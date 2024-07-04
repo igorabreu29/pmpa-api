@@ -1,5 +1,5 @@
-import { DisciplineByCourseIdAndDisciplineId, DisciplinesRepository } from "@/domain/app/repositories/disiciplines-repository.ts";
-import { Discipline } from "@/domain/enterprise/entities/discipline.ts";
+import { DisciplinesRepository } from "@/domain/boletim/app/repositories/disiciplines-repository.ts";
+import { Discipline } from "@/domain/boletim/enterprise/entities/discipline.ts";
 
 export class InMemoryDisciplinesRepository implements DisciplinesRepository {
   public items: Discipline[] = []
@@ -16,5 +16,11 @@ export class InMemoryDisciplinesRepository implements DisciplinesRepository {
 
   async create(discipline: Discipline): Promise<void> {
     this.items.push(discipline)
+  }
+
+  async createMany(disciplines: Discipline[]): Promise<void> {
+    for (const discipline of disciplines) {
+      this.items.push(discipline)
+    }
   }
 }

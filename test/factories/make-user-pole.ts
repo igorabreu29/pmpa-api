@@ -1,5 +1,5 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { UserPole } from "@/domain/enterprise/entities/user-pole.ts";
+import { UserPole } from "@/domain/boletim/enterprise/entities/user-pole.ts";
 
 export function makeUserPole(
   override: Partial<UserPole> = {},

@@ -1,5 +1,6 @@
-import { UsersCourseRepository } from "@/domain/app/repositories/users-course-repository.ts";
-import { UserCourse } from "@/domain/enterprise/entities/user-course.ts";
+import { UsersCourseRepository } from "@/domain/boletim/app/repositories/users-course-repository.ts";
+import { UserWithPole } from "@/domain/boletim/enterprise/entities/value-objects/user-with-pole.ts";
+import { UserCourse } from "@/domain/boletim/enterprise/entities/user-course.ts";
 
 export class InMemoryUsersCourseRepository implements UsersCourseRepository {
   public items: UserCourse[] = []
@@ -21,5 +22,11 @@ export class InMemoryUsersCourseRepository implements UsersCourseRepository {
 
   async create(userCourse: UserCourse): Promise<void> {
     this.items.push(userCourse)
+  }
+
+  async createMany(usersOnCourses: UserCourse[]): Promise<void> {
+    usersOnCourses.forEach(userOnCourse => {
+      this.items.push(userOnCourse)
+    })
   }
 }

@@ -1,5 +1,5 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { CourseHistoric } from "@/domain/enterprise/entities/course-historic.ts";
+import { CourseHistoric } from "@/domain/boletim/enterprise/entities/course-historic.ts";
 import { faker } from '@faker-js/faker'
  
 export function makeCourseHistoric(

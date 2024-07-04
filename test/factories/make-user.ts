@@ -1,5 +1,5 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { User } from "@/domain/enterprise/entities/user.ts";
+import { User } from "@/domain/boletim/enterprise/entities/user.ts";
 
 export function makeUser(
   override: Partial<User> = {},
@@ -12,9 +12,6 @@ export function makeUser(
     cpf: '01234567811',
     active: true,
     role: 'student',
-    
-    courses: [],
-    poles: [],
     ...override
   }, id)
 }

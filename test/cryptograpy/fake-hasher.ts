@@ -1,4 +1,4 @@
-import { Hasher } from "@/domain/app/cryptography/hasher.ts";
+import { Hasher } from "@/domain/boletim/app/cryptography/hasher.ts";
 
 export class FakeHasher implements Hasher {
   hash = async (password: string): Promise<string> => {

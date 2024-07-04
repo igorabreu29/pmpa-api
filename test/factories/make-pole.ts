@@ -1,5 +1,5 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { Pole } from "@/domain/enterprise/entities/pole.ts";
+import { Pole } from "@/domain/boletim/enterprise/entities/pole.ts";
 import { faker } from "@faker-js/faker";
 
 export function makePole(

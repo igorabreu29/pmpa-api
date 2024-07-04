@@ -1,5 +1,5 @@
-import { CourseHistoricRepository } from "@/domain/app/repositories/course-historic-repository.ts";
-import { CourseHistoric } from "@/domain/enterprise/entities/course-historic.ts";
+import { CourseHistoricRepository } from "@/domain/boletim/app/repositories/course-historic-repository.ts";
+import { CourseHistoric } from "@/domain/boletim/enterprise/entities/course-historic.ts";
 
 export class InMemoryCourseHistoricRepository implements CourseHistoricRepository {
   public items: CourseHistoric[] = []

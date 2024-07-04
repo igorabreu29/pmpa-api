@@ -1,5 +1,5 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { Course } from "@/domain/enterprise/entities/course.ts";
+import { Course } from "@/domain/boletim/enterprise/entities/course.ts";
 
 export function makeCourse(
   override: Partial<Course> = {},
@@ -12,9 +12,8 @@ export function makeCourse(
     imageUrl: 'https://image-url',
     modules: null,
     periods: null,
+    endsAt: new Date(),
 
-    poles: [],
-    users: [],
     ...override
   }, id)
 }

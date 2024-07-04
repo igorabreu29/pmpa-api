@@ -1,5 +1,5 @@
-import { PolesRepository } from "@/domain/app/repositories/poles-repository.ts";
-import { Pole } from "@/domain/enterprise/entities/pole.ts";
+import { PolesRepository } from "@/domain/boletim/app/repositories/poles-repository.ts";
+import { Pole } from "@/domain/boletim/enterprise/entities/pole.ts";
 
 export class InMemoryPolesRepository implements PolesRepository {
   public items: Pole[] = []
@@ -12,5 +12,15 @@ export class InMemoryPolesRepository implements PolesRepository {
   async findByName(name: string): Promise<Pole | null> {
     const pole = this.items.find(item => item.name === name)
     return pole ?? null
+  }
+
+  async create(pole: Pole): Promise<void> {
+    this.items.push(pole)
+  }
+
+  async createMany(poles: Pole[]): Promise<void> {
+    poles.forEach(pole => {
+      this.items.push(pole)
+    })
   }
 }

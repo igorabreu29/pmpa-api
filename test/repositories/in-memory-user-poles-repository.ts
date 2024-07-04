@@ -1,5 +1,5 @@
-import { UserPolesRepository } from "@/domain/app/repositories/user-poles-repository.ts";
-import { UserPole } from "@/domain/enterprise/entities/user-pole.ts";
+import { UserPolesRepository } from "@/domain/boletim/app/repositories/user-poles-repository.ts";
+import { UserPole } from "@/domain/boletim/enterprise/entities/user-pole.ts";
 
 export class InMemoryUserPolesRepository implements UserPolesRepository {
   public items: UserPole[] = []
@@ -16,5 +16,11 @@ export class InMemoryUserPolesRepository implements UserPolesRepository {
 
   async create(userPole: UserPole): Promise<void> {
     this.items.push(userPole)
+  }
+
+  async createMany(usersOnPoles: UserPole[]): Promise<void> {
+    usersOnPoles.forEach(userOnPole => {
+      this.items.push(userOnPole)
+    })
   }
 }

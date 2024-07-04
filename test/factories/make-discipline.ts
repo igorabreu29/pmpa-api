@@ -1,5 +1,5 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { Discipline } from "@/domain/enterprise/entities/discipline.ts";
+import { Discipline } from "@/domain/boletim/enterprise/entities/discipline.ts";
 
 export function makeDiscipline(
   override: Partial<Discipline> = {},
