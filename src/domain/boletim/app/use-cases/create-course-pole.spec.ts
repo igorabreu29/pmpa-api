@@ -1,13 +1,7 @@
-import { InMemoryCoursesDisciplinesRepository } from 'test/repositories/in-memory-courses-disciplines-repository.ts'
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
-import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
 import { describe, it, expect, beforeEach } from 'vitest'
-import { CreateCourseDiscipline } from './create-course-discipline.ts'
-import { InMemoryUsersCourseRepository } from 'test/repositories/in-memory-users-course-repository.ts'
 import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found-error.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
-import { makeDiscipline } from 'test/factories/make-discipline.ts'
-import { makeCourseDiscipline } from 'test/factories/make-course-discipline.ts'
 import { ResourceAlreadyExistError } from '@/core/errors/use-case/resource-already-exist-error.ts'
 import { InMemoryCoursesPolesRepository } from 'test/repositories/in-memory-courses-poles-repository.ts'
 import { CreateCoursePole } from './create-course-pole.ts'
@@ -15,7 +9,6 @@ import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repos
 import { makePole } from 'test/factories/make-pole.ts'
 import { makeCoursePole } from 'test/factories/make-course-pole.ts'
 
-let usersCoursesRepository: InMemoryUsersCourseRepository
 let coursesRepository: InMemoryCoursesRepository
 let polesRepository: InMemoryPolesRepository
 let coursesPolesReposiry: InMemoryCoursesPolesRepository
@@ -23,10 +16,7 @@ let sut: CreateCoursePole
 
 describe('Create Course Pole', () => {
   beforeEach(() => {
-    usersCoursesRepository = new InMemoryUsersCourseRepository()
-    coursesRepository = new InMemoryCoursesRepository(
-      usersCoursesRepository
-    )
+    coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
     coursesPolesReposiry = new InMemoryCoursesPolesRepository()
     sut = new CreateCoursePole(

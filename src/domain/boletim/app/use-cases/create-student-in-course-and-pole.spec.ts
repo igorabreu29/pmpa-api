@@ -1,5 +1,4 @@
 import { describe, it, beforeEach, expect } from 'vitest'
-import { StudentsRepository } from '../repositories/students-repository.ts'
 import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository.ts'
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
@@ -25,10 +24,15 @@ let sut: CreateStudentInCourseAndPole
 describe('Create Student In Course And Pole', () => {
   beforeEach(() => {
     studentsRepository = new InMemoryStudentsRepository()
-    studentsCoursesRepository = new InMemoryStudentsCoursesRepository()
     studentsPolesRepository = new InMemoryStudentsPolesRepository()
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
+    studentsCoursesRepository = new InMemoryStudentsCoursesRepository(
+      studentsRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
     hasher = new FakeHasher()
     sut = new CreateStudentInCourseAndPole(
       studentsRepository,

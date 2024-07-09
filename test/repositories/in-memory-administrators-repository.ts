@@ -4,6 +4,11 @@ import { Administrator } from "@/domain/boletim/enterprise/entities/administrato
 export class InMemoryAdministratorsRepository implements AdministratorsRepository {
   public items: Administrator[] = []
 
+  async findById(id: string): Promise<Administrator | null> {
+    const admin = this.items.find(item => item.id.toValue() === id)
+    return admin ?? null
+  }
+
   async findByCPF(cpf: string): Promise<Administrator | null> {
     const admin = this.items.find(item => item.cpf === cpf)
     return admin ?? null
@@ -16,5 +21,10 @@ export class InMemoryAdministratorsRepository implements AdministratorsRepositor
 
   async create(admin: Administrator): Promise<void> {
     this.items.push(admin)
+  }
+
+  async save(admin: Administrator): Promise<void> {
+    const adminIndex = this.items.findIndex(item => item.equals(admin))
+    this.items[adminIndex] = admin
   }
 }

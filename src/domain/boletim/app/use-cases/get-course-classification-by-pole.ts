@@ -1,72 +1,44 @@
 import { Either, left, right } from "@/core/either.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { Role, User } from "@/domain/boletim/enterprise/entities/user.ts";
+import { Role } from "@/domain/boletim/enterprise/entities/user.ts";
 import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
-import { UsersRepository } from "../repositories/users-repository.ts";
 import { classifyStudentsByModuleFormule, classifyStudentsByPeriodFormule } from "../utils/generate-students-classification.ts";
 import { StudentClassficationByModule, StudentClassficationByPeriod } from "../types/generate-students-classification.js";
-import { UserWithPole } from "@/domain/boletim/enterprise/entities/value-objects/user-with-pole.ts";
+import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts";
+import { PolesRepository } from "../repositories/poles-repository.ts";
 
-interface GetClassificationCourseUseCaseRequest {
+interface GetCourseClassificationByPoleUseCaseRequest {
   courseId: string
-  poleId?: string
-  role: Role
+  poleId: string
   page: number
 }
 
-type GetClassificationCourseUseCaseResponse = Either<ResourceNotFoundError, {
+type GetCourseClassificationByPoleUseCaseResponse = Either<ResourceNotFoundError, {
   studentsWithAverage: StudentClassficationByPeriod[] | StudentClassficationByModule[]
 }>
 
-export class GetClassificationCourseUseCase {
+export class GetCourseClassificationByPoleUseCase {
   constructor(
     private coursesRepository: CoursesRepository,
-    private usersRepository: UsersRepository,
+    private polesRepository: PolesRepository,
+    private studentsCoursesRepository: StudentsCoursesRepository,
     private getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
   ) {}
 
-  async execute({ courseId, poleId, role, page }: GetClassificationCourseUseCaseRequest): Promise<GetClassificationCourseUseCaseResponse> {
+  async execute({ courseId, poleId, page }: GetCourseClassificationByPoleUseCaseRequest): Promise<GetCourseClassificationByPoleUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
-    let students: UserWithPole[] = []
+    const pole = await this.polesRepository.findById(poleId)
+    if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
-    if (role === 'manager' && poleId) {
-      const { users } = await this.usersRepository.findManyByCourseIdAndPoleIdWithPole({
-        courseId,
-        poleId,
-        page,
-        perPage: 30,
-        role: 'student'
-      })
-
-      students = users
-    }
-
-    const { users } = await this.usersRepository.findManyByCourseIdWithPole({ courseId, role: 'student', page, perPage: 30 })
-    students = users
+    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyByCourseIdAndPoleIdWithCourseAndPole({ courseId, poleId, page, perPage: 30 })
 
     const studentsWithAverage = await Promise.all(students.map(async (student) => {
-      if (role === 'manager') {
-        const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({
-          courseFormule: course.formule,
-          studentId: student.userId.toValue(),
-          courseId: course.id.toValue(),
-        })
-
-        if (studentAverage.isLeft()) return { message: studentAverage.value.message }
-
-        return {
-          studentAverage: studentAverage.value.grades,
-          studentBirthday: student.birthday,
-          studentCivilID: student.civilID,
-        }
-      }
-
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({
         courseFormule: course.formule,
-        studentId: student.userId.toValue(),
+        studentId: student.studentId.toValue(),
         courseId
       })
 

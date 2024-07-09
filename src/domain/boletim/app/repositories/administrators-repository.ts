@@ -5,4 +5,5 @@ export abstract class AdministratorsRepository {
   abstract findByCPF(cpf: string): Promise<Administrator | null>
   abstract findByEmail(email: string): Promise<Administrator | null>
   abstract create(admin: Administrator): Promise<void>
+  abstract save(admin: Administrator): Promise<void>
 }

@@ -13,7 +13,6 @@ import { InMemoryUsersCourseRepository } from "test/repositories/in-memory-users
 import { makeUserCourse } from "test/factories/make-user-course.ts";
 import { CreateStudentsBatchUseCase } from "./create-students-batch.ts";
 import { InMemoryUserPolesRepository } from "test/repositories/in-memory-user-poles-repository.ts";
-import { makeUserPole } from "test/factories/make-user-pole.ts";
 
 let usersCoursesRepository: InMemoryUsersCourseRepository
 let userPolesRepository: InMemoryUserPolesRepository
@@ -25,17 +24,13 @@ let sut: CreateStudentsBatchUseCase
 
 describe('Create Students Lot Use Case', () => {
   beforeEach(() => {
-    usersCoursesRepository = new InMemoryUsersCourseRepository()
-    userPolesRepository = new InMemoryUserPolesRepository()
     polesRepository = new InMemoryPolesRepository()
     usersRepository = new InMemoryUsersRepository(
       usersCoursesRepository,
       userPolesRepository,
       polesRepository,
     )
-    coursesRepository = new InMemoryCoursesRepository(
-      usersCoursesRepository
-    )
+    coursesRepository = new InMemoryCoursesRepository()
     hasher = new FakeHasher()
     sut = new CreateStudentsBatchUseCase(usersRepository, coursesRepository, polesRepository, usersCoursesRepository, userPolesRepository, hasher)
   })

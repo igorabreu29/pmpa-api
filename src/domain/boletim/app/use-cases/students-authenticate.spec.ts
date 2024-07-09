@@ -1,24 +1,22 @@
 import { FakeEncrypter } from "test/cryptograpy/fake-encrypter.ts";
 import { FakeHasher } from "test/cryptograpy/fake-hasher.ts";
 import { beforeEach, describe, expect, it } from "vitest";
-import { AuthenticateUseCase } from "./authenticate.ts";
 import { InvalidCredentialsError } from "./errors/invalid-credentials-error.ts";
-import { makeUser } from "test/factories/make-user.ts";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
-import { StudentAuthenticationUseCase } from "./student-authentication.ts";
 import { makeStudent } from "test/factories/make-student.ts";
+import { StudentsAuthenticateUseCase } from "./students-authenticate.ts";
 
 let studentsRepository: InMemoryStudentsRepository
 let hasher: FakeHasher
 let encrypter: FakeEncrypter
-let sut: StudentAuthenticationUseCase
+let sut: StudentsAuthenticateUseCase
 
-describe('Authenticate Use Case', () => {
+describe('Students Authenticate Use Case', () => {
   beforeEach(() => {
     studentsRepository = new InMemoryStudentsRepository()
     hasher = new FakeHasher()
     encrypter = new FakeEncrypter()
-    sut = new StudentAuthenticationUseCase(studentsRepository, hasher, encrypter)
+    sut = new StudentsAuthenticateUseCase(studentsRepository, hasher, encrypter)
   })
 
   it ('should not be able to authenticate student with cpf not existing', async () => {
@@ -28,7 +26,7 @@ describe('Authenticate Use Case', () => {
     expect(result.value).toBeInstanceOf(InvalidCredentialsError)
   })
 
-  it ('should not be able to authenticate studet with password not equals', async () => {
+  it ('should not be able to authenticate student with password not equals', async () => {
     const student = makeStudent({ passwordHash: '202010-hasher' })
     studentsRepository.items.push(student)
 
@@ -38,7 +36,7 @@ describe('Authenticate Use Case', () => {
     expect(result.value).toBeInstanceOf(InvalidCredentialsError)
    })
 
-   it ('should be able to receive "{ redirect: true }" if the user has the student role and does not have login confirmation', async () => {
+   it ('should be able to receive "{ redirect: true }" if the student does not confirmated login', async () => {
     const student = makeStudent({ passwordHash: '202020-hasher' })
     studentsRepository.items.push(student)
 
@@ -50,7 +48,7 @@ describe('Authenticate Use Case', () => {
     })
    })
  
-   it ('should be able to authenticate user', async () => {
+   it ('should be able to authenticate student', async () => {
     const student = makeStudent({ passwordHash: '202020-hasher', loginConfirmation: true })
     studentsRepository.items.push(student)
  

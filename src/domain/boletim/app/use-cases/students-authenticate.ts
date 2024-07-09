@@ -4,23 +4,23 @@ import { StudentsRepository } from "../repositories/students-repository.ts"
 import { Hasher } from "../cryptography/hasher.ts"
 import { Encrypter } from "../cryptography/encrypter.ts"
 
-interface StudentAuthenticationUseCaseRequest {
+interface StudentsAuthenticateUseCaseRequest {
   cpf: string
   password: string
 }
 
-type StudentAuthenticationUseCaseResponse = Either<InvalidCredentialsError, {
+type StudentsAuthenticateUseCaseResponse = Either<InvalidCredentialsError, {
   token: string
 } | { redirect: true }>
 
-export class StudentAuthenticationUseCase {
+export class StudentsAuthenticateUseCase {
   constructor (
     private studentsRepository: StudentsRepository,
     private hasher: Hasher,
     private encrypter: Encrypter
   ) {}
 
-  async execute({ cpf, password }: StudentAuthenticationUseCaseRequest): Promise<StudentAuthenticationUseCaseResponse> {
+  async execute({ cpf, password }: StudentsAuthenticateUseCaseRequest): Promise<StudentsAuthenticateUseCaseResponse> {
     const student = await this.studentsRepository.findByCPF(cpf)
     if (!student) return left(new InvalidCredentialsError())
     

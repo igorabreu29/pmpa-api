@@ -1,50 +1,39 @@
-import { Either, right } from "@/core/either.ts"
-import { Role, User } from "@/domain/boletim/enterprise/entities/user.ts"
-import { UsersRepository } from "../repositories/users-repository.ts"
+import { Either, left, right } from "@/core/either.ts"
+import { Role } from "@/domain/boletim/enterprise/entities/user.ts"
+import { StudentsRepository } from "../repositories/students-repository.ts"
+import { StudentWithCourseAndPole } from "../../enterprise/entities/value-objects/student-with-course-and-pole.ts"
+import { CoursesRepository } from "../repositories/courses-repository.ts"
+import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
+import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts"
 
 interface FetchCourseStudentsUseCaseRequest {
   courseId: string
-  poleId?: string
   page: number
   perPage: number
-  role?: Role
 }
 
-type FetchCourseStudentsUseCaseResponse = Either<null, {
-  users: User[]
+type FetchCourseStudentsUseCaseResponse = Either<ResourceNotFoundError, {
+  students: StudentWithCourseAndPole[]
   pages: number
   totalItems: number
 }>
 
 export class FetchCourseStudentsUseCase {
   constructor (
-    private usersRepository: UsersRepository
+    private coursesRepository: CoursesRepository,
+    private studentsCoursesRepository: StudentsCoursesRepository,
   ) {}
 
-  async execute({ courseId, poleId, page, perPage, role }: FetchCourseStudentsUseCaseRequest): Promise<FetchCourseStudentsUseCaseResponse> {
-    if (role === 'manager') {
-      const { users, pages, totalItems } = await this.usersRepository.findManyByCourseIdAndPoleId({
-        courseId,
-        page,
-        perPage,
-        poleId: String(poleId),
-        role: 'student',
-      })
+  async execute({ courseId, page, perPage }: FetchCourseStudentsUseCaseRequest): Promise<FetchCourseStudentsUseCaseResponse> {
+    const course = await this.coursesRepository.findById(courseId)
+    if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
-      return right({
-        users,
-        pages, 
-        totalItems
-      })
-    }
-
-    const { users, pages, totalItems} = await this.usersRepository.findManyByCourseId({
+    const { studentsCourse, pages, totalItems} = await this.studentsCoursesRepository.findManyByCourseIdWithCourseAndPole({
       courseId,
       page,
       perPage,
-      role: 'student',
     })
 
-    return right({ users, pages, totalItems })
+    return right({ students: studentsCourse, pages, totalItems })
   }
 }

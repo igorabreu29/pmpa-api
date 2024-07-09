@@ -18,9 +18,7 @@ describe(('Create Assessment Use Case'), () => {
     vi.useFakeTimers(),
     assessmentsRepository = new InMemoryAssessmentsRepository()
     usersCoursesRepository = new InMemoryUsersCourseRepository()
-    coursesRepository = new InMemoryCoursesRepository(
-      usersCoursesRepository
-    )
+    coursesRepository = new InMemoryCoursesRepository()
     sut = new CreateAssessmentUseCase(
       assessmentsRepository,
       coursesRepository

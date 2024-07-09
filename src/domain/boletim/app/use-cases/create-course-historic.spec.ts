@@ -5,19 +5,14 @@ import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
 import { ConflictError } from './errors/conflict-error.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
-import { InMemoryUsersCourseRepository } from 'test/repositories/in-memory-users-course-repository.ts'
 
-let usersCoursesRepository: InMemoryUsersCourseRepository
 let coursesRepository: InMemoryCoursesRepository
 let courseHistoricRepository: InMemoryCourseHistoricRepository
 let sut: CreateCourseHistoricUseCase
 
 describe('Create Course Historic Use Case', () => {
   beforeEach(() => {
-    usersCoursesRepository = new InMemoryUsersCourseRepository()
-    coursesRepository = new InMemoryCoursesRepository(
-      usersCoursesRepository
-    )
+    coursesRepository = new InMemoryCoursesRepository()
     courseHistoricRepository = new InMemoryCourseHistoricRepository()
     sut = new CreateCourseHistoricUseCase(
       coursesRepository,

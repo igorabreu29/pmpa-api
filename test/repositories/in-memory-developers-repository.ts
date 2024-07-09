@@ -5,6 +5,11 @@ import { Developer } from "@/domain/boletim/enterprise/entities/developer.ts";
 export class InMemoryDevelopersRepository implements DevelopersRepository {
   public items: Developer[] = []
 
+  async findById(id: string): Promise<Developer | null> {
+    const developer = this.items.find(item => item.id.toValue() === id)
+    return developer ?? null
+  }
+
   async findByCPF(cpf: string): Promise<Developer | null> {
     const developer = this.items.find(item => item.cpf === cpf)
     return developer ?? null

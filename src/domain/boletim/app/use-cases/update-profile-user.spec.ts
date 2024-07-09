@@ -1,4 +1,3 @@
-import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository.ts";
 import { beforeEach, describe, expect, it } from "vitest";

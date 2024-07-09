@@ -24,10 +24,15 @@ let sut: CreateManagerInCourseAndPole
 describe('Create Manager In Course And Pole', () => {
   beforeEach(() => {
     managersRepository = new InMemoryManagersRepository()
-    managersCoursesRepository = new InMemoryManagersCoursesRepository()
     managersPolesRepository = new InMemoryManagersPolesRepository()
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
+    managersCoursesRepository = new InMemoryManagersCoursesRepository(
+      managersRepository,
+      coursesRepository,
+      managersPolesRepository,
+      polesRepository
+    )
     hasher = new FakeHasher()
     sut = new CreateManagerInCourseAndPole(
       managersRepository,

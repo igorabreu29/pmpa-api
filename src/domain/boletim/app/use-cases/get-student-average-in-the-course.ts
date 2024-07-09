@@ -4,7 +4,7 @@ import { AssessmentsRepository } from "../repositories/assessments-repository.ts
 import { BehaviorsRepository } from "../repositories/behaviors-repository.ts"
 import { generateBehaviorAverage } from "../utils/generate-behavior-average.ts"
 import { generateAssessmentAverage } from "../utils/generate-assessment-average.ts"
-import { AssessmentWithModule, AssessmentsPerPeriod, formules } from "../utils/verify-formule.ts"
+import { AssessmentWithModule, formules } from "../utils/verify-formule.ts"
 import { GenerateBehaviorStatus } from "../utils/get-behavior-average-status.ts"
 import { GetGeralStudentAverageStatusResponse } from "../utils/get-geral-student-average-status.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"

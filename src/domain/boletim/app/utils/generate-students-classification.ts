@@ -8,13 +8,13 @@ export const classifyStudentsByPeriodFormule = (studentsWithAverage: StudentClas
       const geralAverageStudentA = studentA.studentAverage.averageInform.geralAverage
       const geralAverageStudentB = studentB.studentAverage.averageInform.geralAverage
 
-      const totalFromStudentAThatIsRecoveringInModule1 = studentA.studentAverage.assessments['module1']?.filter(student => student.isRecovering) 
-      const totalFromStudentAThatIsRecoveringInModule2 = studentA.studentAverage.assessments['module2']?.filter(student => student.isRecovering) 
-      const totalFromStudentAThatIsRecoveringInModule3 = studentA.studentAverage.assessments['module3']?.filter(student => student.isRecovering) 
+      const totalFromStudentAThatIsRecoveringInModule1 = studentA.studentAverage.assessments['module1']?.filter(student => student.average < 7) 
+      const totalFromStudentAThatIsRecoveringInModule2 = studentA.studentAverage.assessments['module2']?.filter(student => student.average < 7) 
+      const totalFromStudentAThatIsRecoveringInModule3 = studentA.studentAverage.assessments['module3']?.filter(student => student.average < 7) 
 
-      const totalFromStudentBThatIsRecoveringInModule1 = studentB.studentAverage.assessments['module1']?.filter(student => student.isRecovering) 
-      const totalFromStudentBThatIsRecoveringInModule2 = studentB.studentAverage.assessments['module2']?.filter(student => student.isRecovering) 
-      const totalFromStudentBThatIsRecoveringInModule3 = studentB.studentAverage.assessments['module3']?.filter(student => student.isRecovering) 
+      const totalFromStudentBThatIsRecoveringInModule1 = studentB.studentAverage.assessments['module1']?.filter(student => student.average < 7) 
+      const totalFromStudentBThatIsRecoveringInModule2 = studentB.studentAverage.assessments['module2']?.filter(student => student.average < 7) 
+      const totalFromStudentBThatIsRecoveringInModule3 = studentB.studentAverage.assessments['module3']?.filter(student => student.average < 7) 
 
       const totalRecoveringFromStudentA = 
         totalFromStudentAThatIsRecoveringInModule1?.length + totalFromStudentAThatIsRecoveringInModule2?.length + totalFromStudentAThatIsRecoveringInModule3?.length

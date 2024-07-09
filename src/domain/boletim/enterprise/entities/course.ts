@@ -6,13 +6,16 @@ export type Active = 'enabled' | 'disabled'
 
 export type Formule = 'module' | 'period'
 
-interface CourseProps {
+export type CourseType = 'CFP' | 'CAS' | 'CHO' | 'CFO'
+
+interface CourseProps { 
   formule: Formule
   name: string
   active: Active
   imageUrl: string
   startAt: Date
   endsAt: Date
+  type: CourseType
   modules: number | null
   periods: number | null
 }

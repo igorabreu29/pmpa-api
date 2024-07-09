@@ -1,6 +1,5 @@
 import { InMemoryAssessmentsRepository } from "test/repositories/in-memory-assessments-repository.ts";
 import { beforeEach, describe, expect, it } from "vitest";
-import { CreateAssessmentUseCase } from "./create-assessment.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { makeAssessment } from "test/factories/make-assessment.ts";
 import { DeleteAssessmentUseCaseUseCase } from "./delete-assessment.ts";

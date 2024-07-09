@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { makeAssessment } from "test/factories/make-assessment.ts";
 import { InMemoryBehaviorsRepository } from "test/repositories/in-memory-behaviors-repository.ts";
 import { UpdateBehaviorUseCaseUseCase } from "./update-behavior.ts";
 import { makeBehavior } from "test/factories/make-behavior.ts";

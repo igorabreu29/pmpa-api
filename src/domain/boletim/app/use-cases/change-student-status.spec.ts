@@ -1,17 +1,38 @@
-import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository.ts";
 import { beforeEach, describe, expect, it } from "vitest";
-import { makeUser } from "test/factories/make-user.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
 import { ChangeStudentStatusUseCase } from "./change-student-status.ts";
 import { makeStudent } from "test/factories/make-student.ts";
+import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
+import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
+import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
+import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
+import { InMemoryCoursesPolesRepository } from "test/repositories/in-memory-courses-poles-repository.ts";
 
+let studentsCoursesRepository: InMemoryStudentsCoursesRepository
+let studentsPolesRepository: InMemoryStudentsPolesRepository
+let coursesRepository: InMemoryCoursesRepository
+let polesRepository: InMemoryPolesRepository
+let coursesPolesRepository: InMemoryCoursesPolesRepository
 let studentsRepository: InMemoryStudentsRepository
 let sut: ChangeStudentStatusUseCase
 
-describe('Change User Status Use Case', () => {
+describe('Change Student Status Use Case', () => {
   beforeEach(() => {
-    studentsRepository = new InMemoryStudentsRepository()
+    coursesRepository = new InMemoryCoursesRepository()
+    polesRepository = new InMemoryPolesRepository()
+    coursesPolesRepository = new InMemoryCoursesPolesRepository()
+    studentsCoursesRepository = new InMemoryStudentsCoursesRepository(
+      coursesRepository
+    )
+    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsRepository = new InMemoryStudentsRepository(
+      studentsCoursesRepository,
+      coursesRepository,
+      coursesPolesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
     sut = new ChangeStudentStatusUseCase(studentsRepository)
   })
 

@@ -1,6 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { makeCourse } from "test/factories/make-course.ts";
-import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
 import { CreatePoleUseCase } from "./create-pole.ts";
 import { makePole } from "test/factories/make-pole.ts";

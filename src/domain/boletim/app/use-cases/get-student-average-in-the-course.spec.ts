@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
 import { InMemoryAssessmentsRepository } from "test/repositories/in-memory-assessments-repository.ts";
 import { InMemoryBehaviorsRepository } from "test/repositories/in-memory-behaviors-repository.ts";
-import { InMemoryCourseDisciplineRepository } from "test/repositories/in-memory-course-discipline-repository.ts";
 import { makeUser } from "test/factories/make-user.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { makeAssessment } from "test/factories/make-assessment.ts";
@@ -10,17 +9,18 @@ import { makeBehavior } from "test/factories/make-behavior.ts";
 import { makeCourseDiscipline } from "test/factories/make-course-discipline.ts";
 import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
+import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
-let courseDisciplinesRepository: InMemoryCourseDisciplineRepository
+let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let sut: GetStudentAverageInTheCourseUseCase
 
 describe(('Get Student Average In The Course Use Case'), () => {
   beforeEach(() => {
     assessmentsRepository = new InMemoryAssessmentsRepository()
     behaviorsRepository = new InMemoryBehaviorsRepository()
-    courseDisciplinesRepository = new InMemoryCourseDisciplineRepository()
+    courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository()
     sut = new GetStudentAverageInTheCourseUseCase(
       assessmentsRepository, 
       behaviorsRepository,
@@ -122,7 +122,8 @@ describe(('Get Student Average In The Course Use Case'), () => {
 
     const courseDiscipline1 = makeCourseDiscipline({ courseId: course.id, disciplineId: discipline1.id, module: 1 })
     const courseDiscipline2 = makeCourseDiscipline({ courseId: course.id, disciplineId: discipline2.id, module: 1 })
-    courseDisciplinesRepository.createMany([courseDiscipline1, courseDiscipline2])
+    courseDisciplinesRepository.create(courseDiscipline1)
+    courseDisciplinesRepository.create(courseDiscipline2)
 
     const result = await sut.execute({
       studentId: student.id.toValue(),

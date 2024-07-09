@@ -5,20 +5,15 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
-import { InMemoryUsersCourseRepository } from "test/repositories/in-memory-users-course-repository.ts";
 
 let courseHistoricRepository: InMemoryCourseHistoricRepository
-let usersCoursesRepository: InMemoryUsersCourseRepository
 let coursesRepository: InMemoryCoursesRepository
 let sut: CreateHistoricUseCase
 
 describe(('Create Historic Use Case'), () => {
   beforeEach(() => {
     courseHistoricRepository = new InMemoryCourseHistoricRepository()
-    usersCoursesRepository = new InMemoryUsersCourseRepository()
-    coursesRepository = new InMemoryCoursesRepository(
-      usersCoursesRepository
-    )
+    coursesRepository = new InMemoryCoursesRepository()
     sut = new CreateHistoricUseCase(courseHistoricRepository, coursesRepository)
   })
 

@@ -9,7 +9,7 @@ export function makeCourse(
     formule: 'period',
     name: 'CFP - 2024',
     active: 'enabled',
-    imageUrl: 'https://image-url',
+    imageUrl: 'http://random-url',
     modules: null,
     periods: null,
     endsAt: new Date(),

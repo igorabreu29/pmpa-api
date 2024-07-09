@@ -19,9 +19,7 @@ describe(('Create Behavior Use Case'), () => {
 
     behaviorsRepository = new InMemoryBehaviorsRepository()
     usersCoursesRepository = new InMemoryUsersCourseRepository()
-    coursesRepository = new InMemoryCoursesRepository (
-      usersCoursesRepository
-    )
+    coursesRepository = new InMemoryCoursesRepository ()
     sut = new CreateBehaviorUseCase(
       behaviorsRepository,
       coursesRepository

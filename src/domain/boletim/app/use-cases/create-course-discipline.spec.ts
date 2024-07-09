@@ -10,7 +10,6 @@ import { makeDiscipline } from 'test/factories/make-discipline.ts'
 import { makeCourseDiscipline } from 'test/factories/make-course-discipline.ts'
 import { ResourceAlreadyExistError } from '@/core/errors/use-case/resource-already-exist-error.ts'
 
-let usersCoursesRepository: InMemoryUsersCourseRepository
 let coursesRepository: InMemoryCoursesRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
 let courseDisciplineRepository: InMemoryCoursesDisciplinesRepository
@@ -18,10 +17,7 @@ let sut: CreateCourseDiscipline
 
 describe('Create Course Discipline', () => {
   beforeEach(() => {
-    usersCoursesRepository = new InMemoryUsersCourseRepository()
-    coursesRepository = new InMemoryCoursesRepository(
-      usersCoursesRepository
-    )
+    coursesRepository = new InMemoryCoursesRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     courseDisciplineRepository = new InMemoryCoursesDisciplinesRepository()
     sut = new CreateCourseDiscipline(

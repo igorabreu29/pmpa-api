@@ -3,18 +3,13 @@ import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-alrea
 import { CreateCourseUseCase } from "./create-course.ts";
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { makeCourse } from "test/factories/make-course.ts";
-import { InMemoryUsersCourseRepository } from "test/repositories/in-memory-users-course-repository.ts";
-import { Expected } from "../../enterprise/entities/discipline.ts";
 
-let usersCoursesRepository: InMemoryUsersCourseRepository
 let coursesRepository: InMemoryCoursesRepository
 let sut: CreateCourseUseCase
 
 describe('Create Course Use Case', () => {
   beforeEach(() => {
-    coursesRepository = new InMemoryCoursesRepository(
-      usersCoursesRepository
-    )
+    coursesRepository = new InMemoryCoursesRepository()
     sut = new CreateCourseUseCase(
       coursesRepository
     )

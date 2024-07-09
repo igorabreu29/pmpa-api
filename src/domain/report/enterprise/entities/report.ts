@@ -3,8 +3,10 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Optional } from "@/core/types/optional.ts";
 
 interface ReportProps {
+  userId: string
   title: string
   content: string
+  IP: string
   createdAt: Date
 } 
 
