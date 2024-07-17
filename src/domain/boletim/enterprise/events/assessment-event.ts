@@ -2,14 +2,26 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { DomainEvent } from "@/core/events/domain-event.ts";
 import { Assessment } from "../entities/assessment.ts";
 
+interface AssessmentEventProps {
+  assessment: Assessment,
+  reporterId: string,
+  reporterIp: string
+}
+
 export class AssessmentEvent implements DomainEvent {
   public ocurredAt: Date;
   public assessment: Assessment
-  public userIP: string
+  public reporterId: string
+  public reporterIp: string
 
-  public constructor(assessment: Assessment, userIP: string) {
+  public constructor({
+    assessment,
+    reporterId,
+    reporterIp
+  }: AssessmentEventProps) {
     this.assessment = assessment
-    this.userIP = userIP
+    this.reporterId = reporterId
+    this.reporterIp = reporterIp
     this.ocurredAt = new Date()
   }
 

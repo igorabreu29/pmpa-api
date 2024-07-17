@@ -16,6 +16,7 @@ interface UpdateBehaviorUseCaseUseCaseRequest {
   october?: number | null
   november?: number | null
   december?: number | null
+  userIp: string
 }
 
 type UpdateBehaviorUseCaseUseCaseResponse = Either<ResourceNotFoundError, null>
@@ -38,7 +39,8 @@ export class UpdateBehaviorUseCaseUseCase {
     september,
     october,
     november,
-    december
+    december, 
+    userIp
   }: UpdateBehaviorUseCaseUseCaseRequest): Promise<UpdateBehaviorUseCaseUseCaseResponse> {
     const behavior = await this.behaviorsRepository.findById({ id }) 
     if (!behavior) return left(new ResourceNotFoundError('Behavior not found.'))
@@ -55,6 +57,7 @@ export class UpdateBehaviorUseCaseUseCase {
     behavior.october = october || behavior.october
     behavior.november = november || behavior.november
     behavior.december = december || behavior.december
+    behavior.userIp = userIp || behavior.userIp
     await this.behaviorsRepository.update(behavior)
 
     return right(null)

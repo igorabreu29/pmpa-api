@@ -1,15 +1,16 @@
-import { EventHandler } from "@/core/events/event-handler.ts";
-import { SendReportUseCase } from "../use-cases/send-report.ts";
 import { DomainEvents } from "@/core/events/domain-events.ts";
-import { UsersRepository } from "@/domain/boletim/app/repositories/users-repository.ts";
-import { BehaviorCreatedEvent } from "@/domain/boletim/enterprise/events/behavior-created-event.ts";
+import { EventHandler } from "@/core/events/event-handler.ts";
 import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-repository.ts";
-import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
+import { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
+import { SendReportUseCase } from "../use-cases/send-report.ts";
+import { ReportersRepository } from "../repositories/reporters-repository.ts";
+import { BehaviorEvent } from "@/domain/boletim/enterprise/events/behavior-event.ts";
 
 export class OnBehaviorUpdated implements EventHandler {
   constructor (
-    private polesReposiory: InMemoryPolesRepository,
-    private usersRepository: UsersRepository,
+    private studentsRepository: StudentsRepository,
+    private reportersRepository: ReportersRepository,
+    private coursesRepository: CoursesRepository,
     private sendReport: SendReportUseCase
   ) {
     this.setupSubscriptions()
@@ -18,18 +19,29 @@ export class OnBehaviorUpdated implements EventHandler {
   setupSubscriptions(): void {
     DomainEvents.register(
       this.sendUpdateBehaviorReport.bind(this),
-      BehaviorCreatedEvent.name
+      BehaviorEvent.name
     )
   }
 
-  private async sendUpdateBehaviorReport({ behavior }: BehaviorCreatedEvent) {
-    const pole = await this.polesReposiory.findById(behavior.poleId.toValue())
-    const user = await this.usersRepository.findById(behavior.studentId.toValue())
+  private async sendUpdateBehaviorReport({ behavior, reporterId, reporterIp, ocurredAt }: BehaviorEvent) {
+    const course = await this.coursesRepository.findById(behavior.courseId.toValue())
+    const reporter = await this.reportersRepository.findById({ id: reporterId })
+    const student = await this.studentsRepository.findById(behavior.studentId.toValue())
 
-    if (pole) {
+    if (course && reporter && student) {
       await this.sendReport.execute({
-        title: `Atualiza Comportamento`,
-        content: `${pole?.managerName} atualizou comportamento do estudante: ${user?.username}`,
+        title: 'Notas de comportamento atualizadas',
+        content: `
+          IP: ${reporterIp} \n
+          Curso: ${course.name.value} \n
+          Remetente: ${reporter.username.value} \n
+          Estudante: ${student.username.value} \n
+          Data: ${ocurredAt} \n
+          ${reporter.username.value} atualizou notas de comportamento do aluno: ${student.username.value}
+        `,
+        ip: reporterIp,
+        reporterId,
+        action: 'update'
       })
     }
   }

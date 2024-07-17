@@ -1,16 +1,16 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
-import { makePole } from "test/factories/make-pole.ts";
-import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
-import { makeCourse } from "test/factories/make-course.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { InMemoryManagersCoursesRepository } from "test/repositories/in-memory-managers-courses-repository.ts";
-import { InMemoryManagersPolesRepository } from "test/repositories/in-memory-managers-poles-repository.ts";
-import { FetchCourseManagersUseCase } from "./fetch-course-managers.ts";
-import { makeManager } from "test/factories/make-manager.ts";
+import { makeCourse } from "test/factories/make-course.ts";
 import { makeManagerCourse } from "test/factories/make-manager-course.ts";
 import { makeManagerPole } from "test/factories/make-manager-pole.ts";
+import { makeManager } from "test/factories/make-manager.ts";
+import { makePole } from "test/factories/make-pole.ts";
+import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
+import { InMemoryManagersCoursesRepository } from "test/repositories/in-memory-managers-courses-repository.ts";
+import { InMemoryManagersPolesRepository } from "test/repositories/in-memory-managers-poles-repository.ts";
 import { InMemoryManagersRepository } from "test/repositories/in-memory-managers-repository.ts";
+import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
+import { beforeEach, describe, expect, it } from "vitest";
+import { FetchCourseManagersUseCase } from "./fetch-course-managers.ts";
 
 let managersRepository: InMemoryManagersRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -50,9 +50,9 @@ describe(('Fetch Course Managers Use Case'), () => {
     const pole3 = makePole()
     polesRepository.createMany([pole1, pole2, pole3])
 
-    const manager1 = makeManager({ username: 'manager-1' })
-    const manager2 = makeManager({ username: 'manager-2' })
-    const manager3 = makeManager({ username: 'manager-3' })
+    const manager1 = makeManager()
+    const manager2 = makeManager()
+    const manager3 = makeManager()
     managersRepository.create(manager1)
     managersRepository.create(manager2)
     managersRepository.create(manager3)
@@ -79,25 +79,25 @@ describe(('Fetch Course Managers Use Case'), () => {
     expect(result.value).toMatchObject({
       managers: [
         {
-          username: manager1.username,
+          username: manager1.username.value,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           poleId: pole1.id,
-          pole: pole1.name
+          pole: pole1.name.value
         },
         {
-          username: manager2.username,
+          username: manager2.username.value,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           poleId: pole2.id,
-          pole: pole2.name
+          pole: pole2.name.value
         },
         {
-          username: manager3.username,
+          username: manager3.username.value,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           poleId: pole3.id,
-          pole: pole3.name
+          pole: pole3.name.value
         },
       ]
     })
@@ -111,7 +111,7 @@ describe(('Fetch Course Managers Use Case'), () => {
     polesRepository.create(pole)
 
     for (let i = 1; i <= 8; i++) {
-      const manager = makeManager({ username: `manager-${i}` })
+      const manager = makeManager()
       const managerCourse = makeManagerCourse({ courseId: course.id, managerId: manager.id })
       const managerPole = makeManagerPole({ managerId: managerCourse.id, poleId: pole.id })
       managersRepository.create(manager)

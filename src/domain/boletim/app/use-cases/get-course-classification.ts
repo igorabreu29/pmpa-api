@@ -1,7 +1,6 @@
 import { Either, left, right } from "@/core/either.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { Role } from "@/domain/boletim/enterprise/entities/user.ts";
 import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
 import { classifyStudentsByModuleFormule, classifyStudentsByPeriodFormule } from "../utils/generate-students-classification.ts";
 import { StudentClassficationByModule, StudentClassficationByPeriod } from "../types/generate-students-classification.js";

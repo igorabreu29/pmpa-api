@@ -1,10 +1,13 @@
 import { Either, left, right } from "@/core/either.ts";
 import { ReportsRepository } from "../repositories/reports-repository.ts";
-import { Report } from "../../enterprise/entities/report.ts";
+import { Report, TypeAction } from "../../enterprise/entities/report.ts";
 
 export interface SendReportUseCaseRequest {
+  reporterId: string
+  ip: string
   title: string
   content: string
+  action: TypeAction
 }
 
 export type SendReportUseCaseResponse = Either<null, {
@@ -16,10 +19,13 @@ export class SendReportUseCase {
     private reportsRepository: ReportsRepository
   ) {}
 
-  async execute({ title, content }: SendReportUseCaseRequest): Promise<SendReportUseCaseResponse> {
+  async execute({ title, content, ip, reporterId, action }: SendReportUseCaseRequest): Promise<SendReportUseCaseResponse> {
     const report = Report.create({
       title,
-      content
+      content,
+      ip, 
+      reporterId,
+      action
     })
     await this.reportsRepository.create(report)
 

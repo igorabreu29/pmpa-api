@@ -3,6 +3,7 @@ import { ManagerWithCourseAndPole } from "../../enterprise/entities/value-object
 import { ManagerWithCourse } from "../../enterprise/entities/value-objects/manager-with-course.ts";
 
 export abstract class ManagersCoursesRepository {
+  abstract findByCourseId({ courseId }: { courseId: string }): Promise<ManagerCourse | null>
   abstract findByManagerIdAndCourseId({ managerId, courseId }: { managerId: string, courseId: string }): Promise<ManagerCourse | null>
   abstract findManyByCourseIdWithCourseAndPole({
     courseId,

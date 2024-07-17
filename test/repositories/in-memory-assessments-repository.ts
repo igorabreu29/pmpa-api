@@ -5,8 +5,8 @@ import { Assessment } from "@/domain/boletim/enterprise/entities/assessment.ts";
 export class InMemoryAssessmentsRepository implements AssessmentsRepository {
   public items: Assessment[] = []
 
-  async findByStudentIdAndCourseId({ studentId, studentCourseId }: StudentAssessmentsByCourse): Promise<Assessment | null> {
-    const assessment = this.items.find(item => item.studentId.toValue() === studentId && item.courseId.toValue() === studentCourseId)
+  async findByStudentIdAndCourseId({ studentId, courseId }: StudentAssessmentsByCourse): Promise<Assessment | null> {
+    const assessment = this.items.find(item => item.studentId.toValue() === studentId && item.courseId.toValue() === courseId)
     return assessment ?? null
   }
 
@@ -15,22 +15,17 @@ export class InMemoryAssessmentsRepository implements AssessmentsRepository {
     return assessment ?? null
   }
 
-  async findManyByStudentIdAndCourseId({ studentId, studentCourseId }: StudentAssessmentsByCourse): Promise<Assessment[]> {
-    const assessments = this.items.filter(item => item.studentId.toValue() === studentId && item.courseId.toValue() === studentCourseId)
+  async findManyByStudentIdAndCourseId({ studentId, courseId }: StudentAssessmentsByCourse): Promise<Assessment[]> {
+    const assessments = this.items.filter(item => item.studentId.toValue() === studentId && item.courseId.toValue() === courseId)
     return assessments
   }
 
   async findManyByStudentIdAndCourseIdAndPoleId({ studentId, courseId, poleId }: StudentAssessmentsByCourseAndPole): Promise<Assessment[]> {
     const assessments = this.items.filter(item => {
       return item.studentId.toValue() === studentId &&
-      item.courseId.toValue() === courseId &&
-      item.poleId.toValue() === poleId
+      item.courseId.toValue() === courseId
     })
     return assessments
-  }
-
-  async countByUserIdAndCourseId({ userId, courseId }: { userId: string; courseId: string; }): Promise<number> {
-    return 0
   }
 
   async create(assessment: Assessment): Promise<void> {
@@ -40,22 +35,22 @@ export class InMemoryAssessmentsRepository implements AssessmentsRepository {
   }
   
   async createMany(assessments: Assessment[]): Promise<void> {
-    assessments.forEach(assesment => {
-      this.items.push(assesment)
+    assessments.forEach(assessment => {
+      this.items.push(assessment)
     })
   }
 
-  async update(assesment: Assessment): Promise<void> {
-    const assesmentIndex = this.items.findIndex(item => item.id === assesment.id)
-    this.items[assesmentIndex] = assesment
+  async update(assessment: Assessment): Promise<void> {
+    const assessmentIndex = this.items.findIndex(item => item.id.equals(assessment.id))
+    this.items[assessmentIndex] = assessment
 
-    DomainEvents.dispatchEventsForAggregate(assesment.id)
+    DomainEvents.dispatchEventsForAggregate(assessment.id)
   }
 
-  async delete(assesment: Assessment): Promise<void> {
-    const assesmentIndex = this.items.findIndex(item => item.id === assesment.id)
-    this.items.splice(assesmentIndex, 1)
+  async delete(assessment: Assessment): Promise<void> {
+    const assessmentIndex = this.items.findIndex(item => item.id === assessment.id)
+    this.items.splice(assessmentIndex, 1)
 
-    DomainEvents.dispatchEventsForAggregate(assesment.id)
+    DomainEvents.dispatchEventsForAggregate(assessment.id)
   }
 }

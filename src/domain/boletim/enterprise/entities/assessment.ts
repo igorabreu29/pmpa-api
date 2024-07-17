@@ -1,18 +1,18 @@
 import { AggregateRoot } from "@/core/entities/aggregate-root.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Optional } from "@/core/types/optional.ts";
-import { AssessmentEvent } from "../events/assessment-event.ts";
+import { Either, left, right } from "@/core/either.ts";
+import { ConflictError } from "../../app/use-cases/errors/conflict-error.ts";
+import { DomainEvent } from "@/core/events/domain-event.ts";
 
 interface AssessmentProps {
   studentId: UniqueEntityId
   courseId: UniqueEntityId
-  poleId: UniqueEntityId
   disciplineId: UniqueEntityId
   vf: number
   avi: number | null
   avii: number | null
   vfe: number | null
-  userIP: string
 }
 
 export class Assessment extends AggregateRoot<AssessmentProps> {
@@ -22,10 +22,6 @@ export class Assessment extends AggregateRoot<AssessmentProps> {
 
   get courseId() {
     return this.props.courseId
-  }
-
-  get poleId() {
-    return this.props.poleId
   }
 
   get disciplineId() {
@@ -40,12 +36,6 @@ export class Assessment extends AggregateRoot<AssessmentProps> {
   }
 
   get avi() {
-    if (
-      this.props.avi && (
-        this.props.avi > 10 || this.props.avi < 0
-      )
-    ) return null
-
     return this.props.avi
   }
   set avi(value) {
@@ -53,11 +43,6 @@ export class Assessment extends AggregateRoot<AssessmentProps> {
   }
 
   get avii() {
-    if (!this.props.avi) return null
-    if (this.props.avii && (
-      this.props.avii > 10 || this.props.avii < 0
-    )) return null
-
     return this.props.avii
   }
   set avii(value) {
@@ -65,36 +50,44 @@ export class Assessment extends AggregateRoot<AssessmentProps> {
   }
 
   get vfe() {
-    if (this.props.vfe && (
-      this.props.vfe > 10 || this.props.vfe < 0
-    )) return null
-
     return this.props.vfe
   }
   set vfe(value) {
     this.props.vfe = value
   }
 
-  get userIP() {
-    return this.props.userIP
+  public addDomainAssessmentEvent(domainEvent: DomainEvent): void {
+    this.addDomainEvent(domainEvent)
   }
 
   static create(
     props: Optional<AssessmentProps, 'avi' | 'avii' | 'vfe'>,
-    id?: UniqueEntityId) {
+    id?: UniqueEntityId
+  ): Either<ConflictError, Assessment> {
+    if (props.avi && (
+        props.avi > 10 || props.avi < 0
+      )
+    ) return left(new ConflictError('Invalid size number'))
+
+    if (!props.avi && props.avii) return left(new ConflictError('Invalid expected'))
+
+    if (props.avi && props.avii && (
+        props.avii > 10 || props.avii < 0
+      )
+    ) return left(new ConflictError('Invalid size number'))
+
+    if (props.vfe && (
+        props.vfe > 10 || props.vfe < 0
+      )
+    ) return left(new ConflictError('Invalid size number'))
 
     const assessment = new Assessment({
-      avi: null,
-      avii: null,
-      vfe: null,
+      avi: props.avi ?? null,
+      avii: props.avii ?? null,
+      vfe: props.vfe ?? null,
       ...props
     }, id)
     
-    const isNewAssessment = !id
-    if (isNewAssessment) {
-      assessment.addDomainEvent(new AssessmentEvent(assessment, assessment.userIP))
-    }
-
-    return assessment
+    return right(assessment)
   }
 }

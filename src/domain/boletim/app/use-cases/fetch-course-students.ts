@@ -1,6 +1,4 @@
 import { Either, left, right } from "@/core/either.ts"
-import { Role } from "@/domain/boletim/enterprise/entities/user.ts"
-import { StudentsRepository } from "../repositories/students-repository.ts"
 import { StudentWithCourseAndPole } from "../../enterprise/entities/value-objects/student-with-course-and-pole.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"

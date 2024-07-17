@@ -8,7 +8,7 @@ import { ConflictError } from "./errors/conflict-error.ts";
 let assessmentsRepository: InMemoryAssessmentsRepository
 let sut: UpdateAssessmentUseCaseUseCase
 
-describe(('Delete Assessment Use Case'), () => {
+describe(('Update Assessment Use Case'), () => {
   beforeEach(() => {
     assessmentsRepository = new InMemoryAssessmentsRepository()
     sut = new UpdateAssessmentUseCaseUseCase(assessmentsRepository)
@@ -24,27 +24,26 @@ describe(('Delete Assessment Use Case'), () => {
   })
 
   it ('should not be able to update asssessment if avi is less than 0', async () => {
-    const assessment = makeAssessment({ vf: 5, avi: -1 })
+    const assessment = makeAssessment({ vf: 5 })
     assessmentsRepository.create(assessment)
 
     const result = await sut.execute({
       id: assessment.id.toValue(),
-      vf: 5,
-      avi: -1,
+      vf: assessment.vf,
+      avi: -1
     })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ConflictError)
   })
 
-  it ('should not be able to update asssessment if avii is less than 0', async () => {
-    const assessment = makeAssessment({ vf: 5, avi: 5, avii: -1 })
+  it ('should not be able to update asssessment if avii is less than 0 or greater than 10', async () => {
+    const assessment = makeAssessment({ vf: 5, avi: 5 })
     assessmentsRepository.create(assessment)
 
     const result = await sut.execute({
       id: assessment.id.toValue(),
       vf: 5,
-      avi: 5,
       avii: -1,
     })
 
@@ -52,8 +51,8 @@ describe(('Delete Assessment Use Case'), () => {
     expect(result.value).toBeInstanceOf(ConflictError)
   })
 
-  it ('should not be able to update asssessment if vfe is less than 0', async () => {
-    const assessment = makeAssessment({ vf: 5, vfe: -1 })
+  it ('should not be able to update asssessment if vfe is less than 0 or greater than 10', async () => {
+    const assessment = makeAssessment({ vf: 5 })
     assessmentsRepository.create(assessment)
 
     const result = await sut.execute({
@@ -67,7 +66,7 @@ describe(('Delete Assessment Use Case'), () => {
   })
 
   it ('should not be able to update asssessment if avii has been passed and avi has not passed', async () => {
-    const assessment = makeAssessment({ vf: 5, avii: 4 })
+    const assessment = makeAssessment({ vf: 5 })
     assessmentsRepository.create(assessment)
 
     const result = await sut.execute({

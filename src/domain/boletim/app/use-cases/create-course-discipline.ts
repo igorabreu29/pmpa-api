@@ -1,5 +1,4 @@
 import { Either, left, right } from "@/core/either.ts";
-import { Expected } from "../../enterprise/entities/discipline.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
 import { DisciplinesRepository } from "../repositories/disiciplines-repository.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
@@ -12,7 +11,7 @@ interface CreateCourseDisciplineRequest {
   disciplineId: string
   module: number
   hours: number
-  expected: Expected
+  expected: string
   weight: number
 }
 

@@ -17,7 +17,7 @@ describe(('Create Pole Use Case'), () => {
     const pole = makePole()
     polesRepository.items.push(pole)
 
-    const result = await sut.execute({ name: pole.name })
+    const result = await sut.execute({ name: pole.name.value })
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)

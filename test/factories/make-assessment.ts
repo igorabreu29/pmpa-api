@@ -1,20 +1,22 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Assessment } from "@/domain/boletim/enterprise/entities/assessment.ts";
-import { faker } from "@faker-js/faker";
 
 export function makeAssessment(
   override: Partial<Assessment> = {},
   id?: UniqueEntityId
 ) {
-  return Assessment.create({
+  const assessmentOrError = Assessment.create({
     studentId: new UniqueEntityId(),
     courseId: new UniqueEntityId(),
-    poleId: new UniqueEntityId(),
     disciplineId: new UniqueEntityId(),
-    vf: faker.number.int(),
+    vf: 8,
     avi: null,
     avii: null,
     vfe: null,
+    userIp: '',
     ...override
   }, id)
+  
+  if (assessmentOrError.isLeft()) throw new Error(assessmentOrError.value.message)
+  return assessmentOrError.value
 }

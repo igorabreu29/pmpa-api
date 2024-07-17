@@ -36,7 +36,6 @@ export class CreateCoursePole {
     const coursePole = CoursePole.create({
       courseId: course.id,
       poleId: pole.id,
-      managerName: null
     })
     await this.coursesPolesRepository.create(coursePole)
 

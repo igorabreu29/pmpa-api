@@ -1,17 +1,24 @@
 import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Optional } from "@/core/types/optional.ts";
+import { TypeAction } from "./report.ts";
 
 interface ReportBatchProps {
+  reporterId: UniqueEntityId
   title: string
   content: string
   ip: string
   fileName: string
   fileLink: string
   createdAt: Date
+  action: TypeAction
 } 
 
 export class ReportBatch extends Entity<ReportBatchProps> {
+  get reporterId() {
+    return this.props.reporterId
+  }
+
   get title() {
     return this.props.title
   }

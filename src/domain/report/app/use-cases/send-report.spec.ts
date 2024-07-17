@@ -17,6 +17,8 @@ describe('Send Report Use Case', () => {
     const result = await sut.execute({
      title: 'Notes',
      content: 'new notes added in CFP - 2022', 
+     ip: '',
+     userId: ''
     })
 
     expect(result.isRight()).toBe(true)

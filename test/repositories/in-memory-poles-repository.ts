@@ -10,7 +10,7 @@ export class InMemoryPolesRepository implements PolesRepository {
   }
 
   async findByName(name: string): Promise<Pole | null> {
-    const pole = this.items.find(item => item.name === name)
+    const pole = this.items.find(item => item.name.value === name)
     return pole ?? null
   }
 

@@ -11,12 +11,12 @@ export class InMemoryDevelopersRepository implements DevelopersRepository {
   }
 
   async findByCPF(cpf: string): Promise<Developer | null> {
-    const developer = this.items.find(item => item.cpf === cpf)
+    const developer = this.items.find(item => item.cpf.value === cpf)
     return developer ?? null
   }
 
   async findByEmail(email: string): Promise<Developer | null> {
-    const developer = this.items.find(item => item.email === email)
+    const developer = this.items.find(item => item.email.value === email)
     return developer ?? null
   }
 

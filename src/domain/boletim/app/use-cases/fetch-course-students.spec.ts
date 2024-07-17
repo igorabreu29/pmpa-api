@@ -1,7 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { makeUser } from "test/factories/make-user.ts";
-import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { makeUserCourse } from "test/factories/make-user-course.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
 import { makePole } from "test/factories/make-pole.ts";
 import { FetchCourseStudentsUseCase } from "./fetch-course-students.ts";
@@ -13,7 +10,6 @@ import { makeStudent } from "test/factories/make-student.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { makeCourse } from "test/factories/make-course.ts";
-import { makeCoursePole } from "test/factories/make-course-pole.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
@@ -25,7 +21,13 @@ let sut: FetchCourseStudentsUseCase
 
 describe(('Fetch Course Students Use Case'), () => {
   beforeEach(() => {
-    studentsRepository = new InMemoryStudentsRepository()
+    studentsRepository = new InMemoryStudentsRepository(
+      studentsCoursesRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
+    
     coursesRepository = new InMemoryCoursesRepository()
     studentsPolesRepository = new InMemoryStudentsPolesRepository()
     polesRepository = new InMemoryPolesRepository()
@@ -55,9 +57,9 @@ describe(('Fetch Course Students Use Case'), () => {
     const pole3 = makePole()
     polesRepository.createMany([pole1, pole2, pole3])
 
-    const student1 = makeStudent({ username: 'student-1' })
-    const student2 = makeStudent({ username: 'student-2' })
-    const student3 = makeStudent({ username: 'student-3' })
+    const student1 = makeStudent()
+    const student2 = makeStudent()
+    const student3 = makeStudent()
     studentsRepository.create(student1)
     studentsRepository.create(student2)
     studentsRepository.create(student3)
@@ -85,25 +87,25 @@ describe(('Fetch Course Students Use Case'), () => {
     expect(result.value).toMatchObject({
       students: [
         {
-          username: 'student-1',
+          username: student1.username.value,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           poleId: pole1.id,
-          pole: pole1.name
+          pole: pole1.name.value
         },
         {
-          username: 'student-2',
+          username: student2.username.value,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           poleId: pole2.id,
-          pole: pole2.name
+          pole: pole2.name.value
         },
         {
-          username: 'student-3',
+          username: student3.username.value,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           poleId: pole3.id,
-          pole: pole3.name
+          pole: pole3.name.value
         },
       ]
     })
@@ -117,7 +119,7 @@ describe(('Fetch Course Students Use Case'), () => {
     polesRepository.create(pole)
 
     for (let i = 1; i <= 8; i++) {
-      const student = makeStudent({ username: `student-${i}` })
+      const student = makeStudent()
       const studentCourse = makeStudentCourse({ courseId: course.id, studentId: student.id })
       const studentPole = makeStudentPole({ studentId: studentCourse.id, poleId: pole.id })
       studentsRepository.create(student)

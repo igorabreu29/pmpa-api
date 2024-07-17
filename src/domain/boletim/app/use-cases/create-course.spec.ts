@@ -1,34 +1,67 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { CreateCourseUseCase } from "./create-course.ts";
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { makeCourse } from "test/factories/make-course.ts";
+import { InMemoryCoursesPolesRepository } from "test/repositories/in-memory-courses-poles-repository.ts";
+import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
 
 let coursesRepository: InMemoryCoursesRepository
+let coursesPolesRepository: InMemoryCoursesPolesRepository
+let coursesDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let sut: CreateCourseUseCase
 
 describe('Create Course Use Case', () => {
   beforeEach(() => {
+    vi.useFakeTimers()
+
     coursesRepository = new InMemoryCoursesRepository()
+    coursesPolesRepository = new InMemoryCoursesPolesRepository()
+    coursesDisciplinesRepository = new InMemoryCoursesDisciplinesRepository()
     sut = new CreateCourseUseCase(
-      coursesRepository
+      coursesRepository,
+      coursesPolesRepository,
+      coursesDisciplinesRepository
     )
   })
-  
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it ('should not be able to course user with name already existing', async () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
-    const result = await sut.execute({ formule: course.formule, imageUrl: course.imageUrl, name: course.name, endsAt: new Date() })
+    const result = await sut.execute({ formule: course.formule, imageUrl: course.imageUrl, name: course.name.value, endsAt: new Date(), disciplines: [], poleIds: [] })
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)
   })
 
   it ('should be able to create course', async () => {
-    const result = await sut.execute({ formule: 'module', imageUrl: 'random-url', name: 'CFP - 2024', endsAt: new Date() })
-    
+    vi.setSystemTime('2022-1-2')
+
+    const result = await sut.execute({ 
+      formule: 'module', 
+      imageUrl: 'random-url', 
+      name: 'CFP - 2024', 
+      endsAt: new Date('2023'),
+      disciplines: [
+        {
+          id: 'discipline-1',
+          expected: 'VF',
+          hours: 30,
+          module: 1,
+          weight: 1
+        }
+      ], 
+      poleIds: ['pole-1', 'pole-2'] 
+    })
+
     expect(result.isRight()).toBe(true)
     expect(coursesRepository.items).toHaveLength(1)
+    expect(coursesDisciplinesRepository.items).toHaveLength(1)
+    expect(coursesPolesRepository.items).toHaveLength(2)
   })
 })

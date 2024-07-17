@@ -1,12 +1,12 @@
 import { Either, left, right } from "@/core/either.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { Role } from "@/domain/boletim/enterprise/entities/user.ts";
 import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
 import { classifyStudentsByModuleFormule, classifyStudentsByPeriodFormule } from "../utils/generate-students-classification.ts";
 import { StudentClassficationByModule, StudentClassficationByPeriod } from "../types/generate-students-classification.js";
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts";
 import { PolesRepository } from "../repositories/poles-repository.ts";
+import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts";
 
 interface GetCourseClassificationByPoleUseCaseRequest {
   courseId: string
@@ -19,10 +19,10 @@ type GetCourseClassificationByPoleUseCaseResponse = Either<ResourceNotFoundError
 }>
 
 export class GetCourseClassificationByPoleUseCase {
-  constructor(
+  constructor ( 
     private coursesRepository: CoursesRepository,
     private polesRepository: PolesRepository,
-    private studentsCoursesRepository: StudentsCoursesRepository,
+    private studentsPolesRepository: StudentsPolesRepository,
     private getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
   ) {}
 
@@ -33,7 +33,7 @@ export class GetCourseClassificationByPoleUseCase {
     const pole = await this.polesRepository.findById(poleId)
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
-    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyByCourseIdAndPoleIdWithCourseAndPole({ courseId, poleId, page, perPage: 30 })
+    const { studentsPole: students } = await this.studentsPolesRepository.findManyByPoleId({ poleId, page, perPage: 30 })
 
     const studentsWithAverage = await Promise.all(students.map(async (student) => {
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({

@@ -10,12 +10,12 @@ export class InMemoryManagersRepository implements ManagersRepository {
   }
 
   async findByCPF(cpf: string): Promise<Manager | null> {
-    const manager = this.items.find(item => item.cpf === cpf)
+    const manager = this.items.find(item => item.cpf.value === cpf)
     return manager ?? null
   }
 
   async findByEmail(email: string): Promise<Manager | null> {
-    const manager = this.items.find(item => item.email === email)
+    const manager = this.items.find(item => item.email.value === email)
     return manager ?? null
   }
 

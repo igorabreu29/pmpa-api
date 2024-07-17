@@ -19,7 +19,12 @@ let sut: FetchStudentCoursesUseCase
 
 describe('Fetch Student Courses Use Case', () => {
   beforeEach(() => {
-    studentsRepository = new InMemoryStudentsRepository()
+    studentsRepository = new InMemoryStudentsRepository(
+      studentsCoursesRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
     coursesRepository = new InMemoryCoursesRepository()
     studentsPolesRepository = new InMemoryStudentsPolesRepository()
     polesRepository = new InMemoryPolesRepository()
@@ -72,12 +77,12 @@ describe('Fetch Student Courses Use Case', () => {
         {
           studentId: student.id,
           courseId: course1.id,
-          course: course1.name,
+          course: course1.name.value,
         },
         {
           studentId: student.id,
           courseId: course2.id,
-          course: course2.name,
+          course: course2.name.value,
         },
       ]
     })

@@ -12,4 +12,10 @@ export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesR
   async create(courseDiscipline: CourseDiscipline): Promise<void> {
     this.items.push(courseDiscipline)
   }
+
+  async createMany(coursesDisciplines: CourseDiscipline[]): Promise<void> {
+    coursesDisciplines.forEach(courseDiscipline => {
+      this.items.push(courseDiscipline)
+    })
+  }
 }

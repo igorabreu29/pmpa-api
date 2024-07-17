@@ -19,7 +19,6 @@ import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-stu
 import { makeStudent } from 'test/factories/make-student.ts'
 import { makeStudentCourse } from 'test/factories/make-student-course.ts'
 import { makeStudentPole } from 'test/factories/make-student-pole.ts'
-import { GetCourseClassificationUseCase } from './get-course-classification.ts'
 import { GetCourseClassificationByPoleUseCase } from './get-course-classification-by-pole.ts'
 
 interface MakeGetStudentAverageInTheCourseUseCase {
@@ -33,12 +32,12 @@ export function makeGetStudentAverageInTheCourseUseCase({ assessmentsRepository,
   const discipline2 = makeDiscipline()
   const discipline3 = makeDiscipline()
 
-  const assessment1 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-1'), poleId: new UniqueEntityId('pole-1'), vf: 7, disciplineId: discipline1.id })
-  const assessment2 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-1'), poleId: new UniqueEntityId('pole-1'), vf: 9, disciplineId: discipline2.id })
-  const assessment3 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-1'), poleId: new UniqueEntityId('pole-1'), vf: 8.5, disciplineId: discipline3.id })
-  const assessment4 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-2'), poleId: new UniqueEntityId('pole-1'), vf: 7.2, disciplineId: discipline1.id })
-  const assessment5 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-2'), poleId: new UniqueEntityId('pole-1'), vf: 6.6, disciplineId: discipline2.id })
-  const assessment6 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-2'), poleId: new UniqueEntityId('pole-1'), vf: 10, disciplineId: discipline3.id })
+  const assessment1 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-1'), vf: 7, disciplineId: discipline1.id })
+  const assessment2 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-1'), vf: 9, disciplineId: discipline2.id })
+  const assessment3 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-1'), vf: 8.5, disciplineId: discipline3.id })
+  const assessment4 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-2'), vf: 7.2, disciplineId: discipline1.id })
+  const assessment5 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-2'), vf: 6.6, disciplineId: discipline2.id })
+  const assessment6 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-2'), vf: 10, disciplineId: discipline3.id })
   assessmentsRepository.createMany([assessment1, assessment2, assessment3, assessment4, assessment5, assessment6])
 
   const behavior1 = makeBehavior({ january: 5, february: 7, march: 10, april: 7, may: 4.5, jun: 5.75, studentId: new UniqueEntityId('student-1'), poleId: new UniqueEntityId('pole-1'), courseId: new UniqueEntityId('course-1') })
@@ -74,14 +73,24 @@ let sut: GetCourseClassificationByPoleUseCase
 
 describe('Get Classfication Course By Pole Use Case', () => {
   beforeEach(() => {
-    studentsRepository = new InMemoryStudentsRepository()
-    coursesRepository = new InMemoryCoursesRepository ()
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
-    polesRepository = new InMemoryPolesRepository()
+    studentsRepository = new InMemoryStudentsRepository(
+      studentsCoursesRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
+
     studentsCoursesRepository = new InMemoryStudentsCoursesRepository(
       studentsRepository,
       coursesRepository,
       studentsPolesRepository,
+      polesRepository
+    )
+    coursesRepository = new InMemoryCoursesRepository ()
+    polesRepository = new InMemoryPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
       polesRepository
     )
 
@@ -97,7 +106,7 @@ describe('Get Classfication Course By Pole Use Case', () => {
     sut = new GetCourseClassificationByPoleUseCase (
       coursesRepository,
       polesRepository,
-      studentsCoursesRepository,
+      studentsPolesRepository,
       getStudentAverageInTheCourseUseCase
     )
   })
@@ -129,8 +138,7 @@ describe('Get Classfication Course By Pole Use Case', () => {
     coursesRepository.create(course)
 
     const pole1 = makePole({}, new UniqueEntityId('pole-1'))
-    const pole2 = makePole()
-    polesRepository.createMany([pole1, pole2])
+    polesRepository.createMany([pole1])
 
     const student1 = makeStudent({}, new UniqueEntityId('student-1'))
     const student2 = makeStudent({}, new UniqueEntityId('student-2'))

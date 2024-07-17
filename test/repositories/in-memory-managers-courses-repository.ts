@@ -17,6 +17,11 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
     private polesRepository: InMemoryPolesRepository
   ) {}
 
+  async findByCourseId({ courseId }: { courseId: string; }): Promise<ManagerCourse | null> {
+    const managerCourse = this.items.find(item => item.courseId.toValue() === courseId)
+    return managerCourse ?? null
+  }
+
   async findByManagerIdAndCourseId({ managerId, courseId }: { managerId: string; courseId: string; }): Promise<ManagerCourse | null> {
     const studentCourse = this.items.find(item => item.managerId.toValue() === managerId && item.courseId.toValue() === courseId)
     return studentCourse ?? null
@@ -60,14 +65,14 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
         
         return ManagerWithCourseAndPole.create({
           managerId: manager.id,
-          username: manager.username,
-          email: manager.email,
-          cpf: manager.cpf,
+          username: manager.username.value,
+          email: manager.email.value,
+          cpf: manager.cpf.value,
           assignedAt: manager.createdAt,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           poleId: pole.id,
-          pole: pole.name
+          pole: pole.name.value
         })
       })
 
@@ -109,12 +114,12 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
 
         return ManagerWithCourse.create({
           managerId: manager.id,
-          username: manager.username,
-          cpf: manager.cpf,
-          email: manager.email,
+          username: manager.username.value,
+          cpf: manager.cpf.value,
+          email: manager.email.value,
           assignedAt: manager.createdAt,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           imageUrl: course.imageUrl
         })
       })

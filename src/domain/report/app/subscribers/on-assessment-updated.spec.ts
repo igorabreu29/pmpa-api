@@ -1,29 +1,40 @@
-import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
-import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
-import { InMemoryReportsRepository } from 'test/repositories/in-memory-reports-repository.ts'
-import { describe, it, expect, beforeEach, MockInstance, vi } from 'vitest'
-import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
-import { InMemoryUsersCourseRepository } from 'test/repositories/in-memory-users-course-repository.ts'
+import { makeAssessment } from 'test/factories/make-assessment.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
 import { makeDiscipline } from 'test/factories/make-discipline.ts'
-import { makeAssessment } from 'test/factories/make-assessment.ts'
-import { InMemoryAssessmentsRepository } from 'test/repositories/in-memory-assessments-repository.ts'
-import { waitFor } from 'test/utils/wait-for.ts'
-import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
-import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repository.ts'
-import { InMemoryUserPolesRepository } from 'test/repositories/in-memory-user-poles-repository.ts'
-import { makeUser } from 'test/factories/make-user.ts'
 import { makePole } from 'test/factories/make-pole.ts'
-import { OnAssessmentDeleted } from './on-assessment-deleted.ts'
+import { InMemoryAssessmentsRepository } from 'test/repositories/in-memory-assessments-repository.ts'
+import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
+import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
+import { InMemoryManagersCoursesRepository } from 'test/repositories/in-memory-managers-courses-repository.ts'
+import { InMemoryManagersPolesRepository } from 'test/repositories/in-memory-managers-poles-repository.ts'
+import { InMemoryManagersRepository } from 'test/repositories/in-memory-managers-repository.ts'
+import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
+import { InMemoryReportsRepository } from 'test/repositories/in-memory-reports-repository.ts'
+import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-students-courses-repository.ts'
+import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository.ts'
+import { waitFor } from 'test/utils/wait-for.ts'
+import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
+import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
 import { OnAssessmentUpdated } from './on-assessment-updated.ts'
+import { makeManagerCourse } from 'test/factories/make-manager-course.ts'
+import { makeManager } from 'test/factories/make-manager.ts'
+import { makeStudent } from 'test/factories/make-student.ts'
+import { InMemoryReportersRepository } from 'test/repositories/in-memory-reporters-repository.ts'
+import { makeReporter } from 'test/factories/make-reporter.ts'
+import { AssessmentEvent } from '@/domain/boletim/enterprise/events/assessment-event.ts'
 
-let usersCoursesRepository: InMemoryUsersCourseRepository
-let usersPolesRepository: InMemoryUserPolesRepository
-let usersRepository: InMemoryUsersRepository
+let studensCoursesRepository: InMemoryStudentsCoursesRepository
+let studentsPolesRepository: InMemoryStudentsPolesRepository
 let polesRepository: InMemoryPolesRepository
+
+let studentsRepository: InMemoryStudentsRepository
+let reportersRepository: InMemoryReportersRepository
+let coursesRepository: InMemoryCoursesRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
-let reportsRepository: InMemoryReportsRepository
 let assessmentsRepository: InMemoryAssessmentsRepository
+
+let reportsRepository: InMemoryReportsRepository
 let sendReportUseCase: SendReportUseCase
 
 let sendReportExecuteSpy: MockInstance<
@@ -33,15 +44,26 @@ let sendReportExecuteSpy: MockInstance<
 
 describe('On Assessment Created', () => {
   beforeEach(() => {
-    usersCoursesRepository = new InMemoryUsersCourseRepository()
-    usersPolesRepository = new InMemoryUserPolesRepository()
-    usersRepository = new InMemoryUsersRepository(
-      usersCoursesRepository,
-      usersPolesRepository,
+    studensCoursesRepository = new InMemoryStudentsCoursesRepository(
+      studentsRepository,
+      coursesRepository,
+      studentsPolesRepository,
       polesRepository
     )
+
+    coursesRepository = new InMemoryCoursesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository()
     polesRepository = new InMemoryPolesRepository()
+
+    studentsRepository = new InMemoryStudentsRepository(
+      studensCoursesRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
+    reportersRepository = new InMemoryReportersRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
+
     reportsRepository = new InMemoryReportsRepository()
     assessmentsRepository = new InMemoryAssessmentsRepository()
 
@@ -52,25 +74,32 @@ describe('On Assessment Created', () => {
     sendReportExecuteSpy = vi.spyOn(sendReportUseCase, 'execute')
 
     new OnAssessmentUpdated (
-      usersRepository,
-      polesRepository,
+      studentsRepository,
+      reportersRepository,
+      coursesRepository,
+      disciplinesRepository,
       sendReportUseCase
     )
   })
 
   it ('should send a report when an assessment is created', async () => {
     const course = makeCourse()
-    const user = makeUser()
-    const pole = makePole()
     const discipline = makeDiscipline()
+    const student = makeStudent()
+    const reporter = makeReporter()
 
-    usersRepository.create(user)
-    polesRepository.create(pole)
+    coursesRepository.create(course)
     disciplinesRepository.create(discipline)
+    studentsRepository.create(student)
+    reportersRepository.items.push(reporter)
 
-    const assessment = makeAssessment({ courseId: course.id, disciplineId: discipline.id, studentId: user.id, poleId: pole.id })
-    assessmentsRepository.create(assessment)
+    const assessment = makeAssessment({ courseId: course.id, studentId: student.id, disciplineId: discipline.id })
+    assessment.addDomainAssessmentEvent(new AssessmentEvent({ assessment, reporterId: reporter.id.toValue(), reporterIp: '' }))
 
+    assessment.vf = 10
+
+    assessmentsRepository.update(assessment)
+    
     await waitFor(() => {
       expect(sendReportExecuteSpy).toHaveBeenCalled()
     })

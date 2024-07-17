@@ -2,21 +2,32 @@ import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Optional } from "@/core/types/optional.ts";
 
+export type TypeAction  = 'add' | 'remove' | 'update' | 'login confirmed'
+
 interface ReportProps {
-  userId: string
+  reporterId: string
   title: string
   content: string
-  IP: string
+  ip: string
   createdAt: Date
+  action: TypeAction
 } 
 
 export class Report extends Entity<ReportProps> {
+  get reporterId() {
+    return this.props.reporterId
+  }
+
   get title() {
     return this.props.title
   }
 
   get content() {
     return this.props.content
+  }
+
+  get ip() {
+    return this.props.ip
   }
   
   get createdAt() {

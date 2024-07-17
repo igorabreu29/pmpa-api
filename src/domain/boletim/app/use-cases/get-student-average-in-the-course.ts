@@ -59,7 +59,7 @@ export class GetStudentAverageInTheCourseUseCase {
 }: GetStudentAverageInTheCourseUseCaseRequest): Promise<GetStudentAverageInTheCourseUseCaseResponse> {
     const assessments = await this.assessmentsRepository.findManyByStudentIdAndCourseId({
       studentId,
-      studentCourseId: courseId
+      courseId
     })
     
     const behaviors = await this.behaviorsRepository.findManyByStudentIdAndCourseId({ studentId, courseId })

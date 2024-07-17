@@ -2,14 +2,16 @@ import { EventHandler } from "@/core/events/event-handler.ts";
 import { SendReportUseCase } from "../use-cases/send-report.ts";
 import { DomainEvents } from "@/core/events/domain-events.ts";
 import { DisciplinesRepository } from "@/domain/boletim/app/repositories/disiciplines-repository.ts";
-import { PolesRepository } from "@/domain/boletim/app/repositories/poles-repository.ts";
-import { UsersRepository } from "@/domain/boletim/app/repositories/users-repository.ts";
 import { AssessmentEvent } from "@/domain/boletim/enterprise/events/assessment-event.ts";
+import { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
+import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-repository.ts";
+import { ReportersRepository } from "../repositories/reporters-repository.ts";
 
 export class OnAssessmentDeleted implements EventHandler {
   constructor (
-    private usersRepository: UsersRepository,
-    private poleRepository: PolesRepository,
+    private studentsRepository: StudentsRepository,
+    private reportersRepository: ReportersRepository,
+    private coursesRepository: CoursesRepository,
     private disciplinesRepository: DisciplinesRepository,
     private sendReport: SendReportUseCase
   ) {
@@ -18,19 +20,32 @@ export class OnAssessmentDeleted implements EventHandler {
 
   setupSubscriptions(): void {
     DomainEvents.register(
-      this.sendNewAssessmentReport.bind(this),
+      this.sendDeleteAssessmentReport.bind(this),
       AssessmentEvent.name
     )
   }
 
-  private async sendNewAssessmentReport({ assessment }: AssessmentEvent) {
-    const user = await this.usersRepository.findById(assessment.studentId.toValue())
-    const pole = await this.poleRepository.findById(assessment.poleId.toValue())
+  private async sendDeleteAssessmentReport({ assessment, reporterId, reporterIp, ocurredAt }: AssessmentEvent) {
+    const course = await this.coursesRepository.findById(assessment.courseId.toValue())
+    const discipline = await this.disciplinesRepository.findById(assessment.disciplineId.toValue())
+    const reporter = await this.reportersRepository.findById({ id: reporterId })
+    const student = await this.studentsRepository.findById(assessment.studentId.toValue())
 
-    if (pole) {
+    if (course && discipline && reporter && student) {
       await this.sendReport.execute({
-        title: `Removeu notas`,
-        content: `${pole?.managerName} removeu as notas do estudante: ${user?.username}`,
+        title: `Notas removidas`,
+        content: `
+          IP: ${reporterIp} \n
+          Course: ${course.name.value} \n
+          Disciplina: ${discipline.name} \n
+          Remetente: ${reporter.username.value} \n
+          Estudante: ${student.username.value} \n
+          Data: ${ocurredAt} \n
+          ${reporter.username.value} removeu notas do aluno: ${student.username.value}
+        `,
+        ip: reporterIp,
+        reporterId: reporter.id.toValue(),
+        action: 'remove'
       })
     }
   }

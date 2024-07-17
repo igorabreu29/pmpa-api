@@ -4,7 +4,6 @@ import { InMemoryCoursesRepository } from "./in-memory-courses-repository.ts";
 import { StudentCourseWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/student-course-with-course.ts";
 import { StudentWithCourseAndPole } from "@/domain/boletim/enterprise/entities/value-objects/student-with-course-and-pole.ts";
 import { InMemoryStudentsRepository } from "./in-memory-students-repository.ts";
-import { StudentsPolesRepository } from "@/domain/boletim/app/repositories/students-poles-repository.ts";
 import { InMemoryPolesRepository } from "./in-memory-poles-repository.ts";
 import { InMemoryStudentsPolesRepository } from "./in-memory-students-poles-repository.ts";
 
@@ -48,7 +47,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
           studentCourseId: studentCourse.id,
           studentId: studentCourse.studentId,
           courseId: studentCourse.courseId,
-          course: course.name,
+          course: course.name.value,
           courseImageUrl: course.imageUrl        
         })
       })
@@ -58,6 +57,46 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
 
     return {
       studentCourses,
+      pages,
+      totalItems: allStudentCourses.length
+    }
+  }
+
+  async findManyByCourseIdWithCourse ({ 
+    courseId, 
+    page, 
+    perPage 
+  }: { 
+    courseId: string
+    page: number
+    perPage: number
+  }): Promise<{ 
+    studentsCourse: StudentCourseWithCourse[]
+    pages: number
+    totalItems: number
+  }> {
+    const allStudentCourses = this.items
+      .filter(item => {
+        return item.courseId.toValue() === courseId
+      })
+      .map(studentCourse => {
+        const course = this.coursesRepository.items.find(item => item.id.equals(studentCourse.courseId))
+        if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist.`) 
+
+        return StudentCourseWithCourse.create({
+          studentCourseId: studentCourse.id,
+          studentId: studentCourse.studentId,
+          courseId: studentCourse.courseId,
+          course: course.name.value,
+          courseImageUrl: course.imageUrl        
+        })
+      })
+
+    const studentsCourse = allStudentCourses.slice((page - 1) * perPage, page * perPage)
+    const pages = Math.ceil(allStudentCourses.length / perPage)
+
+    return {
+      studentsCourse,
       pages,
       totalItems: allStudentCourses.length
     }
@@ -101,16 +140,16 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
 
         return StudentWithCourseAndPole.create({
           studentId: student.id,
-          username: student.username,
-          cpf: student.cpf,
-          email: student.email,
-          birthday: student.birthday,
-          civilID: student.documents?.civilID ? student.documents.civilID: 0,
+          username: student.username.value,
+          cpf: student.cpf.value,
+          email: student.email.value,
+          birthday: student.birthday.value,
+          civilID: student.civilId ? student.civilId: 0,
           assignedAt: student.createdAt,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           poleId: pole.id,
-          pole: pole.name,
+          pole: pole.name.value,
         })
       })
 
@@ -166,16 +205,16 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
 
         return StudentWithCourseAndPole.create({
           studentId: student.id,
-          username: student.username,
-          cpf: student.cpf,
-          email: student.email,
-          birthday: student.birthday,
-          civilID: student.documents?.civilID ? student.documents.civilID: 0,
+          username: student.username.value,
+          cpf: student.cpf.value,
+          email: student.email.value,
+          birthday: student.birthday.value,
+          civilID: student.civilId ? student.civilId : 0,
           assignedAt: student.createdAt,
           courseId: course.id,
-          course: course.name,
+          course: course.name.value,
           poleId: pole.id,
-          pole: pole.name
+          pole: pole.name.value
         })
       })
 
@@ -191,5 +230,11 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
 
   async create(studentCourse: StudentCourse): Promise<void> {
     this.items.push(studentCourse)
+  }
+
+  async createMany(studentsCourses: StudentCourse[]): Promise<void> {
+    studentsCourses.forEach(studentCourse => {
+      this.items.push(studentCourse)
+    })
   }
 }

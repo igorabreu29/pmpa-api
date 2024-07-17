@@ -1,21 +1,32 @@
 import { Entity } from "@/core/entities/entity.ts"
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
 import { Optional } from "@/core/types/optional.ts"
+import { Name } from "./value-objects/name.ts"
+import { Email } from "./value-objects/email.ts"
+import { CPF } from "./value-objects/cpf.ts"
+import { Birthday } from "./value-objects/birthday.ts"
+import { Password } from "./value-objects/password.ts"
+import { Either, right } from "@/core/either.ts"
+import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
+import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts"
+import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts"
+import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts"
+import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts"
 
 export type AdministratorRole = 'admin'
 
 interface AdministratorProps {
-  username: string
-  email: string
-  passwordHash: string
-  cpf: string
+  username: Name
+  email: Email
+  passwordHash: Password
+  cpf: CPF
   role: AdministratorRole
   active: boolean
   avatarUrl?: string | null
   createdAt: Date
 
   civilID: number
-  birthday: Date
+  birthday: Birthday
 }
 
 
@@ -81,13 +92,25 @@ export class Administrator extends Entity<AdministratorProps> {
     return this.props.createdAt
   }
 
-  static create(props: Optional<AdministratorProps, 'createdAt' | 'role' | 'active'>, id?: UniqueEntityId) {
-    return new Administrator({
+  static create(
+    props: Optional<AdministratorProps, 'createdAt' | 'role' | 'active'>, 
+    id?: UniqueEntityId
+  ): Either<
+      | InvalidNameError
+      | InvalidCPFError
+      | InvalidBirthdayError
+      | InvalidEmailError
+      | InvalidPasswordError,
+      Administrator
+    > {
+    const administrator = new Administrator({
       ...props,
       createdAt: props.createdAt ?? new Date(),
       avatarUrl: props.avatarUrl ?? null,
       role: props.role ?? 'admin',
       active: props.active ?? true
     }, id)
+
+    return right(administrator)
   }
 }

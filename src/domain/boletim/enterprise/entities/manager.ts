@@ -1,21 +1,32 @@
 import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Optional } from "@/core/types/optional.ts";
+import { Name } from "./value-objects/name.ts";
+import { Email } from "./value-objects/email.ts";
+import { Password } from "./value-objects/password.ts";
+import { CPF } from "./value-objects/cpf.ts";
+import { Birthday } from "./value-objects/birthday.ts";
+import { Either, right } from "@/core/either.ts";
+import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
+import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
+import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
+import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
+import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 
 export type ManagerRole = 'manager'
 
 interface ManagerProps {
-  username: string
-  email: string
-  passwordHash: string
-  cpf: string
+  username: Name
+  email: Email
+  passwordHash: Password
+  cpf: CPF
   role: ManagerRole
   active: boolean
   avatarUrl?: string | null
   createdAt: Date
 
-  civilID?: number
-  birthday: Date
+  civilID: number
+  birthday: Birthday
 }
 
 export class Manager extends Entity<ManagerProps> {
@@ -80,13 +91,25 @@ export class Manager extends Entity<ManagerProps> {
     return this.props.createdAt
   }
 
-  static create(props: Optional<ManagerProps, 'createdAt' | 'role' | 'active'>, id?: UniqueEntityId) {
-    return new Manager({
+  static create(
+    props: Optional<ManagerProps, 'createdAt' | 'role' | 'active'>, 
+    id?: UniqueEntityId
+  ): Either<
+      | InvalidNameError
+      | InvalidCPFError
+      | InvalidBirthdayError
+      | InvalidEmailError
+      | InvalidPasswordError,
+      Manager
+    > {
+    const manager = new Manager({
       ...props,
       createdAt: props.createdAt ?? new Date(),
       active: props.active ?? true,
       avatarUrl: props.avatarUrl ?? null,
       role: props.role ?? 'manager'
     }, id)
+
+    return right(manager)
   }
 }

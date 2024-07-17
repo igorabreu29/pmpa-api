@@ -1,14 +1,23 @@
 import { Entity } from "@/core/entities/entity.ts"
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
 import { Optional } from "@/core/types/optional.ts"
+import { Name } from "./value-objects/name.ts"
+import { Email } from "./value-objects/email.ts"
+import { Password } from "./value-objects/password.ts"
+import { CPF } from "./value-objects/cpf.ts"
+import { Either, right } from "@/core/either.ts"
+import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts"
+import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts"
+import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
+import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts"
 
 export type DeveloperRole = 'dev'
 
 interface DeveloperProps {
-  username: string
-  email: string
-  passwordHash: string
-  cpf: string
+  username: Name
+  email: Email
+  passwordHash: Password
+  cpf: CPF
   role: DeveloperRole
   active: boolean
   avatarUrl?: string | null
@@ -63,13 +72,24 @@ export class Developer extends Entity<DeveloperProps> {
     return this.props.createdAt
   }
 
-  static create(props: Optional<DeveloperProps, 'createdAt' | 'role' | 'active'>, id?: UniqueEntityId) {
-    return new Developer({
+  static create(
+    props: Optional<DeveloperProps, 'createdAt' | 'role' | 'active'>, 
+    id?: UniqueEntityId
+  ): Either<
+      | InvalidNameError
+      | InvalidCPFError
+      | InvalidEmailError
+      | InvalidPasswordError,
+      Developer
+    > {
+    const developer = new Developer({
       ...props,
       createdAt: props.createdAt ?? new Date(),
       avatarUrl: props.avatarUrl ?? null,
       role: props.role ?? 'dev',
       active: props.active ?? true
     }, id)
+
+    return right(developer)
   }
 }

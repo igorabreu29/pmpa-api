@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
 import { InMemoryAssessmentsRepository } from "test/repositories/in-memory-assessments-repository.ts";
 import { InMemoryBehaviorsRepository } from "test/repositories/in-memory-behaviors-repository.ts";
-import { makeUser } from "test/factories/make-user.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { makeAssessment } from "test/factories/make-assessment.ts";
 import { makeBehavior } from "test/factories/make-behavior.ts";
@@ -10,6 +9,7 @@ import { makeCourseDiscipline } from "test/factories/make-course-discipline.ts";
 import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
+import { makeStudent } from "test/factories/make-student.ts";
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
@@ -30,7 +30,7 @@ describe(('Get Student Average In The Course Use Case'), () => {
 
   it ('should not be able to obtain student average if the course does not have module', async () => {
     const course = makeCourse()
-    const student = makeUser({ role: 'student' })
+    const student = makeStudent()
     const discipline1 = makeDiscipline()
     const discipline2 = makeDiscipline()
 
@@ -58,7 +58,7 @@ describe(('Get Student Average In The Course Use Case'), () => {
 
   it ('should be able to get student average with module formule', async () => {
     const course = makeCourse()
-    const student = makeUser({ role: 'student' })
+    const student = makeStudent()
     const discipline1 = makeDiscipline()
     const discipline2 = makeDiscipline()
 
@@ -109,7 +109,7 @@ describe(('Get Student Average In The Course Use Case'), () => {
 
   it ('should be able to get student average with period formule', async () => {
     const course = makeCourse({ formule: 'period' })
-    const student = makeUser({ role: 'student' })
+    const student = makeStudent()
     const discipline1 = makeDiscipline()
     const discipline2 = makeDiscipline()
 

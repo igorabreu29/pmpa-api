@@ -143,7 +143,6 @@ describe('Generate Students Classification', () => {
     ]
 
     const result = classifyStudentsByPeriodFormule(studentsWithAverage) 
-    console.log(result[0])
 
     expect(result).toMatchObject([
       {
@@ -157,7 +156,7 @@ describe('Generate Students Classification', () => {
     ])
   })
 
-  it.skip ('should be able to generate students classification by course module formule', () => {
+  it ('should be able to generate students classification by course module formule', () => {
     const behaviorMonths = [
       {
         august: 7,
@@ -253,7 +252,6 @@ describe('Generate Students Classification', () => {
     ]
 
     const result = classifyStudentsByModuleFormule(studentsWithAverage) 
-    console.log(result)
 
     expect(result).toMatchObject([
       {

@@ -17,6 +17,7 @@ export function makeBehavior(
     may: faker.number.int(1),
     jun: faker.number.int(1),
     currentYear: new Date().getFullYear(),
+    userIp: '',
     ...override
   }, id)
 }

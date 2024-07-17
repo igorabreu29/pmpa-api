@@ -12,4 +12,10 @@ export class InMemoryCoursesPolesRepository implements CoursesPoleRepository {
   async create(coursePole: CoursePole): Promise<void> {
     this.items.push(coursePole)
   }
+
+  async createMany(coursesPoles: CoursePole[]): Promise<void> {
+    coursesPoles.forEach(coursePole => {
+      this.items.push(coursePole)
+    })
+  }
 }

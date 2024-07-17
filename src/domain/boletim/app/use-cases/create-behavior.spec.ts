@@ -4,13 +4,23 @@ import { CreateBehaviorUseCase } from "./create-behavior.ts";
 import { InMemoryBehaviorsRepository } from "test/repositories/in-memory-behaviors-repository.ts";
 import { makeBehavior } from "test/factories/make-behavior.ts";
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
-import { InMemoryUsersCourseRepository } from "test/repositories/in-memory-users-course-repository.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
+import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts";
+import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
+import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
+import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
+import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
+import { makePole } from "test/factories/make-pole.ts";
+import { makeStudent } from "test/factories/make-student.ts";
+
+let studentsCoursesRepository: InMemoryStudentsCoursesRepository
+let studentsPolesRepository: InMemoryStudentsPolesRepository
 
 let behaviorsRepository: InMemoryBehaviorsRepository
-let usersCoursesRepository: InMemoryUsersCourseRepository
 let coursesRepository: InMemoryCoursesRepository
+let polesRepository: InMemoryPolesRepository
+let studentsRepository: InMemoryStudentsRepository
 let sut: CreateBehaviorUseCase
 
 describe(('Create Behavior Use Case'), () => {
@@ -18,11 +28,19 @@ describe(('Create Behavior Use Case'), () => {
     vi.useFakeTimers()
 
     behaviorsRepository = new InMemoryBehaviorsRepository()
-    usersCoursesRepository = new InMemoryUsersCourseRepository()
     coursesRepository = new InMemoryCoursesRepository ()
+    polesRepository = new InMemoryPolesRepository()
+    studentsRepository = new InMemoryStudentsRepository(
+      studentsCoursesRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
     sut = new CreateBehaviorUseCase(
       behaviorsRepository,
-      coursesRepository
+      coursesRepository,
+      polesRepository,
+      studentsRepository
     )
   })
 
@@ -32,10 +50,49 @@ describe(('Create Behavior Use Case'), () => {
 
   it ('should not be able to create behavior if course does not exist', async () => {
     const result = await sut.execute({
-      studentId: 'student-1',
-      courseId: 'course-1',
+      studentId: '',
+      courseId: 'not-found',
       poleId: '',
-      currentYear: 2025
+      currentYear: 2025,
+      userIp: '',
+      userId: ''
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+  })
+  
+  it ('should not be able to create behavior if pole does not exist', async () => {
+    const course = makeCourse()
+    coursesRepository.create(course)
+
+    const result = await sut.execute({
+      studentId: 'student-1',
+      courseId: course.id.toValue(),
+      poleId: '',
+      currentYear: 2025,
+      userIp: '',
+      userId: ''
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+  })
+
+  it ('should not be able to create behavior if student does not exist', async () => {
+    const course = makeCourse()
+    coursesRepository.create(course)
+
+    const pole = makePole()
+    polesRepository.create(pole)
+
+    const result = await sut.execute({
+      studentId: 'student-1',
+      courseId: course.id.toValue(),
+      poleId: pole.id.toValue(),
+      currentYear: 2025,
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -45,14 +102,25 @@ describe(('Create Behavior Use Case'), () => {
   it ('should not be able to create behavior if course has been finished', async () => {
     vi.setSystemTime(new Date('2023-1-5'))
 
-    const course = makeCourse({ endsAt: new Date('2022') })
+    const endsAtOrError = EndsAt.create(new Date('2023-1-4'))
+    if (endsAtOrError.isLeft()) return
+
+    const course = makeCourse({ endsAt: endsAtOrError.value })
     coursesRepository.create(course)
 
+    const pole = makePole()
+    polesRepository.create(pole)
+
+    const student = makeStudent()
+    studentsRepository.create(student)
+
     const result = await sut.execute({
-      studentId: 'student-1',
+      studentId: student.id.toValue(),
       courseId: course.id.toValue(),
-      poleId: '',
-      currentYear: 2025
+      poleId: pole.id.toValue(),
+      currentYear: 2025,
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -63,11 +131,22 @@ describe(('Create Behavior Use Case'), () => {
     const behavior = makeBehavior()
     behaviorsRepository.create(behavior)
 
+    const course = makeCourse()
+    coursesRepository.create(course)
+
+    const pole = makePole()
+    polesRepository.create(pole)
+
+    const student = makeStudent()
+    studentsRepository.create(student)
+
     const result = await sut.execute({
       studentId: behavior.studentId.toValue(),
       courseId: behavior.courseId.toValue(),
       poleId: '',
-      currentYear: behavior.currentYear
+      currentYear: behavior.currentYear,
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -75,16 +154,23 @@ describe(('Create Behavior Use Case'), () => {
   })
 
   it ('should be able to create behavior', async () => {
-    vi.setSystemTime(new Date('2023-1-5'))
-
-    const course = makeCourse({ endsAt: new Date('2025') })
+    const course = makeCourse()
     coursesRepository.create(course)
 
+    const pole = makePole()
+    polesRepository.create(pole)
+
+    const student = makeStudent()
+    studentsRepository.create(student)
+
+
     const result = await sut.execute({
-      studentId: 'user-1',
+      studentId: student.id.toValue(),
       courseId: course.id.toValue(),
-      poleId: 'pole-1',
-      currentYear: new Date().getFullYear()
+      poleId: pole.id.toValue(),
+      currentYear: new Date().getFullYear(),
+      userIp: '',
+      userId: 'manager-1'
     })
 
     expect(result.isRight()).toBe(true)

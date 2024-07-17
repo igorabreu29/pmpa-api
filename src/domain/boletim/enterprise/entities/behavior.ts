@@ -1,7 +1,7 @@
 import { AggregateRoot } from "@/core/entities/aggregate-root.ts";
-import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { BehaviorCreatedEvent } from "../events/behavior-created-event.ts";
+import { BehaviorCreatedEvent } from "../events/behavior-event.ts";
+import { DomainEvent } from "@/core/events/domain-event.ts";
 
 interface BehaviorProps {
   studentId: UniqueEntityId
@@ -123,14 +123,12 @@ export class Behavior extends AggregateRoot<BehaviorProps> {
     return this.props.currentYear
   }
 
+  public addDomainBehaviorEvent(domainEvent: DomainEvent): void {
+    this.addDomainEvent(domainEvent)
+  }
+
   static create(props: BehaviorProps, id?: UniqueEntityId) {
     const behavior = new Behavior(props, id)
-
-    const isNewBehavior = !id
-    if (isNewBehavior) {
-      behavior.addDomainEvent(new BehaviorCreatedEvent(behavior))
-    }
-
     return behavior
   }
 }

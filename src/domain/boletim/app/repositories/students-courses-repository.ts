@@ -17,6 +17,21 @@ export abstract class StudentsCoursesRepository {
     pages: number
     totalItems: number
   }>
+
+  abstract findManyByCourseIdWithCourse({
+    courseId,
+    page,
+    perPage
+  }: {
+    courseId: string
+    page: number
+    perPage: number
+  }): Promise<{
+    studentsCourse: StudentCourseWithCourse[],
+    pages: number
+    totalItems: number
+  }>
+
   abstract findManyByCourseIdWithCourseAndPole({
     courseId,
     page,
@@ -46,4 +61,5 @@ export abstract class StudentsCoursesRepository {
     totalItems: number
   }>
   abstract create(studentCourse: StudentCourse): Promise<void>
+  abstract createMany(studentsCourses: StudentCourse[]): Promise<void>
 }

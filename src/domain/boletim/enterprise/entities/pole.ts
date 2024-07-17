@@ -1,8 +1,11 @@
 import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import { Name } from "./value-objects/name.ts";
+import { Either, right } from "@/core/either.ts";
+import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 
 interface PoleProps {
-  name: string
+  name: Name
 }
 
 export class Pole extends Entity<PoleProps> {
@@ -10,7 +13,12 @@ export class Pole extends Entity<PoleProps> {
     return this.props.name
   }
 
-  static create(props: PoleProps, id?: UniqueEntityId) {
-    return new Pole(props, id)
+  static create(
+    props: PoleProps,
+    id?: UniqueEntityId
+  ): Either<InvalidNameError, Pole> {
+    const pole = new Pole(props, id)
+
+    return right(pole)
   }
 }

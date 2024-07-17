@@ -1,40 +1,52 @@
+import { AggregateRoot } from "@/core/entities/aggregate-root.ts";
 import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Optional } from "@/core/types/optional.ts";
+import { Either, right } from "@/core/either.ts";
+import { Email } from "./value-objects/email.ts";
+import { CPF } from "./value-objects/cpf.ts";
+import { Password } from "./value-objects/password.ts";
+import { Birthday } from "./value-objects/birthday.ts";
+import { Name } from "./value-objects/name.ts";
+import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
+import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
+import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
+import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
+import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
+import { StudentLoginConfirmedEvent } from "../events/student-login-confirmed-event.ts";
 
 export type StudentRole = 'student'
 
 interface Parent {
-  motherName: string | undefined
-  fatherName: string | undefined
-}
-
-interface Document {
-  militaryID?: number
-  civilID?: number
+  motherName: string
+  fatherName?: string
 }
 
 interface StudentProps {
-  username: string
-  email: string
-  passwordHash: string
-  cpf: string
+  username: Name
+  email: Email
+  passwordHash: Password
+  cpf: CPF
   role: StudentRole
   active: boolean
   avatarUrl?: string | null
-  birthday: Date 
+  birthday: Birthday 
   createdAt: Date
 
-  loginConfirmation: boolean
+  isLoginConfirmed: boolean
 
   parent?: Parent
-  documents?: Document
+  
+  civilId: number
+  militaryId?: number
 
   state?: string
   county?: string
+
+  ip?: string
 }
 
-export class Student extends Entity<StudentProps> {
+export class Student extends AggregateRoot<StudentProps> {
   get username() {
     return this.props.username
   }
@@ -56,7 +68,7 @@ export class Student extends Entity<StudentProps> {
     this.props.passwordHash = value
   }
 
-  get cpf() {
+  get cpf(){
     return this.props.cpf
   }
 
@@ -85,11 +97,15 @@ export class Student extends Entity<StudentProps> {
     this.props.active = value
   }
 
-  get loginConfirmation() {
-    return this.props.loginConfirmation
+  get isLoginConfirmed() {
+    return this.props.isLoginConfirmed
   }
-  set loginConfirmation(value) {
-    this.props.loginConfirmation = value
+  set isLoginConfirmed(value) {
+    if (!this.props.isLoginConfirmed && this.props.ip) {
+      this.addDomainEvent(new StudentLoginConfirmedEvent({ student: this, studentIp: this.props.ip }))
+    }
+
+    this.props.isLoginConfirmed = value
   }
 
   get parent() {
@@ -99,11 +115,18 @@ export class Student extends Entity<StudentProps> {
     this.props.parent = value
   }
 
-  get documents() {
-    return this.props.documents
+  get civilId() {
+    return this.props.civilId
   }
-  set documents(value) {
-    this.props.documents = value
+  set civilId(value) {
+    this.props.civilId = value
+  }
+
+  get militaryId() {
+    return this.props.militaryId
+  }
+  set militaryId(value) {
+    this.props.militaryId = value
   }
 
   get state() {
@@ -124,14 +147,33 @@ export class Student extends Entity<StudentProps> {
     return this.props.createdAt
   }
 
-  static create(props: Optional<StudentProps, 'createdAt' | 'loginConfirmation' | 'role' | 'active'>, id?: UniqueEntityId) {
-    return new Student({
+  get ip() {
+    return this.props.ip
+  }
+  set ip(value) {
+    this.props.ip = value
+  }
+
+  static create(
+    props: Optional<StudentProps, 'createdAt' | 'isLoginConfirmed' | 'role' | 'active'>, 
+    id?: UniqueEntityId): Either<
+      | InvalidEmailError
+      | InvalidCPFError
+      | InvalidBirthdayError
+      | InvalidNameError 
+      | InvalidPasswordError,
+      Student
+    > {
+
+    const student = new Student({
       ...props,
       createdAt: props.createdAt ?? new Date(),
       avatarUrl: props.avatarUrl ?? null,
-      loginConfirmation: props.loginConfirmation ?? false,
+      isLoginConfirmed: props.isLoginConfirmed ?? false,
       role: props.role ?? 'student',
       active: props.active ?? true
     }, id)
+
+    return right(student)
   }
 }

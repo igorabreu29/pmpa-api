@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { ChangeManagerStatusUseCase } from "./change-manager-status.ts";
-import { makeManager } from "test/factories/make-manager.ts";
 import { InMemoryAdministratorsRepository } from "test/repositories/in-memory-administrators-repository.ts";
 import { ChangeAdministratorStatusUseCase } from "./change-administrator-status.ts";
 import { makeAdministrator } from "test/factories/make-administrator.ts";

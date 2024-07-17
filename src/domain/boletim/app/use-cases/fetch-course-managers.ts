@@ -1,8 +1,6 @@
 import { Either, left, right } from "@/core/either.ts"
-import { StudentWithCourseAndPole } from "../../enterprise/entities/value-objects/student-with-course-and-pole.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
-import { ManagersRepository } from "../repositories/managers-repository.ts"
 import { ManagerWithCourseAndPole } from "../../enterprise/entities/value-objects/manager-with-course-and-pole.ts"
 import { ManagersCoursesRepository } from "../repositories/managers-courses-repository.ts"
 

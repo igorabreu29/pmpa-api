@@ -17,7 +17,7 @@ export class GetStudentAssessmentsUseCase {
   ) {}
 
   async execute({ courseId, studentId }: GetStudentAssessmentsUseCaseRequest): Promise<GetStudentAssessmentsUseCaseResponse> {
-    const assessments = await this.assessmentsRepository.findManyByStudentIdAndCourseId({ studentId, studentCourseId: courseId })
+    const assessments = await this.assessmentsRepository.findManyByStudentIdAndCourseId({ studentId, courseId })
     return right({ assessments })
   }
 }

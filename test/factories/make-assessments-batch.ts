@@ -10,7 +10,9 @@ export function makeAssessmentBatch (
     userId: new UniqueEntityId(),
     courseId: new UniqueEntityId(),
     assessments: [],
-    userIP: faker.internet.ip(),
+    userIp: faker.internet.ip(),
+    fileLink: faker.internet.url(),
+    fileName: faker.lorem.slug(),
     ...override
-  })
+  }, id)
 }

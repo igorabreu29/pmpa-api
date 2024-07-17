@@ -10,12 +10,12 @@ export class InMemoryAdministratorsRepository implements AdministratorsRepositor
   }
 
   async findByCPF(cpf: string): Promise<Administrator | null> {
-    const admin = this.items.find(item => item.cpf === cpf)
+    const admin = this.items.find(item => item.cpf.value === cpf)
     return admin ?? null
   }
 
   async findByEmail(email: string): Promise<Administrator | null> {
-    const admin = this.items.find(item => item.email === email)
+    const admin = this.items.find(item => item.email.value === email)
     return admin ?? null
   }
 
