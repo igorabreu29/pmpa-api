@@ -1,19 +1,17 @@
 import { Either, left, right } from "@/core/either.ts";
-import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { BehaviorsRepository } from "../repositories/behaviors-repository.ts";
+import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { Behavior } from "@/domain/boletim/enterprise/entities/behavior.ts";
-import { ConflictError } from "./errors/conflict-error.ts";
-import { CoursesRepository } from "../repositories/courses-repository.ts";
 import dayjs from "dayjs";
-import { PolesRepository } from "../repositories/poles-repository.ts";
-import { StudentsRepository } from "../repositories/students-repository.ts";
 import { BehaviorEvent } from "../../enterprise/events/behavior-event.ts";
+import { BehaviorsRepository } from "../repositories/behaviors-repository.ts";
+import { CoursesRepository } from "../repositories/courses-repository.ts";
+import { StudentsRepository } from "../repositories/students-repository.ts";
+import { ConflictError } from "./errors/conflict-error.ts";
 
 interface CreateBehaviorUseCaseRequest {
   studentId: string
   courseId: string
-  poleId: string
   january?: number | null
   february?: number | null
   march?: number | null
@@ -37,14 +35,12 @@ export class CreateBehaviorUseCase {
   constructor(
     private behaviorsRepository: BehaviorsRepository,
     private coursesRepository: CoursesRepository,
-    private polesRepository: PolesRepository,
     private studentsRepository: StudentsRepository
   ) {}
 
   async execute({
     studentId,
     courseId,
-    poleId,
     january, 
     february,
     march,
@@ -63,14 +59,11 @@ export class CreateBehaviorUseCase {
   }: CreateBehaviorUseCaseRequest): Promise<CreateBehaviorUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
-      
-    const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
+    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
+      
     const student = await this.studentsRepository.findById(studentId)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
-    
-    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
 
     const behaviorAlreadyAdded = await this.behaviorsRepository.findByStudentIdAndCourseId({ studentId, courseId }) 
     if (behaviorAlreadyAdded) return left(new ResourceNotFoundError('Behaviors already exist.'))
@@ -78,7 +71,6 @@ export class CreateBehaviorUseCase {
     const behavior = Behavior.create({
       studentId: new UniqueEntityId(studentId),
       courseId: new UniqueEntityId(courseId),
-      poleId: new UniqueEntityId(poleId),
       january,
       february,
       march,

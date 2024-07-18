@@ -39,7 +39,6 @@ describe(('Create Behavior Use Case'), () => {
     sut = new CreateBehaviorUseCase(
       behaviorsRepository,
       coursesRepository,
-      polesRepository,
       studentsRepository
     )
   })
@@ -52,7 +51,6 @@ describe(('Create Behavior Use Case'), () => {
     const result = await sut.execute({
       studentId: '',
       courseId: 'not-found',
-      poleId: '',
       currentYear: 2025,
       userIp: '',
       userId: ''
@@ -69,7 +67,6 @@ describe(('Create Behavior Use Case'), () => {
     const result = await sut.execute({
       studentId: 'student-1',
       courseId: course.id.toValue(),
-      poleId: '',
       currentYear: 2025,
       userIp: '',
       userId: ''
@@ -89,7 +86,6 @@ describe(('Create Behavior Use Case'), () => {
     const result = await sut.execute({
       studentId: 'student-1',
       courseId: course.id.toValue(),
-      poleId: pole.id.toValue(),
       currentYear: 2025,
       userIp: '',
       userId: ''
@@ -108,16 +104,9 @@ describe(('Create Behavior Use Case'), () => {
     const course = makeCourse({ endsAt: endsAtOrError.value })
     coursesRepository.create(course)
 
-    const pole = makePole()
-    polesRepository.create(pole)
-
-    const student = makeStudent()
-    studentsRepository.create(student)
-
     const result = await sut.execute({
-      studentId: student.id.toValue(),
+      studentId: 'student-1',
       courseId: course.id.toValue(),
-      poleId: pole.id.toValue(),
       currentYear: 2025,
       userIp: '',
       userId: ''
@@ -143,7 +132,6 @@ describe(('Create Behavior Use Case'), () => {
     const result = await sut.execute({
       studentId: behavior.studentId.toValue(),
       courseId: behavior.courseId.toValue(),
-      poleId: '',
       currentYear: behavior.currentYear,
       userIp: '',
       userId: ''
@@ -157,17 +145,12 @@ describe(('Create Behavior Use Case'), () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
-    const pole = makePole()
-    polesRepository.create(pole)
-
     const student = makeStudent()
     studentsRepository.create(student)
-
 
     const result = await sut.execute({
       studentId: student.id.toValue(),
       courseId: course.id.toValue(),
-      poleId: pole.id.toValue(),
       currentYear: new Date().getFullYear(),
       userIp: '',
       userId: 'manager-1'

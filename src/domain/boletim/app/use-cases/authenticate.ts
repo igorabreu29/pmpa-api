@@ -1,8 +1,8 @@
 import { Either, left, right } from "@/core/either.ts"
-import { InvalidCredentialsError } from "./errors/invalid-credentials-error.ts"
-import { AuthenticatesRepository } from "../repositories/authenticates-repository.ts"
-import { Hasher } from "../cryptography/hasher.ts"
 import { Encrypter } from "../cryptography/encrypter.ts"
+import { Hasher } from "../cryptography/hasher.ts"
+import { AuthenticatesRepository } from "../repositories/authenticates-repository.ts"
+import { InvalidCredentialsError } from "./errors/invalid-credentials-error.ts"
 
 interface AuthenticateUseCaseRequest {
   cpf: string

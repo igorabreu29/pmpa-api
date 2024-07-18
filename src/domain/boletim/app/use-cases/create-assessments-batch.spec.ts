@@ -11,12 +11,14 @@ import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repos
 import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
 import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CreateAssessmentsBatchUseCase } from "./create-assessments-batch.ts";
 import { makeStudent } from "test/factories/make-student.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { makePole } from "test/factories/make-pole.ts";
+import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts";
+import { ConflictError } from "./errors/conflict-error.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -29,8 +31,10 @@ let assessmentsRepository: InMemoryAssessmentsRepository
 let assessmentsBatchRepository: InMemoryAssessmentsBatchRepository
 let sut: CreateAssessmentsBatchUseCase
 
-describe('Create Students Batch Use Case', () => {
+describe('Create Assessments Batch Use Case', () => {
   beforeEach(() => {
+    vi.useFakeTimers()
+
     studentsCoursesRepository = new InMemoryStudentsCoursesRepository (
       studentsRepository,
       coursesRepository,
@@ -38,7 +42,11 @@ describe('Create Students Batch Use Case', () => {
       polesRepository
     )
 
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      polesRepository,
+    )
     polesRepository = new InMemoryPolesRepository()    
   
     coursesRepository = new InMemoryCoursesRepository()
@@ -62,11 +70,37 @@ describe('Create Students Batch Use Case', () => {
     )
   })
 
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it ('should not be able to create assessments batch if course does not exist', async () => {
     const result = await sut.execute({ studentAssessments: [], courseId: 'not-found', userIp: '', userId: '', fileLink: '', fileName: '' })
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+  })
+
+  it ('should not be able to create behavior if course has been finished', async () => {
+    vi.setSystemTime(new Date('2023-1-5'))
+
+    const endsAtOrError = EndsAt.create(new Date('2023-1-4'))
+    if (endsAtOrError.isLeft()) return
+
+    const course = makeCourse({ endsAt: endsAtOrError.value })
+    coursesRepository.create(course)
+
+    const result = await sut.execute({
+      courseId: course.id.toValue(),
+      fileLink: '',
+      fileName: '',
+      studentAssessments: [],
+      userIp: '',
+      userId: ''
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ConflictError)
   })
 
   it ('should not be able to create assessments batch if student does not exist.', async () => {

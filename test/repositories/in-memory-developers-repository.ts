@@ -23,4 +23,9 @@ export class InMemoryDevelopersRepository implements DevelopersRepository {
   async create(developer: Developer): Promise<void> {
     this.items.push(developer)
   }
+
+  async save(developer: Developer): Promise<void> {
+    const developerIndex = this.items.findIndex(item => item.equals(developer))
+    this.items[developerIndex] = developer
+  }
 }

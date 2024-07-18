@@ -55,6 +55,9 @@ export class Administrator extends Entity<AdministratorProps> {
   get cpf() {
     return this.props.cpf
   }
+  set cpf(value) {
+    this.props.cpf = value
+  }
 
   get avatarUrl() {
     return this.props.avatarUrl

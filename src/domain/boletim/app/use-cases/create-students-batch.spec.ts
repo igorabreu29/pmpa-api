@@ -33,7 +33,11 @@ describe('Create Students Batch Use Case', () => {
 
     polesRepository = new InMemoryPolesRepository()
     coursesRepository = new InMemoryCoursesRepository()
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      polesRepository
+    )
 
     studentsRepository = new InMemoryStudentsRepository(
       studentsCoursesRepository,

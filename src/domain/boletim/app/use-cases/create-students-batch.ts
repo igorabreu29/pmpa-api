@@ -2,6 +2,7 @@ import { Either, left, right } from "@/core/either.ts"
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
+import { StudentBatch } from "../../enterprise/entities/student-batch.ts"
 import { StudentCourse } from "../../enterprise/entities/student-course.ts"
 import { StudentPole } from "../../enterprise/entities/student-pole.ts"
 import { Student } from "../../enterprise/entities/student.ts"
@@ -13,11 +14,10 @@ import { Password } from "../../enterprise/entities/value-objects/password.ts"
 import { Hasher } from "../cryptography/hasher.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { PolesRepository } from "../repositories/poles-repository.ts"
+import { StudentsBatchRepository } from "../repositories/students-batch-repository.ts"
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts"
 import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts"
 import { StudentsRepository } from "../repositories/students-repository.ts"
-import { StudentBatch } from "../../enterprise/entities/student-batch.ts"
-import { StudentsBatchRepository } from "../repositories/students-batch-repository.ts"
 
 interface StudentCreated {
   student: Student
@@ -139,6 +139,9 @@ export class CreateStudentsBatchUseCase {
         passwordHash: passwordOrError.value,
         civilId: student.civilId,
         birthday: birthdayOrError.value,
+        parent: {
+          motherName: ''
+        }
       })
       if (studentOrError.isLeft()) return studentOrError.value
       const studentCreated = studentOrError.value

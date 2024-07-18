@@ -1,7 +1,5 @@
 import { Either, left, right } from "@/core/either.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
-import { ManagersRepository } from "../repositories/managers-repository.ts";
 import { AdministratorsRepository } from "../repositories/administrators-repository.ts";
 
 interface ChangeAdministratorStatusUseCaseRequest {

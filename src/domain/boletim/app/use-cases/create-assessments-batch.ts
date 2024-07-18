@@ -10,6 +10,7 @@ import { AssessmentsBatchRepository } from "../repositories/assessments-batch-re
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
 import { ConflictError } from "./errors/conflict-error.ts"
 import { StudentsRepository } from "../repositories/students-repository.ts"
+import dayjs from "dayjs"
 
 interface Error {
   name: string
@@ -49,6 +50,7 @@ export class CreateAssessmentsBatchUseCase {
   async execute({ studentAssessments, courseId, userIp, userId, fileLink, fileName }: CreateAssessmentsBatchUseCaseRequest): Promise<CreateAssessmentsBatchUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
 
     const errors: Error[] = []
     const assessments: Assessment[] = []

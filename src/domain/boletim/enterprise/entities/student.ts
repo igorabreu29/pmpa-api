@@ -35,7 +35,7 @@ interface StudentProps {
 
   isLoginConfirmed: boolean
 
-  parent?: Parent
+  parent: Parent
   
   civilId: number
   militaryId?: number

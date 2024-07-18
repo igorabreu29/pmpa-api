@@ -61,7 +61,8 @@ describe(('Create Assessment Use Case'), () => {
       vfe: null,
       avi: null,
       avii: null,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -83,7 +84,8 @@ describe(('Create Assessment Use Case'), () => {
       vfe: null,
       avi: null,
       avii: null,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
     
     expect(result.isLeft()).toBe(true)
@@ -108,7 +110,8 @@ describe(('Create Assessment Use Case'), () => {
       vfe: null,
       avi: null,
       avii: null,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -141,7 +144,8 @@ describe(('Create Assessment Use Case'), () => {
       vfe: null,
       avi: null,
       avii: null,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -171,7 +175,8 @@ describe(('Create Assessment Use Case'), () => {
       vfe: null,
       avi: null,
       avii: null,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -198,7 +203,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: -1,
       avii: null,
       vfe: null,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -225,7 +231,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: 5,
       avii: -1,
       vfe: null,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -252,7 +259,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: null,
       avii: null,
       vfe: -1,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -279,7 +287,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: null,
       avii: 10,
       vfe: null,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -307,7 +316,8 @@ describe(('Create Assessment Use Case'), () => {
       vfe: null,
       avi: null,
       avii: null,
-      userIp: ''
+      userIp: '',
+      userId: ''
     })
 
     expect(result.isRight()).toBe(true)

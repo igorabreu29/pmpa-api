@@ -1,12 +1,10 @@
 import { AggregateRoot } from "@/core/entities/aggregate-root.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { BehaviorCreatedEvent } from "../events/behavior-event.ts";
 import { DomainEvent } from "@/core/events/domain-event.ts";
 
 interface BehaviorProps {
   studentId: UniqueEntityId
   courseId: UniqueEntityId
-  poleId: UniqueEntityId
   january?: number | null
   february?: number | null
   march?: number | null
@@ -29,10 +27,6 @@ export class Behavior extends AggregateRoot<BehaviorProps> {
 
   get courseId() {
     return this.props.courseId
-  }
-
-  get poleId() {
-    return this.props.poleId
   }
 
   get january() {

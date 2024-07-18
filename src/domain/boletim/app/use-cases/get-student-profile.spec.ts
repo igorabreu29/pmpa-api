@@ -23,7 +23,11 @@ describe('Get Student Profile Use Case', () => {
   beforeEach(() => {
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      polesRepository
+    )
 
     studentsCoursesRepository = new InMemoryStudentsCoursesRepository (
       studentsRepository,
@@ -44,7 +48,7 @@ describe('Get Student Profile Use Case', () => {
     )
   })
 
-  it ('should not be able to get student profile if his does not exist.', async () => {
+  it ('should not be able to get student profile does not exist.', async () => {
     const result = await sut.execute({
       id: 'student-not-found'
     })

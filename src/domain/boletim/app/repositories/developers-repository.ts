@@ -5,4 +5,5 @@ export abstract class DevelopersRepository {
   abstract findByCPF(cpf: string): Promise<Developer | null>
   abstract findByEmail(email: string): Promise<Developer | null>
   abstract create(developer: Developer): Promise<void>
+  abstract save(developer: Developer): Promise<void>
 }

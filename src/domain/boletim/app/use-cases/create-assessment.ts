@@ -47,13 +47,13 @@ export class CreateAssessmentUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
+    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
+
     const discipline = await this.disciplinesRepository.findById(disciplineId)
     if (!discipline) return left(new ResourceNotFoundError('Discipline not found.'))
 
     const student = await this.studentsRepository.findById(studentId)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
-
-    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
 
     const assessmentAlreadyAdded = await this.assessmentsRepository.findByStudentIdAndCourseId({ studentId, courseId }) 
     if (assessmentAlreadyAdded) return left(new ResourceNotFoundError('Assessment already exist.'))
@@ -73,7 +73,7 @@ export class CreateAssessmentUseCase {
     assessment.addDomainAssessmentEvent(new AssessmentEvent({
       assessment,
       reporterId: userId,
-      userIp
+      reporterIp: userIp
     }))
 
     await this.assessmentsRepository.create(assessment)   
