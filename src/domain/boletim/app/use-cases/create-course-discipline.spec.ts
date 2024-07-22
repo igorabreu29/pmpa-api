@@ -3,7 +3,6 @@ import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-r
 import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { CreateCourseDiscipline } from './create-course-discipline.ts'
-import { InMemoryUsersCourseRepository } from 'test/repositories/in-memory-users-course-repository.ts'
 import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found-error.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
 import { makeDiscipline } from 'test/factories/make-discipline.ts'
@@ -33,8 +32,7 @@ describe('Create Course Discipline', () => {
       disciplineId: '',
       expected: 'VF',
       hours: 0,
-      module: 0,
-      weight: 0
+      module: 0
     })
 
     expect(result.isLeft()).toBe(true)
@@ -50,8 +48,7 @@ describe('Create Course Discipline', () => {
       disciplineId: '',
       expected: 'VF',
       hours: 0,
-      module: 0,
-      weight: 0
+      module: 0
     })
 
     expect(result.isLeft()).toBe(true)
@@ -73,8 +70,7 @@ describe('Create Course Discipline', () => {
       disciplineId: discipline.id.toValue(),
       expected: 'VF',
       hours: 0,
-      module: 0,
-      weight: 0
+      module: 0
     })
 
     expect(result.isLeft()).toBe(true)
@@ -93,8 +89,7 @@ describe('Create Course Discipline', () => {
       disciplineId: discipline.id.toValue(),
       expected: 'VF',
       hours: 0,
-      module: 0,
-      weight: 0
+      module: 0
     })
 
     expect(result.isRight()).toBe(true)

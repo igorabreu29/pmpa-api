@@ -12,7 +12,6 @@ interface CreateCourseDisciplineRequest {
   module: number
   hours: number
   expected: string
-  weight: number
 }
 
 type CreateCourseDisciplineResponse = Either<ResourceNotFoundError | ResourceAlreadyExistError, null>
@@ -29,8 +28,7 @@ export class CreateCourseDiscipline {
     disciplineId,
     expected,
     hours,
-    module,
-    weight
+    module
   }: CreateCourseDisciplineRequest): Promise<CreateCourseDisciplineResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
@@ -46,8 +44,7 @@ export class CreateCourseDiscipline {
       disciplineId: discipline.id,
       expected,
       hours,
-      module,
-      weight
+      module
     })
     await this.coursesDisciplinesRepository.create(courseDiscipline)
 

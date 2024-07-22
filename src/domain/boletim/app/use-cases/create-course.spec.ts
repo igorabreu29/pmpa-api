@@ -29,11 +29,11 @@ describe('Create Course Use Case', () => {
     vi.useRealTimers()
   })
 
-  it ('should not be able to course user with name already existing', async () => {
+  it ('should not be able to course user with name already exist', async () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
-    const result = await sut.execute({ formule: course.formule, imageUrl: course.imageUrl, name: course.name.value, endsAt: new Date(), disciplines: [], poleIds: [] })
+    const result = await sut.execute({ formula: course.formula, imageUrl: course.imageUrl, name: course.name.value, endsAt: new Date(), disciplines: [], poleIds: [] })
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)
@@ -43,7 +43,7 @@ describe('Create Course Use Case', () => {
     vi.setSystemTime('2022-1-2')
 
     const result = await sut.execute({ 
-      formule: 'module', 
+      formula: 'CAS', 
       imageUrl: 'random-url', 
       name: 'CFP - 2024', 
       endsAt: new Date('2023'),
@@ -52,8 +52,7 @@ describe('Create Course Use Case', () => {
           id: 'discipline-1',
           expected: 'VF',
           hours: 30,
-          module: 1,
-          weight: 1
+          module: 1
         }
       ], 
       poleIds: ['pole-1', 'pole-2'] 
