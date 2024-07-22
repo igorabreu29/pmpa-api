@@ -1,5 +1,4 @@
-import { Formule } from "@/domain/boletim/enterprise/entities/course.ts";
-import { formuleType } from "./get-behavior-average-by-course-formule.ts";
+import { formulaType } from "./get-behavior-average-by-course-formula.ts"
 
 export interface BehaviorMonths {
   january?: number | null
@@ -18,10 +17,10 @@ export interface BehaviorMonths {
 
 export interface GenerateBehaviorAverageProps {
   behaviorMonths: BehaviorMonths[]
-  formule: Formule
+  isPeriod?: boolean
 }
 
-export function generateBehaviorAverage({ behaviorMonths, formule }: GenerateBehaviorAverageProps) {
+export function generateBehaviorAverage({ behaviorMonths, isPeriod = false }: GenerateBehaviorAverageProps) {
   const behaviorMonthsNotes: (number | null)[] = []
 
   for (const behaviorMonth of behaviorMonths) {
@@ -31,9 +30,5 @@ export function generateBehaviorAverage({ behaviorMonths, formule }: GenerateBeh
     behaviorMonthsNotes.push(...notes)
   }
 
-  if (formule === 'module') {
-    return formuleType['module']({ behaviorMonthsNotes })
-  }
-
-  return formuleType['period']({ behaviorMonthsNotes })
+  return formulaType[isPeriod ? 'period' : 'module']({ behaviorMonthsNotes })
 }

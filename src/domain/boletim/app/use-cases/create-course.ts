@@ -1,7 +1,7 @@
 import { Either, left, right } from "@/core/either.ts"
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
-import { Course, Formule } from "@/domain/boletim/enterprise/entities/course.ts"
+import { Course, Formula } from "@/domain/boletim/enterprise/entities/course.ts"
 import { CoursesPoleRepository } from "../repositories/courses-poles-repository.ts"
 import { CoursesDisciplinesRepository } from "../repositories/courses-disciplines-repository.ts"
 import { CoursePole } from "../../enterprise/entities/course-pole.ts"
@@ -12,7 +12,7 @@ import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts"
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
 
 interface CreateCourseUseCaseRequest {
-  formule: Formule
+  formula: Formula
   name: string
   imageUrl: string
   modules?: number
@@ -24,7 +24,6 @@ interface CreateCourseUseCaseRequest {
     expected: string
     hours: number
     module: number
-    weight: number
   }[]
 }
 
@@ -41,7 +40,7 @@ export class CreateCourseUseCase {
     private coursesDisciplinesRepository: CoursesDisciplinesRepository
   ) {}
 
-  async execute({ formule, name, imageUrl, modules, periods, endsAt, poleIds, disciplines }: CreateCourseUseCaseRequest): Promise<CreateCourseUseCaseResponse> {
+  async execute({ formula, name, imageUrl, modules, periods, endsAt, poleIds, disciplines }: CreateCourseUseCaseRequest): Promise<CreateCourseUseCaseResponse> {
     const courseAlreadyExist = await this.coursesRepository.findByName(name)
     if (courseAlreadyExist) return left(new ResourceAlreadyExistError('Course already present on the platform.'))
 
@@ -52,7 +51,7 @@ export class CreateCourseUseCase {
     if (endsAtOrError.isLeft()) return left(endsAtOrError.value)
 
     const courseOrError = Course.create({
-      formule, 
+      formula, 
       name: nameOrError.value, 
       imageUrl, 
       active: "enabled", 

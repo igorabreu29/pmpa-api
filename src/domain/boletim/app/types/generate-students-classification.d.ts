@@ -1,6 +1,6 @@
 import { GenerateBehaviorStatus } from "../utils/get-behavior-average-status.ts";
 import { GetGeralStudentAverageStatusResponse } from "../utils/get-geral-student-average-status.ts";
-import { AssessmentWithModule } from "../utils/verify-formule.ts";
+import { AssessmentWithModule } from "../utils/verify-formula.ts";
 
 export interface StudentClassficationByPeriod {
   studentAverage: {

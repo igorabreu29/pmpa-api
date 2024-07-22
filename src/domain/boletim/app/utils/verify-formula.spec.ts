@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { formules } from "./verify-formule.ts";
+import { formulas } from "./verify-formula.ts";
 import { generateBehaviorAverage } from "./generate-behavior-average.ts";
 import { Status } from "./get-assessment-average-status.ts";
 
-describe('Verify Formules', () => {
-  describe("Period Formule", () => {
+describe('Verify Formulas', () => {
+  describe("Period Formula", () => {
     it ('should be able to receive inform about average', () => {
       const assessments = [
         {
@@ -76,9 +76,9 @@ describe('Verify Formules', () => {
           march: 9.5,
         },
       ]
-      const behaviorAverage = generateBehaviorAverage({ behaviorMonths, formule: 'period' })
+      const behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod: true })
   
-      const result = formules['period']({ 
+      const result = formulas['period']({ 
         assessments,
         behaviorAverage, 
       })
@@ -126,7 +126,7 @@ describe('Verify Formules', () => {
     })
   })
 
-  describe('Module Formule', () => {
+  describe('Module Formula', () => {
     it ('should be able to receive inform about average without behavior', () => {
       const assessments = [
         {
@@ -151,7 +151,7 @@ describe('Verify Formules', () => {
         },
       ]
 
-      const result = formules['module']({
+      const result = formulas['module']({
         assessments
       })
 
@@ -209,9 +209,9 @@ describe('Verify Formules', () => {
         },
       ]
 
-      const behaviorAverageStatus = generateBehaviorAverage({ behaviorMonths, formule: 'module' })
+      const behaviorAverageStatus = generateBehaviorAverage({ behaviorMonths })
 
-      const result = formules['module']({
+      const result = formulas['module']({
         assessments,
         behaviorAverage: behaviorAverageStatus
       })
