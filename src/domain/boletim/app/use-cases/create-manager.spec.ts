@@ -21,11 +21,16 @@ let polesRepository: InMemoryPolesRepository
 let hasher: FakeHasher
 let sut: CreateManagerUseCase
 
-describe('Create Manager In Course And Pole', () => {
+describe('Create Manager', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
-    managersRepository = new InMemoryManagersRepository()
+    managersRepository = new InMemoryManagersRepository(
+      managersCoursesRepository,
+      coursesRepository,
+      managersPolesRepository,
+      polesRepository
+    )
     managersPolesRepository = new InMemoryManagersPolesRepository()
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()

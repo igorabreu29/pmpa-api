@@ -19,7 +19,12 @@ let sut: FetchManagerCoursesUseCase
 
 describe('Fetch Manager Courses Use Case', () => {
   beforeEach(() => {
-    managersRepository = new InMemoryManagersRepository()
+    managersRepository = new InMemoryManagersRepository(
+      managersCoursesRepository,
+      coursesRepository,
+      managersPolesRepository,
+      polesRepository
+    )
     coursesRepository = new InMemoryCoursesRepository()
     managersPolesRepository = new InMemoryManagersPolesRepository()
     polesRepository = new InMemoryPolesRepository()

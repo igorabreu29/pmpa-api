@@ -1,8 +1,14 @@
+import { AssessmentEvent } from '@/domain/boletim/enterprise/events/assessment-event.ts'
 import { makeAssessment } from 'test/factories/make-assessment.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
+import { makeDiscipline } from 'test/factories/make-discipline.ts'
+import { makeReporter } from 'test/factories/make-reporter.ts'
+import { makeStudent } from 'test/factories/make-student.ts'
 import { InMemoryAssessmentsRepository } from 'test/repositories/in-memory-assessments-repository.ts'
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
+import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
 import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
+import { InMemoryReportersRepository } from 'test/repositories/in-memory-reporters-repository.ts'
 import { InMemoryReportsRepository } from 'test/repositories/in-memory-reports-repository.ts'
 import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-students-courses-repository.ts'
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
@@ -11,12 +17,6 @@ import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
 import { OnAssessmentCreated } from './on-assessment-created.ts'
-import { makeStudent } from 'test/factories/make-student.ts'
-import { InMemoryReportersRepository } from 'test/repositories/in-memory-reporters-repository.ts'
-import { makeReporter } from 'test/factories/make-reporter.ts'
-import { AssessmentEvent } from '@/domain/boletim/enterprise/events/assessment-event.ts'
-import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
-import { makeDiscipline } from 'test/factories/make-discipline.ts'
 
 let studensCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -46,7 +46,11 @@ describe('On Assessment Created', () => {
     )
 
     coursesRepository = new InMemoryCoursesRepository()
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studensCoursesRepository,
+      polesRepository
+    )
     polesRepository = new InMemoryPolesRepository()
 
     studentsRepository = new InMemoryStudentsRepository(

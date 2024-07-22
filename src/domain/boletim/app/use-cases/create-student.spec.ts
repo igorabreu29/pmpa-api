@@ -12,11 +12,6 @@ import { makeStudentCourse } from 'test/factories/make-student-course.ts'
 import { ResourceAlreadyExistError } from '@/core/errors/use-case/resource-already-exist-error.ts'
 import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-students-courses-repository.ts'
 import { CreateStudentUseCase } from './create-student.ts'
-import { InvalidNameError } from '@/core/errors/domain/invalid-name.ts'
-import { InvalidEmailError } from '@/core/errors/domain/invalid-email.ts'
-import { InvalidCPFError } from '@/core/errors/domain/invalid-cpf.ts'
-import { InvalidBirthdayError } from '@/core/errors/domain/invalid-birthday.ts'
-import { makeStudentPole } from 'test/factories/make-student-pole.ts'
 
 let studentsRepository: InMemoryStudentsRepository
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
@@ -30,7 +25,11 @@ describe('Create Student', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      polesRepository
+    )
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
     studentsCoursesRepository = new InMemoryStudentsCoursesRepository(

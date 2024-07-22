@@ -7,13 +7,11 @@ import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-s
 import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
-import { InMemoryCoursesPolesRepository } from "test/repositories/in-memory-courses-poles-repository.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
 let coursesRepository: InMemoryCoursesRepository
 let polesRepository: InMemoryPolesRepository
-let coursesPolesRepository: InMemoryCoursesPolesRepository
 let studentsRepository: InMemoryStudentsRepository
 let sut: ChangeStudentStatusUseCase
 
@@ -21,15 +19,20 @@ describe('Change Student Status Use Case', () => {
   beforeEach(() => {
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
-    coursesPolesRepository = new InMemoryCoursesPolesRepository()
     studentsCoursesRepository = new InMemoryStudentsCoursesRepository(
-      coursesRepository
+      studentsRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
     )
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      polesRepository
+    )
     studentsRepository = new InMemoryStudentsRepository(
       studentsCoursesRepository,
       coursesRepository,
-      coursesPolesRepository,
       studentsPolesRepository,
       polesRepository
     )

@@ -33,7 +33,11 @@ describe('On Assessment Batch Created', () => {
       polesRepository
     )
     coursesRepository = new InMemoryCoursesRepository()
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      polesRepository
+    )
     polesRepository = new InMemoryPolesRepository()
 
     studentsRepository = new InMemoryStudentsRepository(

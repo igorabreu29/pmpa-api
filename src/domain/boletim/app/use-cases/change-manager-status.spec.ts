@@ -3,13 +3,37 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { ChangeManagerStatusUseCase } from "./change-manager-status.ts";
 import { InMemoryManagersRepository } from "test/repositories/in-memory-managers-repository.ts";
 import { makeManager } from "test/factories/make-manager.ts";
+import { InMemoryManagersCoursesRepository } from "test/repositories/in-memory-managers-courses-repository.ts";
+import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
+import { InMemoryManagersPolesRepository } from "test/repositories/in-memory-managers-poles-repository.ts";
+import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
+
+let managersCoursesRepository: InMemoryManagersCoursesRepository
+let coursesRepository: InMemoryCoursesRepository
+let managersPolesRepository: InMemoryManagersPolesRepository
+let polesRepository: InMemoryPolesRepository
 
 let managersRepository: InMemoryManagersRepository
 let sut: ChangeManagerStatusUseCase
 
 describe('Change Manager Status Use Case', () => {
   beforeEach(() => {
-    managersRepository = new InMemoryManagersRepository()
+    managersCoursesRepository = new InMemoryManagersCoursesRepository(
+      managersRepository,
+      coursesRepository,
+      managersPolesRepository,
+      polesRepository
+    )
+    coursesRepository = new InMemoryCoursesRepository()
+    managersPolesRepository = new InMemoryManagersPolesRepository()
+    polesRepository = new InMemoryPolesRepository()
+
+    managersRepository = new InMemoryManagersRepository(
+      managersCoursesRepository,
+      coursesRepository,
+      managersPolesRepository,
+      polesRepository
+    )
     sut = new ChangeManagerStatusUseCase(managersRepository)
   })
 

@@ -29,7 +29,11 @@ describe(('Fetch Course Students Use Case'), () => {
     )
     
     coursesRepository = new InMemoryCoursesRepository()
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      polesRepository
+    )
     polesRepository = new InMemoryPolesRepository()
     studentsCoursesRepository = new InMemoryStudentsCoursesRepository (
       studentsRepository,

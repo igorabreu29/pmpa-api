@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { makeUserCourse } from "test/factories/make-user-course.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
 import { makePole } from "test/factories/make-pole.ts";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
@@ -23,7 +22,11 @@ let sut: FetchCourseStudentsByPole
 
 describe(('Fetch Course Students Per Pole Use Case'), () => {
   beforeEach(() => {
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      polesRepository
+    )
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
     studentsRepository = new InMemoryStudentsRepository (
