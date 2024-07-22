@@ -27,7 +27,7 @@ test('empty cpf', () => {
   expect(result.value).toBeInstanceOf(InvalidCPFError)
 })
 
-test('invalid cpf with length greater than 11', () => {
+test('invalid cpf with length greater than 14', () => {
   const result = CPF.create('000000000000000')
 
   expect(result.isLeft()).toBe(true)
