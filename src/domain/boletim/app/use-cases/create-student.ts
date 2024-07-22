@@ -154,7 +154,7 @@ export class CreateStudentUseCase {
       poleId: pole.id
     })
     await this.studentsPolesRepository.create(studentPole)
-
+  
     return right(null)
   }
 }
