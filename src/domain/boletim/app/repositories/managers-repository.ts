@@ -8,4 +8,5 @@ export abstract class ManagersRepository {
   abstract findByEmail(email: string): Promise<Manager | null>
   abstract create(manager: Manager): Promise<void>
   abstract save(manager: Manager): Promise<void>
+  abstract delete(manager: Manager): Promise<void>
 }

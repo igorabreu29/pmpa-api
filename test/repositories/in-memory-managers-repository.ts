@@ -55,7 +55,7 @@ export class InMemoryManagersRepository implements ManagersRepository {
     return ManagerDetails.create({
       managerId: manager.id,
       username: manager.username.value,
-      civilID: manager.civilID,
+      civilID: manager.civilId,
       assignedAt: manager.createdAt,
       birthday: manager.birthday.value,
       cpf: manager.cpf.value,
@@ -82,5 +82,20 @@ export class InMemoryManagersRepository implements ManagersRepository {
   async save(manager: Manager): Promise<void> {
     const managerIndex = this.items.findIndex(item => item.equals(manager))
     this.items[managerIndex] = manager
+  }
+
+  async delete(manager: Manager): Promise<void> {
+    const managerIndex = this.items.findIndex(item => item.equals(manager))
+    const managersCourses = this.managersCoursesRepository.items.filter(item => item.managerId.equals(manager.id))
+
+    for (const managerCourse of managersCourses) {
+      const managerCourseIndex = this.managersCoursesRepository.items.findIndex(item => item.managerId.equals(managerCourse.managerId))
+      const managerPoleIndex = this.managersPolesRepository.items.findIndex(item => item.managerId.equals(managerCourse.id))
+
+      this.managersCoursesRepository.items.splice(managerCourseIndex, 1)
+      this.managersPolesRepository.items.splice(managerPoleIndex, 1)
+    }
+
+    this.items.splice(managerIndex, 1)
   }
 }

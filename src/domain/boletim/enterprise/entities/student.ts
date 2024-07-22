@@ -1,5 +1,4 @@
 import { AggregateRoot } from "@/core/entities/aggregate-root.ts";
-import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Optional } from "@/core/types/optional.ts";
 import { Either, right } from "@/core/either.ts";
@@ -14,13 +13,9 @@ import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { StudentLoginConfirmedEvent } from "../events/student-login-confirmed-event.ts";
+import type { Parent } from "@/core/types/student.ts";
 
 export type StudentRole = 'student'
-
-interface Parent {
-  motherName: string
-  fatherName?: string
-}
 
 interface StudentProps {
   username: Name
@@ -35,7 +30,7 @@ interface StudentProps {
 
   isLoginConfirmed: boolean
 
-  parent: Parent
+  parent?: Parent
   
   civilId: number
   militaryId?: number
@@ -70,6 +65,9 @@ export class Student extends AggregateRoot<StudentProps> {
 
   get cpf(){
     return this.props.cpf
+  }
+  set cpf(value) {
+    this.props.cpf = value
   }
 
   get avatarUrl() {

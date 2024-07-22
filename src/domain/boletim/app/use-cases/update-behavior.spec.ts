@@ -16,6 +16,8 @@ describe(('Delete Assessment Use Case'), () => {
   it ('should not be able to update behavior not existing', async () => {
     const result = await sut.execute({
       id: 'not-found',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -28,6 +30,8 @@ describe(('Delete Assessment Use Case'), () => {
 
     const result = await sut.execute({
       id: behavior.id.toValue(),
+      userId: 'user-1',
+      userIp: '127.0.0.1'
     })
 
     expect(result.isRight()).toBe(true)

@@ -4,7 +4,6 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
 import { classifyStudentsByModuleFormule, classifyStudentsByPeriodFormule } from "../utils/generate-students-classification.ts";
 import { StudentClassficationByModule, StudentClassficationByPeriod } from "../types/generate-students-classification.js";
-import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts";
 import { PolesRepository } from "../repositories/poles-repository.ts";
 import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts";
 

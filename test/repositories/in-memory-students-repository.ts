@@ -87,4 +87,19 @@ export class InMemoryStudentsRepository implements StudentsRepository {
 
     DomainEvents.dispatchEventsForAggregate(student.id)
   }
+
+  async delete(student: Student): Promise<void> {
+    const studentIndex = this.items.findIndex(item => item.equals(student))
+    const studentsCourses = this.studentsCoursesRepository.items.filter(item => item.studentId.equals(student.id))
+
+    for (const studentCourse of studentsCourses) {
+      const studentCourseIndex = this.studentsCoursesRepository.items.findIndex(item => item.studentId.equals(studentCourse.studentId))
+      const studentPoleIndex = this.studentsPolesRepository.items.findIndex(item => item.studentId.equals(studentCourse.id))
+
+      this.studentsCoursesRepository.items.splice(studentCourseIndex, 1)
+      this.studentsPolesRepository.items.splice(studentPoleIndex, 1)
+    }
+
+    this.items.splice(studentIndex, 1)
+  }
 }

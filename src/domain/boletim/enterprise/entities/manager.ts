@@ -12,6 +12,7 @@ import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
+import type { Parent } from "@/core/types/student.ts";
 
 export type ManagerRole = 'manager'
 
@@ -24,9 +25,15 @@ interface ManagerProps {
   active: boolean
   avatarUrl?: string | null
   createdAt: Date
-
-  civilID: number
   birthday: Birthday
+
+  parent?: Parent
+
+  civilId: number
+  militaryId?: number
+
+  state?: string
+  county?: string
 }
 
 export class Manager extends Entity<ManagerProps> {
@@ -54,6 +61,9 @@ export class Manager extends Entity<ManagerProps> {
   get cpf() {
     return this.props.cpf
   }
+  set cpf(value) {
+    this.props.cpf = value
+  }
 
   get avatarUrl() {
     return this.props.avatarUrl
@@ -73,11 +83,25 @@ export class Manager extends Entity<ManagerProps> {
     this.props.active = value
   }
 
-  get civilID() {
-    return this.props.civilID
+  get parent() {
+    return this.props.parent
   }
-  set civilID(value) {
-    this.props.civilID = value
+  set parent(value) {
+    this.props.parent = value
+  }
+
+  get civilId() {
+    return this.props.civilId
+  }
+  set civilId(value) {
+    this.props.civilId = value
+  }
+
+  get militaryId() {
+    return this.props.militaryId
+  }
+  set militaryId(value) {
+    this.props.militaryId = value
   }
 
   get birthday() {
@@ -85,6 +109,20 @@ export class Manager extends Entity<ManagerProps> {
   }
   set birthday(value) {
     this.props.birthday = value
+  }
+
+  get state() {
+    return this.props.state
+  }
+  set state(value) {
+    this.props.state = value
+  }
+
+  get county() {
+    return this.props.county
+  }
+  set county(value) {
+    this.props.county = value
   }
 
   get createdAt() {

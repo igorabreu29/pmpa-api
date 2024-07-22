@@ -1,6 +1,7 @@
 import { Either, left, right } from "@/core/either.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { BehaviorsRepository } from "../repositories/behaviors-repository.ts";
+import { BehaviorEvent } from "../../enterprise/events/behavior-event.ts";
 
 interface UpdateBehaviorUseCaseUseCaseRequest {
   id: string
@@ -16,6 +17,7 @@ interface UpdateBehaviorUseCaseUseCaseRequest {
   october?: number | null
   november?: number | null
   december?: number | null
+  userId: string
   userIp: string
 }
 
@@ -40,7 +42,8 @@ export class UpdateBehaviorUseCaseUseCase {
     october,
     november,
     december, 
-    userIp
+    userIp,
+    userId
   }: UpdateBehaviorUseCaseUseCaseRequest): Promise<UpdateBehaviorUseCaseUseCaseResponse> {
     const behavior = await this.behaviorsRepository.findById({ id }) 
     if (!behavior) return left(new ResourceNotFoundError('Behavior not found.'))
@@ -57,7 +60,13 @@ export class UpdateBehaviorUseCaseUseCase {
     behavior.october = october || behavior.october
     behavior.november = november || behavior.november
     behavior.december = december || behavior.december
-    behavior.userIp = userIp || behavior.userIp
+
+    behavior.addDomainBehaviorEvent(new BehaviorEvent({
+      behavior,
+      reporterId: userId,
+      reporterIp: userIp
+    }))
+    
     await this.behaviorsRepository.update(behavior)
 
     return right(null)

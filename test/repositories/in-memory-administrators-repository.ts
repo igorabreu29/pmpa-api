@@ -27,4 +27,9 @@ export class InMemoryAdministratorsRepository implements AdministratorsRepositor
     const adminIndex = this.items.findIndex(item => item.equals(admin))
     this.items[adminIndex] = admin
   }
+
+  async delete(admin: Administrator): Promise<void> {
+    const adminIndex = this.items.findIndex(item => item.equals(admin))
+    this.items.splice(adminIndex, 1)
+  }
 }

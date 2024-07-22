@@ -73,9 +73,18 @@ let sut: GetCourseClassificationUseCase
 
 describe('Get Classfication Course Use Case', () => {
   beforeEach(() => {
-    studentsRepository = new InMemoryStudentsRepository()
+    studentsRepository = new InMemoryStudentsRepository(
+      studentsCoursesRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
     coursesRepository = new InMemoryCoursesRepository ()
-    studentsPolesRepository = new InMemoryStudentsPolesRepository()
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      polesRepository
+    )
     polesRepository = new InMemoryPolesRepository()
     studentsCoursesRepository = new InMemoryStudentsCoursesRepository(
       studentsRepository,

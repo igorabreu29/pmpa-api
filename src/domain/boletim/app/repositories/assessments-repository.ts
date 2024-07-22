@@ -15,7 +15,6 @@ export abstract class AssessmentsRepository {
   abstract findById({ id }: { id: string }): Promise<Assessment | null>
   abstract findByStudentIdAndCourseId({ studentId, courseId }: StudentAssessmentsByCourse): Promise<Assessment | null>
   abstract findManyByStudentIdAndCourseId({ studentId, courseId }: StudentAssessmentsByCourse): Promise<Assessment[]>
-  abstract findManyByStudentIdAndCourseIdAndPoleId({ studentId, courseId, poleId }: StudentAssessmentsByCourseAndPole): Promise<Assessment[]>
   abstract create(assesment: Assessment): Promise<void>
   abstract createMany(assesments: Assessment[]): Promise<void>
   abstract update(assesment: Assessment): Promise<void>

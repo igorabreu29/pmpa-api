@@ -1,23 +1,22 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { Name } from "../../enterprise/entities/value-objects/name.ts";
 import { InMemoryAdministratorsRepository } from "test/repositories/in-memory-administrators-repository.ts";
 import { makeAdministrator } from "test/factories/make-administrator.ts";
-import { UpdateAdministratorUseCase } from "./update-administrator.ts";
+import { DeleteAdministratorUseCase } from "./delete-administrator.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 let admnistratorsRepository: InMemoryAdministratorsRepository
-let sut: UpdateAdministratorUseCase 
+let sut: DeleteAdministratorUseCase
 
-describe('Update Administrator Use Case', () => {
+describe('Delete Administrator Use Case', () => {
   beforeEach (() => {
     admnistratorsRepository = new InMemoryAdministratorsRepository()
-    sut = new UpdateAdministratorUseCase (
+    sut = new DeleteAdministratorUseCase(
       admnistratorsRepository
     )
   })
 
-  it ('should not be able to update a administrator that does not exist', async () => {
+  it ('should not be able to delete a administrator that does not exist', async () => {
     const result = await sut.execute({
       id: 'not-found',
       role: ''
@@ -41,21 +40,15 @@ describe('Update Administrator Use Case', () => {
   })
 
   it ('should be able to update administrator', async () => {
-    const nameOrError = Name.create('John Doe')
-    if (nameOrError.isLeft()) return
-
-    const administrator = makeAdministrator({ username: nameOrError.value })
+    const administrator = makeAdministrator()
     admnistratorsRepository.create(administrator)
-
-    expect(admnistratorsRepository.items[0].username.value).toEqual('John Doe')
 
     const result = await sut.execute({
       id: administrator.id.toValue(),
-      username: 'Josh Ned',
       role: 'dev'
     })
 
     expect(result.isRight()).toBe(true)
-    expect(admnistratorsRepository.items[0].username.value).toEqual('Josh Ned')
+    expect(admnistratorsRepository.items).toHaveLength(0)
   })
 })

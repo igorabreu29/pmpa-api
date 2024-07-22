@@ -6,4 +6,5 @@ export abstract class AdministratorsRepository {
   abstract findByEmail(email: string): Promise<Administrator | null>
   abstract create(admin: Administrator): Promise<void>
   abstract save(admin: Administrator): Promise<void>
+  abstract delete(admin: Administrator): Promise<void>
 }

@@ -237,4 +237,14 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
       this.items.push(studentCourse)
     })
   }
+
+  async save(studentCourse: StudentCourse): Promise<void> {
+    const studentCourseIndex = this.items.findIndex(item => item.equals(studentCourse))
+    this.items[studentCourseIndex] = studentCourse 
+  }
+
+  async delete(studentCourse: StudentCourse): Promise<void> {
+    const studentCourseIndex = this.items.findIndex(item => item.equals(studentCourse))
+    this.items.splice(studentCourseIndex, 1)
+  }
 }

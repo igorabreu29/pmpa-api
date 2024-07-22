@@ -11,6 +11,8 @@ import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
+import { formatCPF } from "@/core/utils/formatCPF.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 interface UpdateAdministratorUseCaseRequest {
   id: string
@@ -20,6 +22,8 @@ interface UpdateAdministratorUseCaseRequest {
   cpf?: string
   civilId?: number
   birthday?: Date
+
+  role: string
 }
 
 type UpdateAdministratorUseCaseResponse = Either<
@@ -37,15 +41,18 @@ export class UpdateAdministratorUseCase {
     private administratorsRepository: AdministratorsRepository
   ) {}
 
-  async execute({ id, username, email, password, cpf, civilId, birthday }: UpdateAdministratorUseCaseRequest): Promise<UpdateAdministratorUseCaseResponse> {
+  async execute({ id, username, email, password, cpf, civilId, birthday, role }: UpdateAdministratorUseCaseRequest): Promise<UpdateAdministratorUseCaseResponse> {
     const administrator = await this.administratorsRepository.findById(id)
     if (!administrator) return left(new ResourceNotFoundError('Administrator not found.'))
+    if (role !== 'dev') return left(new NotAllowedError())
+
+    const cpfFormatted = formatCPF(administrator.cpf.value)
 
     const nameOrError = Name.create(username ?? administrator.username.value)
     const emailOrError = Email.create(email ?? administrator.email.value)
     const passwordOrError = Password.create(password ?? administrator.passwordHash.value)
     const birthdayOrError = Birthday.create(birthday ?? administrator.birthday.value)
-    const cpfOrError = CPF.create(cpf ?? administrator.cpf.value)
+    const cpfOrError = CPF.create(cpf ?? cpfFormatted)
 
     if (nameOrError.isLeft()) return left(nameOrError.value)
     if (emailOrError.isLeft()) return left(emailOrError.value)

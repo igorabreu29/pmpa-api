@@ -138,10 +138,7 @@ export class CreateStudentsBatchUseCase {
         email: emailOrError.value,
         passwordHash: passwordOrError.value,
         civilId: student.civilId,
-        birthday: birthdayOrError.value,
-        parent: {
-          motherName: ''
-        }
+        birthday: birthdayOrError.value, 
       })
       if (studentOrError.isLeft()) return studentOrError.value
       const studentCreated = studentOrError.value

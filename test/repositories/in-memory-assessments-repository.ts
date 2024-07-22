@@ -20,14 +20,6 @@ export class InMemoryAssessmentsRepository implements AssessmentsRepository {
     return assessments
   }
 
-  async findManyByStudentIdAndCourseIdAndPoleId({ studentId, courseId, poleId }: StudentAssessmentsByCourseAndPole): Promise<Assessment[]> {
-    const assessments = this.items.filter(item => {
-      return item.studentId.toValue() === studentId &&
-      item.courseId.toValue() === courseId
-    })
-    return assessments
-  }
-
   async create(assessment: Assessment): Promise<void> {
     this.items.push(assessment)
 

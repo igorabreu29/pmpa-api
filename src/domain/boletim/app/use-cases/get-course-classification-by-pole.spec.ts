@@ -40,8 +40,8 @@ export function makeGetStudentAverageInTheCourseUseCase({ assessmentsRepository,
   const assessment6 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-2'), vf: 10, disciplineId: discipline3.id })
   assessmentsRepository.createMany([assessment1, assessment2, assessment3, assessment4, assessment5, assessment6])
 
-  const behavior1 = makeBehavior({ january: 5, february: 7, march: 10, april: 7, may: 4.5, jun: 5.75, studentId: new UniqueEntityId('student-1'), poleId: new UniqueEntityId('pole-1'), courseId: new UniqueEntityId('course-1') })
-  const behavior2 = makeBehavior({ january: 5, february: 7, march: 3, april: 7, may: 4.5, jun: 7.75, studentId: new UniqueEntityId('student-2'), poleId: new UniqueEntityId('pole-1'), courseId: new UniqueEntityId('course-1') })
+  const behavior1 = makeBehavior({ january: 5, february: 7, march: 10, april: 7, may: 4.5, jun: 5.75, studentId: new UniqueEntityId('student-1'), courseId: new UniqueEntityId('course-1') })
+  const behavior2 = makeBehavior({ january: 5, february: 7, march: 3, april: 7, may: 4.5, jun: 7.75, studentId: new UniqueEntityId('student-2'), courseId: new UniqueEntityId('course-1') })
   behaviorsRepository.items.push(behavior1)
   behaviorsRepository.items.push(behavior2)
 
