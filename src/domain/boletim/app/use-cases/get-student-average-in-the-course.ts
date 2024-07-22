@@ -1,19 +1,19 @@
 import { Either, left, right } from "@/core/either.ts"
-import { Formule } from "@/domain/boletim/enterprise/entities/course.ts"
+import { Formula } from "@/domain/boletim/enterprise/entities/course.ts"
 import { AssessmentsRepository } from "../repositories/assessments-repository.ts"
 import { BehaviorsRepository } from "../repositories/behaviors-repository.ts"
 import { generateBehaviorAverage } from "../utils/generate-behavior-average.ts"
 import { generateAssessmentAverage } from "../utils/generate-assessment-average.ts"
-import { AssessmentWithModule, formules } from "../utils/verify-formule.ts"
 import { GenerateBehaviorStatus } from "../utils/get-behavior-average-status.ts"
 import { GetGeralStudentAverageStatusResponse } from "../utils/get-geral-student-average-status.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
 import { CoursesDisciplinesRepository } from "../repositories/courses-disciplines-repository.ts"
+import { AssessmentWithModule, formulas } from "../utils/verify-formula.ts"
 
 interface GetStudentAverageInTheCourseUseCaseRequest {
   studentId: string
   courseId: string
-  courseFormule: Formule
+  isPeriod: boolean
 }
 
 type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError, {
@@ -55,7 +55,7 @@ export class GetStudentAverageInTheCourseUseCase {
   async execute({
     studentId,
     courseId,
-    courseFormule
+    isPeriod
 }: GetStudentAverageInTheCourseUseCaseRequest): Promise<GetStudentAverageInTheCourseUseCaseResponse> {
     const assessments = await this.assessmentsRepository.findManyByStudentIdAndCourseId({
       studentId,
@@ -91,7 +91,7 @@ export class GetStudentAverageInTheCourseUseCase {
       december,
     }))
 
-    const behaviorAverage = generateBehaviorAverage({ behaviorMonths, formule: courseFormule })
+    const behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod })
 
     const assessmentWithDisciplineModule = await Promise.all(assessments.map(async assessment => {
       const studentCondition = generateAssessmentAverage({ 
@@ -118,13 +118,13 @@ export class GetStudentAverageInTheCourseUseCase {
     const courseWithoutModule = assessmentWithDisciplineModule.some(item => item === null)
     if (courseWithoutModule) return left(new ResourceNotFoundError('Course does not have module.'))
 
-    const gradesByFormule = formules[courseFormule]({
+    const gradesByFormula = formulas[isPeriod ? 'period' : 'module']({
       assessments: assessmentWithDisciplineModule,
       behaviorAverage,
     })  
 
     return right({
-      grades: gradesByFormule,
+      grades: gradesByFormula
     })
   }
 }

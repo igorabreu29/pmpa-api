@@ -9,12 +9,11 @@ import { InvalidDateError } from "@/core/errors/domain/invalid-date.ts";
 
 export type Active = 'enabled' | 'disabled'
 
-export type Formule = 'module' | 'period'
-
-export type CourseType = 'CFP' | 'CAS' | 'CHO' | 'CFO'
+export type Formula = 'CGS' | 'CFP' | 'CAS' | 'CHO' | 'CFO'
 
 interface CourseProps { 
-  formule: Formule
+  formula: Formula
+  isPeriod: boolean
   name: Name
   active: Active
   imageUrl: string
@@ -25,8 +24,12 @@ interface CourseProps {
 }
 
 export class Course extends Entity<CourseProps> {
-  get formule() {
-    return this.props.formule
+  get formula() {
+    return this.props.formula
+  }
+
+  get isPeriod() {
+    return this.props.isPeriod
   }
 
   get name() {
@@ -58,7 +61,7 @@ export class Course extends Entity<CourseProps> {
   }
 
   static create(
-    props: Optional<CourseProps, 'startAt'>, 
+    props: Optional<CourseProps, 'startAt' | 'isPeriod'>, 
     id?: UniqueEntityId
   ): Either<
     | InvalidNameError
@@ -67,6 +70,7 @@ export class Course extends Entity<CourseProps> {
   > {
     const course = new Course({
       startAt: new Date(),
+      isPeriod: false,
       ...props
     }, id)
 

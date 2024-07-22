@@ -49,14 +49,14 @@ describe(('Get Student Average In The Course Use Case'), () => {
     const result = await sut.execute({
       courseId: course.id.toValue(),
       studentId: student.id.toValue(),
-      courseFormule: 'module',
+      isPeriod: false
     })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it ('should be able to get student average with module formule', async () => {
+  it ('should be able to get student average with module formula', async () => {
     const course = makeCourse()
     const student = makeStudent()
     const discipline1 = makeDiscipline()
@@ -79,7 +79,7 @@ describe(('Get Student Average In The Course Use Case'), () => {
     const result = await sut.execute({
       courseId: course.id.toValue(),
       studentId: student.id.toValue(),
-      courseFormule: 'module',
+      isPeriod: false
     })
 
     expect(result.value).toMatchObject({
@@ -107,8 +107,8 @@ describe(('Get Student Average In The Course Use Case'), () => {
     })
   })
 
-  it ('should be able to get student average with period formule', async () => {
-    const course = makeCourse({ formule: 'period' })
+  it ('should be able to get student average with period formula', async () => {
+    const course = makeCourse({ isPeriod: true })
     const student = makeStudent()
     const discipline1 = makeDiscipline()
     const discipline2 = makeDiscipline()
@@ -127,7 +127,7 @@ describe(('Get Student Average In The Course Use Case'), () => {
 
     const result = await sut.execute({
       studentId: student.id.toValue(),
-      courseFormule: 'period',
+      isPeriod: true,
       courseId: course.id.toValue()
     })
 
