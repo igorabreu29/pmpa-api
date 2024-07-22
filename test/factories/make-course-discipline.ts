@@ -11,7 +11,6 @@ export function makeCourseDiscipline(
     module: 1,
     expected: 'VF',
     hours: 30,
-    weight: 1,
     ...override
   }, id)
 }
