@@ -1,18 +1,18 @@
+import { Either, right } from "@/core/either.ts";
 import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { Optional } from "@/core/types/optional.ts";
-import { Name } from "./value-objects/name.ts";
-import { Email } from "./value-objects/email.ts";
-import { Password } from "./value-objects/password.ts";
-import { CPF } from "./value-objects/cpf.ts";
-import { Birthday } from "./value-objects/birthday.ts";
-import { Either, right } from "@/core/either.ts";
-import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
-import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
+import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
+import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
+import { Optional } from "@/core/types/optional.ts";
 import type { Parent } from "@/core/types/student.ts";
+import { Birthday } from "./value-objects/birthday.ts";
+import { CPF } from "./value-objects/cpf.ts";
+import { Email } from "./value-objects/email.ts";
+import { Name } from "./value-objects/name.ts";
+import { Password } from "./value-objects/password.ts";
 
 export type ManagerRole = 'manager'
 

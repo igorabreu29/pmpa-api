@@ -1,19 +1,19 @@
+import { Either, right } from "@/core/either.ts";
 import { AggregateRoot } from "@/core/entities/aggregate-root.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { Optional } from "@/core/types/optional.ts";
-import { Either, right } from "@/core/either.ts";
-import { Email } from "./value-objects/email.ts";
-import { CPF } from "./value-objects/cpf.ts";
-import { Password } from "./value-objects/password.ts";
-import { Birthday } from "./value-objects/birthday.ts";
-import { Name } from "./value-objects/name.ts";
-import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
-import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
+import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
+import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
-import { StudentLoginConfirmedEvent } from "../events/student-login-confirmed-event.ts";
+import { Optional } from "@/core/types/optional.ts";
 import type { Parent } from "@/core/types/student.ts";
+import { StudentLoginConfirmedEvent } from "../events/student-login-confirmed-event.ts";
+import { Birthday } from "./value-objects/birthday.ts";
+import { CPF } from "./value-objects/cpf.ts";
+import { Email } from "./value-objects/email.ts";
+import { Name } from "./value-objects/name.ts";
+import { Password } from "./value-objects/password.ts";
 
 export type StudentRole = 'student'
 

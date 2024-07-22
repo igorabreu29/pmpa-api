@@ -7,7 +7,6 @@ interface CourseDisciplineProps {
   module: number
   expected: string
   hours: number
-  weight: number
 }
 
 export class CourseDiscipline extends Entity<CourseDisciplineProps> {
@@ -29,10 +28,6 @@ export class CourseDiscipline extends Entity<CourseDisciplineProps> {
 
   get hours() {
     return this.props.hours
-  }
-
-  get weight() {
-    return this.props.weight
   }
 
   static create(props: CourseDisciplineProps, id?: UniqueEntityId) {
