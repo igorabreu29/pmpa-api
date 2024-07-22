@@ -15,7 +15,7 @@ export function makeCourse(
   if (endsAtOrError.isLeft()) throw new Error(endsAtOrError.value.message)
 
   const course = Course.create({
-    formule: 'period',
+    formula: 'CAS',
     name: nameOrError.value,
     active: 'enabled',
     imageUrl: faker.internet.url(),
