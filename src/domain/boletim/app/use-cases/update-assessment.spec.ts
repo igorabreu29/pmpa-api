@@ -17,6 +17,8 @@ describe(('Update Assessment Use Case'), () => {
   it ('should not be able to update assessment not existing', async () => {
     const result = await sut.execute({
       id: 'not-found',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -30,7 +32,9 @@ describe(('Update Assessment Use Case'), () => {
     const result = await sut.execute({
       id: assessment.id.toValue(),
       vf: assessment.vf,
-      avi: -1
+      avi: -1,
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -45,6 +49,8 @@ describe(('Update Assessment Use Case'), () => {
       id: assessment.id.toValue(),
       vf: 5,
       avii: -1,
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -59,6 +65,8 @@ describe(('Update Assessment Use Case'), () => {
       id: assessment.id.toValue(),
       vf: 5,
       vfe: -1,
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -73,6 +81,8 @@ describe(('Update Assessment Use Case'), () => {
       id: assessment.id.toValue(),
       vf: 5,
       avii: 10,
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -88,6 +98,8 @@ describe(('Update Assessment Use Case'), () => {
       vf: 7,
       avi: 7,
       vfe: 7,
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isRight()).toBe(true)

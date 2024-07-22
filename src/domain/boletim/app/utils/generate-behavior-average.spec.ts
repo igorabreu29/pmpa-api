@@ -2,25 +2,38 @@ import { describe, expect, it } from "vitest";
 import { generateBehaviorAverage } from "./generate-behavior-average.ts";
 
 describe('Behavior Average', () => {
-  it ('should be able to generate average behavior with formule equals module', () => {
+  it ('should be able to generate average behavior with formula equals module', () => {
     const behaviorMonths = [
       {
-        january: 7,
-        february: 7,
-        march: 8,
-        april: 7,
+        may: 7,
+        jun: 7,
+        july: 8,
+        august: 7,
+        september: 7,
+        october: 7,
+        november: 7,
+        december: 7,
       },
+      {
+        january: 7,
+        february: 9.2,
+        march: 2.2,
+        april: 8.53
+      }
     ]
 
-    const behaviorAverageByModule = generateBehaviorAverage({ formule: 'module', behaviorMonths })
+    const behaviorAverageByModule = generateBehaviorAverage({ behaviorMonths })
 
-    expect(behaviorAverageByModule.behaviorAverageStatus).toMatchObject({
-      status: 'approved',
-      behaviorAverage: 7.25
+    expect(behaviorAverageByModule).toMatchObject({
+      behaviorAverageStatus: {
+        behaviorAverage: 6.994, 
+        status: 'approved'
+      },
+      behaviorsCount: 12
     })
   })
 
-  it ('should be able to generate average behavior with formule equals period', () => {
+  it ('should be able to generate average behavior with formula equals period', () => {
     const behaviorMonths = [
       {
         august: 7,
@@ -36,7 +49,7 @@ describe('Behavior Average', () => {
       },
     ]
 
-    const behaviorAverageByPeriod = generateBehaviorAverage({ formule: 'period', behaviorMonths })
+    const behaviorAverageByPeriod = generateBehaviorAverage({ isPeriod: true, behaviorMonths })
 
     expect(behaviorAverageByPeriod.behaviorAverageStatus).toMatchObject([
       {

@@ -1,13 +1,12 @@
-import { beforeEach, describe, expect, it } from "vitest";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
 import { makeStudent } from "test/factories/make-student.ts";
-import { MarkLoginConfirmedAsTrueAndUpdateStudent } from "./mark-login-confirmed-as-true-and-update-student.ts";
-import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
-import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
-import { PolesRepository } from "../repositories/poles-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
+import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
+import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
+import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
+import { beforeEach, describe, expect, it } from "vitest";
+import { MarkLoginConfirmedAsTrueAndUpdateStudent } from "./mark-login-confirmed-as-true-and-update-student.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -22,7 +21,8 @@ const data = {
   county: 'fake-county',
   state: 'fake-state',
   email: 'fake-email',
-  motherName: 'fake-mother'
+  motherName: 'fake-mother',
+  studentIp: 'fake-ip'
 }
 
 describe('Login Confirmation By Student Use Case', () => {
@@ -39,7 +39,8 @@ describe('Login Confirmation By Student Use Case', () => {
   it ('should not be able to confirm login student does not exist', async () => {
     const result = await sut.execute({ 
       ...data,
-      studentCPF: 'not-found'
+      studentCPF: 'not-found',
+      
     })
     
     expect(result.isLeft()).toBe(true)

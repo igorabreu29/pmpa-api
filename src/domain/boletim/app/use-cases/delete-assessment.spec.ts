@@ -15,7 +15,9 @@ describe(('Delete Assessment Use Case'), () => {
 
   it ('should not be able to delete assessment not existing', async () => {
     const result = await sut.execute({
-      id: 'not-found'
+      id: 'not-found',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -27,7 +29,9 @@ describe(('Delete Assessment Use Case'), () => {
     assessmentsRepository.create(assessment)
 
     const result = await sut.execute({
-      id: assessment.id.toValue()
+      id: assessment.id.toValue(),
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isRight()).toBe(true)
