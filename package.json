@@ -5,20 +5,27 @@
   "main": "index.js",
   "type": "module",
   "engines": {
-    "node": "v20.15.1"
+    "node": "v20.11.0"
   },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:create-prisma-environment": "pnpm link ./prisma/vitest-environment-prisma",
+    "test:install-prisma-environment": "pnpm link vitest-environment-prisma",
+    "test:e2e:pre": "pnpm test:create-prisma-environment && pnpm test:install-prisma-environment",
+    "test:e2e": "pnpm vitest run --c ./vitest.config.e2e.ts",
+    "dev": "tsx watch --env-file .env src/infra/http/server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.12.12",
     "@vitest/ui": "^1.6.0",
+    "prisma": "^5.17.0",
     "tsx": "^4.10.2",
     "typescript": "^5.4.5",
     "unplugin-swc": "^1.4.5",
@@ -26,6 +33,13 @@
     "vitest": "^1.6.0"
   },
   "dependencies": {
-    "dayjs": "^1.11.11"
+    "@fastify/jwt": "^8.0.1",
+    "@prisma/client": "5.12.1",
+    "bcryptjs": "^2.4.3",
+    "dayjs": "^1.11.11",
+    "fastify": "^4.28.1",
+    "fastify-type-provider-zod": "^2.0.0",
+    "zod": "^3.23.8",
+    "zod-validation-error": "^3.3.0"
   }
 }
