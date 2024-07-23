@@ -14,10 +14,6 @@ export class InMemoryCoursesRepository implements CoursesRepository {
     return course ?? null
   }
 
-  async fetchCourses(): Promise<Course[]> {
-    return this.items
-  }
-
   async create(course: Course): Promise<void> {
     this.items.push(course)
   }

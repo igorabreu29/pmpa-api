@@ -9,6 +9,5 @@ export interface SearchAllCoursesByUserId {
 export abstract class CoursesRepository {
   abstract findById(id: string): Promise<Course | null>
   abstract findByName(name: string): Promise<Course | null>
-  abstract fetchCourses(): Promise<Course[]> 
   abstract create(course: Course): Promise<void> 
 }
