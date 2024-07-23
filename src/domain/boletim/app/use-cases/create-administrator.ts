@@ -27,12 +27,10 @@ export class CreateAdminUseCase {
   ) {}
 
   async execute({ username, email, password, cpf, birthday, civilID }: CreateAdminUseCaseRequest): Promise<CreateAdminUseCaseResponse> {
-    const passwordHash = await this.hasher.hash(password)
-
     const nameOrError = Name.create(username)
     const emailOrError = Email.create(email)
     const cpfOrError = CPF.create(cpf)
-    const passwordOrError = Password.create(passwordHash)
+    const passwordOrError = Password.create(password)
     const birthdayOrError = Birthday.create(birthday)
 
     if (nameOrError.isLeft()) return left(nameOrError.value)
@@ -41,6 +39,7 @@ export class CreateAdminUseCase {
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
 
+    await passwordOrError.value.hash()
     const administratorOrError = Administrator.create({
       username: nameOrError.value, 
       email: emailOrError.value,

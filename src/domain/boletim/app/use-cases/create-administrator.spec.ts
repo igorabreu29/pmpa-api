@@ -5,6 +5,8 @@ import { CreateAdminUseCase } from "./create-administrator.ts";
 import { InMemoryAdministratorsRepository } from "test/repositories/in-memory-administrators-repository.ts";
 import { makeAdministrator } from "test/factories/make-administrator.ts";
 
+import bcryptjs from 'bcryptjs'
+
 let administratorsRepository: InMemoryAdministratorsRepository
 let hasher: FakeHasher
 let sut: CreateAdminUseCase
@@ -20,6 +22,7 @@ describe('Create Admin Use Case', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    vi.restoreAllMocks()
   })
   
   it ('should not be able to create administrator with cpf already existing', async () => {
@@ -60,7 +63,7 @@ describe('Create Admin Use Case', () => {
     expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)
   })
 
-  it ('should be able to create administrator with password', async () => {
+  it ('should be able to create administrator', async () => {
     const data = {
       cpf: '000.000.000-00',
       email: 'test@test.com',
@@ -70,11 +73,16 @@ describe('Create Admin Use Case', () => {
       civilID: 20202
     }
 
+    const spyOn = vi.spyOn(bcryptjs, 'hash').mockImplementation((password: string) => {
+      return `${data.password}-hashed`
+    })
+
     const result = await sut.execute(data)
     
     expect(result.isRight()).toBe(true)
     expect(result.value).toBe(null)
     expect(administratorsRepository.items).toHaveLength(1)
-    expect(administratorsRepository.items[0].passwordHash.value).toEqual(`${data.password}-hasher`)
+    expect(administratorsRepository.items[0].passwordHash.value).toEqual(`${data.password}-hashed`)
+    expect(spyOn).toHaveBeenCalledOnce()
   })
 })

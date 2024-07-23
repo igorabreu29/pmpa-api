@@ -21,7 +21,7 @@ interface CreateManagerUseCaseRequest {
   email: string
   cpf: string
   birthday: Date
-  civilID: number
+  civilId: number
   courseId: string
   poleId: string
 }
@@ -45,7 +45,7 @@ export class CreateManagerUseCase {
     email, 
     username,
     birthday,
-    civilID
+    civilId
   }: CreateManagerUseCaseRequest): Promise<CreateManagerUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
@@ -54,12 +54,11 @@ export class CreateManagerUseCase {
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
     const defaultPassword = `Pmp@${cpf}`
-    const passwordHash = await this.hasher.hash(defaultPassword)
 
     const nameOrError = Name.create(username)
     const emailOrError = Email.create(email)
     const cpfOrError = CPF.create(cpf)
-    const passwordOrError = Password.create(passwordHash)
+    const passwordOrError = Password.create(defaultPassword)
     const birthdayOrError = Birthday.create(birthday)
 
     if (nameOrError.isLeft()) return left(nameOrError.value)
@@ -68,12 +67,13 @@ export class CreateManagerUseCase {
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
 
+    await passwordOrError.value.hash()
     const managerOrError = Manager.create({
       username: nameOrError.value, 
       cpf: cpfOrError.value,
       email: emailOrError.value,
       passwordHash: passwordOrError.value,
-      civilID,
+      civilId,
       birthday: birthdayOrError.value,
       role: 'manager'
     }) 

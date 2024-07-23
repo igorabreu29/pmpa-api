@@ -25,18 +25,17 @@ export class CreateDeveloperUseCase {
   ) {}
 
   async execute({ username, email, password, cpf }: CreateDeveloperUseCaseRequest): Promise<CreateDeveloperUseCaseResponse> {
-    const passwordHash = await this.hasher.hash(password)
-
     const nameOrError = Name.create(username)
     const emailOrError = Email.create(email)
     const cpfOrError = CPF.create(cpf)
-    const passwordOrError = Password.create(passwordHash)
+    const passwordOrError = Password.create(password)
 
     if (nameOrError.isLeft()) return left(nameOrError.value)
     if (emailOrError.isLeft()) return left(emailOrError.value)
     if (cpfOrError.isLeft()) return left(cpfOrError.value)
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
 
+    await passwordOrError.value.hash()
     const developerOrError = Developer.create({
       username: nameOrError.value, 
       email: emailOrError.value,

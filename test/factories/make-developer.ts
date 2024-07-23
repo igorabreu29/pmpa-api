@@ -19,7 +19,7 @@ export function makeDeveloper(
   const cpfOrError = CPF.create('000.000.000-00')
   if (cpfOrError.isLeft()) throw new Error(cpfOrError.value.message)
 
-  const passwordOrError = Password.create('test-hasher')
+  const passwordOrError = Password.create('test-2020')
   if (passwordOrError.isLeft()) throw new Error(passwordOrError.value.message)
 
   const developerOrError = Developer.create({

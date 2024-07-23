@@ -1,10 +1,11 @@
 import { FakeHasher } from "test/cryptograpy/fake-hasher.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
-import { makeAdministrator } from "test/factories/make-administrator.ts";
 import { InMemoryDevelopersRepository } from "test/repositories/in-memory-developers-repository.ts";
 import { CreateDeveloperUseCase } from "./create-developer.ts";
 import { makeDeveloper } from "test/factories/make-developer.ts";
+
+import bcryptjs from 'bcryptjs'
 
 let developersRepository: InMemoryDevelopersRepository
 let hasher: FakeHasher
@@ -66,11 +67,16 @@ describe('Create Developer Use Case', () => {
       civilID: 20202
     }
 
+    const spyOn = vi.spyOn(bcryptjs, 'hash').mockImplementation((password: string) => {
+      return `${data.password}-hashed`
+    })
+
     const result = await sut.execute(data)
     
     expect(result.isRight()).toBe(true)
     expect(result.value).toBe(null)
     expect(developersRepository.items).toHaveLength(1)
-    expect(developersRepository.items[0].passwordHash.value).toEqual(`${data.password}-hasher`)
+    expect(developersRepository.items[0].passwordHash.value).toEqual(`${data.password}-hashed`)
+    expect(spyOn).toHaveBeenCalledOnce()
   })
 })

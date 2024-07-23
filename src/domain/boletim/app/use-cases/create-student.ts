@@ -68,12 +68,11 @@ export class CreateStudentUseCase {
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
     const defaultPassword = `Pmp@${cpf}`
-    const passwordHash = await this.hasher.hash(defaultPassword)
 
     const nameOrError = Name.create(username)
     const emailOrError = Email.create(email)
     const cpfOrError = CPF.create(cpf)
-    const passwordOrError = Password.create(passwordHash)
+    const passwordOrError = Password.create(defaultPassword)
     const birthdayOrError = Birthday.create(birthday)
 
     if (nameOrError.isLeft()) return left(nameOrError.value)
@@ -81,7 +80,8 @@ export class CreateStudentUseCase {
     if (cpfOrError.isLeft()) return left(cpfOrError.value)
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
-    
+
+    await passwordOrError.value.hash()
     const studentOrError = Student.create({
       username: nameOrError.value, 
       cpf: cpfOrError.value,

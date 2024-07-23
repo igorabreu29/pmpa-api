@@ -13,6 +13,8 @@ import { ResourceAlreadyExistError } from '@/core/errors/use-case/resource-alrea
 import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-students-courses-repository.ts'
 import { CreateStudentUseCase } from './create-student.ts'
 
+import bcryptjs from 'bcryptjs'
+
 let studentsRepository: InMemoryStudentsRepository
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -21,7 +23,7 @@ let polesRepository: InMemoryPolesRepository
 let hasher: FakeHasher
 let sut: CreateStudentUseCase
 
-describe('Create Student', () => {
+describe('Create Student Use Case', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
@@ -59,6 +61,7 @@ describe('Create Student', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    vi.restoreAllMocks()
   })
 
   describe('Student', () => {
@@ -97,13 +100,16 @@ describe('Create Student', () => {
 
     it ('should be able to create a student in the course and pole', async () => {
       vi.setSystemTime('2022-10-2')
-  
       const course = makeCourse()
       coursesRepository.create(course)
   
       const pole = makePole()
       polesRepository.create(pole)
-  
+
+      const spyOn = vi.spyOn(bcryptjs, 'hash').mockImplementation((password: string) => {
+        return `Pmp@222.222.222-10-hashed`
+      })
+
       const result = await sut.execute({
         courseId: course.id.toValue(),
         poleId: pole.id.toValue(),
@@ -113,11 +119,12 @@ describe('Create Student', () => {
         birthday: new Date('2004-10-2'),
         civilID: 44444
       })
-  
+      
       expect(result.isRight()).toBe(true)
       expect(studentsRepository.items).toHaveLength(1)
       expect(studentsCoursesRepository.items).toHaveLength(1)
       expect(studentsPolesRepository.items).toHaveLength(1)
+      expect(spyOn).toHaveBeenCalledOnce()
     })
   })
 

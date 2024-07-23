@@ -21,7 +21,7 @@ export function makeManager(
   const cpfOrError = CPF.create('000.000.000-00')
   if (cpfOrError.isLeft()) throw new Error(cpfOrError.value.message)
 
-  const passwordOrError = Password.create('test-hasher')
+  const passwordOrError = Password.create('test-2020')
   if (passwordOrError.isLeft()) throw new Error(passwordOrError.value.message)
 
   const birthdayOrError = Birthday.create(new Date('2004-1-2'))
@@ -33,6 +33,7 @@ export function makeManager(
     passwordHash: passwordOrError.value,
     username: nameOrError.value,
     birthday: birthdayOrError.value,
+    civilId: 0e5,
     ...override
   }, id)
   if (managerOrError.isLeft()) throw new Error('Invalid manager')

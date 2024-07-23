@@ -3,33 +3,44 @@ import { Password } from './password.ts'
 import { InvalidPasswordError } from '@/core/errors/domain/invalid-password.ts'
 
 test('empty password', () => {
-  const result = Password.create('')
+  const password = Password.create('')
 
-  expect(result.isLeft()).toBe(true)
-  expect(result.value).toBeInstanceOf(InvalidPasswordError)
+  expect(password.isLeft()).toBe(true)
+  expect(password.value).toBeInstanceOf(InvalidPasswordError)
 })
 
 test('password with lenght less than 6', () => {
-  const result = Password.create('12345')
+  const password = Password.create('12345')
 
-  expect(result.isLeft()).toBe(true)
-  expect(result.value).toBeInstanceOf(InvalidPasswordError)
+  expect(password.isLeft()).toBe(true)
+  expect(password.value).toBeInstanceOf(InvalidPasswordError)
 })
 
 test('password with lenght greater than 30', () => {
-  const result = Password.create('dsdsadsiajdsapiojdsiajdioajdsioajdioajdaiodjjio')
+  const password = Password.create('dsdsadsiajdsapiojdsiajdioajdsioajdioajdaiodjjio')
 
-  expect(result.isLeft()).toBe(true)
-  expect(result.value).toBeInstanceOf(InvalidPasswordError)
+  expect(password.isLeft()).toBe(true)
+  expect(password.value).toBeInstanceOf(InvalidPasswordError)
 })
 
 test('valid password', () => {
-  const result = Password.create('john-20')
+  const password = Password.create('john-20')
 
   const expected = {
-    value: result.value
+    value: password.value
   }
 
-  expect(result.isRight()).toBe(true)
-  expect(result).toMatchObject(expected)
+  expect(password.isRight()).toBe(true)
+  expect(password).toMatchObject(expected)
+})
+
+test('hash password', async () => {
+  const password = Password.create('john-20')
+  if (password.isLeft()) return
+
+  await password.value.hash()
+  const isValidPassword = await password.value.compare('john-20')
+
+  expect(password.isRight()).toBe(true)
+  expect(isValidPassword).toBe(true)
 })

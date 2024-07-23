@@ -13,6 +13,8 @@ import { makeManager } from 'test/factories/make-manager.ts'
 import { makeManagerCourse } from 'test/factories/make-manager-course.ts'
 import { CreateManagerUseCase } from './create-manager.ts'
 
+import bcryptjs from 'bcryptjs'
+
 let managersRepository: InMemoryManagersRepository
 let managersCoursesRepository: InMemoryManagersCoursesRepository
 let managersPolesRepository: InMemoryManagersPolesRepository
@@ -21,7 +23,7 @@ let polesRepository: InMemoryPolesRepository
 let hasher: FakeHasher
 let sut: CreateManagerUseCase
 
-describe('Create Manager', () => {
+describe('Create Manager Use Case', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
@@ -53,6 +55,7 @@ describe('Create Manager', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    vi.restoreAllMocks()
   })
 
   describe('Manager', () => {
@@ -64,7 +67,7 @@ describe('Create Manager', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilID: 0
+        civilId: 0
       })
   
       expect(result.isLeft()).toBe(true)
@@ -82,7 +85,7 @@ describe('Create Manager', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilID: 0
+        civilId: 0
       })
   
       expect(result.isLeft()).toBe(true)
@@ -95,6 +98,10 @@ describe('Create Manager', () => {
 
       const pole = makePole()
       polesRepository.create(pole)
+      
+      const spyOn = vi.spyOn(bcryptjs, 'hash').mockImplementation((password: string) => {
+        return `Pmp@222.222.222-10-hashed`
+      })
 
       const result = await sut.execute({
         courseId: course.id.toValue(),
@@ -103,13 +110,14 @@ describe('Create Manager', () => {
         email: 'john@example.com',
         username: 'John Doe',
         birthday: new Date('2002'),
-        civilID: 44444
+        civilId: 44444
       })
 
       expect(result.isRight()).toBe(true)
       expect(managersRepository.items).toHaveLength(1)
       expect(managersCoursesRepository.items).toHaveLength(1)
       expect(managersPolesRepository.items).toHaveLength(1)
+      expect(spyOn).toHaveBeenCalledOnce()
     })
   })
 
@@ -136,7 +144,7 @@ describe('Create Manager', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: new Date('2002-2'),
-        civilID: 0
+        civilId: 0
       })
 
       expect(result.isLeft()).toBe(true)
@@ -160,7 +168,7 @@ describe('Create Manager', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: new Date('2004-4-2'),
-        civilID: 0
+        civilId: 0
       })
 
       expect(result.isRight()).toBe(true)
@@ -190,7 +198,7 @@ describe('Create Manager', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: new Date('2002'),
-        civilID: 0
+        civilId: 0
       })
   
       expect(result.isLeft()).toBe(true)
@@ -214,7 +222,7 @@ describe('Create Manager', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: manager.birthday.value,
-        civilID: 0
+        civilId: 0
       })
   
       expect(result.isRight()).toBe(true)
