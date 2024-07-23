@@ -40,7 +40,7 @@ type CreateBehaviorBatchUseCaseResponse = Either<
   null
 >
 
-export class CreateBehaviorBatchUseCase {
+export class CreateBehaviorsBatchUseCase {
   constructor (
     private behaviorsRepository: BehaviorsRepository,
     private coursesRepository: CoursesRepository,

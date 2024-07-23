@@ -11,7 +11,7 @@ import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-stu
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts";
-import { CreateBehaviorBatchUseCase } from "./create-behavior-batch.ts";
+import { CreateBehaviorsBatchUseCase } from "./create-behaviors-batch.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
@@ -22,7 +22,7 @@ let polesRepository: InMemoryPolesRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
 let studentsRepository: InMemoryStudentsRepository
 let behaviorsBatchRepository: InMemoryBehaviorsBatchRepository
-let sut: CreateBehaviorBatchUseCase
+let sut: CreateBehaviorsBatchUseCase
 
 describe('Create Behaviors Batch Use Case', () => {
   beforeEach(() => {
@@ -53,7 +53,7 @@ describe('Create Behaviors Batch Use Case', () => {
       polesRepository
     )
 
-    sut = new CreateBehaviorBatchUseCase(
+    sut = new CreateBehaviorsBatchUseCase(
       behaviorsRepository,
       coursesRepository,
       studentsRepository,
