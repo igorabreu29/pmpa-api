@@ -52,29 +52,17 @@ export class CreateAssessmentsBatchUseCase {
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
     if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
 
-    const errors: Error[] = []
-    const assessments: Assessment[] = []
-
-    await Promise.all(studentAssessments.map(async (studentAssessment) => {
+    const assessmentsBatchOrError = await Promise.all(studentAssessments.map(async (studentAssessment) => {
       const student = await this.studentsRepository.findByCPF(studentAssessment.cpf)
-      if (!student) {
-        const error = new ResourceNotFoundError('Student not found.')
-        return errors.push({ name: error.name, message: error.message })
-      }
+      if (!student) return new ResourceNotFoundError('Student not found.')
 
       const discipline = await this.disciplinesRepository.findByName(studentAssessment.disciplineName)
-      if (!discipline) {
-        const error = new ResourceNotFoundError('Discipline not found.')
-        return errors.push({ name: error.name, message: error.message })
-      }
+      if (!discipline) return new ResourceNotFoundError('Discipline not found.')
 
       const assessmentAlreadyExistToStudent = await this.assessmentsRepository.findByStudentIdAndCourseId({ studentId: student.id.toValue(), courseId: course.id.toValue() })
-      if (assessmentAlreadyExistToStudent) {
-        const error = new ResourceAlreadyExistError('Note already released to the student')
-        return errors.push({ name: error.name, message: error.message })
-      }
+      if (assessmentAlreadyExistToStudent) new ResourceAlreadyExistError('Assessment already released to the student')
 
-      const assessment = Assessment.create({
+      const assessmentOrError = Assessment.create({
         courseId: course.id,
         disciplineId: discipline.id,
         studentId: student.id,
@@ -83,21 +71,15 @@ export class CreateAssessmentsBatchUseCase {
         vf: studentAssessment.vf,
         vfe: studentAssessment.vfe
       })
-      if (assessment.isLeft()) {
-        const error = new ConflictError()
-        return errors.push({ name: error.name, message: error.message })
-      }
+      if (assessmentOrError.isLeft()) return assessmentOrError.value
 
-      assessments.push(assessment.value)      
+      return assessmentOrError.value  
     }))
 
-    if (errors.length) return left([
-      new ResourceNotFoundError('Student not found.'),
-      new ResourceNotFoundError('Student course not found.'),
-      new ResourceNotFoundError('Student pole not found.'),
-      new ResourceAlreadyExistError('Note already released to the student')
-    ])
+    const errors = assessmentsBatchOrError.filter(item => item instanceof Error)
+    if (errors.length) return left(errors.map(error => error))
 
+    const assessments = assessmentsBatchOrError as Assessment[]
     const assessmentBatch = AssessmentBatch.create({
       courseId: new UniqueEntityId(courseId),
       userId: new UniqueEntityId(userId),
