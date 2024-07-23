@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, expect, vi, afterEach } from 'vitest'
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
 import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
-import { FakeHasher } from 'test/cryptograpy/fake-hasher.ts'
+import { FakeHasher } from 'test/cryptography/fake-hasher.ts'
 import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found-error.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
 import { makePole } from 'test/factories/make-pole.ts'
@@ -20,7 +20,6 @@ let managersCoursesRepository: InMemoryManagersCoursesRepository
 let managersPolesRepository: InMemoryManagersPolesRepository
 let coursesRepository: InMemoryCoursesRepository
 let polesRepository: InMemoryPolesRepository
-let hasher: FakeHasher
 let sut: CreateManagerUseCase
 
 describe('Create Manager Use Case', () => {
@@ -42,14 +41,12 @@ describe('Create Manager Use Case', () => {
       managersPolesRepository,
       polesRepository
     )
-    hasher = new FakeHasher()
     sut = new CreateManagerUseCase(
       managersRepository,
       managersCoursesRepository,
       managersPolesRepository,
       coursesRepository,
       polesRepository,
-      hasher
     )
   })
 

@@ -1,4 +1,3 @@
-import { FakeHasher } from "test/cryptograpy/fake-hasher.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { InMemoryDevelopersRepository } from "test/repositories/in-memory-developers-repository.ts";
@@ -8,7 +7,6 @@ import { makeDeveloper } from "test/factories/make-developer.ts";
 import bcryptjs from 'bcryptjs'
 
 let developersRepository: InMemoryDevelopersRepository
-let hasher: FakeHasher
 let sut: CreateDeveloperUseCase
 
 describe('Create Developer Use Case', () => {
@@ -16,8 +14,7 @@ describe('Create Developer Use Case', () => {
     vi.useFakeTimers()
 
     developersRepository = new InMemoryDevelopersRepository()
-    hasher = new FakeHasher()
-    sut = new CreateDeveloperUseCase(developersRepository, hasher)
+    sut = new CreateDeveloperUseCase(developersRepository)
   })
 
   afterEach(() => {

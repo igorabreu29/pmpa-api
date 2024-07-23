@@ -1,4 +1,3 @@
-import { FakeHasher } from "test/cryptograpy/fake-hasher.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { CreateAdminUseCase } from "./create-administrator.ts";
@@ -8,7 +7,6 @@ import { makeAdministrator } from "test/factories/make-administrator.ts";
 import bcryptjs from 'bcryptjs'
 
 let administratorsRepository: InMemoryAdministratorsRepository
-let hasher: FakeHasher
 let sut: CreateAdminUseCase
 
 describe('Create Admin Use Case', () => {
@@ -16,8 +14,7 @@ describe('Create Admin Use Case', () => {
     vi.useFakeTimers()
 
     administratorsRepository = new InMemoryAdministratorsRepository()
-    hasher = new FakeHasher()
-    sut = new CreateAdminUseCase(administratorsRepository, hasher)
+    sut = new CreateAdminUseCase(administratorsRepository)
   })
 
   afterEach(() => {

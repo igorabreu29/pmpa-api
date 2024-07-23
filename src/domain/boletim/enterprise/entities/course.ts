@@ -7,20 +7,19 @@ import { Either, right } from "@/core/either.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidDateError } from "@/core/errors/domain/invalid-date.ts";
 
-export type Active = 'enabled' | 'disabled'
+// export type Active = 'enabled' | 'disabled'
 
 export type Formula = 'CGS' | 'CFP' | 'CAS' | 'CHO' | 'CFO'
+// export type CourseType = 'period' | 'module' | 'year'
 
 interface CourseProps { 
   formula: Formula
   isPeriod: boolean
   name: Name
-  active: Active
+  isActive: boolean
   imageUrl: string
   startAt: Date
   endsAt: EndsAt
-  modules: number | null
-  periods: number | null
 }
 
 export class Course extends Entity<CourseProps> {
@@ -36,20 +35,12 @@ export class Course extends Entity<CourseProps> {
     return this.props.name
   }
 
-  get active() {
-    return this.props.active
+  get isActive() {
+    return this.props.isActive
   }
 
   get imageUrl() {
     return this.props.imageUrl
-  }
-
-  get modules() {
-    return this.props.modules
-  }
-
-  get periods() {
-    return this.props.periods
   }
 
   get startAt() {
@@ -61,7 +52,7 @@ export class Course extends Entity<CourseProps> {
   }
 
   static create(
-    props: Optional<CourseProps, 'startAt' | 'isPeriod'>, 
+    props: Optional<CourseProps, 'startAt' | 'isPeriod' | 'isActive'>, 
     id?: UniqueEntityId
   ): Either<
     | InvalidNameError
@@ -71,6 +62,7 @@ export class Course extends Entity<CourseProps> {
     const course = new Course({
       startAt: new Date(),
       isPeriod: false,
+      isActive: true,
       ...props
     }, id)
 

@@ -1,5 +1,4 @@
-import { FakeEncrypter } from "test/cryptograpy/fake-encrypter.ts";
-import { FakeHasher } from "test/cryptograpy/fake-hasher.ts";
+import { FakeEncrypter } from "test/cryptography/fake-encrypter.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InvalidCredentialsError } from "./errors/invalid-credentials-error.ts";
 import { InMemoryAuthenticatesRepository } from "test/repositories/in-memory-authenticates-repository.ts";
@@ -7,16 +6,14 @@ import { AuthenticateUseCase } from "./authenticate.ts";
 import { makeAuthenticate } from "test/factories/make-authenticate.ts";
 
 let authenticatesRepository: InMemoryAuthenticatesRepository
-let hasher: FakeHasher
 let encrypter: FakeEncrypter
 let sut: AuthenticateUseCase
 
 describe('Authenticate Use Case', () => {
   beforeEach(() => {
     authenticatesRepository = new InMemoryAuthenticatesRepository()
-    hasher = new FakeHasher()
     encrypter = new FakeEncrypter()
-    sut = new AuthenticateUseCase(authenticatesRepository, hasher, encrypter)
+    sut = new AuthenticateUseCase(authenticatesRepository, encrypter)
   })
 
   it ('should not be able to authenticate with cpf not existing', async () => {
@@ -40,7 +37,8 @@ describe('Authenticate Use Case', () => {
     const authenticate = makeAuthenticate()
     authenticatesRepository.items.push(authenticate)
 
-    const result = await sut.execute({ cpf: authenticate.cpf.value, password: 'test' })
+    await authenticate.passwordHash.hash()
+    const result = await sut.execute({ cpf: authenticate.cpf.value, password: 'test-2020' })
     
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
@@ -51,8 +49,9 @@ describe('Authenticate Use Case', () => {
    it ('should be able to authenticate', async () => {
     const authenticate = makeAuthenticate({ isLoginConfirmed: true, role: 'manager' })
     authenticatesRepository.items.push(authenticate)
-
-    const result = await sut.execute({ cpf: authenticate.cpf.value, password: 'test' })
+    
+    await authenticate.passwordHash.hash()
+    const result = await sut.execute({ cpf: authenticate.cpf.value, password: 'test-2020' })
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({

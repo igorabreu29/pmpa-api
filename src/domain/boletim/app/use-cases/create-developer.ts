@@ -1,5 +1,4 @@
 import { Either, left, right } from "@/core/either.ts"
-import { Hasher } from "../cryptography/hasher.ts"
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts"
 import { DevelopersRepository } from "../repositories/developers-repository.ts"
 import { Developer } from "../../enterprise/entities/developer.ts"
@@ -21,7 +20,6 @@ type CreateDeveloperUseCaseResponse = Either<ResourceAlreadyExistError, null>
 export class CreateDeveloperUseCase {
   constructor (
     private developersRepository: DevelopersRepository,
-    private hasher: Hasher
   ) {}
 
   async execute({ username, email, password, cpf }: CreateDeveloperUseCaseRequest): Promise<CreateDeveloperUseCaseResponse> {

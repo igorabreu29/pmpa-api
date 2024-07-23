@@ -16,7 +16,8 @@ export class Password extends ValueObject<PasswordProps> {
   public static validate(password: string): boolean {
     if (!password || 
       password.trim().length < 6 ||
-      password.trim().length > 30
+      password.trim().length > 255
+
     ) {
       return false
     }

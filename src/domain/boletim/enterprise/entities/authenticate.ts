@@ -6,10 +6,12 @@ import { Either, right } from "@/core/either.ts";
 import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 
+export type Role = 'student' | 'manager' | 'admin' | 'dev'
+
 interface AuthenticateProps {
   cpf: CPF
   passwordHash: Password
-  role: 'student' | 'manager' | 'admin' | 'dev'
+  role: Role
   isLoginConfirmed?: boolean
 }
 

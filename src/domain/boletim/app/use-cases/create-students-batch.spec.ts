@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { FakeHasher } from "test/cryptograpy/fake-hasher.ts";
+import { FakeHasher } from "test/cryptography/fake-hasher.ts";
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
 import { makeCourse } from "test/factories/make-course.ts";

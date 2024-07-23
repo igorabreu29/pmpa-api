@@ -24,7 +24,6 @@ interface CreateBehaviorUseCaseRequest {
   october?: number | null
   november?: number | null
   december?: number | null
-  currentYear: number
   userId: string
   userIp: string
 }
@@ -53,7 +52,6 @@ export class CreateBehaviorUseCase {
     october,
     november,
     december,
-    currentYear,
     userIp,
     userId
   }: CreateBehaviorUseCaseRequest): Promise<CreateBehaviorUseCaseResponse> {
@@ -83,7 +81,6 @@ export class CreateBehaviorUseCase {
       october,
       november,
       december,
-      currentYear,
     })
     behavior.addDomainBehaviorEvent(new BehaviorEvent({ behavior, reporterId: userId, reporterIp: userIp }))
     await this.behaviorsRepository.create(behavior)

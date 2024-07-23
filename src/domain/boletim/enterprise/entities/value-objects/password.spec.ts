@@ -16,8 +16,8 @@ test('password with lenght less than 6', () => {
   expect(password.value).toBeInstanceOf(InvalidPasswordError)
 })
 
-test('password with lenght greater than 30', () => {
-  const password = Password.create('dsdsadsiajdsapiojdsiajdioajdsioajdioajdaiodjjio')
+test('password with lenght greater than 255', () => {
+  const password = Password.create('i'.repeat(260))
 
   expect(password.isLeft()).toBe(true)
   expect(password.value).toBeInstanceOf(InvalidPasswordError)

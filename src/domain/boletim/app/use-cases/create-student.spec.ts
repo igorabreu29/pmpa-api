@@ -3,7 +3,7 @@ import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
 import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
-import { FakeHasher } from 'test/cryptograpy/fake-hasher.ts'
+import { FakeHasher } from 'test/cryptography/fake-hasher.ts'
 import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found-error.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
 import { makePole } from 'test/factories/make-pole.ts'
@@ -20,7 +20,6 @@ let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
 let coursesRepository: InMemoryCoursesRepository
 let polesRepository: InMemoryPolesRepository
-let hasher: FakeHasher
 let sut: CreateStudentUseCase
 
 describe('Create Student Use Case', () => {
@@ -48,14 +47,12 @@ describe('Create Student Use Case', () => {
       polesRepository
     )
     
-    hasher = new FakeHasher()
     sut = new CreateStudentUseCase(
       studentsRepository,
       studentsCoursesRepository,
       studentsPolesRepository,
       coursesRepository,
       polesRepository,
-      hasher
     )
   })
 

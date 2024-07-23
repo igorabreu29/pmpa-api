@@ -5,6 +5,9 @@ import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-r
 import { makeCourse } from "test/factories/make-course.ts";
 import { InMemoryCoursesPolesRepository } from "test/repositories/in-memory-courses-poles-repository.ts";
 import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
+import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
+
+let polesRepositoy: InMemoryPolesRepository
 
 let coursesRepository: InMemoryCoursesRepository
 let coursesPolesRepository: InMemoryCoursesPolesRepository
@@ -14,9 +17,13 @@ let sut: CreateCourseUseCase
 describe('Create Course Use Case', () => {
   beforeEach(() => {
     vi.useFakeTimers()
+    
+    polesRepositoy = new InMemoryPolesRepository()
 
     coursesRepository = new InMemoryCoursesRepository()
-    coursesPolesRepository = new InMemoryCoursesPolesRepository()
+    coursesPolesRepository = new InMemoryCoursesPolesRepository(
+      polesRepositoy
+    )
     coursesDisciplinesRepository = new InMemoryCoursesDisciplinesRepository()
     sut = new CreateCourseUseCase(
       coursesRepository,
@@ -33,7 +40,15 @@ describe('Create Course Use Case', () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
-    const result = await sut.execute({ formula: course.formula, imageUrl: course.imageUrl, name: course.name.value, endsAt: new Date(), disciplines: [], poleIds: [] })
+    const result = await sut.execute({
+      formula: course.formula, 
+      imageUrl: course.imageUrl, 
+      name: course.name.value, 
+      endsAt: new Date(), 
+      disciplines: [], 
+      poleIds: [], 
+      isPeriod: false 
+    })
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)
@@ -47,6 +62,7 @@ describe('Create Course Use Case', () => {
       imageUrl: 'random-url', 
       name: 'CFP - 2024', 
       endsAt: new Date('2023'),
+      isPeriod: false,
       disciplines: [
         {
           id: 'discipline-1',

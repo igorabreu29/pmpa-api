@@ -20,10 +20,7 @@ export function makeCourse(
   const course = Course.create({
     formula: 'CAS',
     name: nameOrError.value,
-    active: 'enabled',
     imageUrl: faker.internet.url(),
-    modules: null,
-    periods: null,
     endsAt: endsAtOrError.value,
     ...override
   }, id)

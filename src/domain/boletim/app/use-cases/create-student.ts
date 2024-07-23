@@ -1,6 +1,5 @@
 import { Either, left, right } from "@/core/either.ts";
 import { StudentsRepository } from "../repositories/students-repository.ts";
-import { Hasher } from "../cryptography/hasher.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
@@ -48,8 +47,7 @@ export class CreateStudentUseCase {
     private studentsCoursesRepository: StudentsCoursesRepository, 
     private studentsPolesRepository: StudentsPolesRepository,
     private coursesRepository: CoursesRepository,
-    private polesRepository: PolesRepository,
-    private hasher: Hasher
+    private polesRepository: PolesRepository
   ) {}
 
   async execute({
