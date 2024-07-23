@@ -11,7 +11,10 @@ export function makeCourse(
   const nameOrError = Name.create(faker.person.fullName())
   if (nameOrError.isLeft()) throw new Error(nameOrError.value.message)
 
-  const endsAtOrError = EndsAt.create(new Date(new Date().getTime() + 10))
+  const endsAt = new Date()
+  endsAt.setMinutes(new Date().getMinutes() + 10)
+
+  const endsAtOrError = EndsAt.create(endsAt)
   if (endsAtOrError.isLeft()) throw new Error(endsAtOrError.value.message)
 
   const course = Course.create({
