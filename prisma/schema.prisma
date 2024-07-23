@@ -1,0 +1,206 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  MANAGER
+  ADMIN
+  DEV
+}
+
+model User {
+  id       String @id @default(cuid())
+  email    String @unique
+  cpf      String @unique
+  password String
+
+  username         String
+  isActive         Boolean
+  avatarUrl        String?
+  isLoginConfirmed DateTime?
+  birthday         DateTime?
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  role Role @default(STUDENT)
+
+  profile        Profile?
+  assessments    Assessment[]
+  behaviors      Behavior[]
+  usersOnCourses UserOnCourse[]
+
+  @@map("users")
+}
+
+model Profile {
+  userId     String  @unique
+  motherName String?
+  fatherName String?
+
+  civilId    Int
+  militaryId Int?
+
+  state  String?
+  county String?
+
+  userIp String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("profiles")
+}
+
+model UserOnCourse {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  courses      Course             @relation(fields: [courseId], references: [id])
+  users        User               @relation(fields: [userId], references: [id])
+  usersOnPoles UserCourseOnPole[]
+
+  @@index([userId, courseId])
+}
+
+model UserCourseOnPole {
+  id             String   @id @default(cuid())
+  userOnCourseId String
+  poleId         String
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  usersOnCourses UserOnCourse @relation(fields: [userOnCourseId], references: [id])
+  poles          Pole         @relation(fields: [poleId], references: [id])
+}
+
+model Course {
+  id       String  @id @default(cuid())
+  name     String
+  isActive Boolean @default(true)
+  isPeriod Boolean @default(false)
+  imageUrl String
+
+  startAt DateTime @default(now()) @map("starts_at")
+  endsAt  DateTime
+
+  assessments          Assessment[]
+  behaviors            Behavior[]
+  coursesOnPoles       CourseOnPole[]
+  userOnCourses        UserOnCourse[]
+  coursesOnDisciplines CourseOnDiscipline[]
+  coursesHistorics     CourseHistoric[]
+
+  @@map("courses")
+}
+
+model CourseHistoric {
+  id       String @id @default(cuid())
+  courseId String
+
+  classname  String
+  startDate  DateTime @map("start_date")
+  finishDate DateTime @map("finish_date")
+
+  speechs      Int?
+  internships  Int?
+  totalHours   Int? @map("total_hours")
+  divisionBoss Int? @map("division_boss")
+  commander    Int?
+
+  courses Course @relation(fields: [courseId], references: [id])
+}
+
+model CourseOnPole {
+  id       String @id @default(cuid())
+  courseId String
+  poleId   String
+
+  courses Course @relation(fields: [courseId], references: [id])
+  poles   Pole   @relation(fields: [poleId], references: [id])
+
+  @@index([courseId, poleId])
+  @@map("courses_on_poles")
+}
+
+model CourseOnDiscipline {
+  id           String @id @default(cuid())
+  courseId     String
+  disciplineId String
+
+  module   Int
+  hours    Int
+  expected String
+
+  courses     Course     @relation(fields: [courseId], references: [id])
+  disciplines Discipline @relation(fields: [disciplineId], references: [id])
+
+  @@map("courses_on_disciplines")
+}
+
+model Pole {
+  id   String @id @default(cuid())
+  name String
+
+  coursesOnPoles     CourseOnPole[]
+  userCoursesOnPoles UserCourseOnPole[]
+
+  @@map("poles")
+}
+
+model Discipline {
+  id   String @id @default(cuid())
+  name String
+
+  assessments          Assessment[]
+  coursesOnDisciplines CourseOnDiscipline[]
+
+  @@map("disciplines")
+}
+
+model Assessment {
+  id           String @id @default(cuid())
+  studentId    String
+  courseId     String
+  disciplineId String
+
+  vf   Decimal
+  avi  Decimal?
+  avii Decimal?
+  vfe  Decimal?
+
+  students    User       @relation(fields: [studentId], references: [id])
+  courses     Course     @relation(fields: [courseId], references: [id])
+  disciplines Discipline @relation(fields: [disciplineId], references: [id])
+
+  @@map("assessments")
+}
+
+model Behavior {
+  id        String @id @default(cuid())
+  studentId String
+  courseId  String
+
+  january     Decimal?
+  february    Decimal?
+  march       Decimal?
+  april       Decimal?
+  may         Decimal?
+  jun         Decimal?
+  july        Decimal?
+  august      Decimal?
+  september   Decimal?
+  october     Decimal?
+  november    Decimal?
+  decimal     Decimal?
+  currentYear Int?
+
+  students User   @relation(fields: [studentId], references: [id])
+  courses  Course @relation(fields: [courseId], references: [id])
+
+  @@map("behaviors")
+}
