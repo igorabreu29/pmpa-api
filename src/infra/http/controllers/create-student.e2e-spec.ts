@@ -4,7 +4,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { prisma } from '@/infra/database/lib/prisma.ts'
 
-describe('Authenticate (e2e)', () => {
+describe('Students (e2e)', () => {
   beforeAll(async () => {
     await app.ready()
   }) 
@@ -14,15 +14,21 @@ describe('Authenticate (e2e)', () => {
   }) 
 
   it ('POST /credentials/auth', async () => {
-    await prisma.user.create({
+    const endsAt = new Date()
+    endsAt.setMinutes(new Date().getMinutes() + 10)
+
+    await prisma.course.create({
       data: {
-        cpf: '05399970210',
-        password: '$2a$08$grhz.fiRrbOMRnJ9Sb/lZOIGf4fmkcC9bZUUX3IDCTWxu9XA6WtKi',
-        email: '',
-        username: 'igor',
-        role: 'DEV',
-        isActive: true,
-        civilId: '00009'
+        endsAt,
+        formula: 'CAS',
+        imageUrl: '',
+        name: 'CAS',
+      }
+    })
+
+    await prisma.pole.create({
+      data: {
+        name: 'pole-1'
       }
     })
 
