@@ -11,6 +11,7 @@ interface StudentDetailsProps {
   assignedAt: Date
   birthday: Date
   civilID: number
+  avatarUrl?: string
 
   courses: Course[]
   poles: Pole[]
