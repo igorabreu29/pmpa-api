@@ -26,6 +26,7 @@ model User {
   isLoginConfirmed DateTime?
   birthday         DateTime?
   createdAt        DateTime  @default(now()) @map("created_at")
+  civilId          String
 
   role Role @default(STUDENT)
 
@@ -42,7 +43,6 @@ model Profile {
   motherName String?
   fatherName String?
 
-  civilId    Int
   militaryId Int?
 
   state  String?
@@ -78,12 +78,21 @@ model UserCourseOnPole {
   poles          Pole         @relation(fields: [poleId], references: [id])
 }
 
+enum Formula {
+  CGS
+  CFP
+  CAS
+  CHO
+  CFO
+}
+
 model Course {
   id       String  @id @default(cuid())
   name     String
   isActive Boolean @default(true)
   isPeriod Boolean @default(false)
   imageUrl String
+  formula  Formula
 
   startAt DateTime @default(now()) @map("starts_at")
   endsAt  DateTime
