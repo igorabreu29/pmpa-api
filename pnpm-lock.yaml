@@ -26,6 +26,9 @@ importers:
       fastify-type-provider-zod:
         specifier: ^2.0.0
         version: 2.0.0(fastify@4.28.1)(zod@3.23.8)
+      vitest-environment-prisma:
+        specifier: link:prisma\vitest-environment-prisma
+        version: link:prisma/vitest-environment-prisma
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -48,6 +51,9 @@ importers:
       '@vitest/ui':
         specifier: ^1.6.0
         version: 1.6.0(vitest@1.6.0)
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
@@ -701,6 +707,10 @@ packages:
   diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+
+  dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+    engines: {node: '>=12'}
 
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
@@ -2237,6 +2247,8 @@ snapshots:
       wrappy: 1.0.2
 
   diff-sequences@29.6.3: {}
+
+  dotenv@16.4.5: {}
 
   ecdsa-sig-formatter@1.0.11:
     dependencies:

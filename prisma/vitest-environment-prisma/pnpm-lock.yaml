@@ -6,4 +6,8 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    dependencies:
+      pmpa-api:
+        specifier: link:C:/Users/PMPA/Desktop/PMPA/igor/pmpa-api
+        version: link:../..
