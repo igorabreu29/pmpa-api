@@ -4,8 +4,8 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { ClientError } from "../errors/client-error.ts";
-import { ConflictError } from "../errors/conflict-error.ts";
 import { env } from "@/infra/env/index.ts";
+import { UnauthorizedError } from "../errors/unauthorized-error.ts";
 
 export async function authenticate(
   app: FastifyInstance
@@ -32,7 +32,7 @@ export async function authenticate(
 
       switch(error.constructor) {
         case InvalidCredentialsError: 
-          throw new ConflictError('CPF or password invalid')
+          throw new UnauthorizedError('CPF or password invalid')
         default: 
           throw new ClientError('Bad Request')
       }
