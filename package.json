@@ -11,10 +11,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:create-prisma-environment": "pnpm link --dir ./prisma/vitest-environment-prisma",
-    "test:install-prisma-environment": "pnpm add ./prisma/vitest-environment-prisma",
-    "test:e2e:pre": "run-s test:create-prisma-environment test:install-prisma-environment",
-    "test:e2e": "pnpm test:e2e:pre && pnpm vitest run --c ./vitest.config.e2e.ts",
+    "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
+    "test:install-prisma-environment": "npm link vitest-environment-prisma",
+    "prestest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
+    "test:e2e": "vitest run --c ./vitest.config.e2e.ts",
+    "test:e2e:watch": "vitest --c ./vitest.config.e2e.ts",
     "dev": "tsx watch --env-file .env src/infra/http/server.ts"
   },
   "keywords": [],
@@ -43,7 +44,6 @@
     "dayjs": "^1.11.11",
     "fastify": "^4.28.1",
     "fastify-type-provider-zod": "^2.0.0",
-    "vitest-environment-prisma": "link:prisma\\vitest-environment-prisma",
     "zod": "^3.23.8",
     "zod-validation-error": "^3.3.0"
   }
