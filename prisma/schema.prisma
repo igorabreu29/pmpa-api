@@ -118,8 +118,8 @@ model CourseHistoric {
   speechs      Int?
   internships  Int?
   totalHours   Int? @map("total_hours")
-  divisionBoss Int? @map("division_boss")
-  commander    Int?
+  divisionBoss String? @map("division_boss")
+  commander    String?
 
   courses Course @relation(fields: [courseId], references: [id])
 }
@@ -205,7 +205,7 @@ model Behavior {
   september   Decimal?
   october     Decimal?
   november    Decimal?
-  decimal     Decimal?
+  december     Decimal?
   currentYear Int?
 
   students User   @relation(fields: [studentId], references: [id])
