@@ -5,8 +5,5 @@
   "main": "prisma-test-environment.ts",
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "pmpa-api": "link:C:/Users/PMPA/Desktop/PMPA/igor/pmpa-api"
-  }
+  "license": "ISC"
 }
