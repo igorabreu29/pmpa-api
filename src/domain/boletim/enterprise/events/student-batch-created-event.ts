@@ -3,7 +3,7 @@ import { DomainEvent } from "@/core/events/domain-event.ts";
 import { StudentBatch } from "../entities/student-batch.ts";
 
 interface StudentBatchCreatedEventProps {
-  studentBatch: StudentBatch,
+  studentBatch: StudentBatch
   reporterIp: string
 }
 
