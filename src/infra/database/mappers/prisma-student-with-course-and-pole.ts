@@ -13,7 +13,7 @@ export class PrismaStudentWithCourseAndPoleMapper {
       studentId: new UniqueEntityId(student.id),
       email: student.email,
       cpf: student.cpf,
-      civilID: Number(student.civilId),
+      civilId: Number(student.civilId),
       assignedAt: student.createdAt,
       username: student.username,
       birthday: student.birthday as Date,

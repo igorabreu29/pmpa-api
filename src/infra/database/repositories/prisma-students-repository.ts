@@ -88,7 +88,6 @@ export class PrismaStudentsRepository implements StudentsRepository {
       civilId: studentDetails.civilId,
       avatarUrl: studentDetails.avatarUrl,
       birthday: studentDetails.birthday,
-      civilID: studentDetails.civilId,
       assignedAt: studentDetails.createdAt,
       role: studentDetails.role,
       isActive: studentDetails.isActive,

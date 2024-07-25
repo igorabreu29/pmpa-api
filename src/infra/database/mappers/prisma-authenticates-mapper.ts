@@ -2,7 +2,7 @@ import { formatCPF } from '@/core/utils/formatCPF.ts';
 import { Authenticate } from '@/domain/boletim/enterprise/entities/authenticate.ts';
 import { CPF } from '@/domain/boletim/enterprise/entities/value-objects/cpf.ts';
 import { Password } from '@/domain/boletim/enterprise/entities/value-objects/password.ts';
-import { defineRoleAccess } from '@/infra/utils/define-role.ts';
+import { defineRoleAccessToPrisma } from '@/infra/utils/define-role.ts';
 import { Prisma, User as PrismaAuthenticate } from '@prisma/client'
 
 export class PrismaAuthenticatesMapper {
@@ -18,7 +18,7 @@ export class PrismaAuthenticatesMapper {
     const authenticateOrError = Authenticate.create({
       cpf: cpfOrError.value,
       passwordHash: passwordOrError.value,
-      role: defineRoleAccess(authenticate.role),
+      role: defineRoleAccessToPrisma(authenticate.role),
       isLoginConfirmed: authenticate.isLoginConfirmed ? true : false
     })
     if (authenticateOrError.isLeft()) throw new Error(authenticateOrError.value.message)
