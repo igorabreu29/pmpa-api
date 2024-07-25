@@ -32,7 +32,7 @@ export function makeAdministrator(
     passwordHash: passwordOrError.value,
     username: nameOrError.value,
     birthday: birthdayOrError.value,
-    civilID: faker.number.int(),
+    civilId: faker.number.int(),
     ...override
   }, id)
   if (administratorOrError.isLeft()) throw new Error('Invalid administrator')
