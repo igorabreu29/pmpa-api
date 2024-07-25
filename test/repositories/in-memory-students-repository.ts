@@ -63,7 +63,7 @@ export class InMemoryStudentsRepository implements StudentsRepository {
       username: student.username.value,
       email: student.email.value,
       cpf: student.cpf.value,
-      civilID: student.civilId ?? 0e2,
+      civilId: student.civilId ?? 0e2,
       birthday: student.birthday.value,
       assignedAt: student.createdAt,
       courses,
@@ -73,6 +73,8 @@ export class InMemoryStudentsRepository implements StudentsRepository {
   
   async create(student: Student): Promise<void> {
     this.items.push(student)
+
+    DomainEvents.dispatchEventsForAggregate(student.id)
   }
 
   async createMany(students: Student[]): Promise<void> {
@@ -101,5 +103,7 @@ export class InMemoryStudentsRepository implements StudentsRepository {
     }
 
     this.items.splice(studentIndex, 1)
+
+    DomainEvents.dispatchEventsForAggregate(student.id)
   }
 }

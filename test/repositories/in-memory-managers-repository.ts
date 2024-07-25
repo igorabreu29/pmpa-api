@@ -5,6 +5,7 @@ import { InMemoryCoursesRepository } from "./in-memory-courses-repository.ts";
 import { InMemoryManagersPolesRepository } from "./in-memory-managers-poles-repository.ts";
 import { InMemoryPolesRepository } from "./in-memory-poles-repository.ts";
 import { ManagerDetails } from "@/domain/boletim/enterprise/entities/value-objects/manager-details.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class InMemoryManagersRepository implements ManagersRepository {
   public items: Manager[] = []
@@ -55,7 +56,7 @@ export class InMemoryManagersRepository implements ManagersRepository {
     return ManagerDetails.create({
       managerId: manager.id,
       username: manager.username.value,
-      civilID: manager.civilId,
+      civilId: manager.civilId,
       assignedAt: manager.createdAt,
       birthday: manager.birthday.value,
       cpf: manager.cpf.value,
@@ -77,11 +78,15 @@ export class InMemoryManagersRepository implements ManagersRepository {
 
   async create(manager: Manager): Promise<void> {
     this.items.push(manager)
+
+    DomainEvents.dispatchEventsForAggregate(manager.id)
   }
 
   async save(manager: Manager): Promise<void> {
     const managerIndex = this.items.findIndex(item => item.equals(manager))
     this.items[managerIndex] = manager
+
+    DomainEvents.dispatchEventsForAggregate(manager.id)
   }
 
   async delete(manager: Manager): Promise<void> {
@@ -97,5 +102,7 @@ export class InMemoryManagersRepository implements ManagersRepository {
     }
 
     this.items.splice(managerIndex, 1)
+
+    DomainEvents.dispatchEventsForAggregate(manager.id)
   }
 }
