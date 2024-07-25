@@ -13,11 +13,11 @@ describe('Students (e2e)', () => {
     await app.close()
   }) 
 
-  it ('POST /credentials/auth', async () => {
+  it ('POST /students', async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
 
-    await prisma.course.create({
+    const course = await prisma.course.create({
       data: {
         endsAt,
         formula: 'CAS',
@@ -26,24 +26,27 @@ describe('Students (e2e)', () => {
       }
     })
 
-    await prisma.pole.create({
+    const pole = await prisma.pole.create({
       data: {
         name: 'pole-1'
       }
     })
 
     const data = {
+      username: 'Igor',
       cpf: '05399970210',
-      password: 'node-20'
+      password: 'node-20',
+      email: 'igor29nahan@gmail.com',
+      birthday: '29/01/2006',
+      civilId: 0e5,
+      courseId: course.id,
+      poleId: pole.id
     }
 
     const result = await request(app.server)
-      .post('/credentials/auth')
+      .post('/students')
       .send(data)
-      .expect(201)
 
-    const { token } = result.body
-
-    expect(token).toEqual(expect.any(String))
+    expect(result.statusCode).toEqual(201)
   })
 })
