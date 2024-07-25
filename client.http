@@ -1,10 +1,25 @@
 @baseUrl = http://localhost:3333
 
 ###
-POST http://localhost:3333/credentials/auth
+POST {{baseUrl}}/credentials/auth
 Content-Type: application/json
 
 {
   "cpf": "05399970210",
   "password": "node-20"
+}
+
+###
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+    "username": "Igor",
+    "cpf": "053.999.702-10",
+    "password": "node-20",
+    "email": "igor29nahan@gmail.com",
+    "birthday": "29/01/2006",
+    "civilId": 12345,
+    "courseId": "clz1f0f2v000013hh4mwb399j",
+    "poleId": "clz1f0xk4000113hhfg6euud4"
 }
