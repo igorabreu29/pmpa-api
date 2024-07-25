@@ -12,7 +12,7 @@ export function makeCreateStudentUseCase() {
   const coursesRepository = new PrismaCoursesRepository()
   const polesRepository = new PrismaPolesRepository() 
 
-  return new CreateStudentUseCase(
+  return new CreateStudentUseCase (
     studentsRepository,
     studentsCoursesRepository,
     studentsPolesRepository,
