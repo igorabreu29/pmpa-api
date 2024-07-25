@@ -47,7 +47,7 @@ export class GetCourseClassificationByPoleUseCase {
       return {
         studentAverage: studentAverage.value.grades,
         studentBirthday: student.birthday,
-        studentCivilID: student.civilID,
+        studentCivilID: student.civilId,
       }
     }))
 

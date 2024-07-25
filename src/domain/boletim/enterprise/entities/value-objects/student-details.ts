@@ -10,7 +10,7 @@ interface StudentDetailsProps {
   cpf: string
   assignedAt: Date
   birthday: Date
-  civilID: number
+  civilId: number
   avatarUrl?: string
 
   courses: Course[]
@@ -42,8 +42,8 @@ export class StudentDetails extends ValueObject<StudentDetailsProps> {
     return this.props.birthday
   }
 
-  get civilID() {
-    return this.props.civilID
+  get civilId() {
+    return this.props.civilId
   }
 
   get courses() {

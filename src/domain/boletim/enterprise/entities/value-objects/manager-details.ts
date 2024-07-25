@@ -10,7 +10,8 @@ interface ManagerDetailsProps {
   cpf: string
   assignedAt: Date
   birthday: Date
-  civilID: number
+  civilId: number
+  avatarUrl?: string
 
   courses: Course[]
   poles: Pole[]
@@ -41,8 +42,8 @@ export class ManagerDetails extends ValueObject<ManagerDetailsProps> {
     return this.props.birthday
   }
 
-  get civilID() {
-    return this.props.civilID
+  get civilId() {
+    return this.props.civilId
   }
 
   get courses() {

@@ -15,7 +15,7 @@ interface StudentWithCourseAndPoleProps {
   pole: string
 
   birthday: Date
-  civilID: number
+  civilId: number
 }
 
 export class StudentWithCourseAndPole extends ValueObject<StudentWithCourseAndPoleProps> {
@@ -59,8 +59,8 @@ export class StudentWithCourseAndPole extends ValueObject<StudentWithCourseAndPo
     return this.props.birthday
   }
 
-  get civilID() {
-    return this.props.civilID
+  get civilId() {
+    return this.props.civilId
   }
 
   static create(props: StudentWithCourseAndPoleProps) {
