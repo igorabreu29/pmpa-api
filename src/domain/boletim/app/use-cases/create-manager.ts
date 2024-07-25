@@ -14,8 +14,12 @@ import { CPF } from "../../enterprise/entities/value-objects/cpf.ts";
 import { Email } from "../../enterprise/entities/value-objects/email.ts";
 import { Name } from "../../enterprise/entities/value-objects/name.ts";
 import { Password } from "../../enterprise/entities/value-objects/password.ts";
+import { ManagerEvent } from "../../enterprise/events/manager-event.ts";
 
 interface CreateManagerUseCaseRequest {
+  userId: string
+  userIp: string
+
   username: string
   email: string
   cpf: string
@@ -37,6 +41,8 @@ export class CreateManagerUseCase {
   ) {}
 
   async execute({
+    userId,
+    userIp,
     courseId,
     poleId,
     cpf, 
@@ -117,7 +123,7 @@ export class CreateManagerUseCase {
       if (managerAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Manager already present at a pole'))
 
       const managerPole = ManagerPole.create({
-        managerId: managerWithEmail.id,
+        managerId: managerCourse.id,
         poleId: pole.id
       })
       await this.managersPolesRepository.create(managerPole)
@@ -138,6 +144,14 @@ export class CreateManagerUseCase {
       poleId: pole.id
     })
     await this.managersPolesRepository.create(managerPole)
+
+    manager.addDomainManagerEvent(
+      new ManagerEvent({
+        manager,
+        reporterId: userId,
+        reporterIp: userIp
+      })
+    )
 
     return right(null)
   }

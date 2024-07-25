@@ -14,6 +14,7 @@ import { CPF } from "./value-objects/cpf.ts";
 import { Email } from "./value-objects/email.ts";
 import { Name } from "./value-objects/name.ts";
 import { Password } from "./value-objects/password.ts";
+import { DomainEvent } from "@/core/events/domain-event.ts";
 
 export type StudentRole = 'student'
 
@@ -150,6 +151,10 @@ export class Student extends AggregateRoot<StudentProps> {
   }
   set ip(value) {
     this.props.ip = value
+  }
+
+  public addDomainStudentEvent(domainEvent: DomainEvent): void {
+    this.addDomainEvent(domainEvent)
   }
 
   static create(

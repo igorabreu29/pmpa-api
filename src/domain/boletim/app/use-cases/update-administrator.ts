@@ -13,8 +13,12 @@ import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { formatCPF } from "@/core/utils/formatCPF.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { AdministratorEvent } from "../../enterprise/events/administrator-event.ts";
 
 interface UpdateAdministratorUseCaseRequest {
+  userId: string
+  userIp: string
+
   id: string
   username?: string
   email?: string
@@ -41,7 +45,7 @@ export class UpdateAdministratorUseCase {
     private administratorsRepository: AdministratorsRepository
   ) {}
 
-  async execute({ id, username, email, password, cpf, civilId, birthday, role }: UpdateAdministratorUseCaseRequest): Promise<UpdateAdministratorUseCaseResponse> {
+  async execute({ id, username, email, password, cpf, civilId, birthday, role, userId, userIp }: UpdateAdministratorUseCaseRequest): Promise<UpdateAdministratorUseCaseResponse> {
     const administrator = await this.administratorsRepository.findById(id)
     if (!administrator) return left(new ResourceNotFoundError('Administrator not found.'))
     if (role !== 'dev') return left(new NotAllowedError())
@@ -65,9 +69,17 @@ export class UpdateAdministratorUseCase {
     administrator.passwordHash = passwordOrError.value
     administrator.birthday = birthdayOrError.value
     administrator.cpf = cpfOrError.value
-    administrator.civilID = civilId ?? administrator.civilID
+    administrator.civilId = civilId ?? administrator.civilId
 
     await this.administratorsRepository.save(administrator)
+
+    administrator.addDomainAdministratorEvent(
+      new AdministratorEvent({
+        administrator,
+        reporterId: userId, 
+        reporterIp: userIp
+      })
+    )
 
     return right(null)
   }

@@ -7,13 +7,17 @@ import { Birthday } from "../../enterprise/entities/value-objects/birthday.ts"
 import { CPF } from "../../enterprise/entities/value-objects/cpf.ts"
 import { Email } from "../../enterprise/entities/value-objects/email.ts"
 import { Password } from "../../enterprise/entities/value-objects/password.ts"
+import { AdministratorEvent } from "../../enterprise/events/administrator-event.ts"
 
 interface CreateAdminUseCaseRequest {
+  userId: string
+  userIp: string
+
   username: string
   email: string
   cpf: string
   password: string
-  civilID: number
+  civilId: number
   birthday: Date
 }
 
@@ -24,7 +28,7 @@ export class CreateAdminUseCase {
     private administratorsRepository: AdministratorsRepository,
   ) {}
 
-  async execute({ username, email, password, cpf, birthday, civilID }: CreateAdminUseCaseRequest): Promise<CreateAdminUseCaseResponse> {
+  async execute({ username, email, password, cpf, birthday, civilId, userId, userIp }: CreateAdminUseCaseRequest): Promise<CreateAdminUseCaseResponse> {
     const nameOrError = Name.create(username)
     const emailOrError = Email.create(email)
     const cpfOrError = CPF.create(cpf)
@@ -45,7 +49,7 @@ export class CreateAdminUseCase {
       role: 'admin',
       cpf: cpfOrError.value,
       birthday: birthdayOrError.value,
-      civilID
+      civilId
     })
     if (administratorOrError.isLeft()) return left(administratorOrError.value)
     const administrator = administratorOrError.value
@@ -57,6 +61,14 @@ export class CreateAdminUseCase {
     if (userAlreadyExistWithEmail) return left(new ResourceAlreadyExistError('Administrator already exist.'))
 
     await this.administratorsRepository.create(administrator)
+
+    administrator.addDomainAdministratorEvent(
+      new AdministratorEvent({
+        administrator,
+        reporterId: userId, 
+        reporterIp: userIp
+      })
+    )
 
     return right(null)
   }

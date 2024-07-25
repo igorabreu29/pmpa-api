@@ -12,6 +12,8 @@ import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts"
 import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts"
 import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts"
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts"
+import { AggregateRoot } from "@/core/entities/aggregate-root.ts"
+import { DomainEvent } from "@/core/events/domain-event.ts"
 
 export type AdministratorRole = 'admin'
 
@@ -25,12 +27,12 @@ interface AdministratorProps {
   avatarUrl?: string | null
   createdAt: Date
 
-  civilID: number
+  civilId: number
   birthday: Birthday
 }
 
 
-export class Administrator extends Entity<AdministratorProps> {
+export class Administrator extends AggregateRoot<AdministratorProps> {
   get username() {
     return this.props.username
   }
@@ -77,11 +79,11 @@ export class Administrator extends Entity<AdministratorProps> {
     this.props.active = value
   }
 
-  get civilID() {
-    return this.props.civilID
+  get civilId() {
+    return this.props.civilId
   }
-  set civilID(value) {
-    this.props.civilID = value
+  set civilId(value) {
+    this.props.civilId = value
   }
 
   get birthday() {
@@ -93,6 +95,10 @@ export class Administrator extends Entity<AdministratorProps> {
 
   get createdAt() {
     return this.props.createdAt
+  }
+
+  public addDomainAdministratorEvent(domainEvent: DomainEvent): void {
+    this.addDomainEvent(domainEvent)
   }
 
   static create(

@@ -12,7 +12,7 @@ interface CreateDeveloperUseCaseRequest {
   email: string
   cpf: string
   password: string
-  civilID: number
+  civilId: number
 }
 
 type CreateDeveloperUseCaseResponse = Either<ResourceAlreadyExistError, null>

@@ -10,6 +10,8 @@ import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts"
 import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts"
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts"
+import { Birthday } from "./value-objects/birthday.ts"
+import { InvalidDateError } from "@/core/errors/domain/invalid-date.ts"
 
 export type DeveloperRole = 'dev'
 
@@ -21,6 +23,8 @@ interface DeveloperProps {
   role: DeveloperRole
   active: boolean
   avatarUrl?: string | null
+  civilId?: number
+  birthday?: Birthday
   createdAt: Date
 }
 
@@ -68,6 +72,20 @@ export class Developer extends Entity<DeveloperProps> {
     this.props.active = value
   }
 
+  get civilId() {
+    return this.props.civilId
+  }
+  set civilId(value) {
+   this.props.civilId = value
+  }
+
+  get birthday() {
+    return this.props.birthday
+  }
+  set birthday(value) {
+   this.props.birthday = value
+  }
+
   get createdAt() {
     return this.props.createdAt
   }
@@ -79,7 +97,8 @@ export class Developer extends Entity<DeveloperProps> {
       | InvalidNameError
       | InvalidCPFError
       | InvalidEmailError
-      | InvalidPasswordError,
+      | InvalidPasswordError
+      | InvalidDateError,
       Developer
     > {
     const developer = new Developer({

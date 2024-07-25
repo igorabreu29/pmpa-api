@@ -13,6 +13,8 @@ import { CPF } from "./value-objects/cpf.ts";
 import { Email } from "./value-objects/email.ts";
 import { Name } from "./value-objects/name.ts";
 import { Password } from "./value-objects/password.ts";
+import { AggregateRoot } from "@/core/entities/aggregate-root.ts";
+import { DomainEvent } from "@/core/events/domain-event.ts";
 
 export type ManagerRole = 'manager'
 
@@ -36,7 +38,7 @@ interface ManagerProps {
   county?: string
 }
 
-export class Manager extends Entity<ManagerProps> {
+export class Manager extends AggregateRoot<ManagerProps> {
   get username() {
     return this.props.username
   }
@@ -127,6 +129,10 @@ export class Manager extends Entity<ManagerProps> {
 
   get createdAt() {
     return this.props.createdAt
+  }
+
+  public addDomainManagerEvent(domainEvent: DomainEvent): void {
+    this.addDomainEvent(domainEvent)
   }
 
   static create(

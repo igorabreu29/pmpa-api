@@ -13,6 +13,7 @@ import type { InvalidPasswordError } from "@/core/errors/domain/invalid-password
 import type { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { formatCPF } from "@/core/utils/formatCPF.ts";
+import { StudentEvent } from "../../enterprise/events/student-event.ts";
 
 interface UpdateStudentUseCaseRequest {
   id: string
@@ -30,6 +31,9 @@ interface UpdateStudentUseCaseRequest {
   county?: string
   courseId?: string
   poleId?: string
+
+  userId: string
+  userIp: string
 }
 
 type UpdateStudentUseCaseResponse = Either<
@@ -61,6 +65,8 @@ export class UpdateStudentUseCase {
     birthday,
     state,
     county,
+    userId,
+    userIp
   }: UpdateStudentUseCaseRequest): Promise<UpdateStudentUseCaseResponse> {
     const student = await this.studentsRepository.findById(id)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
@@ -93,6 +99,16 @@ export class UpdateStudentUseCase {
     }
     student.state = state ?? student.state
     student.county = county ?? student.county
+
+
+    student.addDomainStudentEvent(
+      new StudentEvent({
+        reporterId: userId,
+        reporterIp: userIp,
+        student
+      })
+    )
+
 
     return right(null)
   }

@@ -19,13 +19,17 @@ import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
+import { StudentEvent } from "../../enterprise/events/student-event.ts";
 
 interface CreateStudentUseCaseRequest {
+  userId: string
+  userIp: string
+
   username: string
   email: string
   cpf: string
   birthday: Date
-  civilID: number
+  civilId: number
   courseId: string
   poleId: string
 }
@@ -57,7 +61,9 @@ export class CreateStudentUseCase {
     email, 
     username,
     birthday,
-    civilID
+    civilId,
+    userId,
+    userIp
   }: CreateStudentUseCaseRequest): Promise<CreateStudentUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
@@ -85,7 +91,7 @@ export class CreateStudentUseCase {
       cpf: cpfOrError.value,
       email: emailOrError.value,
       passwordHash: passwordOrError.value,
-      civilId: civilID,
+      civilId: civilId,
       birthday: birthdayOrError.value,
       role: 'student'
     })
@@ -108,8 +114,8 @@ export class CreateStudentUseCase {
       if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Student already present at a pole'))
 
       const studentPole = StudentPole.create({
-        studentId: studentWithCPF.id,
-        poleId: studentCourse.id
+        studentId: studentCourse.id,
+        poleId: pole.id
       })
       await this.studentsPolesRepository.create(studentPole)
 
@@ -131,7 +137,7 @@ export class CreateStudentUseCase {
       if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Student already present at a pole'))
       
       const studentPole = StudentPole.create({
-        studentId: studentWithEmail.id,
+        studentId: studentCourse.id,
         poleId: pole.id
       })
       await this.studentsPolesRepository.create(studentPole)
@@ -148,11 +154,19 @@ export class CreateStudentUseCase {
     await this.studentsCoursesRepository.create(studentCourse)
 
     const studentPole = StudentPole.create({
-      studentId: student.id,
+      studentId: studentCourse.id,
       poleId: pole.id
     })
     await this.studentsPolesRepository.create(studentPole)
-  
+
+    student.addDomainStudentEvent(
+      new StudentEvent({
+        reporterId: userId,
+        reporterIp: userIp,
+        student
+      })
+    )
+
     return right(null)
   }
 }

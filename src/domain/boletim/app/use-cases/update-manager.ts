@@ -15,6 +15,9 @@ import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { formatCPF } from "@/core/utils/formatCPF.ts";
 
 interface UpdateManagerUseCaseRequest {
+  userId: string
+  userIp: string
+
   id: string
   role: string
   username?: string
@@ -61,6 +64,8 @@ export class UpdateManagerUseCase {
     birthday,
     state,
     county,
+    userId,
+    userIp
   }: UpdateManagerUseCaseRequest): Promise<UpdateManagerUseCaseResponse> {
     const manager = await this.managersRepository.findById(id)
     if (!manager) return left(new ResourceNotFoundError('manager not found.'))
