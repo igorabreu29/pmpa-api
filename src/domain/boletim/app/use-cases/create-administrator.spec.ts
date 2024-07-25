@@ -34,7 +34,9 @@ describe('Create Admin Use Case', () => {
       email: administrator.email.value, 
       username: administrator.username.value,
       birthday: new Date('2002'),
-      civilID: 20202
+      civilId: 20202,
+      userId: '',
+      userIp: ''
     })
     
     expect(result.isLeft()).toBe(true)
@@ -53,7 +55,9 @@ describe('Create Admin Use Case', () => {
       email: administrator.email.value, 
       username: administrator.username.value,
       birthday: new Date('2002'),
-      civilID: 20202
+      civilId: 20202,
+      userId: '',
+      userIp: ''
     })
     
     expect(result.isLeft()).toBe(true)
@@ -67,7 +71,9 @@ describe('Create Admin Use Case', () => {
       username: 'John Doe',
       password: '202020',
       birthday: new Date('2002'),
-      civilID: 20202
+      civilId: 20202,
+      userId: '',
+      userIp: ''
     }
 
     const spyOn = vi.spyOn(bcryptjs, 'hash').mockImplementation((password: string) => {

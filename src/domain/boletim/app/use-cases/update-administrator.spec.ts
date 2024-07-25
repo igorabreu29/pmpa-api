@@ -20,7 +20,9 @@ describe('Update Administrator Use Case', () => {
   it ('should not be able to update a administrator that does not exist', async () => {
     const result = await sut.execute({
       id: 'not-found',
-      role: ''
+      role: '',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -33,7 +35,9 @@ describe('Update Administrator Use Case', () => {
 
     const result = await sut.execute({
       id: administrator.id.toValue(),
-      role: 'admin'
+      role: 'admin',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -52,7 +56,9 @@ describe('Update Administrator Use Case', () => {
     const result = await sut.execute({
       id: administrator.id.toValue(),
       username: 'Josh Ned',
-      role: 'dev'
+      role: 'dev',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isRight()).toBe(true)

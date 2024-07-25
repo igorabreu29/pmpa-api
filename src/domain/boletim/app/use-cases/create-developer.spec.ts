@@ -32,7 +32,7 @@ describe('Create Developer Use Case', () => {
       password: developer.passwordHash.value, 
       email: developer.email.value, 
       username: developer.username.value,
-      civilID: 20202
+      civilId: 20202
     })
     
     expect(result.isLeft()).toBe(true)
@@ -48,7 +48,7 @@ describe('Create Developer Use Case', () => {
       password: developer.passwordHash.value, 
       email: developer.email.value, 
       username: developer.username.value,
-      civilID: 20202
+      civilId: 20202
     })
     
     expect(result.isLeft()).toBe(true)
@@ -61,7 +61,7 @@ describe('Create Developer Use Case', () => {
       email: 'test@test.com',
       username: 'John Doe',
       password: '202020',
-      civilID: 20202
+      civilId: 20202
     }
 
     const spyOn = vi.spyOn(bcryptjs, 'hash').mockImplementation((password: string) => {

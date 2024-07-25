@@ -63,7 +63,9 @@ describe('Create Manager Use Case', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilId: 0
+        civilId: 0,
+        userId: '',
+        userIp: ''
       })
   
       expect(result.isLeft()).toBe(true)
@@ -81,7 +83,9 @@ describe('Create Manager Use Case', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilId: 0
+        civilId: 0,
+        userId: '',
+        userIp: ''
       })
   
       expect(result.isLeft()).toBe(true)
@@ -106,7 +110,9 @@ describe('Create Manager Use Case', () => {
         email: 'john@example.com',
         username: 'John Doe',
         birthday: new Date('2002'),
-        civilId: 44444
+        civilId: 4444,
+        userId: '',
+        userIp: ''
       })
 
       expect(result.isRight()).toBe(true)
@@ -140,7 +146,9 @@ describe('Create Manager Use Case', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: new Date('2002-2'),
-        civilId: 0
+        civilId: 0,
+        userId: '',
+        userIp: ''
       })
 
       expect(result.isLeft()).toBe(true)
@@ -164,7 +172,9 @@ describe('Create Manager Use Case', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: new Date('2004-4-2'),
-        civilId: 0
+        civilId: 0,
+        userId: '',
+        userIp: ''
       })
 
       expect(result.isRight()).toBe(true)
@@ -194,7 +204,9 @@ describe('Create Manager Use Case', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: new Date('2002'),
-        civilId: 0
+        civilId: 0,
+        userId: '',
+        userIp: ''
       })
   
       expect(result.isLeft()).toBe(true)
@@ -218,7 +230,9 @@ describe('Create Manager Use Case', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: manager.birthday.value,
-        civilId: 0
+        civilId: 0,
+        userId: '',
+        userIp: ''
       })
   
       expect(result.isRight()).toBe(true)

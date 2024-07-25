@@ -42,7 +42,7 @@ describe('Update Manager Use Case', () => {
   })
 
   it ('should not be able to update a manager that does not exist', async () => {
-    const result = await sut.execute({ id: 'not-found', role: ''})
+    const result = await sut.execute({ id: 'not-found', role: '', userId: '', userIp: '' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
@@ -52,7 +52,7 @@ describe('Update Manager Use Case', () => {
     const manager = makeManager()
     managersRepository.create(manager)
 
-    const result = await sut.execute({ id: manager.id.toValue(), role: 'manager', username: '' })
+    const result = await sut.execute({ id: manager.id.toValue(), role: 'manager', username: '', userId: '', userIp: '' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
@@ -65,10 +65,10 @@ describe('Update Manager Use Case', () => {
     const manager = makeManager({ username: nameOrError.value, civilId: 1234567 })
     managersRepository.create(manager)
 
-    const result = await sut.execute({ id: manager.id.toValue(), role: 'admin', username: 'Josh Ned', civilId: 2345678 })
+    const result = await sut.execute({ id: manager.id.toValue(), role: 'admin', username: 'Josh Ned', civilId: 12345, userId: '', userIp: '' })
 
     expect(result.isRight()).toBe(true)
     expect(managersRepository.items[0].username.value).toEqual('Josh Ned')
-    expect(managersRepository.items[0].civilId).toEqual(2345678)
+    expect(managersRepository.items[0].civilId).toEqual(12345)
   })
 })

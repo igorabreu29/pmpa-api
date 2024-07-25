@@ -44,7 +44,7 @@ describe('Delete Manager Use Case', () => {
   })
 
   it ('should not be able to delete a manager that does not exist', async () => {
-    const result = await sut.execute({ id: 'not-found', role: ''})
+    const result = await sut.execute({ id: 'not-found', role: '', userId: '', userIp: '' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
@@ -54,7 +54,7 @@ describe('Delete Manager Use Case', () => {
     const manager = makeManager()
     managersRepository.create(manager)
 
-    const result = await sut.execute({ id: manager.id.toValue(), role: 'manager' })
+    const result = await sut.execute({ id: manager.id.toValue(), role: 'manager', userId: '', userIp: '' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
@@ -97,7 +97,7 @@ describe('Delete Manager Use Case', () => {
     })
     managersPolesRepository.create(managerPole2)
 
-    const result = await sut.execute({ id: manager1.id.toValue(), role: 'admin' })
+    const result = await sut.execute({ id: manager1.id.toValue(), role: 'admin', userId: '', userIp: '' })
 
     expect(result.isRight()).toBe(true)
     expect(managersCoursesRepository.items).toHaveLength(1)

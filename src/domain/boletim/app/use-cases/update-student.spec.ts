@@ -46,7 +46,7 @@ describe('Update Student Use Case', () => {
   })
 
   it ('should not be able to update a student that does not exist', async () => {
-    const result = await sut.execute({ id: 'not-found', role: '', username: '' })
+    const result = await sut.execute({ id: 'not-found', role: '', username: '', userId: '', userIp: '' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
@@ -56,7 +56,7 @@ describe('Update Student Use Case', () => {
     const student = makeStudent()
     studentsRepository.create(student)
 
-    const result = await sut.execute({ id: student.id.toValue(), role: 'student', username: '' })
+    const result = await sut.execute({ id: student.id.toValue(), role: 'student', username: '', userId: '', userIp: '' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
@@ -69,7 +69,7 @@ describe('Update Student Use Case', () => {
     const student = makeStudent({ username: nameOrError.value, civilId: 1234567 })
     studentsRepository.create(student)
 
-    const result = await sut.execute({ id: student.id.toValue(), role: 'manager', username: 'Josh Ned', civilId: 2345678 })
+    const result = await sut.execute({ id: student.id.toValue(), role: 'manager', username: 'Josh Ned', civilId: 2345678, userId: '', userIp: '' })
 
     expect(result.isRight()).toBe(true)
     expect(studentsRepository.items[0].username.value).toEqual('Josh Ned')

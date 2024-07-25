@@ -19,7 +19,9 @@ describe('Delete Administrator Use Case', () => {
   it ('should not be able to delete a administrator that does not exist', async () => {
     const result = await sut.execute({
       id: 'not-found',
-      role: ''
+      role: '',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -32,7 +34,9 @@ describe('Delete Administrator Use Case', () => {
 
     const result = await sut.execute({
       id: administrator.id.toValue(),
-      role: 'admin'
+      role: 'admin',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -45,7 +49,9 @@ describe('Delete Administrator Use Case', () => {
 
     const result = await sut.execute({
       id: administrator.id.toValue(),
-      role: 'dev'
+      role: 'dev',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isRight()).toBe(true)
