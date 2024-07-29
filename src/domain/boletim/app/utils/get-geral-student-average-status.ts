@@ -10,10 +10,12 @@ export type Concept = 'excellent'
   | 'insufficient' 
   | 'no income'
 
-export type StudentStatus = 'approved' 
+export type StudentStatus = 
+  | 'approved' 
   | 'disapproved' 
   | 'approved second season' 
   | 'disapproved second season'
+  | 'second season'
 
 export interface GetGeralStudentAverageStatusResponse {
   concept: Concept
