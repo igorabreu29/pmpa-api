@@ -4,13 +4,15 @@ import { StudentWithPole } from "@/domain/boletim/enterprise/entities/value-obje
 import { InMemoryPolesRepository } from "./in-memory-poles-repository.ts";
 import { InMemoryStudentsRepository } from "./in-memory-students-repository.ts";
 import { InMemoryStudentsCoursesRepository } from "./in-memory-students-courses-repository.ts";
+import { InMemoryCoursesRepository } from "./in-memory-courses-repository.ts";
 
 export class InMemoryStudentsPolesRepository implements StudentsPolesRepository {
   public items: StudentPole[] = []
 
-  constructor(
+  constructor (
     private studentsRepository: InMemoryStudentsRepository,
     private studentsCoursesRepository: InMemoryStudentsCoursesRepository,
+    private coursesRepository: InMemoryCoursesRepository,
     private polesRepository: InMemoryPolesRepository
   ) {}
 
