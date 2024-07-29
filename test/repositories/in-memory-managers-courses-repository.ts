@@ -158,6 +158,7 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
         if (!course) throw new Error(`Course with ID ${managerCourse.courseId.toValue()} does not exist.`)
 
         return ManagerWithCourse.create({
+          managerCourseId: managerCourse.id,
           managerId: manager.id,
           username: manager.username.value,
           cpf: manager.cpf.value,
