@@ -1,5 +1,6 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Developer } from "@/domain/boletim/enterprise/entities/developer.ts";
+import { Birthday } from "@/domain/boletim/enterprise/entities/value-objects/birthday.ts";
 import { CPF } from "@/domain/boletim/enterprise/entities/value-objects/cpf.ts";
 import { Email } from "@/domain/boletim/enterprise/entities/value-objects/email.ts";
 import { Name } from "@/domain/boletim/enterprise/entities/value-objects/name.ts";
@@ -22,11 +23,16 @@ export function makeDeveloper(
   const passwordOrError = Password.create('test-2020')
   if (passwordOrError.isLeft()) throw new Error(passwordOrError.value.message)
 
+    const birthdayOrError = Birthday.create(new Date('2004-1-2'))
+    if (birthdayOrError.isLeft()) throw new Error(birthdayOrError.value.message)
+
   const developerOrError = Developer.create({
     email: emailOrError.value,
     cpf: cpfOrError.value,
     passwordHash: passwordOrError.value,
     username: nameOrError.value,
+    birthday: birthdayOrError.value,
+    civilId: 20225,
     ...override
   }, id)
   if (developerOrError.isLeft()) throw new Error(developerOrError.value.message)
