@@ -9,12 +9,12 @@ export interface BehaviorAveragePerPeriod {
   behaviorsCount: number
 }
 
-export const formulaType = {
+export const defineBehaviorByFormulaType = {
   period: ({ behaviorMonthsNotes }: FormulaTypeProps) => {
-    const TOTAL_TIME_PER_PERIOD = 6
+    const TOTAL_MONTH_PER_PERIOD = 6 // 6 months
     const behaviorAveragePerPeriod: BehaviorAveragePerPeriod[] = []
 
-    for (let i = 0; i < behaviorMonthsNotes.length; i += TOTAL_TIME_PER_PERIOD) {
+    for (let i = 0; i < behaviorMonthsNotes.length; i += TOTAL_MONTH_PER_PERIOD) {
       const behaviorPerPeriod = behaviorMonthsNotes.map(behavior => Number(behavior)).slice(i, i + 6)
       const behaviorAverage = behaviorPerPeriod.reduce((previousNote, currentNote) => previousNote + currentNote, 0) / behaviorPerPeriod.length
       behaviorAveragePerPeriod.push({
@@ -24,10 +24,11 @@ export const formulaType = {
     }
 
     const behaviorAverageStatus = behaviorAveragePerPeriod.map(behaviorAverage => getBehaviorAverageStatus(Number(behaviorAverage.average.toFixed(3))))
+    const behaviorsCount = behaviorAveragePerPeriod.reduce((previousBehavior, currentBehavior) => previousBehavior + currentBehavior.behaviorsCount, 0)
 
     return {
       behaviorAverageStatus,
-      behaviorsCount: behaviorAveragePerPeriod.reduce((previousBehavior, currentBehavior) => previousBehavior + currentBehavior.behaviorsCount , 0)
+      behaviorsCount
     }
   },
 
