@@ -6,7 +6,7 @@ type PrismaManagerWithCourse = User & {
   course: Course
 }
 
-export class PrismaStudentWithCourseAndPoleMapper {
+export class PrismaStudentCourseDetailsMapper {
   static toDomain(manager: PrismaManagerWithCourse): ManagerWithCourse {
     return ManagerWithCourse.create({
       managerId: new UniqueEntityId(manager.id),

@@ -1,15 +1,15 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts';
-import { StudentWithCourseAndPole } from '@/domain/boletim/enterprise/entities/value-objects/student-with-course-and-pole.ts';
+import { StudentCourseDetails } from '@/domain/boletim/enterprise/entities/value-objects/student-with-course-and-pole.ts';
 import { Course, Pole, User } from '@prisma/client';
 
-type PrismaStudentWithCourseAndPole = User & {
+type PrismaStudentCourseDetails = User & {
   course: Course
   pole: Pole
 }
 
-export class PrismaStudentWithCourseAndPoleMapper {
-  static toDomain(student: PrismaStudentWithCourseAndPole): StudentWithCourseAndPole {
-    return StudentWithCourseAndPole.create({
+export class PrismaStudentCourseDetailsMapper {
+  static toDomain(student: PrismaStudentCourseDetails): StudentCourseDetails {
+    return StudentCourseDetails.create({
       studentId: new UniqueEntityId(student.id),
       email: student.email,
       cpf: student.cpf,
