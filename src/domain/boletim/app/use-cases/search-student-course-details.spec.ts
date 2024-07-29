@@ -2,7 +2,6 @@ import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-r
 import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-students-courses-repository.ts'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { SearchStudentCourseDetailsUseCase } from './search-student-course-details.ts'
-import type { StudentsRepository } from '../repositories/students-repository.ts'
 import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository.ts'
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
 import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
@@ -33,6 +32,7 @@ describe('Search Student Courses Details Use Case', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     polesRepository = new InMemoryPolesRepository()
@@ -68,9 +68,9 @@ describe('Search Student Courses Details Use Case', () => {
     const pole = makePole()
     polesRepository.create(pole)
 
-    const studentNameOrError = Name.create('John')
-    const studentNameOrError2 = Name.create('Jony')
-    const studentNameOrError3 = Name.create('Bryan')
+    const studentNameOrError = Name.create('John Doe')
+    const studentNameOrError2 = Name.create('Jony Doe')
+    const studentNameOrError3 = Name.create('Bryan Adams')
 
     if (studentNameOrError.isLeft()) return
     if (studentNameOrError2.isLeft()) return
@@ -94,7 +94,7 @@ describe('Search Student Courses Details Use Case', () => {
     const result = await sut.execute({
       courseId: course.id.toValue(),
       page: 1,
-      query: 'Jo'
+      query: 'doe'
     })
 
     expect(result.isRight()).toBe(true)
@@ -102,10 +102,51 @@ describe('Search Student Courses Details Use Case', () => {
     expect(result.value).toMatchObject({
       students: [
         {
-          username: 'John'
+          username: 'John Doe'
         },
         {
-          username: 'Jony'
+          username: 'Jony Doe'
+        }
+      ]
+    })
+  })
+
+  it ('should be able to paginated search students', async () => {
+    const course = makeCourse()
+    coursesRepository.create(course)
+
+    const pole = makePole()
+    polesRepository.create(pole)
+
+    for (let i = 1; i <= 12; i++) {
+      const studentNameOrError = Name.create(`john-${i}`)
+      if (studentNameOrError.isLeft()) return
+
+      const student = makeStudent({ username: studentNameOrError.value })
+      studentsRepository.create(student)
+  
+      const studentCourse = makeStudentCourse({ studentId: student.id, courseId: course.id })
+      studentsCoursesRepository.create(studentCourse)
+  
+      const studentPole = makeStudentPole({ studentId: studentCourse.id, poleId: pole.id })
+      studentsPolesRepository.create(studentPole)
+    }
+
+    const result = await sut.execute({
+      courseId: course.id.toValue(),
+      page: 2,
+      query: 'john'
+    })
+
+    expect(result.isRight()).toBe(true)
+    expect(studentsRepository.items).toHaveLength(12)
+    expect(result.value).toMatchObject({
+      students: [
+        {
+          username: 'john-11'
+        },
+        {
+          username: 'john-12'
         }
       ]
     })
