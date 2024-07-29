@@ -1,4 +1,4 @@
-import { formulaType } from "./get-behavior-average-by-course-formula.ts"
+import { defineBehaviorByFormulaType } from "./get-behavior-average-by-course-formula.ts"
 
 export interface BehaviorMonths {
   january?: number | null
@@ -30,5 +30,5 @@ export function generateBehaviorAverage({ behaviorMonths, isPeriod = false }: Ge
     behaviorMonthsNotes.push(...notes)
   }
 
-  return formulaType[isPeriod ? 'period' : 'module']({ behaviorMonthsNotes })
+  return defineBehaviorByFormulaType[isPeriod ? 'period' : 'module']({ behaviorMonthsNotes })
 }
