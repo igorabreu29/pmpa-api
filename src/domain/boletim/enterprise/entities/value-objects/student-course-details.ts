@@ -1,7 +1,7 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { ValueObject } from "@/core/entities/value-object.ts";
 
-interface StudentWithCourseAndPoleProps {
+interface StudentCourseDetailsProps {
   studentId: UniqueEntityId
   username: string
   email: string
@@ -14,11 +14,12 @@ interface StudentWithCourseAndPoleProps {
   poleId: UniqueEntityId
   pole: string
 
+  loginConfirmed?: boolean
   birthday: Date
   civilId: number
 }
 
-export class StudentWithCourseAndPole extends ValueObject<StudentWithCourseAndPoleProps> {
+export class StudentCourseDetails extends ValueObject<StudentCourseDetailsProps> {
   get studentId() {
     return this.props.studentId
   }
@@ -63,7 +64,7 @@ export class StudentWithCourseAndPole extends ValueObject<StudentWithCourseAndPo
     return this.props.civilId
   }
 
-  static create(props: StudentWithCourseAndPoleProps) {
-    return new StudentWithCourseAndPole(props)
+  static create(props: StudentCourseDetailsProps) {
+    return new StudentCourseDetails(props)
   }
 }
