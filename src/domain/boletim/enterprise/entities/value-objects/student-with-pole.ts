@@ -7,6 +7,7 @@ interface StudentWithPoleProps {
   email: string
   cpf: string
   assignedAt: Date
+  isLoginConfirmed?: boolean
 
   poleId: UniqueEntityId
   pole: string
@@ -42,6 +43,10 @@ export class StudentWithPole extends ValueObject<StudentWithPoleProps> {
 
   get assignedAt() {
     return this.props.assignedAt
+  }
+
+  get isLoginConfirmed() {
+    return this.props.isLoginConfirmed
   }
 
   get birthday() {
