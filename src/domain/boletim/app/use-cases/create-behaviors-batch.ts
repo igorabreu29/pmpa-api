@@ -9,6 +9,8 @@ import { Behavior } from "../../enterprise/entities/behavior.ts";
 import { BehaviorsBatchRepository } from "../repositories/behaviors-batch-repository.ts";
 import { BehaviorBatch } from "../../enterprise/entities/behavior-batch.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 interface StudentBehavior {
   cpf: string
@@ -33,10 +35,12 @@ interface CreateBehaviorBatchUseCaseRequest {
   userIp: string,
   fileLink: string
   fileName: string
+
+  role: Role
 }
 
 type CreateBehaviorBatchUseCaseResponse = Either<
-  ResourceNotFoundError | Error[],
+  ResourceNotFoundError | Error[] | NotAllowedError,
   null
 >
 
@@ -54,8 +58,11 @@ export class CreateBehaviorsBatchUseCase {
     fileLink,
     fileName,
     userId,
-    userIp    
+    userIp,
+    role
   }: CreateBehaviorBatchUseCaseRequest): Promise<CreateBehaviorBatchUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
     if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
