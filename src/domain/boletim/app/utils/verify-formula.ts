@@ -44,11 +44,11 @@ export const formulas = {
     for(const assessment of assessments) {
       if (!assessment) continue
 
-      if (!assessmentsPerPeriod[`module${assessment?.module}`]) {
-        assessmentsPerPeriod[`module${assessment?.module}`] = []
+      if (!assessmentsPerPeriod[`module${assessment.module}`]) {
+        assessmentsPerPeriod[`module${assessment.module}`] = []
       }
 
-      assessmentsPerPeriod[`module${assessment?.module}`].push({
+      assessmentsPerPeriod[`module${assessment.module}`].push({
         ...assessment
       })
     }
@@ -62,8 +62,7 @@ export const formulas = {
         return Number(previousAverage) + Number(currentAverage.average)
       }, 0)
       
-      const periodAverageWithWeight = calculatesAverageWithWeight(
-        { 
+      const periodAverageWithWeight = calculatesAverageWithWeight({ 
           assessmentAverage: assessmentsAveragePerPeriod,
           assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module${index + 1}`]?.length, 
           behaviorAveragePerPeriod: item.behaviorAverage, 
@@ -76,17 +75,21 @@ export const formulas = {
       return periodAverageWithWeight
     })
 
-    const studentIsRecovering = assessments.some((item) => item?.isRecovering)
+    const isStudentRecovering = assessments.some((item) => item?.isRecovering)
     const geralAverage = averagesWithWeight.reduce((previousModuleAverage, currentModuleAverage) => previousModuleAverage + currentModuleAverage, 0) / weightPerPeriod
+    
+    const studentAverageStatus = getGeralStudentAverageStatus({ average: geralAverage, isRecovering: isStudentRecovering })
 
-    const status = getGeralStudentAverageStatus({ average: geralAverage, isRecovering: studentIsRecovering })
+    const isStudentSecondSeason = assessments.some(assessment => assessment?.status === 'second season')
+
+    studentAverageStatus.status = isStudentSecondSeason ? 'second season' : studentAverageStatus.status
 
     return {
       averageInform: {
         geralAverage: Number(geralAverage.toFixed(3)), 
         behaviorAverageStatus,
         behaviorsCount,
-        status
+        studentAverageStatus
       },
       assessments: {
         ...assessmentsPerPeriod
@@ -109,14 +112,14 @@ export const formulas = {
       assessmentsAverageWithBehaviorAverage = (assessmentsAverage + behaviorAverageStatus.behaviorAverage) / 2
     }
 
-    const status = getGeralStudentAverageStatus({ average: assessmentsAverageWithBehaviorAverage || assessmentsAverage, isRecovering: studentIsRecovering })
+    const studentAverageStatus = getGeralStudentAverageStatus({ average: assessmentsAverageWithBehaviorAverage || assessmentsAverage, isRecovering: studentIsRecovering })
 
     return {
       averageInform: {
         geralAverage: behaviorAverage ? Number(assessmentsAverageWithBehaviorAverage.toFixed(3)) : Number(assessmentsAverage.toFixed(3)),
         behaviorAverageStatus: behaviorAverage ? behaviorAverage.behaviorAverageStatus : [],
         behaviorsCount: behaviorAverage ? behaviorAverage.behaviorsCount : 0,
-        status
+        studentAverageStatus
       },
       assessments,
       assessmentsCount: assessments.length,

@@ -97,7 +97,7 @@ describe('Verify Formulas', () => {
               behaviorAverage: 8.167
             }),
           ]),
-          status: { concept: 'good', status: 'approved second season' }
+          studentAverageStatus: { concept: 'good', status: 'approved second season' }
         },
         
         assessments: expect.objectContaining({
@@ -158,7 +158,7 @@ describe('Verify Formulas', () => {
       expect(result).toMatchObject({
         averageInform: {
           geralAverage: 6.335,
-          status: { concept: 'regular', status: 'approved' },
+          studentAverageStatus: { concept: 'regular', status: 'approved' },
           behaviorAverageStatus: []
         },
         
@@ -219,7 +219,7 @@ describe('Verify Formulas', () => {
       expect(result).toMatchObject({
         averageInform: {
           geralAverage: 6.578,
-          status: { concept: 'regular', status: 'approved' },
+          studentAverageStatus: { concept: 'regular', status: 'approved' },
           behaviorAverageStatus: {
             behaviorAverage: 6.821,
             status: 'approved'
