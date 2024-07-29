@@ -1,13 +1,10 @@
-import { InMemoryCoursesPolesRepository } from "test/repositories/in-memory-courses-poles-repository.ts";
 import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
 import { beforeEach, describe, expect, it } from "vitest";
-import { FetchLoginConfirmationMetrics } from "./fetch-login-confirmation-metrics.ts";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
 import { makePole } from "test/factories/make-pole.ts";
-import { makeCoursePole } from "test/factories/make-course-pole.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudent } from "test/factories/make-student.ts";
@@ -50,6 +47,7 @@ describe('Fetch Login Confirmation Metrics By Manager', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     polesRepository = new InMemoryPolesRepository()
@@ -71,6 +69,7 @@ describe('Fetch Login Confirmation Metrics By Manager', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
 

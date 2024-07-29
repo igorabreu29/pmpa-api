@@ -9,7 +9,6 @@ import { makeStudent } from "test/factories/make-student.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { makeCourse } from "test/factories/make-course.ts";
-import { makeCoursePole } from "test/factories/make-course-pole.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { FetchCourseStudentsByPole } from "./fetch-course-students-by-pole.ts";
 
@@ -39,6 +38,7 @@ describe(('Fetch Course Students By Pole Use Case'), () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     
