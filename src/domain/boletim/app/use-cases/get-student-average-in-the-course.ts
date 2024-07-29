@@ -1,5 +1,4 @@
 import { Either, left, right } from "@/core/either.ts"
-import { Formula } from "@/domain/boletim/enterprise/entities/course.ts"
 import { AssessmentsRepository } from "../repositories/assessments-repository.ts"
 import { BehaviorsRepository } from "../repositories/behaviors-repository.ts"
 import { generateBehaviorAverage } from "../utils/generate-behavior-average.ts"
@@ -9,11 +8,27 @@ import { GetGeralStudentAverageStatusResponse } from "../utils/get-geral-student
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
 import { CoursesDisciplinesRepository } from "../repositories/courses-disciplines-repository.ts"
 import { AssessmentWithModule, formulas } from "../utils/verify-formula.ts"
+import type { DisciplinesRepository } from "../repositories/disciplines-repository.ts"
 
 interface GetStudentAverageInTheCourseUseCaseRequest {
   studentId: string
   courseId: string
   isPeriod: boolean
+}
+
+interface Month {
+  january?: number | null
+  february?: number | null
+  march?: number | null
+  april?: number | null
+  may?: number | null
+  jun?: number | null
+  july?: number | null
+  august?: number | null
+  september?: number | null
+  october?: number | null
+  november?: number | null
+  december?: number | null
 }
 
 type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError, {
@@ -22,14 +37,11 @@ type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError,
       geralAverage: number | string;
       behaviorAverageStatus: GenerateBehaviorStatus[]
       behaviorsCount: number
-      status: GetGeralStudentAverageStatusResponse
+      studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
 
     assessments: {
-      [x: string]: {
-        module: number
-        average: number
-      }[]
+      [x: string]: AssessmentWithModule[]
     },
     assessmentsCount: number
   } | {
@@ -37,12 +49,14 @@ type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError,
       geralAverage: number | string;
       behaviorAverageStatus: GenerateBehaviorStatus[] | GenerateBehaviorStatus
       behaviorsCount: number
-      status: GetGeralStudentAverageStatusResponse
+      studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
 
     assessments: (AssessmentWithModule | null)[],
     assessmentsCount: number
   },
+
+  behaviorMonths: Month[]
 }>
 
 export class GetStudentAverageInTheCourseUseCase {
@@ -96,22 +110,22 @@ export class GetStudentAverageInTheCourseUseCase {
     const assessmentWithDisciplineModule = await Promise.all(assessments.map(async assessment => {
       const studentCondition = generateAssessmentAverage({ 
         vf: assessment.vf, 
-        avi: assessment.avi ?? -1,
-        avii: assessment.avii ?? -1, 
+        avi: assessment.avi === null ? -1 : assessment.avi,
+        avii: assessment.avii === null ? -1 : assessment.avii, 
         vfe: assessment.vfe
       })
 
-      const courseDiscipline = await this.courseDisciplineRepository.findByCourseIdAndDisciplineId({
+      const courseDiscipline = await this.courseDisciplineRepository.findByCourseIdAndDisciplineIdWithDiscipline({
         courseId: assessment.courseId.toValue(), 
         disciplineId: assessment.disciplineId.toValue() 
       })
-
       if (!courseDiscipline) return null
 
       return {
         id: assessment.id.toValue(),
-        module: Number(courseDiscipline?.module),
-        ...studentCondition
+        module: courseDiscipline.module,
+        disciplineName: courseDiscipline.disciplineName,
+        ...studentCondition,
       }
     }))
 
@@ -121,10 +135,11 @@ export class GetStudentAverageInTheCourseUseCase {
     const gradesByFormula = formulas[isPeriod ? 'period' : 'module']({
       assessments: assessmentWithDisciplineModule,
       behaviorAverage,
-    })  
+    })
 
     return right({
-      grades: gradesByFormula
+      grades: gradesByFormula,
+      behaviorMonths
     })
   }
 }

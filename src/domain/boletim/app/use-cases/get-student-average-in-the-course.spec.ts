@@ -10,9 +10,11 @@ import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
 import { makeStudent } from "test/factories/make-student.ts";
+import { InMemoryDisciplinesRepository } from "test/repositories/in-memory-disciplines-repository.ts";
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
+let disciplinesRepository: InMemoryDisciplinesRepository
 let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let sut: GetStudentAverageInTheCourseUseCase
 
@@ -20,7 +22,10 @@ describe(('Get Student Average In The Course Use Case'), () => {
   beforeEach(() => {
     assessmentsRepository = new InMemoryAssessmentsRepository()
     behaviorsRepository = new InMemoryBehaviorsRepository()
-    courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository()
+    disciplinesRepository = new InMemoryDisciplinesRepository()
+    courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
+      disciplinesRepository
+    )
     sut = new GetStudentAverageInTheCourseUseCase(
       assessmentsRepository, 
       behaviorsRepository,
@@ -33,6 +38,8 @@ describe(('Get Student Average In The Course Use Case'), () => {
     const student = makeStudent()
     const discipline1 = makeDiscipline()
     const discipline2 = makeDiscipline()
+
+    disciplinesRepository.createMany([discipline1, discipline2])
 
     const assessment1 = makeAssessment({ courseId: course.id, studentId: student.id, vf: 7, disciplineId: discipline1.id })
     assessmentsRepository.create(assessment1)
@@ -62,14 +69,19 @@ describe(('Get Student Average In The Course Use Case'), () => {
     const discipline1 = makeDiscipline()
     const discipline2 = makeDiscipline()
 
+    disciplinesRepository.createMany([discipline1, discipline2])
+
     const assessment1 = makeAssessment({ courseId: course.id, studentId: student.id, vf: 7, disciplineId: discipline1.id })
     assessmentsRepository.create(assessment1)
 
     const assessment2 = makeAssessment({ courseId: course.id, studentId: student.id, vf: 7, disciplineId: discipline2.id })
     assessmentsRepository.create(assessment2)
 
-    const behavior = makeBehavior({ january: 5, february: 7, march: 10, april: 7, may: 4.5, jun: 5.75, studentId: student.id, courseId: course.id })
+    const behavior = makeBehavior({ january: 10, february: 7, march: 10, april: 7, may: 4.5, jun: 5.75, studentId: student.id, courseId: course.id })
     behaviorsRepository.create(behavior)
+
+    const behavior2 = makeBehavior({ july: 5, august: 7, september: 10, october: 7, november: 4.5, december: 5.75, studentId: student.id, courseId: course.id })
+    behaviorsRepository.create(behavior2)
 
     const courseDiscipline1 = makeCourseDiscipline({ courseId: course.id, disciplineId: discipline1.id, module: 1 })
     courseDisciplinesRepository.create(courseDiscipline1)
@@ -85,11 +97,12 @@ describe(('Get Student Average In The Course Use Case'), () => {
     expect(result.value).toMatchObject({
       grades: {
         averageInform: {
-          geralAverage: 6.771,
-          behaviorAverageStatus:       {
-            behaviorAverage: 6.542, status: 'approved'
+          geralAverage: 6.979,
+          behaviorAverageStatus: {
+            behaviorAverage: 6.958, 
+            status: 'approved'
           },
-          status: {
+          studentAverageStatus: {
             concept: 'regular',
             status: 'approved'
           }
@@ -112,6 +125,7 @@ describe(('Get Student Average In The Course Use Case'), () => {
     const student = makeStudent()
     const discipline1 = makeDiscipline()
     const discipline2 = makeDiscipline()
+    disciplinesRepository.createMany([discipline1, discipline2])
 
     const assessment1 = makeAssessment({ courseId: course.id, disciplineId: discipline1.id, studentId: student.id, vf: 7 })
     const assessment2 = makeAssessment({ courseId: course.id, disciplineId: discipline2.id, studentId: student.id, vf: 5 })
@@ -137,13 +151,14 @@ describe(('Get Student Average In The Course Use Case'), () => {
           geralAverage: 6.181,
           behaviorAverageStatus: [
             {
-              behaviorAverage: 6.542, status: 'approved'
+              behaviorAverage: 6.542, 
+              status: 'approved'
             }
           ],
           behaviorsCount: 6,
-          status: {
+          studentAverageStatus: {
             concept: 'regular',
-            status: 'approved'
+            status: 'second season'
           }
         },
   
