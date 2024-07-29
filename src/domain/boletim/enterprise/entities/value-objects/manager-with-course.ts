@@ -2,6 +2,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { ValueObject } from "@/core/entities/value-object.ts";
 
 interface ManagerWithCourseProps {
+  managerCourseId: UniqueEntityId
   managerId: UniqueEntityId
   username: string
   email: string
@@ -14,6 +15,10 @@ interface ManagerWithCourseProps {
 }
 
 export class ManagerWithCourse extends ValueObject<ManagerWithCourseProps> {
+  get managerCourseId() {
+    return this.props.managerCourseId
+  }
+
   get managerId() {
     return this.props.managerId
   }
