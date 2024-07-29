@@ -7,17 +7,25 @@ import { makeAssessment } from "./make-assessment.ts"
 import { makeBehavior } from "./make-behavior.ts"
 import { makeCourseDiscipline } from "./make-course-discipline.ts"
 import { makeDiscipline } from "./make-discipline.ts"
+import type { InMemoryDisciplinesRepository } from "test/repositories/in-memory-disciplines-repository.ts"
 
 interface MakeGetStudentAverageInTheCourseUseCase {
   assessmentsRepository: InMemoryAssessmentsRepository
   behaviorsRepository: InMemoryBehaviorsRepository
+  disciplinesRepository: InMemoryDisciplinesRepository
   courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 }
 
-export function makeGetStudentAverageInTheCourseUseCase({ assessmentsRepository, behaviorsRepository, courseDisciplinesRepository }: MakeGetStudentAverageInTheCourseUseCase) {
+export function makeGetStudentAverageInTheCourseUseCase({ 
+  assessmentsRepository, 
+  behaviorsRepository, 
+  disciplinesRepository,
+  courseDisciplinesRepository 
+}: MakeGetStudentAverageInTheCourseUseCase) {
   const discipline1 = makeDiscipline()
   const discipline2 = makeDiscipline()
   const discipline3 = makeDiscipline()
+  disciplinesRepository.createMany([discipline1, discipline2, discipline3])
 
   const assessment1 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-1'), vf: 7, disciplineId: discipline1.id })
   const assessment2 = makeAssessment({ courseId: new UniqueEntityId('course-1'), studentId: new UniqueEntityId('student-1'), vf: 9, disciplineId: discipline2.id })
