@@ -16,8 +16,8 @@ describe('Create Discpline Use Case', () => {
   it ('should not be able to create discipline with name already existing', async () => {
     const discipline = makeDiscipline()
     disciplinesRepository.create(discipline)
-
-    const result = await sut.execute({ name: discipline.name })
+    
+    const result = await sut.execute({ name: discipline.name.value })
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)
