@@ -5,6 +5,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { ConflictError } from "./errors/conflict-error.ts";
 import { CourseHistoric } from "@/domain/boletim/enterprise/entities/course-historic.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 
 interface CreateCourseHistoricUseCaseRequest {
   courseId: string
@@ -18,7 +19,7 @@ interface CreateCourseHistoricUseCaseRequest {
   commander?: string
 }
 
-type CreateCourseHistoricUseCaseResponse = Either<ResourceNotFoundError, null>
+type CreateCourseHistoricUseCaseResponse = Either<ResourceNotFoundError | ResourceAlreadyExistError | ConflictError, null>
 
 export class CreateCourseHistoricUseCase {
   constructor(
@@ -39,6 +40,10 @@ export class CreateCourseHistoricUseCase {
   }: CreateCourseHistoricUseCaseRequest): Promise<CreateCourseHistoricUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    
+    const courseHasHistoric = await this.courseHistoricRepository.findByCourseId(courseId)
+    if (courseHasHistoric) return left(new ResourceAlreadyExistError('This course already has a historic.'))
+
     if (finishDate.getTime() < startDate.getTime()) return left(new ConflictError('Conflict between dates. Finish Date cannot be less than Start Date.'))
       
     const courseHistoric = CourseHistoric.create({
