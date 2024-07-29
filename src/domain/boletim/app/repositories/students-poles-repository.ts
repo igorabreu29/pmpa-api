@@ -4,7 +4,7 @@ import { StudentWithPole } from "../../enterprise/entities/value-objects/student
 export abstract class StudentsPolesRepository {
   abstract findByStudentId({ studentId }: { studentId: string }): Promise<StudentPole | null>
   abstract findByStudentIdAndPoleId({ studentId, poleId }: { studentId: string, poleId: string }): Promise<StudentPole | null>
-  abstract findManyByPoleId({ poleId, page, perPage }: { poleId: string, page: number, perPage: number }): Promise<{
+  abstract findManyByPoleId({ poleId, page, perPage }: { poleId: string, page?: number, perPage?: number }): Promise<{
     studentsPole: StudentWithPole[],
     pages: number
     totalItems: number

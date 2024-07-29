@@ -5,6 +5,7 @@ import { ManagerWithCourse } from "../../enterprise/entities/value-objects/manag
 export abstract class ManagersCoursesRepository {
   abstract findByCourseId({ courseId }: { courseId: string }): Promise<ManagerCourse | null>
   abstract findByManagerIdAndCourseId({ managerId, courseId }: { managerId: string, courseId: string }): Promise<ManagerCourse | null>
+  abstract findByManagerAndCourseIdWithPole({ managerId, courseId }: { managerId: string, courseId: string }): Promise<ManagerWithCourseAndPole | null>
   abstract findManyByCourseIdWithCourseAndPole({
     courseId,
     page,

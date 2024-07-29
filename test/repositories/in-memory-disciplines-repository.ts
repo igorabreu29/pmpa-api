@@ -1,4 +1,4 @@
-import { DisciplinesRepository } from "@/domain/boletim/app/repositories/disiciplines-repository.ts";
+import type { DisciplinesRepository } from "@/domain/boletim/app/repositories/disciplines-repository.ts";
 import { Discipline } from "@/domain/boletim/enterprise/entities/discipline.ts";
 
 export class InMemoryDisciplinesRepository implements DisciplinesRepository {
@@ -10,7 +10,7 @@ export class InMemoryDisciplinesRepository implements DisciplinesRepository {
   }
 
   async findByName(name: string): Promise<Discipline | null> {
-    const discipline = this.items.find(item => item.name === name)
+    const discipline = this.items.find(item => item.name.value === name)
     return discipline ?? null
   }
 

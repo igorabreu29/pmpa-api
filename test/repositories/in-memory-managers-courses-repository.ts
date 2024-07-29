@@ -27,6 +27,51 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
     return studentCourse ?? null
   }
 
+  async findByManagerAndCourseIdWithPole({ 
+    managerId, 
+    courseId 
+  }: { 
+    managerId: string; 
+    courseId: string; 
+  }): Promise<ManagerWithCourseAndPole | null> {
+      const managerCourse = this.items.find(item => {
+        return item.managerId.toValue() === managerId && item.courseId.toValue() === courseId
+      })
+      if (!managerCourse) return null
+
+      const manager = this.managersRepository.items.find(item => {
+        return item.id.equals(managerCourse.managerId)
+      })
+      if (!manager) throw new Error(`Manager with ID ${managerCourse.managerId.toValue()} does not exist`)
+
+      const course = this.coursesRepository.items.find(item => {
+        return item.id.equals(managerCourse.courseId)
+      })
+      if (!course) throw new Error(`Course with ID ${managerCourse.courseId.toValue()} does not exist`)
+      
+      const managerPole = this.managersPolesRepository.items.find(item => {
+        return item.managerId.equals(managerCourse.id)
+      })
+      if (!managerPole) throw new Error(`Manager with ID ${managerCourse.managerId.toValue()} does not exist`)
+
+      const pole = this.polesRepository.items.find(item => {
+        return item.id.equals(managerPole.poleId)
+      })
+      if (!pole) throw new Error(`Pole with ID ${managerPole.poleId.toValue()} does not exist`)
+
+      return ManagerWithCourseAndPole.create({
+        managerId: managerCourse.managerId,
+        cpf: manager.cpf.value,
+        email: manager.email.value,
+        username: manager.username.value,
+        assignedAt: manager.createdAt,
+        courseId: managerCourse.courseId,
+        course: course.name.value,
+        poleId: pole.id,
+        pole: pole.name.value
+      })
+  }
+
   async findManyByCourseIdWithCourseAndPole({ 
     courseId, 
     page, 

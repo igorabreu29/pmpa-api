@@ -1,9 +1,18 @@
 import { StudentCourse } from "../../enterprise/entities/student-course.ts";
+import { StudentCourseDetails } from "../../enterprise/entities/value-objects/student-course-details.ts";
 import { StudentCourseWithCourse } from "../../enterprise/entities/value-objects/student-course-with-course.ts";
-import { StudentWithCourseAndPole } from "../../enterprise/entities/value-objects/student-with-course-and-pole.ts";
+import type { StudentWithPole } from "../../enterprise/entities/value-objects/student-with-pole.ts";
+
+export interface SearchManyDetails {
+  courseId: string
+  query: string
+  page: number
+}
 
 export abstract class StudentsCoursesRepository {
   abstract findByStudentIdAndCourseId({ studentId, courseId }: { studentId: string, courseId: string }): Promise<StudentCourse | null>
+
+  abstract findManyByCourseIdWithPole({ courseId }: { courseId: string }): Promise<StudentWithPole[]>
   abstract findManyByStudentIdWithCourse({
     studentId,
     page,
@@ -41,27 +50,20 @@ export abstract class StudentsCoursesRepository {
     page: number
     perPage: number
   }): Promise<{
-    studentsCourse: StudentWithCourseAndPole[],
+    studentsCourse: StudentCourseDetails[],
     pages: number
     totalItems: number
   }>
-  abstract findManyByCourseIdAndPoleIdWithCourseAndPole({
+
+  abstract searchManyDetailsByCourseId({
     courseId,
-    poleId,
-    page,
-    perPage
-  }: {
-    courseId: string
-    poleId: string
-    page: number
-    perPage: number
-  }): Promise<{
-    studentsCourse: StudentWithCourseAndPole[],
-    pages: number
-    totalItems: number
-  }>
+    query,
+    page
+  }: SearchManyDetails): Promise<StudentCourseDetails[]>
+
   abstract create(studentCourse: StudentCourse): Promise<void>
   abstract createMany(studentsCourses: StudentCourse[]): Promise<void>
+
   abstract save(studentCourse: StudentCourse): Promise<void>
   abstract delete(studentCourse: StudentCourse): Promise<void>
 }

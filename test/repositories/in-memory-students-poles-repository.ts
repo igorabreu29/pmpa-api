@@ -30,8 +30,8 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
     perPage 
   }: { 
     poleId: string; 
-    page: number; 
-    perPage: number; 
+    page?: number; 
+    perPage?: number; 
   }): Promise<{
     studentsPole: StudentWithPole[],
     pages: number
@@ -57,13 +57,14 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
           cpf: student.cpf.value,
           birthday: student.birthday.value,
           assignedAt: student.createdAt,
+          isLoginConfirmed: student.isLoginConfirmed,
           poleId: pole.id,
           pole: pole.name.value
         })
       })
 
-      const studentsPole = allStudentsPole.slice((page - 1) * perPage, page * perPage)
-      const pages = Math.ceil(allStudentsPole.length / perPage)
+      const studentsPole = page && perPage ? allStudentsPole.slice((page - 1) * perPage, page * perPage) : allStudentsPole
+      const pages = perPage ? Math.ceil(allStudentsPole.length / perPage) : 0
 
       return {
         studentsPole, 
