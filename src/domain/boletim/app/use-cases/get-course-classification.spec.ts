@@ -17,6 +17,7 @@ import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students
 import { beforeEach, describe, expect, it } from 'vitest'
 import { GetCourseClassificationUseCase } from './get-course-classification.ts'
 import { GetStudentAverageInTheCourseUseCase } from './get-student-average-in-the-course.ts'
+import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
 
 let studentsRepository: InMemoryStudentsRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -26,8 +27,10 @@ let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
+let disciplinesRepository: InMemoryDisciplinesRepository
 let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
+
 let sut: GetCourseClassificationUseCase
 
 describe('Get Classfication Course Use Case', () => {
@@ -54,10 +57,14 @@ describe('Get Classfication Course Use Case', () => {
 
     assessmentsRepository = new InMemoryAssessmentsRepository()
     behaviorsRepository = new InMemoryBehaviorsRepository()
-    courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository()
+    disciplinesRepository = new InMemoryDisciplinesRepository()
+    courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
+      disciplinesRepository
+    )
     getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase({
       assessmentsRepository,
       behaviorsRepository,
+      disciplinesRepository,
       courseDisciplinesRepository
     })
 
@@ -113,7 +120,7 @@ describe('Get Classfication Course Use Case', () => {
             averageInform: {
               geralAverage: 7.354,
               behaviorAverageStatus: { behaviorAverage: 6.542, status: 'approved' },
-              status: { concept: 'good', status: 'approved' }
+              studentAverageStatus: { concept: 'good', status: 'approved' }
             },
 
             assessments: [
@@ -139,7 +146,7 @@ describe('Get Classfication Course Use Case', () => {
             averageInform: {
               geralAverage: 6.821,
               behaviorAverageStatus: { behaviorAverage: 5.708, status: 'disapproved' },
-              status: { concept: 'regular', status: 'approved' }
+              studentAverageStatus: { concept: 'regular', status: 'approved' }
             },
 
             assessments: [
