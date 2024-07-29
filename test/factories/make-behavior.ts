@@ -9,15 +9,7 @@ export function makeBehavior(
   return Behavior.create({
     studentId: new UniqueEntityId(),
     courseId: new UniqueEntityId(),
-    poleId: new UniqueEntityId(),
-    january: faker.number.int(1),
-    february: faker.number.int(1),
-    march: faker.number.int(1),
-    april: faker.number.int(1),
-    may: faker.number.int(1),
-    jun: faker.number.int(1),
     currentYear: new Date().getFullYear(),
-    userIp: '',
     ...override
   }, id)
 }
