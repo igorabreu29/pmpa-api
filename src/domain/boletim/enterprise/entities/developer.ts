@@ -23,8 +23,8 @@ interface DeveloperProps {
   role: DeveloperRole
   active: boolean
   avatarUrl?: string | null
-  civilId?: number
-  birthday?: Birthday
+  civilId: number
+  birthday: Birthday
   createdAt: Date
 }
 
