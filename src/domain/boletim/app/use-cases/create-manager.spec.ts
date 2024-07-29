@@ -13,6 +13,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { CreateManagerUseCase } from './create-manager.ts'
 
 import bcryptjs from 'bcryptjs'
+import { NotAllowedError } from '@/core/errors/use-case/not-allowed-error.ts'
 
 let managersRepository: InMemoryManagersRepository
 let managersCoursesRepository: InMemoryManagersCoursesRepository
@@ -55,6 +56,24 @@ describe('Create Manager Use Case', () => {
   })
 
   describe('Manager', () => {
+    it ('should not be able to create if access is student or manager', async () => {
+      const result = await sut.execute({
+        courseId: '',
+        poleId: '',
+        cpf: '',
+        email: '',
+        username: '',
+        birthday: new Date(),
+        civilId: 0,
+        userId: '',
+        userIp: '',
+        role: 'manager'
+      })
+      
+      expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(NotAllowedError)
+    })
+
     it ('should not be able to create manager if course not found', async () => {
       const result = await sut.execute({
         courseId: '',
@@ -65,7 +84,8 @@ describe('Create Manager Use Case', () => {
         birthday: new Date(),
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'admin'
       })
   
       expect(result.isLeft()).toBe(true)
@@ -85,7 +105,8 @@ describe('Create Manager Use Case', () => {
         birthday: new Date(),
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'admin'
       })
   
       expect(result.isLeft()).toBe(true)
@@ -112,7 +133,8 @@ describe('Create Manager Use Case', () => {
         birthday: new Date('2002'),
         civilId: 4444,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'admin'
       })
 
       expect(result.isRight()).toBe(true)
@@ -148,7 +170,8 @@ describe('Create Manager Use Case', () => {
         birthday: new Date('2002-2'),
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'admin'
       })
 
       expect(result.isLeft()).toBe(true)
@@ -174,7 +197,8 @@ describe('Create Manager Use Case', () => {
         birthday: new Date('2004-4-2'),
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'admin'
       })
 
       expect(result.isRight()).toBe(true)
@@ -206,7 +230,8 @@ describe('Create Manager Use Case', () => {
         birthday: new Date('2002'),
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'admin'
       })
   
       expect(result.isLeft()).toBe(true)
@@ -232,7 +257,8 @@ describe('Create Manager Use Case', () => {
         birthday: manager.birthday.value,
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'admin'
       })
   
       expect(result.isRight()).toBe(true)

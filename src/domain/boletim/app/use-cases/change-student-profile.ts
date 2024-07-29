@@ -51,7 +51,7 @@ export class ChangeStudentProfileUseCase {
     student.passwordHash = passwordOrError.value
     student.parent = {
       fatherName: fatherName ?? student.parent?.fatherName,
-      motherName: motherName ?? student.parent.motherName
+      motherName: motherName ?? student.parent?.motherName
     }
     student.birthday = birthdayOrError.value
 

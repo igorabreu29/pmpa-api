@@ -18,6 +18,8 @@ import { StudentsBatchRepository } from "../repositories/students-batch-reposito
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts"
 import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts"
 import { StudentsRepository } from "../repositories/students-repository.ts"
+import type { Role } from "../../enterprise/entities/authenticate.ts"
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
 
 interface StudentCreated {
   student: Student
@@ -41,9 +43,11 @@ interface CreateStudentsBatchUseCaseRequest {
   userIp: string
   fileName: string
   fileLink: string
+
+  role: Role
 }
 
-type CreateStudentsBatchUseCaseResponse = Either<ResourceNotFoundError | Error[], null>
+type CreateStudentsBatchUseCaseResponse = Either<ResourceNotFoundError | Error[] | NotAllowedError, null>
 
 export class CreateStudentsBatchUseCase {
   constructor (
@@ -56,7 +60,9 @@ export class CreateStudentsBatchUseCase {
     private hasher: Hasher
   ) {}
 
-  async execute({ students, courseName, userId, userIp, fileName, fileLink }: CreateStudentsBatchUseCaseRequest): Promise<CreateStudentsBatchUseCaseResponse> {
+  async execute({ students, courseName, userId, userIp, fileName, fileLink, role }: CreateStudentsBatchUseCaseRequest): Promise<CreateStudentsBatchUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+
     const course = await this.coursesRepository.findByName(courseName)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 

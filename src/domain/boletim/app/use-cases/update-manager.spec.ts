@@ -41,14 +41,7 @@ describe('Update Manager Use Case', () => {
     )
   })
 
-  it ('should not be able to update a manager that does not exist', async () => {
-    const result = await sut.execute({ id: 'not-found', role: '', userId: '', userIp: '' })
-
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
-  })
-
-  it ('should not be able to update a manager if role to be manager or manager', async () => {
+  it ('should not be able to update a manager if access is student or manager', async () => {
     const manager = makeManager()
     managersRepository.create(manager)
 
@@ -56,6 +49,13 @@ describe('Update Manager Use Case', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+
+  it ('should not be able to update a manager that does not exist', async () => {
+    const result = await sut.execute({ id: 'not-found', role: '', userId: '', userIp: '' })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it ('should be able to update a manager', async () => {

@@ -2,6 +2,8 @@ import { Either, left, right } from "@/core/either.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { BehaviorsRepository } from "../repositories/behaviors-repository.ts";
 import { BehaviorEvent } from "../../enterprise/events/behavior-event.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 interface UpdateBehaviorUseCaseUseCaseRequest {
   id: string
@@ -19,9 +21,11 @@ interface UpdateBehaviorUseCaseUseCaseRequest {
   december?: number | null
   userId: string
   userIp: string
+
+  role: Role
 }
 
-type UpdateBehaviorUseCaseUseCaseResponse = Either<ResourceNotFoundError, null>
+type UpdateBehaviorUseCaseUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, null>
 
 export class UpdateBehaviorUseCaseUseCase {
   constructor(
@@ -43,8 +47,11 @@ export class UpdateBehaviorUseCaseUseCase {
     november,
     december, 
     userIp,
-    userId
+    userId,
+    role
   }: UpdateBehaviorUseCaseUseCaseRequest): Promise<UpdateBehaviorUseCaseUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+
     const behavior = await this.behaviorsRepository.findById({ id }) 
     if (!behavior) return left(new ResourceNotFoundError('Behavior not found.'))
     

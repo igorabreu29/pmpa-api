@@ -4,6 +4,8 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { ConflictError } from "./errors/conflict-error.ts";
 import { Assessment } from "../../enterprise/entities/assessment.ts";
 import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 interface UpdateAssessmentUseCaseUseCaseRequest {
   id: string
@@ -13,9 +15,11 @@ interface UpdateAssessmentUseCaseUseCaseRequest {
   avi?: number
   avii?: number
   vfe?: number
+
+  role: Role
 }
 
-type UpdateAssessmentUseCaseUseCaseResponse = Either<ResourceNotFoundError | ConflictError, null>
+type UpdateAssessmentUseCaseUseCaseResponse = Either<ResourceNotFoundError | ConflictError | NotAllowedError, null>
 
 export class UpdateAssessmentUseCaseUseCase {
   constructor ( 
@@ -30,7 +34,10 @@ export class UpdateAssessmentUseCaseUseCase {
     vfe,
     avi,
     avii,
+    role
   }: UpdateAssessmentUseCaseUseCaseRequest): Promise<UpdateAssessmentUseCaseUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+
     const assessment = await this.assessmentsRepository.findById({ id }) 
     if (!assessment) return left(new ResourceNotFoundError('Assessment not found.'))
 

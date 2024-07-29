@@ -14,6 +14,7 @@ import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-s
 import { makeStudent } from "test/factories/make-student.ts";
 import { InMemoryDisciplinesRepository } from "test/repositories/in-memory-disciplines-repository.ts";
 import { makeDiscipline } from "test/factories/make-discipline.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -49,6 +50,24 @@ describe(('Create Assessment Use Case'), () => {
     vi.useRealTimers()
   })
 
+  it ('should not be able to create assessment if user access is student', async () => {
+    const result = await sut.execute({
+      studentId: '',
+      courseId: '',
+      disciplineId: '',
+      vf: 2,
+      vfe: null,
+      avi: null,
+      avii: null,
+      userIp: '',
+      userId: '',
+      role: 'student'
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+
   it ('should not be able to create assessment if course does not exist', async () => {
     const assessment = makeAssessment()
     assessmentsRepository.create(assessment)
@@ -62,7 +81,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: null,
       avii: null,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -85,7 +105,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: null,
       avii: null,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
     
     expect(result.isLeft()).toBe(true)
@@ -111,7 +132,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: null,
       avii: null,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -145,7 +167,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: null,
       avii: null,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -176,7 +199,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: null,
       avii: null,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -204,7 +228,8 @@ describe(('Create Assessment Use Case'), () => {
       avii: null,
       vfe: null,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -232,7 +257,8 @@ describe(('Create Assessment Use Case'), () => {
       avii: -1,
       vfe: null,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -260,7 +286,8 @@ describe(('Create Assessment Use Case'), () => {
       avii: null,
       vfe: -1,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -288,7 +315,8 @@ describe(('Create Assessment Use Case'), () => {
       avii: 10,
       vfe: null,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -317,7 +345,8 @@ describe(('Create Assessment Use Case'), () => {
       avi: null,
       avii: null,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isRight()).toBe(true)

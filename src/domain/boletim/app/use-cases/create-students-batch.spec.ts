@@ -12,6 +12,7 @@ import { InMemoryStudentsRepository } from "test/repositories/in-memory-students
 import { makeStudent } from "test/factories/make-student.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { InMemoryStudentsBatchRepository } from "test/repositories/in-memory-students-batch-repository.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
 
 let studentsRepository: InMemoryStudentsRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -80,6 +81,7 @@ describe('Create Students Batch Use Case', () => {
         userIp: '',
         fileName: '',
         fileLink: '',
+        role: 'manager' as Role,
         students: [
           {
             username: 'John Doe',
@@ -121,6 +123,7 @@ describe('Create Students Batch Use Case', () => {
         userIp: '0.0.0.0',
         fileName: 'add-student-batch.xlsx',
         fileLink: 'http://0.0.0.0/add-students-batch.xlsx',
+        role: 'manager' as Role,
         students: [
           {
             username: student.username.value,
@@ -177,6 +180,7 @@ describe('Create Students Batch Use Case', () => {
         userIp: '',
         fileName: '',
         fileLink: '',
+        role: 'manager' as Role,
         students: [
           {
             username: 'John Doe',
@@ -218,6 +222,7 @@ describe('Create Students Batch Use Case', () => {
         userIp: '0.0.0.0',
         fileName: 'add-student-batch.xlsx',
         fileLink: 'http://0.0.0.0/add-students-batch.xlsx',
+        role: 'manager' as Role,
         students: [
           {
             username: student.username.value,
@@ -263,6 +268,7 @@ describe('Create Students Batch Use Case', () => {
         userIp: '',
         fileName: '',
         fileLink: '',
+        role: 'manager' as Role,
       })
       expect(result.isLeft()).toBe(true)
       expect(result.value).toBeInstanceOf(ResourceNotFoundError)
@@ -287,6 +293,7 @@ describe('Create Students Batch Use Case', () => {
         userIp: '',
         fileName: '',
         fileLink: '',
+        role: 'admin' as Role,
         students: [
           {
             username: 'John Doe',
@@ -328,6 +335,7 @@ describe('Create Students Batch Use Case', () => {
         userIp: '',
         fileName: '',
         fileLink: '',
+        role: 'dev' as Role,
         students: [
           {
             username: 'John Doe',

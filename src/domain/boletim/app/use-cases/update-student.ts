@@ -14,10 +14,11 @@ import type { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday
 import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { formatCPF } from "@/core/utils/formatCPF.ts";
 import { StudentEvent } from "../../enterprise/events/student-event.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
 
 interface UpdateStudentUseCaseRequest {
   id: string
-  role: string
+  role: Role
   username?: string
   email?: string
   cpf?: string
@@ -68,9 +69,10 @@ export class UpdateStudentUseCase {
     userId,
     userIp
   }: UpdateStudentUseCaseRequest): Promise<UpdateStudentUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+      
     const student = await this.studentsRepository.findById(id)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
-    if (role === 'student') return left(new NotAllowedError())
 
     const cpfFormatted = formatCPF(student.cpf.value)
     

@@ -2,7 +2,7 @@ import { Either, left, right } from "@/core/either.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts"
-import { DisciplinesRepository } from "../repositories/disiciplines-repository.ts"
+import { DisciplinesRepository } from "../repositories/disciplines-repository.ts"
 import { Assessment } from "@/domain/boletim/enterprise/entities/assessment.ts"
 import { AssessmentsRepository } from "../repositories/assessments-repository.ts"
 import { AssessmentBatch } from "../../enterprise/entities/assessment-batch.ts"
@@ -11,6 +11,8 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
 import { ConflictError } from "./errors/conflict-error.ts"
 import { StudentsRepository } from "../repositories/students-repository.ts"
 import dayjs from "dayjs"
+import type { Role } from "../../enterprise/entities/authenticate.ts"
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
 
 interface Error {
   name: string
@@ -34,9 +36,11 @@ interface CreateAssessmentsBatchUseCaseRequest {
   userIp: string,
   fileLink: string
   fileName: string
+  
+  role: Role
 }
 
-type CreateAssessmentsBatchUseCaseResponse = Either<ResourceNotFoundError | Error[], null>
+type CreateAssessmentsBatchUseCaseResponse = Either<ResourceNotFoundError | Error[] | NotAllowedError, null>
 
 export class CreateAssessmentsBatchUseCase {
   constructor (
@@ -47,7 +51,9 @@ export class CreateAssessmentsBatchUseCase {
     private assessmentsBatchRepository: AssessmentsBatchRepository,
   ) {}
 
-  async execute({ studentAssessments, courseId, userIp, userId, fileLink, fileName }: CreateAssessmentsBatchUseCaseRequest): Promise<CreateAssessmentsBatchUseCaseResponse> {
+  async execute({ studentAssessments, courseId, userIp, userId, fileLink, fileName, role }: CreateAssessmentsBatchUseCaseRequest): Promise<CreateAssessmentsBatchUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+    
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
     if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))

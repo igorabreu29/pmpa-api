@@ -24,9 +24,10 @@ export class DeleteStudentUseCase {
   ) {}
 
   async execute({ id, role, userId, userIp }: DeleteStudentUseCaseRequest): Promise<DeleteStudentUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+      
     const student = await this.studentsRepository.findById(id)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
-    if (role === 'student') return left(new NotAllowedError())
       
     await this.studentsRepository.delete(student)
 

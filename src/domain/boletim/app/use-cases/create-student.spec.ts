@@ -13,6 +13,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { CreateStudentUseCase } from './create-student.ts'
 
 import bcryptjs from 'bcryptjs'
+import { NotAllowedError } from '@/core/errors/use-case/not-allowed-error.ts'
 
 let studentsRepository: InMemoryStudentsRepository
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
@@ -61,6 +62,24 @@ describe('Create Student Use Case', () => {
   })
 
   describe('Student', () => {
+    it ('should not be able to create if access is student', async () => {
+      const result = await sut.execute({
+        courseId: '',
+        poleId: '',
+        cpf: '',
+        email: '',
+        username: '',
+        birthday: new Date(),
+        civilId: 0,
+        userId: '',
+        userIp: '',
+        role: 'student'
+      })
+      
+      expect(result.isLeft()).toBe(true)
+      expect(result.value).toBeInstanceOf(NotAllowedError)
+    })
+
     it ('should not be able to create student if course not found', async () => {
       const result = await sut.execute({
         courseId: '',
@@ -71,7 +90,8 @@ describe('Create Student Use Case', () => {
         birthday: new Date(),
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'manager'
       })
   
       expect(result.isLeft()).toBe(true)
@@ -91,7 +111,8 @@ describe('Create Student Use Case', () => {
         birthday: new Date(),
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'manager'
       })
   
       expect(result.isLeft()).toBe(true)
@@ -119,7 +140,8 @@ describe('Create Student Use Case', () => {
         birthday: new Date('2004-10-2'),
         civilId: 44444,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'manager'
       })
       
       expect(result.isRight()).toBe(true)
@@ -155,7 +177,8 @@ describe('Create Student Use Case', () => {
         birthday: new Date('2004'),
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'manager'
       })
   
       expect(result.isLeft()).toBe(true)
@@ -183,7 +206,8 @@ describe('Create Student Use Case', () => {
         birthday: student.birthday.value,
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'manager'
       })
 
       expect(result.isRight()).toBe(true)
@@ -217,7 +241,8 @@ describe('Create Student Use Case', () => {
         birthday: student.birthday.value,
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'manager'
       })
   
       expect(result.isLeft()).toBe(true)
@@ -245,7 +270,8 @@ describe('Create Student Use Case', () => {
         birthday: student.birthday.value,
         civilId: 0,
         userId: '',
-        userIp: ''
+        userIp: '',
+        role: 'manager'
       })
   
       expect(result.isRight()).toBe(true)

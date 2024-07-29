@@ -5,6 +5,8 @@ import { InMemoryAdministratorsRepository } from "test/repositories/in-memory-ad
 import { makeAdministrator } from "test/factories/make-administrator.ts";
 
 import bcryptjs from 'bcryptjs'
+import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 let administratorsRepository: InMemoryAdministratorsRepository
 let sut: CreateAdminUseCase
@@ -21,6 +23,28 @@ describe('Create Admin Use Case', () => {
     vi.useRealTimers()
     vi.restoreAllMocks()
   })
+
+  it ('should not be able to create administrator if access is not dev', async () => {
+    vi.setSystemTime('2022-1-2')
+
+    const administrator = makeAdministrator()
+    administratorsRepository.create(administrator)
+
+    const result = await sut.execute({ 
+      cpf: '000.000.000-00', 
+      password: administrator.passwordHash.value, 
+      email: administrator.email.value, 
+      username: administrator.username.value,
+      birthday: new Date('2002'),
+      civilId: 20202,
+      userId: '',
+      userIp: '',
+      role: 'admin'
+    })
+    
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
   
   it ('should not be able to create administrator with cpf already existing', async () => {
     vi.setSystemTime('2022-1-2')
@@ -36,7 +60,8 @@ describe('Create Admin Use Case', () => {
       birthday: new Date('2002'),
       civilId: 20202,
       userId: '',
-      userIp: ''
+      userIp: '',
+      role: 'dev'
     })
     
     expect(result.isLeft()).toBe(true)
@@ -57,7 +82,8 @@ describe('Create Admin Use Case', () => {
       birthday: new Date('2002'),
       civilId: 20202,
       userId: '',
-      userIp: ''
+      userIp: '',
+      role: 'dev'
     })
     
     expect(result.isLeft()).toBe(true)
@@ -73,7 +99,8 @@ describe('Create Admin Use Case', () => {
       birthday: new Date('2002'),
       civilId: 20202,
       userId: '',
-      userIp: ''
+      userIp: '',
+      role: 'dev' as Role
     }
 
     const spyOn = vi.spyOn(bcryptjs, 'hash').mockImplementation((password: string) => {

@@ -23,9 +23,10 @@ export class DeleteAdministratorUseCase {
   ) {}
 
   async execute({ id, role, userId, userIp}: DeleteAdministratorUseCaseRequest): Promise<DeleteAdministratorUseCaseResponse> {
+    if (role !== 'dev') return left(new NotAllowedError())
+      
     const administrator = await this.administratorsRepository.findById(id)
     if (!administrator) return left(new ResourceNotFoundError('Administrator not found.'))
-    if (role !== 'dev') return left(new NotAllowedError())
     
     await this.administratorsRepository.delete(administrator)
 

@@ -13,6 +13,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts";
 import { CreateBehaviorsBatchUseCase } from "./create-behaviors-batch.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -65,8 +66,31 @@ describe('Create Behaviors Batch Use Case', () => {
     vi.useRealTimers()
   })
 
+  it ('should not be able to create behavior if user access is student', async () => {
+    const result = await sut.execute({ 
+      studentBehaviors: [], 
+      courseId: 'not-found', 
+      userIp: '', 
+      userId: '', 
+      fileLink: '', 
+      fileName: '',
+      role: 'student'
+    })
+    
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+
   it ('should not be able to create behaviors batch if course does not exist', async () => {
-    const result = await sut.execute({ studentBehaviors: [], courseId: 'not-found', userIp: '', userId: '', fileLink: '', fileName: '' })
+    const result = await sut.execute({ 
+      studentBehaviors: [], 
+      courseId: 'not-found', 
+      userIp: '', 
+      userId: '', 
+      fileLink: '', 
+      fileName: '',
+      role: 'manager'
+    })
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
@@ -87,7 +111,8 @@ describe('Create Behaviors Batch Use Case', () => {
       fileName: '',
       studentBehaviors: [],
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -149,7 +174,15 @@ describe('Create Behaviors Batch Use Case', () => {
       },
     ]
 
-    const result = await sut.execute({ studentBehaviors, courseId: course.id.toValue(), userIp: '', userId: '', fileLink: '', fileName: '' })
+    const result = await sut.execute({ 
+      studentBehaviors, 
+      courseId: course.id.toValue(), 
+      userIp: '', 
+      userId: '', 
+      fileLink: '', 
+      fileName: '',
+      role: 'manager'
+    })
 
     expect(result.isLeft()).toBe(true)
   })  
@@ -219,7 +252,15 @@ describe('Create Behaviors Batch Use Case', () => {
         december: null,
       },
     ]
-    const result = await sut.execute({ courseId: course.id.toValue(), studentBehaviors, userIp: '', userId: '', fileLink: '', fileName: '' })
+    const result = await sut.execute({ 
+      courseId: course.id.toValue(), 
+      studentBehaviors, 
+      userIp: '', 
+      userId: '', 
+      fileLink: '', 
+      fileName: '' ,
+      role: 'admin'
+    })
 
     expect(result.isLeft()).toBe(true)
   })
@@ -282,7 +323,15 @@ describe('Create Behaviors Batch Use Case', () => {
         december: null,
       },
     ]
-    const result = await sut.execute({ courseId: course.id.toValue(), studentBehaviors, userIp: '', userId: '', fileLink: '', fileName: '' })
+    const result = await sut.execute({ 
+      courseId: course.id.toValue(), 
+      studentBehaviors, 
+      userIp: '', 
+      userId: '', 
+      fileLink: '', 
+      fileName: '',
+      role: 'dev'
+    })
 
     expect(result.isRight()).toBe(true)
     expect(behaviorsBatchRepository.items).toHaveLength(1)

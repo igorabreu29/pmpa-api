@@ -24,9 +24,10 @@ export class DeleteManagerUseCase {
   ) {}
 
   async execute({ id, role, userId, userIp }: DeleteManagerUseCaseRequest): Promise<DeleteManagerUseCaseResponse> {
+    if (role === 'student' || role === 'manager') return left(new NotAllowedError())
+      
     const manager = await this.managersRepository.findById(id)
     if (!manager) return left(new ResourceNotFoundError('Manager not found.'))
-    if (role === 'student' || role === 'manager') return left(new NotAllowedError())
 
     await this.managersRepository.delete(manager)
     

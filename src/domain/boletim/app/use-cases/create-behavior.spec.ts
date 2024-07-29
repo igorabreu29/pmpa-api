@@ -13,6 +13,7 @@ import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-s
 import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
 import { makePole } from "test/factories/make-pole.ts";
 import { makeStudent } from "test/factories/make-student.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -23,7 +24,7 @@ let polesRepository: InMemoryPolesRepository
 let studentsRepository: InMemoryStudentsRepository
 let sut: CreateBehaviorUseCase
 
-describe(('Create Behavior Use Case'), () => {
+describe('Create Behavior Use Case', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
@@ -47,13 +48,26 @@ describe(('Create Behavior Use Case'), () => {
     vi.useRealTimers()
   })
 
+  it ('should not be able to create behavior if user access is student', async () => {
+    const result = await sut.execute({
+      studentId: '',
+      courseId: 'not-found',
+      userIp: '',
+      userId: '',
+      role: 'student'
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+
   it ('should not be able to create behavior if course does not exist', async () => {
     const result = await sut.execute({
       studentId: '',
       courseId: 'not-found',
-      currentYear: 2025,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -67,9 +81,9 @@ describe(('Create Behavior Use Case'), () => {
     const result = await sut.execute({
       studentId: 'student-1',
       courseId: course.id.toValue(),
-      currentYear: 2025,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -86,9 +100,9 @@ describe(('Create Behavior Use Case'), () => {
     const result = await sut.execute({
       studentId: 'student-1',
       courseId: course.id.toValue(),
-      currentYear: 2025,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -107,9 +121,9 @@ describe(('Create Behavior Use Case'), () => {
     const result = await sut.execute({
       studentId: 'student-1',
       courseId: course.id.toValue(),
-      currentYear: 2025,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -132,9 +146,9 @@ describe(('Create Behavior Use Case'), () => {
     const result = await sut.execute({
       studentId: behavior.studentId.toValue(),
       courseId: behavior.courseId.toValue(),
-      currentYear: behavior.currentYear,
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'admin'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -151,9 +165,9 @@ describe(('Create Behavior Use Case'), () => {
     const result = await sut.execute({
       studentId: student.id.toValue(),
       courseId: course.id.toValue(),
-      currentYear: new Date().getFullYear(),
       userIp: '',
-      userId: 'manager-1'
+      userId: 'manager-1',
+      role: 'dev'
     })
 
     expect(result.isRight()).toBe(true)

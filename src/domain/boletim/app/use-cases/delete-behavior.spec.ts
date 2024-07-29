@@ -13,9 +13,20 @@ describe(('Delete Behavior Use Case'), () => {
     sut = new DeleteBehaviorUseCaseUseCase(behaviorsRepository)
   })
 
+  it ('should not be able to delete assessment if user access is student', async () => {
+    const result = await sut.execute({
+      id: 'not-found',
+      role: 'manager'
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+  })
+
   it ('should not be able to delete assessment not existing', async () => {
     const result = await sut.execute({
-      id: 'not-found'
+      id: 'not-found',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -27,7 +38,8 @@ describe(('Delete Behavior Use Case'), () => {
     behaviorsRepository.create(behavior)
 
     const result = await sut.execute({
-      id: behavior.id.toValue()
+      id: behavior.id.toValue(),
+      role: 'manager'
     })
 
     expect(result.isRight()).toBe(true)

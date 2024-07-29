@@ -8,7 +8,7 @@ export interface StudentClassficationByPeriod {
       geralAverage: number | string;
       behaviorAverageStatus: GenerateBehaviorStatus[]
       behaviorsCount: number
-      status: GetGeralStudentAverageStatusResponse
+      studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
 
     assessments: {
@@ -18,6 +18,7 @@ export interface StudentClassficationByPeriod {
   }
   studentBirthday?: Date
   studentCivilID?: number
+  studentPole?: string
 }
 
 export interface StudentClassficationByModule {
@@ -26,7 +27,7 @@ export interface StudentClassficationByModule {
       geralAverage: number | string;
       behaviorAverageStatus: GenerateBehaviorStatus[] | GenerateBehaviorStatus
       behaviorsCount: number
-      status: GetGeralStudentAverageStatusResponse
+      studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
   
     assessments: AssessmentWithModule[]
@@ -34,4 +35,5 @@ export interface StudentClassficationByModule {
   }
   studentBirthday?: Date
   studentCivilID?: number
+  studentPole?: string
 }

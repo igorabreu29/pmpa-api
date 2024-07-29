@@ -15,6 +15,13 @@ import { Email } from "../../enterprise/entities/value-objects/email.ts";
 import { Name } from "../../enterprise/entities/value-objects/name.ts";
 import { Password } from "../../enterprise/entities/value-objects/password.ts";
 import { ManagerEvent } from "../../enterprise/events/manager-event.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import type { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
+import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
+import type { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
+import type { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
+import type { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 
 interface CreateManagerUseCaseRequest {
   userId: string
@@ -27,9 +34,21 @@ interface CreateManagerUseCaseRequest {
   civilId: number
   courseId: string
   poleId: string
+
+  role: Role
 }
 
-type CreateManagerUseCaseResponse = Either<ResourceNotFoundError | ResourceAlreadyExistError, null>
+type CreateManagerUseCaseResponse = Either<
+    | ResourceNotFoundError 
+    | ResourceAlreadyExistError
+    | InvalidEmailError
+    | InvalidCPFError
+    | InvalidPasswordError
+    | InvalidNameError
+    | InvalidBirthdayError
+    | NotAllowedError, 
+    null
+  >
 
 export class CreateManagerUseCase {
   constructor (
@@ -49,13 +68,17 @@ export class CreateManagerUseCase {
     email, 
     username,
     birthday,
-    civilId
+    civilId,
+    role
   }: CreateManagerUseCaseRequest): Promise<CreateManagerUseCaseResponse> {
+    if (role === 'student' || role === 'manager') return left(new NotAllowedError())
+      
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
     const pole = await this.polesRepository.findById(poleId)
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
+
 
     const defaultPassword = `Pmp@${cpf}`
 

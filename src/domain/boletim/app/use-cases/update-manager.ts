@@ -67,9 +67,10 @@ export class UpdateManagerUseCase {
     userId,
     userIp
   }: UpdateManagerUseCaseRequest): Promise<UpdateManagerUseCaseResponse> {
+    if (role === 'student' || role === 'manager') return left(new NotAllowedError())
+      
     const manager = await this.managersRepository.findById(id)
     if (!manager) return left(new ResourceNotFoundError('manager not found.'))
-    if (role === 'student' || role === 'manager') return left(new NotAllowedError())
 
     const cpfFormatted = formatCPF(manager.cpf.value)
     

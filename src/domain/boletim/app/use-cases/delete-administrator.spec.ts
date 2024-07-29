@@ -16,19 +16,7 @@ describe('Delete Administrator Use Case', () => {
     )
   })
 
-  it ('should not be able to delete a administrator that does not exist', async () => {
-    const result = await sut.execute({
-      id: 'not-found',
-      role: '',
-      userId: '',
-      userIp: ''
-    })
-
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
-  })
-
-  it ('should not be able to delete a administrator if role to be diffent dev', async () => {
+  it ('should not be able to delete a administrator if access is not dev', async () => {
     const administrator = makeAdministrator()
     admnistratorsRepository.create(administrator)
 
@@ -41,6 +29,18 @@ describe('Delete Administrator Use Case', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+
+  it ('should not be able to delete a administrator that does not exist', async () => {
+    const result = await sut.execute({
+      id: 'not-found',
+      role: 'dev',
+      userId: '',
+      userIp: ''
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it ('should be able to update administrator', async () => {

@@ -8,6 +8,13 @@ import { CPF } from "../../enterprise/entities/value-objects/cpf.ts"
 import { Email } from "../../enterprise/entities/value-objects/email.ts"
 import { Password } from "../../enterprise/entities/value-objects/password.ts"
 import { AdministratorEvent } from "../../enterprise/events/administrator-event.ts"
+import type { Role } from "../../enterprise/entities/authenticate.ts"
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
+import type { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts"
+import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts"
+import type { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts"
+import type { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
+import type { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts"
 
 interface CreateAdminUseCaseRequest {
   userId: string
@@ -19,16 +26,29 @@ interface CreateAdminUseCaseRequest {
   password: string
   civilId: number
   birthday: Date
+
+  role: Role
 }
 
-type CreateAdminUseCaseResponse = Either<ResourceAlreadyExistError, null>
+type CreateAdminUseCaseResponse = Either<
+    | ResourceAlreadyExistError
+    | InvalidEmailError
+    | InvalidCPFError
+    | InvalidPasswordError
+    | InvalidNameError
+    | InvalidBirthdayError
+    | NotAllowedError, 
+    null
+  >
 
 export class CreateAdminUseCase {
   constructor (
     private administratorsRepository: AdministratorsRepository,
   ) {}
 
-  async execute({ username, email, password, cpf, birthday, civilId, userId, userIp }: CreateAdminUseCaseRequest): Promise<CreateAdminUseCaseResponse> {
+  async execute({ username, email, password, cpf, birthday, civilId, userId, userIp, role }: CreateAdminUseCaseRequest): Promise<CreateAdminUseCaseResponse> {
+    if (role !== 'dev') return left(new NotAllowedError())
+    
     const nameOrError = Name.create(username)
     const emailOrError = Email.create(email)
     const cpfOrError = CPF.create(cpf)

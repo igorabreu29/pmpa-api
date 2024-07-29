@@ -7,6 +7,7 @@ import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-s
 import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -39,8 +40,15 @@ describe('Change Student Status Use Case', () => {
     sut = new ChangeStudentStatusUseCase(studentsRepository)
   })
 
+  it ('should not be able to change student status if access is student', async () => {
+    const result = await sut.execute({ id: 'not-found', status: false, role: 'student' })
+    
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+
   it ('should not be able to change status if user not exist', async () => {
-    const result = await sut.execute({ id: 'not-found', status: false })
+    const result = await sut.execute({ id: 'not-found', status: false, role: 'manager' })
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
@@ -50,7 +58,7 @@ describe('Change Student Status Use Case', () => {
   const student = makeStudent()
   studentsRepository.create(student)
 
-  const result = await sut.execute({ id: student.id.toValue(), status: false })
+  const result = await sut.execute({ id: student.id.toValue(), status: false, role: 'manager' })
 
   expect(result.isRight()).toBe(true)
   expect(studentsRepository.items[0].active).toBe(false)

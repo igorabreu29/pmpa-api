@@ -4,6 +4,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { makeAssessment } from "test/factories/make-assessment.ts";
 import { UpdateAssessmentUseCaseUseCase } from "./update-assessment.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let sut: UpdateAssessmentUseCaseUseCase
@@ -14,11 +15,24 @@ describe(('Update Assessment Use Case'), () => {
     sut = new UpdateAssessmentUseCaseUseCase(assessmentsRepository)
   })
 
+  it ('should not be able to update assessment if user access is student', async () => {
+    const result = await sut.execute({
+      id: 'not-found',
+      userId: '',
+      userIp: '',
+      role: 'student'
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+  
   it ('should not be able to update assessment not existing', async () => {
     const result = await sut.execute({
       id: 'not-found',
       userId: '',
-      userIp: ''
+      userIp: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -34,7 +48,8 @@ describe(('Update Assessment Use Case'), () => {
       vf: assessment.vf,
       avi: -1,
       userId: '',
-      userIp: ''
+      userIp: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -50,7 +65,8 @@ describe(('Update Assessment Use Case'), () => {
       vf: 5,
       avii: -1,
       userId: '',
-      userIp: ''
+      userIp: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -66,7 +82,8 @@ describe(('Update Assessment Use Case'), () => {
       vf: 5,
       vfe: -1,
       userId: '',
-      userIp: ''
+      userIp: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -82,7 +99,8 @@ describe(('Update Assessment Use Case'), () => {
       vf: 5,
       avii: 10,
       userId: '',
-      userIp: ''
+      userIp: '',
+      role: 'admin'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -99,7 +117,8 @@ describe(('Update Assessment Use Case'), () => {
       avi: 7,
       vfe: 7,
       userId: '',
-      userIp: ''
+      userIp: '',
+      role: 'dev'
     })
 
     expect(result.isRight()).toBe(true)

@@ -1,6 +1,6 @@
 import { Either, left, right } from "@/core/either.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
-import { DisciplinesRepository } from "../repositories/disiciplines-repository.ts";
+import { DisciplinesRepository } from "../repositories/disciplines-repository.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { CoursesDisciplinesRepository } from "../repositories/courses-disciplines-repository.ts";
 import { CourseDiscipline } from "../../enterprise/entities/course-discipline.ts";
@@ -36,7 +36,7 @@ export class CreateCourseDiscipline {
     const discipline = await this.disciplinesRepository.findById(disciplineId)
     if (!discipline) return left(new ResourceNotFoundError('Discipline not found.'))
 
-    const courseDisciplineAlreadyExist = await this.coursesDisciplinesRepository.findByCourseIdAndDisciplineId({ courseId, disciplineId })
+    const courseDisciplineAlreadyExist = await this.coursesDisciplinesRepository.findByCourseAndDisciplineId({ courseId, disciplineId })
     if (courseDisciplineAlreadyExist) return left(new ResourceAlreadyExistError())
 
     const courseDiscipline = CourseDiscipline.create({

@@ -47,14 +47,7 @@ describe('Delete Student Use Case', () => {
     )
   })
 
-  it ('should not be able to delete a student that does not exist', async () => {
-    const result = await sut.execute({ id: 'not-found', role: '', userId: '', userIp: ''})
-
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
-  })
-
-  it ('should not be able to delete a student if role to be student', async () => {
+  it ('should not be able to delete a student if access is student', async () => {
     const student = makeStudent()
     studentsRepository.create(student)
 
@@ -62,6 +55,13 @@ describe('Delete Student Use Case', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+
+  it ('should not be able to delete a student that does not exist', async () => {
+    const result = await sut.execute({ id: 'not-found', role: '', userId: '', userIp: ''})
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it ('should be able to delete a student', async () => {

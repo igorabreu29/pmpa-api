@@ -18,6 +18,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts";
 import { CreateAssessmentsBatchUseCase } from "./create-assessments-batch.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -73,8 +74,31 @@ describe('Create Assessments Batch Use Case', () => {
     vi.useRealTimers()
   })
 
+  it ('should not be able to create assessments batch if user access is student', async () => {
+    const result = await sut.execute({
+      studentAssessments: [], 
+      courseId: 'not-found', 
+      userIp: '', 
+      userId: '',
+      role: 'student', 
+      fileLink: '', 
+      fileName: '',
+    })
+    
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+
   it ('should not be able to create assessments batch if course does not exist', async () => {
-    const result = await sut.execute({ studentAssessments: [], courseId: 'not-found', userIp: '', userId: '', fileLink: '', fileName: '' })
+    const result = await sut.execute({
+      studentAssessments: [], 
+      courseId: 'not-found', 
+      userIp: '', 
+      userId: '',
+      role: 'manager', 
+      fileLink: '', 
+      fileName: '',
+    })
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
@@ -95,7 +119,8 @@ describe('Create Assessments Batch Use Case', () => {
       fileName: '',
       studentAssessments: [],
       userIp: '',
-      userId: ''
+      userId: '',
+      role: 'manager'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -136,7 +161,15 @@ describe('Create Assessments Batch Use Case', () => {
       },
     ]
 
-    const result = await sut.execute({ studentAssessments, courseId: course.id.toValue(), userIp: '', userId: '', fileLink: '', fileName: '' })
+    const result = await sut.execute({ 
+      studentAssessments, 
+      courseId: course.id.toValue(), 
+      userIp: '', 
+      userId: '', 
+      fileLink: '', 
+      fileName: '',
+      role: 'manager'
+    })
 
     expect(result.isLeft()).toBe(true)
   })  
@@ -182,7 +215,15 @@ describe('Create Assessments Batch Use Case', () => {
         vfe: null,
       },
     ]
-    const result = await sut.execute({ courseId: course.id.toValue(), studentAssessments, userIp: '', userId: '', fileLink: '', fileName: '' })
+    const result = await sut.execute({ 
+      courseId: course.id.toValue(), 
+      studentAssessments, 
+      userIp: '', 
+      userId: '', 
+      fileLink: '', 
+      fileName: '',
+      role: 'manager'
+    })
 
       expect(result.isLeft()).toBe(true)
   })
@@ -231,7 +272,15 @@ describe('Create Assessments Batch Use Case', () => {
         vfe: null,
       },
     ]
-    const result = await sut.execute({ courseId: course.id.toValue(), studentAssessments, userIp: '', userId: '', fileLink: '', fileName: '' })
+    const result = await sut.execute({ 
+      courseId: course.id.toValue(), 
+      studentAssessments, 
+      userIp: '', 
+      userId: '', 
+      fileLink: '', 
+      fileName: '',
+      role: 'admin' 
+    })
 
       expect(result.isLeft()).toBe(true)
   })
@@ -266,7 +315,7 @@ describe('Create Assessments Batch Use Case', () => {
     const studentAssessments = [
       {
         cpf: student1.cpf.value,
-        disciplineName: discipline1.name,
+        disciplineName: discipline1.name.value,
         poleName: pole.name.value,
         avi: 7,
         avii: null,
@@ -275,7 +324,7 @@ describe('Create Assessments Batch Use Case', () => {
       },
       {
         cpf: student2.cpf.value,
-        disciplineName: discipline2.name,
+        disciplineName: discipline2.name.value,
         poleName: pole.name.value,
         avi: 10,
         avii: null,
@@ -283,7 +332,15 @@ describe('Create Assessments Batch Use Case', () => {
         vfe: null,
       },
     ]
-    const result = await sut.execute({ courseId: course.id.toValue(), studentAssessments, userIp: '', userId: '', fileLink: '', fileName: '' })
+    const result = await sut.execute({ 
+      courseId: course.id.toValue(), 
+      studentAssessments, 
+      userIp: '', 
+      userId: '', 
+      fileLink: '', 
+      fileName: '',
+      role: 'dev' 
+    })
 
     expect(result.isRight()).toBe(true)
     expect(assessmentsBatchRepository.items).toHaveLength(1)

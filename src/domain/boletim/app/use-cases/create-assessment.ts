@@ -6,10 +6,12 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
 import { StudentsRepository } from "../repositories/students-repository.ts";
-import { DisciplinesRepository } from "../repositories/disiciplines-repository.ts";
+import { DisciplinesRepository } from "../repositories/disciplines-repository.ts";
 
 import dayjs from "dayjs";
 import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 interface CreateAssessmentUseCaseRequest {
   userId: string
@@ -21,6 +23,8 @@ interface CreateAssessmentUseCaseRequest {
   avii: number | null
   vfe: number | null
   userIp: string
+
+  role: Role
 }
 
 type CreateAssessmentUseCaseResponse = Either<ResourceNotFoundError | ConflictError, null>
@@ -42,8 +46,11 @@ export class CreateAssessmentUseCase {
     avi,
     avii,
     vfe,
-    userIp
+    userIp,
+    role
   }: CreateAssessmentUseCaseRequest): Promise<CreateAssessmentUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+      
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 

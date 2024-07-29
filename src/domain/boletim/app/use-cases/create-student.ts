@@ -20,6 +20,8 @@ import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import { StudentEvent } from "../../enterprise/events/student-event.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 interface CreateStudentUseCaseRequest {
   userId: string
@@ -32,6 +34,8 @@ interface CreateStudentUseCaseRequest {
   civilId: number
   courseId: string
   poleId: string
+
+  role: Role
 }
 
 type CreateStudentUseCaseResponse = Either<
@@ -41,7 +45,8 @@ type CreateStudentUseCaseResponse = Either<
     | InvalidCPFError
     | InvalidPasswordError
     | InvalidNameError
-    | InvalidBirthdayError,
+    | InvalidBirthdayError
+    | NotAllowedError,
     null
   >
 
@@ -63,13 +68,17 @@ export class CreateStudentUseCase {
     birthday,
     civilId,
     userId,
-    userIp
+    userIp,
+    role
   }: CreateStudentUseCaseRequest): Promise<CreateStudentUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+      
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
-
+      
     const pole = await this.polesRepository.findById(poleId)
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
+      
 
     const defaultPassword = `Pmp@${cpf}`
 

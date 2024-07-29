@@ -5,6 +5,8 @@ import { CreateDeveloperUseCase } from "./create-developer.ts";
 import { makeDeveloper } from "test/factories/make-developer.ts";
 
 import bcryptjs from 'bcryptjs'
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
 
 let developersRepository: InMemoryDevelopersRepository
 let sut: CreateDeveloperUseCase
@@ -20,6 +22,21 @@ describe('Create Developer Use Case', () => {
   afterEach(() => {
     vi.useRealTimers()
   })
+
+  it ('should not be able to create developer if access is not dev', async () => {
+    const result = await sut.execute({ 
+      cpf: '000.000.000-00', 
+      password: '', 
+      email: '', 
+      username: '',
+      civilId: 20202,
+      role: 'admin',
+      birthday: new Date()
+    })
+    
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
   
   it ('should not be able to create developer with cpf already existing', async () => {
     vi.setSystemTime('2022-1-2')
@@ -32,7 +49,9 @@ describe('Create Developer Use Case', () => {
       password: developer.passwordHash.value, 
       email: developer.email.value, 
       username: developer.username.value,
-      civilId: 20202
+      civilId: 20202,
+      role: 'dev',
+      birthday: new Date('2002')
     })
     
     expect(result.isLeft()).toBe(true)
@@ -48,7 +67,9 @@ describe('Create Developer Use Case', () => {
       password: developer.passwordHash.value, 
       email: developer.email.value, 
       username: developer.username.value,
-      civilId: 20202
+      civilId: 20202,
+      role: 'dev',
+      birthday: new Date('2002')
     })
     
     expect(result.isLeft()).toBe(true)
@@ -61,7 +82,9 @@ describe('Create Developer Use Case', () => {
       email: 'test@test.com',
       username: 'John Doe',
       password: '202020',
-      civilId: 20202
+      civilId: 20202,
+      birthday: new Date('2002'),
+      role: 'dev' as Role
     }
 
     const spyOn = vi.spyOn(bcryptjs, 'hash').mockImplementation((password: string) => {

@@ -8,6 +8,8 @@ import { BehaviorsRepository } from "../repositories/behaviors-repository.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
 import { StudentsRepository } from "../repositories/students-repository.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 interface CreateBehaviorUseCaseRequest {
   studentId: string
@@ -26,9 +28,11 @@ interface CreateBehaviorUseCaseRequest {
   december?: number | null
   userId: string
   userIp: string
+
+  role: Role
 }
 
-type CreateBehaviorUseCaseResponse = Either<ResourceNotFoundError, null>
+type CreateBehaviorUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, null>
 
 export class CreateBehaviorUseCase {
   constructor(
@@ -53,10 +57,14 @@ export class CreateBehaviorUseCase {
     november,
     december,
     userIp,
-    userId
+    userId,
+    role
   }: CreateBehaviorUseCaseRequest): Promise<CreateBehaviorUseCaseResponse> {
+    if (role === 'student') return left(new NotAllowedError())
+
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
+
 
     if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
       
