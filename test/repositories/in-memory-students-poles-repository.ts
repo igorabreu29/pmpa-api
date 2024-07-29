@@ -1,10 +1,11 @@
-import { StudentsPolesRepository } from "@/domain/boletim/app/repositories/students-poles-repository.ts";
+import { SearchManyDetailsByPole, StudentsPolesRepository } from "@/domain/boletim/app/repositories/students-poles-repository.ts";
 import { StudentPole } from "@/domain/boletim/enterprise/entities/student-pole.ts";
 import { StudentWithPole } from "@/domain/boletim/enterprise/entities/value-objects/student-with-pole.ts";
 import { InMemoryPolesRepository } from "./in-memory-poles-repository.ts";
 import { InMemoryStudentsRepository } from "./in-memory-students-repository.ts";
 import { InMemoryStudentsCoursesRepository } from "./in-memory-students-courses-repository.ts";
 import { InMemoryCoursesRepository } from "./in-memory-courses-repository.ts";
+import { StudentCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-course-details.ts";
 
 export class InMemoryStudentsPolesRepository implements StudentsPolesRepository {
   public items: StudentPole[] = []
@@ -74,6 +75,48 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
         totalItems: allStudentsPole.length
       }
     }
+
+  async searchManyDetailsByPoleId({ poleId, query, page }: SearchManyDetailsByPole): Promise<StudentCourseDetails[]> {
+    const studentPoles = this.items
+      .filter(item => {
+        return item.poleId.toValue() === poleId
+      })
+      .slice((page - 1) * 10, page * 10)
+      .map(studentPole => {
+        const studentCourse = this.studentsCoursesRepository.items.find(item => {
+          return item.id.equals(studentPole.studentId)
+        })
+        if (!studentCourse) throw new Error(`Student with ID ${studentPole.id.toValue()} does not exist`)
+
+        const student = this.studentsRepository.items.find(item => item.id.equals(studentCourse.studentId))
+        if (!student) throw new Error(`Student with ID ${studentCourse.studentId.toValue()} does not exist`)
+
+        const course = this.coursesRepository.items.find(item => item.id.equals(studentCourse.courseId))
+        if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist`)
+
+        const pole = this.polesRepository.items.find(item => item.id.equals(studentPole.poleId))
+        if (!pole) throw new Error(`Pole with ID ${studentPole.poleId.toValue()} does not exist`)
+
+        return StudentCourseDetails.create({
+          studentId: student.id,
+          username: student.username.value,
+          cpf: student.cpf.value,
+          email: student.email.value,
+          birthday: student.birthday.value,
+          civilId: student.civilId ? student.civilId : 0,
+          assignedAt: student.createdAt,
+          courseId: course.id,
+          course: course.name.value,
+          poleId: pole.id,
+          pole: pole.name.value
+        })
+      })
+      .filter(studentDetails => {
+        return studentDetails.username.toLowerCase().includes(query.toLowerCase())
+      })
+
+    return studentPoles
+  }
 
   async create(studentPole: StudentPole): Promise<void> {
     this.items.push(studentPole)
