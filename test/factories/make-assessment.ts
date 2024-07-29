@@ -13,7 +13,6 @@ export function makeAssessment(
     avi: null,
     avii: null,
     vfe: null,
-    userIp: '',
     ...override
   }, id)
   
