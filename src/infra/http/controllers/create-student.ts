@@ -47,7 +47,8 @@ export async function createStudent(
       birthday,
       civilId,
       courseId,
-      poleId
+      poleId,
+      role: ''
     })
 
     if (result.isLeft()) {
