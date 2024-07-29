@@ -1,5 +1,5 @@
 import { Either, left, right } from "@/core/either.ts"
-import { StudentWithCourseAndPole } from "../../enterprise/entities/value-objects/student-with-course-and-pole.ts"
+import { StudentCourseDetails } from "../../enterprise/entities/value-objects/student-course-details.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts"
@@ -11,7 +11,7 @@ interface FetchCourseStudentsUseCaseRequest {
 }
 
 type FetchCourseStudentsUseCaseResponse = Either<ResourceNotFoundError, {
-  students: StudentWithCourseAndPole[]
+  students: StudentCourseDetails[]
   pages: number
   totalItems: number
 }>
