@@ -3,7 +3,6 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import type { CoursesRepository } from "../repositories/courses-repository.ts";
 import type { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts";
 import { StudentCourseDetails } from "../../enterprise/entities/value-objects/student-course-details.ts";
-import type { StudentsRepository } from "../repositories/students-repository.ts";
 
 interface SearchStudentCourseDetailsUseCaseRequest {
   courseId: string
