@@ -4,8 +4,8 @@ import { StudentCourseWithCourse } from "@/domain/boletim/enterprise/entities/va
 import { prisma } from "../lib/prisma.ts";
 import { PrismaStudentCourseMapper } from "../mappers/prisma-student-course-mapper.ts";
 import { PrismaStudentCourseWithCourseMapper } from "../mappers/student-course-with-course-mapper.ts";
-import { StudentWithCourseAndPole } from "@/domain/boletim/enterprise/entities/value-objects/student-with-course-and-pole.ts";
-import { PrismaStudentWithCourseAndPoleMapper } from "../mappers/prisma-student-with-course-and-pole.ts";
+import { StudentCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-with-course-and-pole.ts";
+import { PrismaStudentCourseDetailsMapper } from "../mappers/prisma-student-with-course-and-pole.ts";
 
 export class PrismaStudentsCoursesRepository implements StudentsCoursesRepository {
   async findByStudentIdAndCourseId({ studentId, courseId }: { studentId: string; courseId: string; }): Promise<StudentCourse | null> {
@@ -119,7 +119,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     page: number; 
     perPage: number; 
   }): Promise<{ 
-    studentsCourse: StudentWithCourseAndPole[]; 
+    studentsCourse: StudentCourseDetails[]; 
     pages: number; 
     totalItems: number; 
   }> {
@@ -158,7 +158,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const pages = Math.ceil(studentsCourseCount / perPage)
 
     return {
-      studentsCourse: studentsCourseMapper.map(studentCourse => PrismaStudentWithCourseAndPoleMapper.toDomain(studentCourse)),
+      studentsCourse: studentsCourseMapper.map(studentCourse => PrismaStudentCourseDetailsMapper.toDomain(studentCourse)),
       pages,
       totalItems: studentsCourseCount
     }
@@ -175,7 +175,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     page: number; 
     perPage: number; 
   }): Promise<{ 
-    studentsCourse: StudentWithCourseAndPole[]; 
+    studentsCourse: StudentCourseDetails[]; 
     pages: number; 
     totalItems: number; 
   }> {
@@ -219,7 +219,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const pages = Math.ceil(studentsCourseCount / perPage)
 
     return {
-      studentsCourse: studentsCourseMapper.map(studentCourse => PrismaStudentWithCourseAndPoleMapper.toDomain(studentCourse)),
+      studentsCourse: studentsCourseMapper.map(studentCourse => PrismaStudentCourseDetailsMapper.toDomain(studentCourse)),
       pages,
       totalItems: studentsCourseCount
     }
