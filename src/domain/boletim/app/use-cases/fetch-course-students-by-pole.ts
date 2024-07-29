@@ -1,46 +1,53 @@
 import { Either, left, right } from "@/core/either.ts"
-import { StudentWithCourseAndPole } from "../../enterprise/entities/value-objects/student-with-course-and-pole.ts"
-import { ManagerRole } from "../../enterprise/entities/manager.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
 import { PolesRepository } from "../repositories/poles-repository.ts"
-import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts"
+import type { StudentsPolesRepository } from "../repositories/students-poles-repository.ts"
+import type { StudentWithPole } from "../../enterprise/entities/value-objects/student-with-pole.ts"
+import type { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
+import type { Name } from "../../enterprise/entities/value-objects/name.ts"
 
 interface FetchCourseStudentsByPoleRequest {
   courseId: string
   poleId: string
-  role: ManagerRole
   page: number
   perPage: number
 }
 
 type FetchCourseStudentsByPoleResponse = Either<ResourceNotFoundError, {
-  students: StudentWithCourseAndPole[]
+  students: {
+    courseId: UniqueEntityId
+    course: Name
+    studentsPole: StudentWithPole[]
+  }
   pages: number
   totalItems: number
 }>
 
 export class FetchCourseStudentsByPole {
   constructor (
-    private studentsCoursesRepository: StudentsCoursesRepository,
     private coursesRepository: CoursesRepository,
-    private polesRepository: PolesRepository
+    private polesRepository: PolesRepository,
+    private studentsPolesRepository: StudentsPolesRepository,
   ) {}
 
-  async execute({ courseId, poleId, role, page, perPage }: FetchCourseStudentsByPoleRequest): Promise<FetchCourseStudentsByPoleResponse> {
+  async execute({ courseId, poleId, page, perPage }: FetchCourseStudentsByPoleRequest): Promise<FetchCourseStudentsByPoleResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
     const pole = await this.polesRepository.findById(poleId)
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
-    const { studentsCourse, pages, totalItems} = await this.studentsCoursesRepository.findManyByCourseIdAndPoleIdWithCourseAndPole({
-      courseId,
-      poleId,
-        page,
-      perPage,
-    })
+    const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyByPoleId({ page, perPage, poleId })
 
-    return right({ students: studentsCourse, pages, totalItems })
+    return right({
+      students: {
+        course: course.name,
+        courseId: course.id,
+        studentsPole
+      },
+      pages,
+      totalItems
+    })
   }
 }
