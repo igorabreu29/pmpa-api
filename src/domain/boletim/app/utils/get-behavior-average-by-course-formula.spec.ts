@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formulaType } from "./get-behavior-average-by-course-formula.ts";
+import { defineBehaviorByFormulaType } from "./get-behavior-average-by-course-formula.ts";
 
 describe('Behavior Average By Formula', () => {
   it ('should be able to get behavior average with period formula', () => {
@@ -7,7 +7,7 @@ describe('Behavior Average By Formula', () => {
       5, 6, 7, 8, 6, 6, 6, 7, 8
     ]
 
-    expect(formulaType['period']({ behaviorMonthsNotes })).toMatchObject({
+    expect(defineBehaviorByFormulaType['period']({ behaviorMonthsNotes })).toMatchObject({
       behaviorAverageStatus: expect.arrayContaining([
         {
           behaviorAverage: 6.333,
@@ -26,7 +26,7 @@ describe('Behavior Average By Formula', () => {
       5, 6, 7, 8, 6, 6, 6, 7, 8
     ]
 
-    const formulaTypeModule = formulaType['module']({ behaviorMonthsNotes })
+    const formulaTypeModule = defineBehaviorByFormulaType['module']({ behaviorMonthsNotes })
 
     expect(formulaTypeModule).toMatchObject({
       behaviorAverageStatus: {
