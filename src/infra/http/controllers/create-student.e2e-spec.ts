@@ -17,6 +17,18 @@ describe('Students (e2e)', () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
 
+    const administrator = await prisma.user.create({
+      data: {
+        username: 'John Doe',
+        civilId: '02345',
+        cpf: '00000000000',
+        email: 'john@acne.com', 
+        isActive: true,
+        password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
+        role: 'ADMIN'
+      }
+    })
+
     const course = await prisma.course.create({
       data: {
         endsAt,
@@ -33,8 +45,8 @@ describe('Students (e2e)', () => {
     })
 
     const data = {
-      username: 'Igor',
-      cpf: '05399970210',
+      username: 'Jony',
+      cpf: '000.111.000-11',
       password: 'node-20',
       email: 'igor29nahan@gmail.com',
       birthday: '29/01/2006',
@@ -43,10 +55,19 @@ describe('Students (e2e)', () => {
       poleId: pole.id
     }
 
-    const result = await request(app.server)
+    const authenticateResponse = await request(app.server)
+      .post('/credentials/auth')
+      .send({
+        cpf: administrator.cpf,
+        password: 'node-20'
+      })
+    const { token } = authenticateResponse.body
+
+    const response = await request(app.server)
       .post('/students')
+      .set('Authorization', `Bearer ${token}`)
       .send(data)
 
-    expect(result.statusCode).toEqual(201)
+    expect(response.statusCode).toEqual(201)
   })
 })
