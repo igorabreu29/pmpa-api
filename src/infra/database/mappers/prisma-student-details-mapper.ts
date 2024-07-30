@@ -1,20 +1,14 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts';
-import { formatCPF } from '@/core/utils/formatCPF.ts';
 import { Course } from '@/domain/boletim/enterprise/entities/course.ts';
 import { Pole } from '@/domain/boletim/enterprise/entities/pole.ts';
-import { Student } from '@/domain/boletim/enterprise/entities/student.ts';
-import { Birthday } from '@/domain/boletim/enterprise/entities/value-objects/birthday.ts';
-import { CPF } from '@/domain/boletim/enterprise/entities/value-objects/cpf.ts';
-import { Email } from '@/domain/boletim/enterprise/entities/value-objects/email.ts';
 import { EndsAt } from '@/domain/boletim/enterprise/entities/value-objects/ends-at.ts';
 import { Name } from '@/domain/boletim/enterprise/entities/value-objects/name.ts';
-import { Password } from '@/domain/boletim/enterprise/entities/value-objects/password.ts';
 import { StudentDetails } from '@/domain/boletim/enterprise/entities/value-objects/student-details.ts';
-import { 
+import {
   User as PrismaStudent,
   Pole as PrismaPole,
   Course as PrismaCourse
-} from '@prisma/client'
+} from '@prisma/client';
 
 type PrismaStudentsDetails = PrismaStudent & {
   poles: PrismaPole[]
