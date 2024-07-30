@@ -29,6 +29,7 @@ describe('Create Student Use Case', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     coursesRepository = new InMemoryCoursesRepository()
