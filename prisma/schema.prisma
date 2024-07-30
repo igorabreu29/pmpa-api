@@ -61,7 +61,7 @@ model UserOnCourse {
   courseId  String
   createdAt DateTime @default(now()) @map("created_at")
 
-  courses      Course             @relation(fields: [courseId], references: [id])
+  courses      Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
   users        User               @relation(fields: [userId], references: [id])
   usersOnPoles UserCourseOnPole[]
 
@@ -74,7 +74,7 @@ model UserCourseOnPole {
   poleId         String
   createdAt      DateTime @default(now()) @map("created_at")
 
-  usersOnCourses UserOnCourse @relation(fields: [userOnCourseId], references: [id])
+  usersOnCourses UserOnCourse @relation(fields: [userOnCourseId], references: [id], onDelete: Cascade)
   poles          Pole         @relation(fields: [poleId], references: [id])
 }
 
@@ -117,7 +117,7 @@ model CourseHistoric {
 
   speechs      Int?
   internships  Int?
-  totalHours   Int? @map("total_hours")
+  totalHours   Int?    @map("total_hours")
   divisionBoss String? @map("division_boss")
   commander    String?
 
@@ -205,7 +205,7 @@ model Behavior {
   september   Decimal?
   october     Decimal?
   november    Decimal?
-  december     Decimal?
+  december    Decimal?
   currentYear Int?
 
   students User   @relation(fields: [studentId], references: [id])
