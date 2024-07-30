@@ -1,9 +1,11 @@
-import { StudentsPolesRepository } from "@/domain/boletim/app/repositories/students-poles-repository.ts";
+import { SearchManyDetailsByPole, StudentsPolesRepository } from "@/domain/boletim/app/repositories/students-poles-repository.ts";
 import { StudentPole } from "@/domain/boletim/enterprise/entities/student-pole.ts";
 import { StudentWithPole } from "@/domain/boletim/enterprise/entities/value-objects/student-with-pole.ts";
 import { prisma } from "../lib/prisma.ts";
 import { PrismaStudentPoleMapper } from "../mappers/prisma-student-pole-mapper.ts";
 import { PrismaStudentWithPoleMapper } from "../mappers/student-with-pole-mapper.ts";
+import { StudentCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-course-details.ts";
+import { PrismaStudentCourseDetailsMapper } from "../mappers/prisma-student-with-course-and-pole.ts";
 
 export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
   async findByStudentId({ studentId }: { studentId: string; }): Promise<StudentPole | null> {
@@ -79,6 +81,50 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       pages,
       totalItems: studentsPoleCount
     }
+  }
+
+  async searchManyDetailsByPoleId({ 
+    poleId, 
+    query, 
+    page 
+  }: SearchManyDetailsByPole): Promise<StudentCourseDetails[]> {
+    const studentPoles = await prisma.userCourseOnPole.findMany({
+      where: {
+        poleId,
+        usersOnCourses: {
+          users: {
+            username: {
+              contains: query
+            }
+          }
+        }
+      },
+
+      include: {
+        usersOnCourses: {
+          select: {
+            courses: true,
+            users: true
+          }
+        },
+        poles: true
+      },
+
+      skip: (page - 1) * 10,
+      take: page * 10
+    })
+
+    const studentPolesMapper = studentPoles.map(studentPole => {
+      return {
+        ...studentPole.usersOnCourses.users,
+        course: studentPole.usersOnCourses.courses,
+        pole: studentPole.poles
+      }
+    })
+    
+    return studentPolesMapper.map(studentCourse => {
+      return PrismaStudentCourseDetailsMapper.toDomain(studentCourse)
+    })
   }
 
   async create(studentPole: StudentPole): Promise<void> {

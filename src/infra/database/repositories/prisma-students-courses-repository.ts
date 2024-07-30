@@ -1,11 +1,13 @@
-import { StudentsCoursesRepository } from "@/domain/boletim/app/repositories/students-courses-repository.ts";
+import { SearchManyDetails, StudentsCoursesRepository } from "@/domain/boletim/app/repositories/students-courses-repository.ts";
 import { StudentCourse } from "@/domain/boletim/enterprise/entities/student-course.ts";
 import { StudentCourseWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/student-course-with-course.ts";
 import { prisma } from "../lib/prisma.ts";
 import { PrismaStudentCourseMapper } from "../mappers/prisma-student-course-mapper.ts";
 import { PrismaStudentCourseWithCourseMapper } from "../mappers/student-course-with-course-mapper.ts";
-import { StudentCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-with-course-and-pole.ts";
 import { PrismaStudentCourseDetailsMapper } from "../mappers/prisma-student-with-course-and-pole.ts";
+import { StudentCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-course-details.ts";
+import { StudentWithPole } from "@/domain/boletim/enterprise/entities/value-objects/student-with-pole.ts";
+import { PrismaStudentWithPoleMapper } from "../mappers/student-with-pole-mapper.ts";
 
 export class PrismaStudentsCoursesRepository implements StudentsCoursesRepository {
   async findByStudentIdAndCourseId({ studentId, courseId }: { studentId: string; courseId: string; }): Promise<StudentCourse | null> {
@@ -63,6 +65,37 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       pages,
       totalItems: studentCoursesCount       
     }
+  }
+
+  async findManyByCourseIdWithPole({ courseId }: { courseId: string; }): Promise<StudentWithPole[]> {
+    const studentCourses = await prisma.userOnCourse.findMany({
+      where: {
+        courseId
+      },
+      
+      include: {
+        users: true,
+        usersOnPoles: {
+          select: {
+            poles: true
+          }
+        }
+      }
+    })
+
+    const studentsCourseMapper = studentCourses.map(studentCourse => {
+      const pole = studentCourse.usersOnPoles.find(item => item.poles.id === studentCourse.id)
+      if (!pole) throw new Error('Pole not found.')
+
+      return {
+        ...studentCourse.users,
+        pole: pole.poles
+      }
+    })
+
+    return studentsCourseMapper.map(studentCourse => {
+      return PrismaStudentWithPoleMapper.toDomain(studentCourse)
+    })
   }
 
   async findManyByCourseIdWithCourse({ 
@@ -136,7 +169,10 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
             poles: true
           }
         }
-      }
+      },
+
+      skip: (page - 1) * perPage,
+      take: page * perPage
     })
 
     const studentsCourseMapper = studentsCourse.map(studentCourse => {
@@ -153,7 +189,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const studentsCourseCount = await prisma.userOnCourse.count({
       where: {
         courseId,
-      }
+      },
     })
     const pages = Math.ceil(studentsCourseCount / perPage)
 
@@ -164,27 +200,17 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     }
   }
 
-  async findManyByCourseIdAndPoleIdWithCourseAndPole({ 
+  async searchManyDetailsByCourseId({ 
     courseId, 
-    poleId, 
-    page, 
-    perPage 
-  }: { 
-    courseId: string; 
-    poleId: string; 
-    page: number; 
-    perPage: number; 
-  }): Promise<{ 
-    studentsCourse: StudentCourseDetails[]; 
-    pages: number; 
-    totalItems: number; 
-  }> {
-    const studentsCourse = await prisma.userOnCourse.findMany({
+    query, 
+    page 
+  }: SearchManyDetails): Promise<StudentCourseDetails[]> {
+    const studentCourses = await prisma.userOnCourse.findMany({
       where: {
         courseId,
-        usersOnPoles: {
-          some: {
-            poleId
+        users: {
+          username: {
+            contains: query
           }
         }
       },
@@ -197,10 +223,13 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
             poles: true
           }
         }
-      }
+      },
+
+      skip: (page - 1) * 10,
+      take: page * 10
     })
 
-    const studentsCourseMapper = studentsCourse.map(studentCourse => {
+    const studentsCourseMapper = studentCourses.map(studentCourse => {
       const pole = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
       if (!pole) throw new Error('Pole not found.')
 
@@ -210,19 +239,10 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
         pole: pole.poles
       }
     })
-
-    const studentsCourseCount = await prisma.userOnCourse.count({
-      where: {
-        courseId,
-      }
+    
+    return studentsCourseMapper.map(studentCourse => {
+      return PrismaStudentCourseDetailsMapper.toDomain(studentCourse)
     })
-    const pages = Math.ceil(studentsCourseCount / perPage)
-
-    return {
-      studentsCourse: studentsCourseMapper.map(studentCourse => PrismaStudentCourseDetailsMapper.toDomain(studentCourse)),
-      pages,
-      totalItems: studentsCourseCount
-    }
   }
 
   async create(studentCourse: StudentCourse): Promise<void> {

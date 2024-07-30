@@ -1,4 +1,4 @@
-import { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
+import { SearchStudentsManyDetails, StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
 import { Student } from "@/domain/boletim/enterprise/entities/student.ts";
 import { StudentDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-details.ts";
 import { prisma } from "../lib/prisma.ts";
@@ -107,6 +107,63 @@ export class PrismaStudentsRepository implements StudentsRepository {
     return PrismaStudentDetailsMapper.toDomain(studentDetailsMapper)
   }
 
+  async searchManyDetails({ query, page }: SearchStudentsManyDetails): Promise<StudentDetails[]> {
+    const PER_PAGE = 10
+
+    const students = await prisma.user.findMany({
+      where: {
+        username: {
+          contains: query
+        },
+      },
+      take: page * PER_PAGE,
+      skip: (page - 1) * PER_PAGE,
+      include: {
+        usersOnCourses: {
+          select: {
+            courses: true
+          },
+          include: {
+            usersOnPoles: {
+              select: {
+                poles: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    const studentsMapper = students.map(student => {
+      return {
+        id: student.id,
+        username: student.username,
+        email: student.email,
+        password: student.password,
+        cpf: student.cpf,
+        civilId: student.civilId,
+        avatarUrl: student.avatarUrl,
+        birthday: student.birthday,
+        assignedAt: student.createdAt,
+        role: student.role,
+        isActive: student.isActive,
+        isLoginConfirmed: student.isLoginConfirmed,
+        createdAt: student.createdAt,
+        courses: student.usersOnCourses.map(item => {
+          return item.courses
+        }),
+        poles: student.usersOnCourses.map(userOnCourse => {
+          return {
+            id: userOnCourse.usersOnPoles[0].poles.id,
+            name: userOnCourse.usersOnPoles[0].poles.name
+          }
+        })
+      }
+    })
+
+    return studentsMapper.map(PrismaStudentDetailsMapper.toDomain)
+  }
+
   async create(student: Student): Promise<void> {
     const prismaMapper = PrismaStudentsMapper.toPrisma(student)
     await prisma.user.create({ data: prismaMapper })
@@ -129,10 +186,11 @@ export class PrismaStudentsRepository implements StudentsRepository {
 
   async delete(student: Student): Promise<void> {
     const prismaMapper = PrismaStudentsMapper.toPrisma(student)
+
     await prisma.user.delete({
       where: {
-        id: prismaMapper.id
-      }
+        id: prismaMapper.id,
+      },
     })
   }
 }
