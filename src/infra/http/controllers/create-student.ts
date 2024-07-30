@@ -12,32 +12,40 @@ import { z } from "zod";
 import { ClientError } from "../errors/client-error.ts";
 import { ConflictError } from "../errors/conflict-error.ts";
 import { NotFound } from "../errors/not-found.ts";
+import { verifyJWT } from "../middlewares/verify-jwt.ts";
+import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 
 export async function createStudent(
   app: FastifyInstance
 ) {
-  app.withTypeProvider<ZodTypeProvider>().post('/students', {
-    schema: {
-      body: z.object({
-        username: z.string().min(3).max(50),
-        email: z.string().email(),
-        cpf: z.string().min(14).max(14),
-        birthday: z.string().transform(birthday => {
-          const [day, month, year] = birthday.split('/')
+  app
+    .withTypeProvider<ZodTypeProvider>()
+    .post('/students', {
+      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
+      schema: {
+        body: z.object({
+          username: z.string().min(3).max(50),
+          email: z.string().email(),
+          cpf: z.string().min(14).max(14),
+          birthday: z.string().transform(birthday => {
+            const [day, month, year] = birthday.split('/')
 
-          const date = new Date()
-          date.setFullYear(Number(year), Number(month), Number(day))
+            const date = new Date()
+            date.setFullYear(Number(year), Number(month), Number(day))
 
-          return date
-        }),
-        civilId: z.number(),
-        courseId: z.string().cuid(),
-        poleId: z.string().cuid()
-      })
-    }
-  }, 
+            return date
+          }),
+          civilId: z.number(),
+          courseId: z.string().cuid(),
+          poleId: z.string().cuid()
+        })
+      },
+    }, 
   async (req, res) => {
     const { username, email, cpf, birthday, civilId, courseId, poleId } = req.body
+    const { payload: { sub, role } } = req.user
+
+    const ip = req.ip
 
     const useCase = makeCreateStudentUseCase()
     const result = await useCase.execute({
@@ -48,7 +56,9 @@ export async function createStudent(
       civilId,
       courseId,
       poleId,
-      role: ''
+      role,
+      userId: sub, 
+      userIp: ip
     })
 
     if (result.isLeft()) {
