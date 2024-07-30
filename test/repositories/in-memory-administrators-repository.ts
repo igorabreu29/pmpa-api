@@ -1,5 +1,5 @@
 import { DomainEvents } from "@/core/events/domain-events.ts";
-import { AdministratorsRepository } from "@/domain/boletim/app/repositories/administrators-repository.ts";
+import { AdministratorsRepository, SearchAdministratorsDetails } from "@/domain/boletim/app/repositories/administrators-repository.ts";
 import { Administrator } from "@/domain/boletim/enterprise/entities/administrator.ts";
 
 export class InMemoryAdministratorsRepository implements AdministratorsRepository {
@@ -18,6 +18,21 @@ export class InMemoryAdministratorsRepository implements AdministratorsRepositor
   async findByEmail(email: string): Promise<Administrator | null> {
     const admin = this.items.find(item => item.email.value === email)
     return admin ?? null
+  }
+
+  async searchManyDetails({ query, page }: SearchAdministratorsDetails): Promise<Administrator[]> {
+    const PER_PAGE = 10
+
+    const administrators = this.items
+      .filter(item => {
+        return item.username.value.toLowerCase().includes(query.toLowerCase())
+      })
+      .slice((page - 1) * PER_PAGE, page * PER_PAGE)
+      .sort((administratorA, administratorB) => {
+        return administratorA.username.value.localeCompare(administratorB.username.value)
+      })
+
+    return administrators
   }
 
   async create(admin: Administrator): Promise<void> {

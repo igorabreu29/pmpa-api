@@ -1,4 +1,4 @@
-import { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
+import { SearchStudentsManyDetails, StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
 import { Student } from "@/domain/boletim/enterprise/entities/student.ts";
 import { InMemoryStudentsCoursesRepository } from "./in-memory-students-courses-repository.ts";
 import { InMemoryCoursesRepository } from "./in-memory-courses-repository.ts";
@@ -69,6 +69,56 @@ export class InMemoryStudentsRepository implements StudentsRepository {
       courses,
       poles
     })
+  }
+
+  async searchManyDetails({ query, page }: SearchStudentsManyDetails): Promise<StudentDetails[]> {
+    const PER_PAGE = 10
+
+    const students = this.items
+      .filter(item => {
+        return item.username.value.toLowerCase().includes(query.toLowerCase())
+      })
+      .slice((page - 1) * PER_PAGE, page * PER_PAGE)
+      .sort((studentA, studentB) => {
+        return studentA.username.value.localeCompare(studentB.username.value)
+      })
+      .map(student => {
+        const studentCourses = this.studentsCoursesRepository.items.filter(item => {
+          return item.studentId.equals(student.id)
+        })
+        
+        const courses = studentCourses.map(studentCourse => {
+          const course = this.coursesRepository.items.find(item => item.id.equals(studentCourse.courseId))
+          if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist.`)
+    
+          return course
+        })
+    
+        const studentPoles = this.studentsPolesRepository.items.filter((item, index) => {
+          return item.studentId.equals(studentCourses[index].id)
+        })
+    
+        const poles = studentPoles.map(studentPole => {
+          const pole = this.polesRepository.items.find(item => item.id.equals(studentPole.poleId))
+          if (!pole) throw new Error(`Pole with ID ${studentPole.poleId.toValue()} does not exist.`)
+    
+          return pole
+        })
+
+        return StudentDetails.create({
+          studentId: student.id,
+          username: student.username.value,
+          civilId: student.civilId,
+          cpf: student.cpf.value,
+          email: student.email.value,
+          birthday: student.birthday.value,
+          assignedAt: student.createdAt,
+          courses,
+          poles
+        })
+      })
+
+    return students
   }
   
   async create(student: Student): Promise<void> {

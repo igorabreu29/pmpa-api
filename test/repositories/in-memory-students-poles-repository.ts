@@ -114,6 +114,9 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
       .filter(studentDetails => {
         return studentDetails.username.toLowerCase().includes(query.toLowerCase())
       })
+      .sort((studentA, studentB) => {
+        return studentA.username.localeCompare(studentB.username)
+      })
 
     return studentPoles
   }

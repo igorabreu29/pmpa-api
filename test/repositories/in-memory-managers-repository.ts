@@ -1,4 +1,4 @@
-import { ManagersRepository } from "@/domain/boletim/app/repositories/managers-repository.ts";
+import { ManagersRepository, SearchManagersManyDetails } from "@/domain/boletim/app/repositories/managers-repository.ts";
 import { Manager } from "@/domain/boletim/enterprise/entities/manager.ts";
 import { InMemoryManagersCoursesRepository } from "./in-memory-managers-courses-repository.ts";
 import { InMemoryCoursesRepository } from "./in-memory-courses-repository.ts";
@@ -74,6 +74,56 @@ export class InMemoryManagersRepository implements ManagersRepository {
   async findByEmail(email: string): Promise<Manager | null> {
     const manager = this.items.find(item => item.email.value === email)
     return manager ?? null
+  }
+
+  async searchManyDetails({ query, page }: SearchManagersManyDetails): Promise<ManagerDetails[]> {
+    const PER_PAGE = 10
+
+    const managers = this.items
+      .filter(item => {
+        return item.username.value.toLowerCase().includes(query.toLowerCase())
+      })
+      .slice((page - 1) * PER_PAGE, page * PER_PAGE)
+      .sort((managerA, managerB) => {
+        return managerA.username.value.localeCompare(managerB.username.value)
+      })
+      .map(manager => {
+        const managerCourses = this.managersCoursesRepository.items.filter(item => {
+          return item.managerId.equals(manager.id)
+        })
+        
+        const courses = managerCourses.map(managerCourse => {
+          const course = this.coursesRepository.items.find(item => item.id.equals(managerCourse.courseId))
+          if (!course) throw new Error(`Course with ID ${managerCourse.courseId.toValue()} does not exist.`)
+    
+          return course
+        })
+    
+        const managerPoles = this.managersPolesRepository.items.filter((item, index) => {
+          return item.managerId.equals(managerCourses[index].id)
+        })
+    
+        const poles = managerPoles.map(managerPole => {
+          const pole = this.polesRepository.items.find(item => item.id.equals(managerPole.poleId))
+          if (!pole) throw new Error(`Pole with ID ${managerPole.poleId.toValue()} does not exist.`)
+    
+          return pole
+        })
+
+        return ManagerDetails.create({
+          managerId: manager.id,
+          username: manager.username.value,
+          civilId: manager.civilId,
+          cpf: manager.cpf.value,
+          email: manager.email.value,
+          birthday: manager.birthday.value,
+          assignedAt: manager.createdAt,
+          courses,
+          poles
+        })
+      })
+
+    return managers
   }
 
   async create(manager: Manager): Promise<void> {
