@@ -38,7 +38,7 @@ interface StudentType {
 
 interface CreateStudentsBatchUseCaseRequest {
   students: StudentType[],
-  courseName: string,
+  courseName: string
   userId: string
   userIp: string
   fileName: string
@@ -57,7 +57,6 @@ export class CreateStudentsBatchUseCase {
     private polesRepository: PolesRepository,
     private studentsPolesRepository: StudentsPolesRepository,
     private studentsBatchRepository: StudentsBatchRepository,
-    private hasher: Hasher
   ) {}
 
   async execute({ students, courseName, userId, userIp, fileName, fileLink, role }: CreateStudentsBatchUseCaseRequest): Promise<CreateStudentsBatchUseCaseResponse> {
@@ -71,12 +70,11 @@ export class CreateStudentsBatchUseCase {
       if (!pole) return new ResourceNotFoundError('Pole not found.')
 
       const defaultPassword = `Pmp@${student.cpf}`
-      const passwordHash = await this.hasher.hash(defaultPassword)
 
       const nameOrError = Name.create(student.username)
       const emailOrError = Email.create(student.email)
       const cpfOrError = CPF.create(student.cpf)
-      const passwordOrError = Password.create(passwordHash)
+      const passwordOrError = Password.create(defaultPassword)
       const birthdayOrError = Birthday.create(student.birthday)
   
       if (nameOrError.isLeft()) return nameOrError.value
@@ -137,7 +135,8 @@ export class CreateStudentsBatchUseCase {
           studentPole
         }
       }
-  
+      
+      await passwordOrError.value.hash()
       const studentOrError = Student.create({
         username: nameOrError.value, 
         cpf: cpfOrError.value,
