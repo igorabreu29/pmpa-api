@@ -5,7 +5,7 @@ import request from 'supertest'
 import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
 
-describe('Delete Student (e2e)', () => {
+describe('Update Student (e2e)', () => {
   beforeAll(async () => {
     await app.ready()
   }) 
@@ -14,7 +14,7 @@ describe('Delete Student (e2e)', () => {
     await app.close()
   }) 
 
-  it ('DELETE /students/:id', async () => {
+  it ('PUT /students/:id', async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
 
@@ -30,38 +30,6 @@ describe('Delete Student (e2e)', () => {
       }
     })
 
-    const course = await prisma.course.create({
-      data: {
-        endsAt,
-        formula: 'CAS',
-        imageUrl: '',
-        name: 'CAS',
-      }
-    })
-
-    const pole = await prisma.pole.create({
-      data: {
-        name: 'pole-1'
-      }
-    })
-
-    const data = {
-      username: 'Jony',
-      cpf: '00011100011',
-      password: 'node-20',
-      email: 'igor29nahan@gmail.com',
-      birthday: '29/01/2006',
-      civilId: '20234',
-      isActive: true
-    }
-
-    const student = await prisma.user.create({
-      data: {
-        ...data,
-        birthday: transformDate(data.birthday),
-        }
-    })
-
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
@@ -70,11 +38,38 @@ describe('Delete Student (e2e)', () => {
       })
     const { token } = authenticateResponse.body
 
-    const response = await request(app.server)
-      .delete(`/students/${student.id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send()
+    const student = await prisma.user.create({
+      data: {
+        username: 'John Doe',
+        civilId: '02346',
+        cpf: '12345678911',
+        email: 'july@acne.com', 
+        isActive: true,
+        password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
+        role: 'STUDENT',
+        birthday: transformDate('01/04/2001')
+      }
+    })
 
-    expect(response.statusCode).toEqual(204)
+    const updateStudentResponse = await request(app.server)
+      .put(`/students/${student.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        username: 'Jenny Doe'
+      })
+
+    expect(updateStudentResponse.statusCode).toEqual(204)
+
+    const studentUpdated = await prisma.user.findUnique({
+      where: {
+        id: student.id
+      },
+
+      select: {
+        username: true
+      }
+    })
+
+    expect(studentUpdated?.username).toEqual('Jenny Doe')
   })
 })
