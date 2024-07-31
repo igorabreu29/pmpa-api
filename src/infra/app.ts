@@ -7,6 +7,7 @@ import { errorHandler } from "./error-handler.ts";
 import { resolve } from "node:path";
 import { createStudentsBatch } from "./http/controllers/create-students-batch.ts";
 import { deleteStudent } from "./http/controllers/delete-student.ts";
+import { updateStudent } from "./http/controllers/update-student.ts";
 
 export const app = fastify()
 
@@ -25,6 +26,7 @@ app.setSerializerCompiler(serializerCompiler)
 app.register(authenticate)
 app.register(createStudent)
 app.register(createStudentsBatch)
+app.register(updateStudent)
 app.register(deleteStudent)
 
 app.setErrorHandler(errorHandler)
