@@ -15,9 +15,9 @@ type PrismaManagersDetails = PrismaManagerDetails & {
   courses: PrismaCourse[]
 }
 
-export class PrismaStudentDetailsMapper {
+export class PrismaManagerDetailsMapper {
   static toDomain(managerDetails: PrismaManagersDetails): ManagerDetails {
-    const student = ManagerDetails.create({
+    const manager = ManagerDetails.create({
       managerId: new UniqueEntityId(managerDetails.id),
       username: managerDetails.username,
       birthday: managerDetails.birthday as Date,
@@ -58,6 +58,6 @@ export class PrismaStudentDetailsMapper {
       })
     })
 
-    return student
+    return manager
   }
 }
