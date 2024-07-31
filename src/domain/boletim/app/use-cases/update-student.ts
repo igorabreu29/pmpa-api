@@ -30,8 +30,6 @@ interface UpdateStudentUseCaseRequest {
   birthday?: Date
   state?: string
   county?: string
-  courseId?: string
-  poleId?: string
 
   userId: string
   userIp: string
@@ -70,10 +68,10 @@ export class UpdateStudentUseCase {
     userIp
   }: UpdateStudentUseCaseRequest): Promise<UpdateStudentUseCaseResponse> {
     if (role === 'student') return left(new NotAllowedError())
-      
+
     const student = await this.studentsRepository.findById(id)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
-
+    
     const cpfFormatted = formatCPF(student.cpf.value)
     
     const nameOrError = Name.create(username ?? student.username.value)
@@ -102,6 +100,7 @@ export class UpdateStudentUseCase {
     student.state = state ?? student.state
     student.county = county ?? student.county
 
+    await this.studentsRepository.save(student)
 
     student.addDomainStudentEvent(
       new StudentEvent({
@@ -110,7 +109,6 @@ export class UpdateStudentUseCase {
         student
       })
     )
-
 
     return right(null)
   }
