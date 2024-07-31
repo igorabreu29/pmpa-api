@@ -5,7 +5,7 @@ POST {{baseUrl}}/credentials/auth
 Content-Type: application/json
 
 {
-  "cpf": "05399970210",
+  "cpf": "00000000000",
   "password": "node-20"
 }
 
@@ -22,4 +22,13 @@ Content-Type: application/json
     "civilId": 12345,
     "courseId": "clz1f0f2v000013hh4mwb399j",
     "poleId": "clz1f0xk4000113hhfg6euud4"
+}
+
+###
+PUT {{baseUrl}}/students/clza1ixu40001jbjg0jsegv4q
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InN1YiI6Ijc1YmE1MDhmLTRhMzYtNDI2My04MzM1LTM5ZDcxZGExNGI1ZCIsInJvbGUiOiJhZG1pbiJ9LCJpYXQiOjE3MjI0NDc3MDgsImV4cCI6MTcyMjQ1MTMwOH0.7R-1S-y9WXi_trL9vKNsIP-h2mp_q9fbGNWzqu5ZSF8
+Content-Type: application/json
+
+{
+  "username": "Jenny Doe"
 }
