@@ -1,7 +1,7 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { ValueObject } from "@/core/entities/value-object.ts";
 
-interface ManagerWithCourseAndPoleProps {
+interface ManagerCourseDetailsProps {
   managerId: UniqueEntityId
   username: string
   email: string
@@ -15,7 +15,7 @@ interface ManagerWithCourseAndPoleProps {
   pole: string
 }
 
-export class ManagerWithCourseAndPole extends ValueObject<ManagerWithCourseAndPoleProps> {
+export class ManagerCourseDetails extends ValueObject<ManagerCourseDetailsProps> {
   get managerId() {
     return this.props.managerId
   }
@@ -52,7 +52,7 @@ export class ManagerWithCourseAndPole extends ValueObject<ManagerWithCourseAndPo
     return this.props.assignedAt
   }
 
-  static create(props: ManagerWithCourseAndPoleProps) {
-    return new ManagerWithCourseAndPole(props)
+  static create(props: ManagerCourseDetailsProps) {
+    return new ManagerCourseDetails(props)
   }
 }
