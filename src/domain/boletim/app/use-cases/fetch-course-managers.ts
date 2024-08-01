@@ -1,8 +1,8 @@
 import { Either, left, right } from "@/core/either.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
-import { ManagerWithCourseAndPole } from "../../enterprise/entities/value-objects/manager-with-course-and-pole.ts"
 import { ManagersCoursesRepository } from "../repositories/managers-courses-repository.ts"
+import { ManagerCourseDetails } from "../../enterprise/entities/value-objects/manager-course-details.ts"
 
 interface FetchCourseManagersUseCaseRequest {
   courseId: string
@@ -11,7 +11,7 @@ interface FetchCourseManagersUseCaseRequest {
 }
 
 type FetchCourseManagersUseCaseResponse = Either<ResourceNotFoundError, {
-  managers: ManagerWithCourseAndPole[]
+  managers: ManagerCourseDetails[]
   pages: number
   totalItems: number
 }>
@@ -26,7 +26,7 @@ export class FetchCourseManagersUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
-    const { managersCourse, pages, totalItems} = await this.managersCoursesRepository.findManyByCourseIdWithCourseAndPole({
+    const { managersCourse, pages, totalItems} = await this.managersCoursesRepository.findManyDetailsByCourseId({
       courseId,
       page,
       perPage,

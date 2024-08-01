@@ -43,7 +43,7 @@ export class GetCourseClassificationByPoleUseCase {
     }
 
     if (managerId) {
-      const managerCourse = await this.managersCoursesRepository.findByManagerAndCourseIdWithPole({ managerId, courseId: course.id.toValue() })
+      const managerCourse = await this.managersCoursesRepository.findDetailsByManagerAndCourseId({ managerId, courseId: course.id.toValue() })
       if (!managerCourse) return left(new ResourceNotFoundError('Manager Course not found.'))
 
       poleIdAssigned = managerCourse.poleId.toValue()

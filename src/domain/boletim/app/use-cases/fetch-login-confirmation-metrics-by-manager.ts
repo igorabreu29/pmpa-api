@@ -40,7 +40,7 @@ export class FetchLoginConfirmationMetricsByManager {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
-    const managerCourse = await this.managersCoursesRepository.findByManagerAndCourseIdWithPole({ courseId, managerId }) 
+    const managerCourse = await this.managersCoursesRepository.findDetailsByManagerAndCourseId({ courseId, managerId }) 
     if (!managerCourse) return left(new ResourceNotFoundError('Manager course not found'))
 
     const { studentsPole } = await this.studentsPolesRepository.findManyByPoleId({ poleId: managerCourse.poleId.toValue() })

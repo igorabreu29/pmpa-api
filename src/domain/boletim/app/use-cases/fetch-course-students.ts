@@ -26,7 +26,7 @@ export class FetchCourseStudentsUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
-    const { studentsCourse, pages, totalItems} = await this.studentsCoursesRepository.findManyByCourseIdWithCourseAndPole({
+    const { studentsCourse, pages, totalItems} = await this.studentsCoursesRepository.findManyDetailsByCourseId({
       courseId,
       page,
       perPage,
