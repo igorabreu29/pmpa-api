@@ -1,5 +1,5 @@
 import { CourseDiscipline } from "../../enterprise/entities/course-discipline.ts";
-import type { CourseWithDiscipline } from "../../enterprise/entities/course-with-discipline.ts";
+import type { CourseWithDiscipline } from "../../enterprise/entities/value-objects/course-with-discipline.ts";
 
 export abstract class CoursesDisciplinesRepository {
   abstract findByCourseAndDisciplineId({ 
