@@ -1,4 +1,3 @@
-import { Entity } from "@/core/entities/entity.ts"
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
 import { Optional } from "@/core/types/optional.ts"
 import { Name } from "./value-objects/name.ts"
