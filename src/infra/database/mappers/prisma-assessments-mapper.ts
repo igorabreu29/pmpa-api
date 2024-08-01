@@ -2,7 +2,7 @@ import { Prisma, Assessment as PrismaAssessment } from '@prisma/client'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts'
 import { Assessment } from '@/domain/boletim/enterprise/entities/assessment.ts'
 
-export class PrismaBehaviorsMapper {
+export class PrismaAssessmentsMapper {
   static toDomain(assessment: PrismaAssessment): Assessment {
     const assessmentOrError = Assessment.create({
       courseId: new UniqueEntityId(assessment.id),
