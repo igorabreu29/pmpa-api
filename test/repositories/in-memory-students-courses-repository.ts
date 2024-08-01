@@ -140,7 +140,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     }
   }
 
-  async findManyByCourseIdWithCourseAndPole({ 
+  async findManyDetailsByCourseId({ 
     courseId, 
     page, 
     perPage 

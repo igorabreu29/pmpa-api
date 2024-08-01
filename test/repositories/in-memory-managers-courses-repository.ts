@@ -2,10 +2,10 @@ import { ManagersCoursesRepository } from "@/domain/boletim/app/repositories/man
 import { ManagerCourse } from "@/domain/boletim/enterprise/entities/manager-course.ts";
 import { InMemoryManagersPolesRepository } from "./in-memory-managers-poles-repository.ts";
 import { InMemoryPolesRepository } from "./in-memory-poles-repository.ts";
-import { ManagerWithCourseAndPole } from "@/domain/boletim/enterprise/entities/value-objects/manager-with-course-and-pole.ts";
 import { InMemoryManagersRepository } from "./in-memory-managers-repository.ts";
 import { InMemoryCoursesRepository } from "./in-memory-courses-repository.ts";
 import { ManagerWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/manager-with-course.ts";
+import { ManagerCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/manager-course-details.ts";
 
 export class InMemoryManagersCoursesRepository implements ManagersCoursesRepository {
   public items: ManagerCourse[] = []
@@ -27,13 +27,13 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
     return studentCourse ?? null
   }
 
-  async findByManagerAndCourseIdWithPole({ 
+  async findDetailsByManagerAndCourseId({ 
     managerId, 
     courseId 
   }: { 
     managerId: string; 
     courseId: string; 
-  }): Promise<ManagerWithCourseAndPole | null> {
+  }): Promise<ManagerCourseDetails | null> {
       const managerCourse = this.items.find(item => {
         return item.managerId.toValue() === managerId && item.courseId.toValue() === courseId
       })
@@ -59,7 +59,7 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
       })
       if (!pole) throw new Error(`Pole with ID ${managerPole.poleId.toValue()} does not exist`)
 
-      return ManagerWithCourseAndPole.create({
+      return ManagerCourseDetails.create({
         managerId: managerCourse.managerId,
         cpf: manager.cpf.value,
         email: manager.email.value,
@@ -72,7 +72,7 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
       })
   }
 
-  async findManyByCourseIdWithCourseAndPole({ 
+  async findManyDetailsByCourseId({ 
     courseId, 
     page, 
     perPage 
@@ -81,7 +81,7 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
     page: number; 
     perPage: number; 
   }): Promise<{ 
-    managersCourse: ManagerWithCourseAndPole[]; 
+    managersCourse: ManagerCourseDetails[]; 
     pages: number; 
     totalItems: number; 
   }> {
@@ -108,7 +108,7 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
         })
         if (!pole) throw new Error(`Pole with ID ${managerPole.poleId.toValue()} does not exist.`)
         
-        return ManagerWithCourseAndPole.create({
+        return ManagerCourseDetails.create({
           managerId: manager.id,
           username: manager.username.value,
           email: manager.email.value,
