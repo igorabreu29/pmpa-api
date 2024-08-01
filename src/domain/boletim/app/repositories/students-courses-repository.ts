@@ -41,7 +41,7 @@ export abstract class StudentsCoursesRepository {
     totalItems: number
   }>
 
-  abstract findManyByCourseIdWithCourseAndPole({
+  abstract findManyDetailsByCourseId({
     courseId,
     page,
     perPage

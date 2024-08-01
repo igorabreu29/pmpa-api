@@ -1,12 +1,12 @@
 import { ManagerCourse } from "../../enterprise/entities/manager-course.ts";
-import { ManagerCourseDetails } from "../../enterprise/entities/value-objects/manager-with-course-and-pole.ts";
+import { ManagerCourseDetails } from "../../enterprise/entities/value-objects/manager-course-details.ts";
 import { ManagerWithCourse } from "../../enterprise/entities/value-objects/manager-with-course.ts";
 
 export abstract class ManagersCoursesRepository {
   abstract findByCourseId({ courseId }: { courseId: string }): Promise<ManagerCourse | null>
   abstract findByManagerIdAndCourseId({ managerId, courseId }: { managerId: string, courseId: string }): Promise<ManagerCourse | null>
-  abstract findByManagerAndCourseIdWithPole({ managerId, courseId }: { managerId: string, courseId: string }): Promise<ManagerCourseDetails | null>
-  abstract findManyByCourseIdWithCourseAndPole({
+  abstract findDetailsByManagerAndCourseId({ managerId, courseId }: { managerId: string, courseId: string }): Promise<ManagerCourseDetails | null>
+  abstract findManyDetailsByCourseId({
     courseId,
     page,
     perPage
