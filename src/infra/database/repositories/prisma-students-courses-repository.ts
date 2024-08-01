@@ -143,7 +143,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       }
   }
 
-  async findManyByCourseIdWithCourseAndPole({ 
+  async findManyDetailsByCourseId({ 
     courseId, 
     page, 
     perPage 

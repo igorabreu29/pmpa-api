@@ -9,7 +9,8 @@ export class PrismaStudentsRepository implements StudentsRepository {
   async findById(id: string): Promise<Student | null> {
     const student = await prisma.user.findUnique({
       where: {
-        id
+        id,
+        role: 'STUDENT',
       }
     }) 
     if (!student) return null
@@ -20,7 +21,8 @@ export class PrismaStudentsRepository implements StudentsRepository {
   async findByCPF(cpf: string): Promise<Student | null> {
     const student = await prisma.user.findUnique({
       where: {
-        cpf
+        cpf,
+        role: 'STUDENT'
       }
     }) 
     if (!student) return null
@@ -31,7 +33,8 @@ export class PrismaStudentsRepository implements StudentsRepository {
   async findByEmail(email: string): Promise<Student | null> {
     const student = await prisma.user.findUnique({
       where: {
-        email
+        email,
+        role: 'STUDENT'
       }
     }) 
     if (!student) return null
@@ -42,7 +45,8 @@ export class PrismaStudentsRepository implements StudentsRepository {
   async findDetailsById(id: string): Promise<StudentDetails | null> {
     const studentDetails = await prisma.user.findUnique({
       where: {
-        id
+        id,
+        role: 'STUDENT'
       },
 
       include: {
@@ -112,8 +116,9 @@ export class PrismaStudentsRepository implements StudentsRepository {
 
     const students = await prisma.user.findMany({
       where: {
+        role: 'STUDENT',
         username: {
-          contains: query
+          contains: query,
         },
       },
       take: page * PER_PAGE,
@@ -178,7 +183,8 @@ export class PrismaStudentsRepository implements StudentsRepository {
     const prismaMapper = PrismaStudentsMapper.toPrisma(student)
     await prisma.user.update({
       where: {
-        id: prismaMapper.id
+        id: prismaMapper.id,
+        role: 'STUDENT'
       },
       data: prismaMapper
     })

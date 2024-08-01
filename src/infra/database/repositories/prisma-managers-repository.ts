@@ -1,51 +1,47 @@
-import { SearchStudentsManyDetails, StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
-import { Student } from "@/domain/boletim/enterprise/entities/student.ts";
-import { StudentDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-details.ts";
 import { prisma } from "../lib/prisma.ts";
-import { PrismaStudentDetailsMapper } from "../mappers/prisma-student-details-mapper.ts";
 import { ManagersRepository } from "@/domain/boletim/app/repositories/managers-repository.ts";
 import { Manager } from "@/domain/boletim/enterprise/entities/manager.ts";
 import { PrismaManagersMapper } from "../mappers/prisma-managers-mapper.ts";
 import { ManagerDetails } from "@/domain/boletim/enterprise/entities/value-objects/manager-details.ts";
 import { PrismaManagerDetailsMapper } from "../mappers/prisma-manager-details-mapper.ts";
+import { SearchManyDetails } from "@/domain/boletim/app/repositories/students-courses-repository.ts";
 
 export class PrismaManagersRepository implements ManagersRepository {
   async findById(id: string): Promise<Manager | null> {
-    const student = await prisma.user.findUnique({
+    const manager = await prisma.user.findUnique({
       where: {
-        id,
-        isActive: true
+        id
       }
     }) 
-    if (!student) return null
+    if (!manager) return null
 
-    return PrismaManagersMapper.toDomain(student)
+    return PrismaManagersMapper.toDomain(manager)
   }
 
   async findByCPF(cpf: string): Promise<Manager | null> {
-    const student = await prisma.user.findUnique({
+    const manager = await prisma.user.findUnique({
       where: {
         cpf
       }
     }) 
-    if (!student) return null
+    if (!manager) return null
 
-    return PrismaManagersMapper.toDomain(student)
+    return PrismaManagersMapper.toDomain(manager)
   }
 
   async findByEmail(email: string): Promise<Manager | null> {
-    const student = await prisma.user.findUnique({
+    const manager = await prisma.user.findUnique({
       where: {
         email
       }
     }) 
-    if (!student) return null
+    if (!manager) return null
 
-    return PrismaManagersMapper.toDomain(student)
+    return PrismaManagersMapper.toDomain(manager)
   }
 
   async findDetailsById(id: string): Promise<ManagerDetails | null> {
-    const studentDetails = await prisma.user.findUnique({
+    const managerDetails = await prisma.user.findUnique({
       where: {
         id
       },
@@ -82,26 +78,26 @@ export class PrismaManagersRepository implements ManagersRepository {
       }
     })
 
-    if (!studentDetails) return null
+    if (!managerDetails) return null
 
-    const studentDetailsMapper = {
-      id: studentDetails.id,
-      username: studentDetails.username,
-      email: studentDetails.email,
-      password: studentDetails.password,
-      cpf: studentDetails.cpf,
-      civilId: studentDetails.civilId,
-      avatarUrl: studentDetails.avatarUrl,
-      birthday: studentDetails.birthday,
-      assignedAt: studentDetails.createdAt,
-      role: studentDetails.role,
-      isActive: studentDetails.isActive,
-      isLoginConfirmed: studentDetails.isLoginConfirmed,
-      createdAt: studentDetails.createdAt,
-      courses: studentDetails.usersOnCourses.map(item => {
+    const managerDetailsMapper = {
+      id: managerDetails.id,
+      username: managerDetails.username,
+      email: managerDetails.email,
+      password: managerDetails.password,
+      cpf: managerDetails.cpf,
+      civilId: managerDetails.civilId,
+      avatarUrl: managerDetails.avatarUrl,
+      birthday: managerDetails.birthday,
+      assignedAt: managerDetails.createdAt,
+      role: managerDetails.role,
+      isActive: managerDetails.isActive,
+      isLoginConfirmed: managerDetails.isLoginConfirmed,
+      createdAt: managerDetails.createdAt,
+      courses: managerDetails.usersOnCourses.map(item => {
         return item.courses
       }),
-      poles: studentDetails.usersOnCourses.map(userOnCourse => {
+      poles: managerDetails.usersOnCourses.map(userOnCourse => {
         return {
           id: userOnCourse.usersOnPoles[0].poles.id,
           name: userOnCourse.usersOnPoles[0].poles.name
@@ -109,14 +105,15 @@ export class PrismaManagersRepository implements ManagersRepository {
       })
     }
 
-    return PrismaManagerDetailsMapper.toDomain(studentDetailsMapper)
+    return PrismaManagerDetailsMapper.toDomain(managerDetailsMapper)
   }
 
-  async searchManyDetails({ query, page }: SearchStudentsManyDetails): Promise<ManagerDetails[]> {
+  async searchManyDetails({ query, page }: SearchManyDetails): Promise<ManagerDetails[]> {
     const PER_PAGE = 10
 
     const managers = await prisma.user.findMany({
       where: {
+        role: 'MANAGER',
         username: {
           contains: query
         },
@@ -139,25 +136,25 @@ export class PrismaManagersRepository implements ManagersRepository {
       }
     })
 
-    const managersMapper = managers.map(student => {
+    const managersMapper = managers.map(manager => {
       return {
-        id: student.id,
-        username: student.username,
-        email: student.email,
-        password: student.password,
-        cpf: student.cpf,
-        civilId: student.civilId,
-        avatarUrl: student.avatarUrl,
-        birthday: student.birthday,
-        assignedAt: student.createdAt,
-        role: student.role,
-        isActive: student.isActive,
-        isLoginConfirmed: student.isLoginConfirmed,
-        createdAt: student.createdAt,
-        courses: student.usersOnCourses.map(item => {
+        id: manager.id,
+        username: manager.username,
+        email: manager.email,
+        password: manager.password,
+        cpf: manager.cpf,
+        civilId: manager.civilId,
+        avatarUrl: manager.avatarUrl,
+        birthday: manager.birthday,
+        assignedAt: manager.createdAt,
+        role: manager.role,
+        isActive: manager.isActive,
+        isLoginConfirmed: manager.isLoginConfirmed,
+        createdAt: manager.createdAt,
+        courses: manager.usersOnCourses.map(item => {
           return item.courses
         }),
-        poles: student.usersOnCourses.map(userOnCourse => {
+        poles: manager.usersOnCourses.map(userOnCourse => {
           return {
             id: userOnCourse.usersOnPoles[0].poles.id,
             name: userOnCourse.usersOnPoles[0].poles.name
@@ -183,7 +180,8 @@ export class PrismaManagersRepository implements ManagersRepository {
     const prismaMapper = PrismaManagersMapper.toPrisma(manager)
     await prisma.user.update({
       where: {
-        id: prismaMapper.id
+        id: prismaMapper.id,
+        role: 'MANAGER'
       },
       data: prismaMapper
     })
