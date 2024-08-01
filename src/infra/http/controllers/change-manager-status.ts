@@ -3,9 +3,7 @@ import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
-import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { makeCreateStudentUseCase } from "@/infra/factories/make-create-student-use-case.ts";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
@@ -14,45 +12,36 @@ import { ConflictError } from "../errors/conflict-error.ts";
 import { NotFound } from "../errors/not-found.ts";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
-import { transformDate } from "@/infra/utils/transform-date.ts";
+import { NotAllowed } from "../errors/not-allowed.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { makeChangeManagerStatusUseCase } from "@/infra/factories/make-change-manager-status-use-case.ts";
 
-export async function createStudent(
+export async function changeManagerStatus(
   app: FastifyInstance
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/students', {
-      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
+    .patch('/managers/:id/status', {
+      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
+        params: z.object({
+          id: z.string().cuid()
+        }),
         body: z.object({
-          username: z.string().min(3).max(50),
-          email: z.string().email(),
-          cpf: z.string().min(14).max(14),
-          birthday: z.string().transform(transformDate),
-          civilId: z.number(),
-          courseId: z.string().cuid(),
-          poleId: z.string().cuid()
+          status: z.boolean()
         })
       },
     }, 
   async (req, res) => {
-    const { username, email, cpf, birthday, civilId, courseId, poleId } = req.body
-    const { payload: { sub, role } } = req.user
+    const { id } = req.params
+    const { status } = req.body
+    const { payload: { role } } = req.user
 
-    const ip = req.ip
-
-    const useCase = makeCreateStudentUseCase()
+    const useCase = makeChangeManagerStatusUseCase()
     const result = await useCase.execute({
-      username,
-      cpf,
-      email,
-      birthday,
-      civilId,
-      courseId,
-      poleId,
-      role,
-      userId: sub, 
-      userIp: ip
+      id,
+      status,
+      role
     })
 
     if (result.isLeft()) {
@@ -61,6 +50,8 @@ export async function createStudent(
       switch(error.constructor) {
         case ResourceNotFoundError: 
           throw new NotFound(error.message)
+        case NotAllowedError: 
+          throw new NotAllowed('Invalid access level')
         case InvalidEmailError:
           throw new ConflictError('This email is not valid.') 
         case InvalidPasswordError:
@@ -73,13 +64,11 @@ export async function createStudent(
           throw new ConflictError('This cpf is not valid.') 
         case InvalidBirthdayError:
           throw new ConflictError('This date is not valid.') 
-        case ResourceAlreadyExistError: 
-          throw new ConflictError('Student already be present in the platform')
         default: 
           throw new ClientError('Ocurred something problem')
       }
     }
 
-    return res.status(201).send()
+    return res.status(204).send()
   })
 }

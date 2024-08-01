@@ -15,14 +15,15 @@ import { NotFound } from "../errors/not-found.ts";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { transformDate } from "@/infra/utils/transform-date.ts";
+import { makeCreateManagerUseCase } from "@/infra/factories/make-create-manager-use-case.ts";
 
-export async function createStudent(
+export async function createManager(
   app: FastifyInstance
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/students', {
-      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
+    .post('/managers', {
+      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         body: z.object({
           username: z.string().min(3).max(50),
@@ -41,7 +42,7 @@ export async function createStudent(
 
     const ip = req.ip
 
-    const useCase = makeCreateStudentUseCase()
+    const useCase = makeCreateManagerUseCase()
     const result = await useCase.execute({
       username,
       cpf,

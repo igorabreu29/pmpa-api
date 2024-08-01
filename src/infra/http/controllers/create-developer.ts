@@ -4,63 +4,53 @@ import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
-import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { makeCreateStudentUseCase } from "@/infra/factories/make-create-student-use-case.ts";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { ClientError } from "../errors/client-error.ts";
 import { ConflictError } from "../errors/conflict-error.ts";
-import { NotFound } from "../errors/not-found.ts";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { transformDate } from "@/infra/utils/transform-date.ts";
+import { makeCreateDeveloperUseCase } from "@/infra/factories/make-create-developer-use-case.ts";
 
-export async function createStudent(
+export async function createDeveloper(
   app: FastifyInstance
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/students', {
-      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
+    .post('/developers', {
+      onRequest: [verifyJWT, verifyUserRole(['dev'])],
       schema: {
         body: z.object({
           username: z.string().min(3).max(50),
           email: z.string().email(),
           cpf: z.string().min(14).max(14),
+          password: z.string().min(6).max(20),
           birthday: z.string().transform(transformDate),
           civilId: z.number(),
-          courseId: z.string().cuid(),
-          poleId: z.string().cuid()
         })
       },
     }, 
   async (req, res) => {
-    const { username, email, cpf, birthday, civilId, courseId, poleId } = req.body
+    const { username, email, cpf, birthday, civilId, password } = req.body
     const { payload: { sub, role } } = req.user
 
-    const ip = req.ip
-
-    const useCase = makeCreateStudentUseCase()
+    const useCase = makeCreateDeveloperUseCase()
     const result = await useCase.execute({
       username,
       cpf,
       email,
       birthday,
       civilId,
-      courseId,
-      poleId,
       role,
-      userId: sub, 
-      userIp: ip
+      password,
     })
 
     if (result.isLeft()) {
       const error = result.value
 
       switch(error.constructor) {
-        case ResourceNotFoundError: 
-          throw new NotFound(error.message)
         case InvalidEmailError:
           throw new ConflictError('This email is not valid.') 
         case InvalidPasswordError:

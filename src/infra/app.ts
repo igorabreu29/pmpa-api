@@ -8,6 +8,16 @@ import { resolve } from "node:path";
 import { createStudentsBatch } from "./http/controllers/create-students-batch.ts";
 import { deleteStudent } from "./http/controllers/delete-student.ts";
 import { updateStudent } from "./http/controllers/update-student.ts";
+import { createManager } from "./http/controllers/create-manager.ts";
+import { deleteManager } from "./http/controllers/delete-manager.ts";
+import { updateManager } from "./http/controllers/update-manager.ts";
+import { createAdministrator } from "./http/controllers/create-administrator.ts";
+import { updateAdministrator } from "./http/controllers/update-administrator.ts";
+import { deleteAdministrator } from "./http/controllers/delete-administrator.ts";
+import { createDeveloper } from "./http/controllers/create-developer.ts";
+import { changeStudentStatus } from "./http/controllers/change-student-status.ts";
+import { changeManagerStatus } from "./http/controllers/change-manager-status.ts";
+import { changeAdministratorStatus } from "./http/controllers/change-administrator-status.ts";
 
 export const app = fastify()
 
@@ -27,6 +37,16 @@ app.register(authenticate)
 app.register(createStudent)
 app.register(createStudentsBatch)
 app.register(updateStudent)
+app.register(changeStudentStatus)
 app.register(deleteStudent)
+app.register(createManager)
+app.register(deleteManager)
+app.register(updateManager)
+app.register(changeManagerStatus)
+app.register(createAdministrator)
+app.register(updateAdministrator)
+app.register(changeAdministratorStatus)
+app.register(deleteAdministrator)
+app.register(createDeveloper)
 
 app.setErrorHandler(errorHandler)
