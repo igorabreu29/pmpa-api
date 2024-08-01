@@ -4,7 +4,7 @@ import { ManagerCourseDetails } from "@/domain/boletim/enterprise/entities/value
 import { ManagerWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/manager-with-course.ts";
 import { prisma } from "../lib/prisma.ts";
 import { PrismaManagersCoursesMapper } from "../mappers/prisma-managers-courses-mapper.ts";
-import { PrismaManagerCourseDetailsMapper } from "../mappers/prisma-manager-with-course-and-pole.ts";
+import { PrismaManagerCourseDetailsMapper } from "../mappers/prisma-manager-course-details.ts";
 import { PrismaManagerWithCourseMapper } from "../mappers/prisma-manager-with-course-mapper.ts";
 
 export class PrismaManagersCoursesRepository implements ManagersCoursesRepository {
