@@ -2,12 +2,12 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts';
 import { ManagerWithCourse } from '@/domain/boletim/enterprise/entities/value-objects/manager-with-course.ts';
 import { Course, User } from '@prisma/client';
 
-type PrismaManageCourseDetails = User & {
+type PrismaManagerWithCourse = User & {
   course: Course
 }
 
-export class PrismaManagerCourseDetailsMapper {
-  static toDomain(manager: PrismaManageCourseDetails): ManagerWithCourse {
+export class PrismaManagerWithCourseMapper {
+  static toDomain(manager: PrismaManagerWithCourse): ManagerWithCourse {
     return ManagerWithCourse.create({
       managerId: new UniqueEntityId(manager.id),
       email: manager.email,
