@@ -13,6 +13,7 @@ import type { InvalidPasswordError } from "@/core/errors/domain/invalid-password
 import type { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { formatCPF } from "@/core/utils/formatCPF.ts";
+import { ManagerEvent } from "../../enterprise/events/manager-event.ts";
 
 interface UpdateManagerUseCaseRequest {
   userId: string
@@ -100,6 +101,15 @@ export class UpdateManagerUseCase {
     manager.state = state ?? manager.state
     manager.county = county ?? manager.county
 
+    await this.managersRepository.save(manager)
+    
+    manager.addDomainManagerEvent(
+      new ManagerEvent({
+        manager,
+        reporterId: userId,
+        reporterIp: userIp
+      })
+    )
     return right(null)
   }
 }
