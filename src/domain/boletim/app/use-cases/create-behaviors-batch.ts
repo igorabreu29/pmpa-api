@@ -11,6 +11,7 @@ import { BehaviorBatch } from "../../enterprise/entities/behavior-batch.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 
 interface StudentBehavior {
   cpf: string
@@ -40,7 +41,7 @@ interface CreateBehaviorBatchUseCaseRequest {
 }
 
 type CreateBehaviorBatchUseCaseResponse = Either<
-  ResourceNotFoundError | Error[] | NotAllowedError,
+  ResourceNotFoundError | NotAllowedError | ResourceAlreadyExistError,
   null
 >
 
@@ -72,7 +73,7 @@ export class CreateBehaviorsBatchUseCase {
       if (!student) return new ResourceNotFoundError('Student not found.')
         
       const behaviorAlreadyAdded = await this.behaviorsRepository.findByStudentIdAndCourseId({ studentId: student.id.toValue(), courseId: course.id.toValue() }) 
-      if (behaviorAlreadyAdded) return new ResourceNotFoundError('Behaviors already exist.')
+      if (behaviorAlreadyAdded) return new ResourceAlreadyExistError('Behaviors already exist.')
 
       const behavior = Behavior.create({
         courseId: course.id,
@@ -95,8 +96,8 @@ export class CreateBehaviorsBatchUseCase {
       return behavior
     }))
 
-    const errors = studentBehaviorsOrError.filter(item => item instanceof Error)
-    if (errors.length) return left(errors.map(error => error))
+    const error = studentBehaviorsOrError.find(item => item instanceof Error)
+    if (error) return left(error)
 
     const behaviors = studentBehaviorsOrError as Behavior[]
     const behaviorBatch = BehaviorBatch.create({

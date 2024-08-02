@@ -3,17 +3,20 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 import request from 'supertest'
 import { prisma } from '@/infra/database/lib/prisma.ts'
+import { transformDate } from '@/infra/utils/transform-date.ts'
 
-describe('Create Students Batch (e2e)', () => {
+import bcrypt from 'bcryptjs'
+
+describe('Create Assessment (e2e)', () => {
   beforeAll(async () => {
     await app.ready()
-  }) 
+  })
 
   afterAll(async () => {
     await app.close()
-  }) 
+  })
 
-  it ('POST /students/batch', async () => {
+  it ('POST /courses/:courseId/behavior', async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
 
@@ -28,22 +31,6 @@ describe('Create Students Batch (e2e)', () => {
         role: 'ADMIN'
       }
     })
-
-    await prisma.course.create({
-      data: {
-        endsAt,
-        formula: 'CAS',
-        imageUrl: '',
-        name: 'node',
-      }
-    })
-
-    await prisma.pole.create({
-      data: {
-        name: 'node-pole'
-      }
-    })
-
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
@@ -52,12 +39,37 @@ describe('Create Students Batch (e2e)', () => {
       })
     const { token } = authenticateResponse.body
 
+    const course = await prisma.course.create({
+      data: {
+        endsAt,
+        formula: 'CAS',
+        imageUrl: '',
+        name: 'CAS',
+      }
+    })
+
+    const data = {
+      username: 'Jony',
+      cpf: '000.111.000-11',
+      password: await bcrypt.hash('node-20', 8),
+      email: 'igor29nahan@gmail.com',
+      birthday: transformDate('29/01/2006'),
+      civilId: '00000',
+      isActive: true
+    }
+
+    const student = await prisma.user.create({
+      data
+    })
+
     const response = await request(app.server)
-      .post('/students/batch')
+      .post(`/courses/${course.id}/behavior`)
       .set('Authorization', `Bearer ${token}`)
-      .type('multipart/form-data')
-      .attach('excel', 'test/upload/students.xlsx')
+      .send({
+        studentId: student.id,
+        january: 7
+      })
 
     expect(response.statusCode).toEqual(201)
   })
-})
+}) 

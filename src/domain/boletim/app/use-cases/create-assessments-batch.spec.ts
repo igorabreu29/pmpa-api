@@ -45,6 +45,7 @@ describe('Create Assessments Batch Use Case', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository,
     )
     polesRepository = new InMemoryPolesRepository()    
@@ -225,7 +226,7 @@ describe('Create Assessments Batch Use Case', () => {
       role: 'manager'
     })
 
-      expect(result.isLeft()).toBe(true)
+    expect(result.isLeft()).toBe(true)
   })
 
   it ('should not be able to create assessments batch if the student already has the assessment', async () => {

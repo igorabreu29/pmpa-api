@@ -10,6 +10,7 @@ import { StudentsRepository } from "../repositories/students-repository.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 
 interface CreateBehaviorUseCaseRequest {
   studentId: string
@@ -32,7 +33,7 @@ interface CreateBehaviorUseCaseRequest {
   role: Role
 }
 
-type CreateBehaviorUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, null>
+type CreateBehaviorUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError | ConflictError, null>
 
 export class CreateBehaviorUseCase {
   constructor(
@@ -65,14 +66,13 @@ export class CreateBehaviorUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
-
     if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
       
     const student = await this.studentsRepository.findById(studentId)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
 
     const behaviorAlreadyAdded = await this.behaviorsRepository.findByStudentIdAndCourseId({ studentId, courseId }) 
-    if (behaviorAlreadyAdded) return left(new ResourceNotFoundError('Behaviors already exist.'))
+    if (behaviorAlreadyAdded) return left(new ResourceAlreadyExistError('Behaviors already exist.'))
 
     const behavior = Behavior.create({
       studentId: new UniqueEntityId(studentId),

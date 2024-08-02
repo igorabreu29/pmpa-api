@@ -11,7 +11,6 @@ import { CPF } from "../../enterprise/entities/value-objects/cpf.ts"
 import { Email } from "../../enterprise/entities/value-objects/email.ts"
 import { Name } from "../../enterprise/entities/value-objects/name.ts"
 import { Password } from "../../enterprise/entities/value-objects/password.ts"
-import { Hasher } from "../cryptography/hasher.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { PolesRepository } from "../repositories/poles-repository.ts"
 import { StudentsBatchRepository } from "../repositories/students-batch-repository.ts"
@@ -47,7 +46,7 @@ interface CreateStudentsBatchUseCaseRequest {
   role: Role
 }
 
-type CreateStudentsBatchUseCaseResponse = Either<ResourceNotFoundError | Error[] | NotAllowedError, null>
+type CreateStudentsBatchUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError | ResourceAlreadyExistError, null>
 
 export class CreateStudentsBatchUseCase {
   constructor (
@@ -165,8 +164,8 @@ export class CreateStudentsBatchUseCase {
       }
     }))
 
-    const errors = studentsOrError.filter(item => item instanceof Error)
-    if (errors.length) return left(errors.map(error => error))
+    const error = studentsOrError.find(item => item instanceof Error)
+    if (error) return left(error)
 
     const studentsCreated = studentsOrError as StudentCreated[]
     const studentBatch = StudentBatch.create({

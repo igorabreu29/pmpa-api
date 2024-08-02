@@ -22,7 +22,6 @@ interface Error {
 interface StudentAssessment {
   cpf: string
   disciplineName: string
-  poleName: string
   avi: number | null
   avii: number | null
   vf: number
@@ -40,7 +39,7 @@ interface CreateAssessmentsBatchUseCaseRequest {
   role: Role
 }
 
-type CreateAssessmentsBatchUseCaseResponse = Either<ResourceNotFoundError | Error[] | NotAllowedError, null>
+type CreateAssessmentsBatchUseCaseResponse = Either<ResourceNotFoundError| NotAllowedError, null>
 
 export class CreateAssessmentsBatchUseCase {
   constructor (
@@ -56,6 +55,7 @@ export class CreateAssessmentsBatchUseCase {
     
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
+
     if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
 
     const assessmentsBatchOrError = await Promise.all(studentAssessments.map(async (studentAssessment) => {
@@ -82,8 +82,9 @@ export class CreateAssessmentsBatchUseCase {
       return assessmentOrError.value  
     }))
 
-    const errors = assessmentsBatchOrError.filter(item => item instanceof Error)
-    if (errors.length) return left(errors.map(error => error))
+    
+    const error = assessmentsBatchOrError.find(item => item instanceof Error)
+    if (error) return left(error)
 
     const assessments = assessmentsBatchOrError as Assessment[]
     const assessmentBatch = AssessmentBatch.create({
