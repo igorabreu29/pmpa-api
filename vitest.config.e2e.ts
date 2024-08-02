@@ -7,5 +7,6 @@ export default defineConfig({
   test: {
     environmentMatchGlobs: [['src/infra/http/controllers/**', 'prisma']],
     include: ['**/*.e2e-spec.ts'],
+    hookTimeout: 30000
   }
 })
