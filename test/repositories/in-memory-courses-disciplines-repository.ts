@@ -1,7 +1,7 @@
 import { CoursesDisciplinesRepository } from "@/domain/boletim/app/repositories/courses-disciplines-repository.ts";
 import { CourseDiscipline } from "@/domain/boletim/enterprise/entities/course-discipline.ts";
 import type { InMemoryDisciplinesRepository } from "./in-memory-disciplines-repository.ts";
-import { CourseWithDiscipline } from "@/domain/boletim/enterprise/entities/course-with-discipline.ts";
+import { CourseWithDiscipline } from "@/domain/boletim/enterprise/entities/value-objects/course-with-discipline.ts";
 
 export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesRepository {
   public items: CourseDiscipline[] = []
