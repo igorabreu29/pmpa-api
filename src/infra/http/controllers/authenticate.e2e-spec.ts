@@ -31,13 +31,13 @@ describe('Authenticate (e2e)', () => {
       password: 'node-20'
     }
 
-    const result = await request(app.server)
+    const response = await request(app.server)
       .post('/credentials/auth')
       .send(data)
-      .expect(201)
 
-    const { token } = result.body
+    const { token } = response.body
 
+    expect(response.statusCode).toEqual(201)
     expect(token).toEqual(expect.any(String))
   })
 })
