@@ -39,11 +39,11 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
       },
 
       include: {
-        courses: true,
-        users: true,
+        course: true,
+        user: true,
         usersOnPoles: {
           select: {
-            poles: true
+            pole: true
           }
         }
       }
@@ -51,9 +51,9 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
     if (!managerCourse) return null
 
     const prismaManagerCourseMapper = {
-      ...managerCourse.users,
-      course: managerCourse.courses,
-      pole: managerCourse.usersOnPoles[0].poles
+      ...managerCourse.user,
+      course: managerCourse.course,
+      pole: managerCourse.usersOnPoles[0].pole
     }
 
     return PrismaManagerCourseDetailsMapper.toDomain(prismaManagerCourseMapper)
@@ -69,11 +69,11 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
       take: page * perPage,
 
       include: {
-        courses: true,
-        users: true,
+        course: true,
+        user: true,
         usersOnPoles: {
           select: {
-            poles: true
+            pole: true
           }
         }
       }
@@ -81,9 +81,9 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
 
     const managerCoursesMapper = managerCourses.map(managerCourses => {
       return {
-        ...managerCourses.users,
-        course: managerCourses.courses,
-        pole: managerCourses.usersOnPoles[0].poles
+        ...managerCourses.user,
+        course: managerCourses.course,
+        pole: managerCourses.usersOnPoles[0].pole
       }
     })
 
@@ -111,15 +111,15 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
       take: page * perPage,
 
       include: {
-        courses: true,
-        users: true,
+        course: true,
+        user: true,
       }
     })
 
     const managerCoursesMapper = managerCourses.map(managerCourses => {
       return {
-        ...managerCourses.users,
-        course: managerCourses.courses
+        ...managerCourses.user,
+        course: managerCourses.course
       }
     })
 

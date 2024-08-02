@@ -50,10 +50,10 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       },
       
       include: {
-        poles: true,
-        usersOnCourses: {
+        pole: true,
+        usersOnCourse: {
           include: {
-            users: true
+            user: true
           }
         }
       },
@@ -71,8 +71,8 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
 
     const studentsPoleMapper = studentsPole.map(studentPole => {
       return {
-        ...studentPole.usersOnCourses.users,
-        pole: studentPole.poles
+        ...studentPole.usersOnCourse.user,
+        pole: studentPole.pole
       }
     })
 
@@ -91,8 +91,8 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
     const studentPoles = await prisma.userCourseOnPole.findMany({
       where: {
         poleId,
-        usersOnCourses: {
-          users: {
+        usersOnCourse: {
+          user: {
             username: {
               contains: query
             }
@@ -101,13 +101,13 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       },
 
       include: {
-        usersOnCourses: {
+        usersOnCourse: {
           select: {
-            courses: true,
-            users: true
+            course: true,
+            user: true
           }
         },
-        poles: true
+        pole: true
       },
 
       skip: (page - 1) * 10,
@@ -116,9 +116,9 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
 
     const studentPolesMapper = studentPoles.map(studentPole => {
       return {
-        ...studentPole.usersOnCourses.users,
-        course: studentPole.usersOnCourses.courses,
-        pole: studentPole.poles
+        ...studentPole.usersOnCourse.user,
+        course: studentPole.usersOnCourse.course,
+        pole: studentPole.pole
       }
     })
     

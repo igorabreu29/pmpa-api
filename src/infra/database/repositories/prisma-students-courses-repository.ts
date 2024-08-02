@@ -41,7 +41,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       },
 
       include: {
-        courses: true
+        course: true
       },
 
       skip: (page - 1) * perPage,
@@ -50,7 +50,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
 
     const studentCoursesMapper = studentCourses.map(studentCourse => ({
       ...studentCourse,
-      course: studentCourse.courses
+      course: studentCourse.course
     }))
 
     const studentCoursesCount = await prisma.userOnCourse.count({
@@ -74,22 +74,22 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       },
       
       include: {
-        users: true,
+        user: true,
         usersOnPoles: {
           select: {
-            poles: true
+            pole: true
           }
         }
       }
     })
 
     const studentsCourseMapper = studentCourses.map(studentCourse => {
-      const pole = studentCourse.usersOnPoles.find(item => item.poles.id === studentCourse.id)
-      if (!pole) throw new Error('Pole not found.')
+      const poleExist = studentCourse.usersOnPoles.find(item => item.pole.id === studentCourse.id)
+      if (!poleExist) throw new Error('Pole not found.')
 
       return {
-        ...studentCourse.users,
-        pole: pole.poles
+        ...studentCourse.user,
+        pole: poleExist.pole
       }
     })
 
@@ -117,7 +117,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
         },
   
         include: {
-          courses: true
+          course: true
         },
   
         skip: (page - 1) * perPage,
@@ -126,7 +126,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
   
       const studentsCourseMapper = studentsCourse.map(studentCourse => ({
         ...studentCourse,
-        course: studentCourse.courses
+        course: studentCourse.course
       }))
   
       const studentsCourseCount = await prisma.userOnCourse.count({
@@ -162,11 +162,11 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       },
 
       include: {
-        users: true,
-        courses: true,
+        user: true,
+        course: true,
         usersOnPoles: {
           include: {
-            poles: true
+            pole: true
           }
         }
       },
@@ -176,13 +176,13 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     })
 
     const studentsCourseMapper = studentsCourse.map(studentCourse => {
-      const pole = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-      if (!pole) throw new Error('Pole not found.')
+      const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
+      if (!poleExist) throw new Error('Pole not found.')
 
       return {
-        ...studentCourse.users,
-        course: studentCourse.courses,
-        pole: pole.poles
+        ...studentCourse.user,
+        course: studentCourse.course,
+        pole: poleExist.pole
       }
     })
 
@@ -208,7 +208,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const studentCourses = await prisma.userOnCourse.findMany({
       where: {
         courseId,
-        users: {
+        user: {
           username: {
             contains: query
           }
@@ -216,11 +216,11 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       },
 
       include: {
-        users: true,
-        courses: true,
+        user: true,
+        course: true,
         usersOnPoles: {
           include: {
-            poles: true
+            pole: true
           }
         }
       },
@@ -230,13 +230,13 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     })
 
     const studentsCourseMapper = studentCourses.map(studentCourse => {
-      const pole = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-      if (!pole) throw new Error('Pole not found.')
+      const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
+      if (!poleExist) throw new Error('Pole not found.')
 
       return {
-        ...studentCourse.users,
-        course: studentCourse.courses,
-        pole: pole.poles
+        ...studentCourse.user,
+        course: studentCourse.course,
+        pole: poleExist.pole
       }
     })
     

@@ -49,7 +49,7 @@ export class PrismaManagersRepository implements ManagersRepository {
       include: {
         usersOnCourses: {
           select: {
-            courses: {
+            course: {
               select: {
                 id: true,
                 name: true,
@@ -65,7 +65,7 @@ export class PrismaManagersRepository implements ManagersRepository {
           include: {
             usersOnPoles: {
               select: {
-                poles: {
+                pole: {
                   select: {
                     id: true,
                     name: true
@@ -95,12 +95,12 @@ export class PrismaManagersRepository implements ManagersRepository {
       isLoginConfirmed: managerDetails.isLoginConfirmed,
       createdAt: managerDetails.createdAt,
       courses: managerDetails.usersOnCourses.map(item => {
-        return item.courses
+        return item.course
       }),
       poles: managerDetails.usersOnCourses.map(userOnCourse => {
         return {
-          id: userOnCourse.usersOnPoles[0].poles.id,
-          name: userOnCourse.usersOnPoles[0].poles.name
+          id: userOnCourse.usersOnPoles[0].pole.id,
+          name: userOnCourse.usersOnPoles[0].pole.name
         }
       })
     }
@@ -123,12 +123,12 @@ export class PrismaManagersRepository implements ManagersRepository {
       include: {
         usersOnCourses: {
           select: {
-            courses: true
+            course: true
           },
           include: {
             usersOnPoles: {
               select: {
-                poles: true
+                pole: true
               }
             }
           }
@@ -152,12 +152,12 @@ export class PrismaManagersRepository implements ManagersRepository {
         isLoginConfirmed: manager.isLoginConfirmed,
         createdAt: manager.createdAt,
         courses: manager.usersOnCourses.map(item => {
-          return item.courses
+          return item.course
         }),
         poles: manager.usersOnCourses.map(userOnCourse => {
           return {
-            id: userOnCourse.usersOnPoles[0].poles.id,
-            name: userOnCourse.usersOnPoles[0].poles.name
+            id: userOnCourse.usersOnPoles[0].pole.id,
+            name: userOnCourse.usersOnPoles[0].pole.name
           }
         })
       }

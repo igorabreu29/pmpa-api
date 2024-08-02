@@ -61,8 +61,8 @@ model UserOnCourse {
   courseId  String
   createdAt DateTime @default(now()) @map("created_at")
 
-  courses      Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  users        User               @relation(fields: [userId], references: [id])
+  course       Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user         User               @relation(fields: [userId], references: [id])
   usersOnPoles UserCourseOnPole[]
 
   @@index([userId, courseId])
@@ -74,8 +74,8 @@ model UserCourseOnPole {
   poleId         String
   createdAt      DateTime @default(now()) @map("created_at")
 
-  usersOnCourses UserOnCourse @relation(fields: [userOnCourseId], references: [id], onDelete: Cascade)
-  poles          Pole         @relation(fields: [poleId], references: [id])
+  usersOnCourse UserOnCourse @relation(fields: [userOnCourseId], references: [id], onDelete: Cascade)
+  pole          Pole         @relation(fields: [poleId], references: [id])
 }
 
 enum Formula {
@@ -99,7 +99,7 @@ model Course {
 
   assessments          Assessment[]
   behaviors            Behavior[]
-  coursesOnPoles       CourseOnPole[]
+  courseOnPoles        CourseOnPole[]
   userOnCourses        UserOnCourse[]
   coursesOnDisciplines CourseOnDiscipline[]
   coursesHistorics     CourseHistoric[]
@@ -121,7 +121,7 @@ model CourseHistoric {
   divisionBoss String? @map("division_boss")
   commander    String?
 
-  courses Course @relation(fields: [courseId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
 }
 
 model CourseOnPole {
@@ -129,8 +129,8 @@ model CourseOnPole {
   courseId String
   poleId   String
 
-  courses Course @relation(fields: [courseId], references: [id])
-  poles   Pole   @relation(fields: [poleId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+  pole   Pole   @relation(fields: [poleId], references: [id])
 
   @@index([courseId, poleId])
   @@map("courses_on_poles")
@@ -145,8 +145,8 @@ model CourseOnDiscipline {
   hours    Int
   expected String
 
-  courses     Course     @relation(fields: [courseId], references: [id])
-  disciplines Discipline @relation(fields: [disciplineId], references: [id])
+  course     Course     @relation(fields: [courseId], references: [id])
+  discipline Discipline @relation(fields: [disciplineId], references: [id])
 
   @@map("courses_on_disciplines")
 }
@@ -155,7 +155,7 @@ model Pole {
   id   String @id @default(cuid())
   name String
 
-  coursesOnPoles     CourseOnPole[]
+  courseOnPoles      CourseOnPole[]
   userCoursesOnPoles UserCourseOnPole[]
 
   @@map("poles")
@@ -165,8 +165,8 @@ model Discipline {
   id   String @id @default(cuid())
   name String
 
-  assessments          Assessment[]
-  coursesOnDisciplines CourseOnDiscipline[]
+  assessments         Assessment[]
+  courseOnDisciplines CourseOnDiscipline[]
 
   @@map("disciplines")
 }
@@ -182,9 +182,9 @@ model Assessment {
   avii Decimal?
   vfe  Decimal?
 
-  students    User       @relation(fields: [studentId], references: [id])
-  courses     Course     @relation(fields: [courseId], references: [id])
-  disciplines Discipline @relation(fields: [disciplineId], references: [id])
+  user       User       @relation(fields: [studentId], references: [id])
+  course     Course     @relation(fields: [courseId], references: [id])
+  discipline Discipline @relation(fields: [disciplineId], references: [id])
 
   @@map("assessments")
 }
@@ -208,8 +208,8 @@ model Behavior {
   december    Decimal?
   currentYear Int?
 
-  students User   @relation(fields: [studentId], references: [id])
-  courses  Course @relation(fields: [courseId], references: [id])
+  user   User   @relation(fields: [studentId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
 
   @@map("behaviors")
 }
