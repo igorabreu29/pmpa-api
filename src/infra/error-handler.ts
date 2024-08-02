@@ -2,7 +2,7 @@ import { FastifyInstance } from 'fastify'
 import { ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import { ClientError } from './http/errors/client-error.ts'
-import { ConflictError } from './http/errors/conflict-error.ts'
+import { Conflict } from './http/errors/conflict-error.ts'
 import { NotFound } from './http/errors/not-found.ts'
 import { UnauthorizedError } from './http/errors/unauthorized-error.ts'
 
@@ -22,7 +22,7 @@ export const errorHandler: FastifyErrorHandler = (error, _, res) => {
     })
   }
 
-  if (error instanceof ConflictError) {
+  if (error instanceof Conflict) {
     return res.status(409).send({
       message: error.message,
     })
