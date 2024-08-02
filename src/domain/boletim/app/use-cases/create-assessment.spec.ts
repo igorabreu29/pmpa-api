@@ -15,6 +15,7 @@ import { makeStudent } from "test/factories/make-student.ts";
 import { InMemoryDisciplinesRepository } from "test/repositories/in-memory-disciplines-repository.ts";
 import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -204,7 +205,7 @@ describe(('Create Assessment Use Case'), () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)
   })
 
   it ('should not be able to create asssessment if avi is less than 0', async () => {

@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 
 interface CreateAssessmentUseCaseRequest {
   userId: string
@@ -27,7 +28,7 @@ interface CreateAssessmentUseCaseRequest {
   role: Role
 }
 
-type CreateAssessmentUseCaseResponse = Either<ResourceNotFoundError | ConflictError, null>
+type CreateAssessmentUseCaseResponse = Either<ResourceNotFoundError | ResourceAlreadyExistError | ConflictError, null>
 
 export class CreateAssessmentUseCase {
   constructor (
@@ -63,7 +64,7 @@ export class CreateAssessmentUseCase {
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
 
     const assessmentAlreadyAdded = await this.assessmentsRepository.findByStudentIdAndCourseId({ studentId, courseId }) 
-    if (assessmentAlreadyAdded) return left(new ResourceNotFoundError('Assessment already exist.'))
+    if (assessmentAlreadyAdded) return left(new ResourceAlreadyExistError('Assessment already exist.'))
 
     const assessmentOrError = Assessment.create({
       studentId: new UniqueEntityId(studentId),
