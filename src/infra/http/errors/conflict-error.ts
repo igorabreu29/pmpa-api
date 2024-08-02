@@ -1,1 +1,1 @@
-export class ConflictError extends Error {}
+export class Conflict extends Error {}

@@ -1,20 +1,13 @@
-import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
-import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
-import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
-import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
-import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
-import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { ClientError } from "../errors/client-error.ts";
-import { ConflictError } from "../errors/conflict-error.ts";
 import { NotFound } from "../errors/not-found.ts";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { makeCreateStudentsBatchUseCase } from "@/infra/factories/make-create-students-batch-use-case.ts";
 
-import excelToJSON from 'convert-excel-to-json' 
+import excelToJSON from 'convert-excel-to-json';
 import { resolve } from "node:path";
 import { upload } from "@/infra/libs/multer.ts";
 import { z } from "zod";

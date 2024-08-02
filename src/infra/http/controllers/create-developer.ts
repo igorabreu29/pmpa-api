@@ -8,7 +8,7 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { ClientError } from "../errors/client-error.ts";
-import { ConflictError } from "../errors/conflict-error.ts";
+import { Conflict } from "../errors/conflict-error.ts";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { transformDate } from "@/infra/utils/transform-date.ts";
@@ -52,19 +52,19 @@ export async function createDeveloper(
 
       switch(error.constructor) {
         case InvalidEmailError:
-          throw new ConflictError('This email is not valid.') 
+          throw new Conflict('This email is not valid.') 
         case InvalidPasswordError:
-          throw new ConflictError('This password is not valid.') 
+          throw new Conflict('This password is not valid.') 
         case InvalidBirthdayError:
-          throw new ConflictError('This birthday is not valid.') 
+          throw new Conflict('This birthday is not valid.') 
         case InvalidNameError:
-          throw new ConflictError('This name is not valid.') 
+          throw new Conflict('This name is not valid.') 
         case InvalidCPFError:
-          throw new ConflictError('This cpf is not valid.') 
+          throw new Conflict('This cpf is not valid.') 
         case InvalidBirthdayError:
-          throw new ConflictError('This date is not valid.') 
+          throw new Conflict('This date is not valid.') 
         case ResourceAlreadyExistError: 
-          throw new ConflictError('Student already be present in the platform')
+          throw new Conflict('Student already be present in the platform')
         default: 
           throw new ClientError('Ocurred something problem')
       }
