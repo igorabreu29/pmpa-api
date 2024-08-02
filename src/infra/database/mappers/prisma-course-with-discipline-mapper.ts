@@ -1,8 +1,8 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
 import { CourseWithDiscipline } from "@/domain/boletim/enterprise/entities/value-objects/course-with-discipline.ts"
-import { CourseOnDiscipline as PrismaCourse, Discipline as PrismaDiscipline } from "@prisma/client"
+import { CourseOnDiscipline as PrismaCourseDiscipline, Discipline as PrismaDiscipline } from "@prisma/client"
 
-type PrismaCourseWithDiscipline = PrismaCourse & {
+type PrismaCourseWithDiscipline = PrismaCourseDiscipline & {
   discipline: PrismaDiscipline
 }
 
