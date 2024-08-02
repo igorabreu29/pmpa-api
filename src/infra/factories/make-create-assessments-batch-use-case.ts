@@ -6,7 +6,7 @@ import { PrismaStudentsRepository } from "../database/repositories/prisma-studen
 import { PrismaAssessmentsBathcRepository } from "../database/repositories/prisma-assessments-batch-repository.ts";
 import { CreateAssessmentsBatchUseCase } from "@/domain/boletim/app/use-cases/create-assessments-batch.ts";
 
-export function makeCreateAssessmentUseCase() {
+export function makeCreateAssessmentsBatchUseCase() {
   const studentsRepository = new PrismaStudentsRepository()
   const coursesRepository = new PrismaCoursesRepository()
   const disciplinesRepository = new PrismaDisciplinesRepository()
