@@ -10,11 +10,11 @@ export class PrismaCoursesPolesMapper {
     }, new UniqueEntityId(coursePole.id))
   }
 
-  static toPrisma(coursePole: CoursePole): Prisma.UserCourseOnPoleUncheckedCreateInput {
+  static toPrisma(coursePole: CoursePole): Prisma.CourseOnPoleUncheckedCreateInput {
     return {
       id: coursePole.id.toValue(),
+      courseId: coursePole.courseId.toValue(),
       poleId: coursePole.poleId.toValue(),
-      userOnCourseId: coursePole.courseId.toValue(),
     }
   }
 }
