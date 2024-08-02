@@ -45,6 +45,7 @@ describe('Get Classfication Course Use Case', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     polesRepository = new InMemoryPolesRepository()

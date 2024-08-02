@@ -18,7 +18,9 @@ describe('Create Course Discipline', () => {
   beforeEach(() => {
     coursesRepository = new InMemoryCoursesRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
-    courseDisciplineRepository = new InMemoryCoursesDisciplinesRepository()
+    courseDisciplineRepository = new InMemoryCoursesDisciplinesRepository(
+      disciplinesRepository
+    )
     sut = new CreateCourseDiscipline(
       coursesRepository,
       disciplinesRepository,
