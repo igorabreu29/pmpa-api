@@ -5,7 +5,7 @@ POST {{baseUrl}}/credentials/auth
 Content-Type: application/json
 
 {
-  "cpf": "00000000000",
+  "cpf": "05399970210",
   "password": "node-20"
 }
 
