@@ -1,0 +1,5 @@
+- Buscar todos as disciplinas de um curso
+- Implementar o disparo de eventos
+- Remover um nota passada
+- Atualizar notas em lote
+- Atualizar estudantes e gerentes
