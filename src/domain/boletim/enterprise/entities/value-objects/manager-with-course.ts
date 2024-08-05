@@ -38,6 +38,10 @@ export class ManagerWithCourse extends ValueObject<ManagerWithCourseProps> {
     return this.props.course
   }
 
+  get imageUrl() {
+    return this.props.imageUrl
+  }
+
   get assignedAt() {
     return this.props.assignedAt
   }
