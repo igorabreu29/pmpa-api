@@ -14,6 +14,19 @@ export class InMemoryCoursesRepository implements CoursesRepository {
     return course ?? null
   }
 
+  async findMany(page: number): Promise<{ courses: Course[]; pages: number; totalItems: number; }> {
+    const allCourses = this.items.sort((courseA, courseB) => courseA.name.value.localeCompare(courseB.name.value))
+
+    const courses = allCourses.slice((page - 1) * 10, page * 10)
+    const pages = Math.ceil(allCourses.length / 10)
+
+    return {
+      courses,
+      pages,
+      totalItems: allCourses.length
+    }
+  }
+
   async create(course: Course): Promise<void> {
     this.items.push(course)
   }

@@ -14,6 +14,19 @@ export class InMemoryPolesRepository implements PolesRepository {
     return pole ?? null
   }
 
+  async findMany(page: number): Promise<{ poles: Pole[]; pages: number; totalItems: number; }> {
+    const allPoles = this.items.sort((poleA, poleB) => poleA.name.value.localeCompare(poleB.name.value))
+
+    const poles = allPoles.slice((page - 1) * 10, page * 10)
+    const pages = Math.ceil(allPoles.length / 10)
+
+    return {
+      poles,
+      pages,
+      totalItems: allPoles.length
+    }
+  }
+
   async create(pole: Pole): Promise<void> {
     this.items.push(pole)
   }

@@ -26,6 +26,24 @@ export class PrismaCoursesRepository implements CoursesRepository {
     return PrismaCoursesMapper.toDomain(course)
   }
 
+  async findMany(page: number): Promise<{ courses: Course[]; pages: number; totalItems: number; }> {
+    const PER_PAGE = 10
+
+    const courses = await prisma.course.findMany({
+      skip: (page - 1) * PER_PAGE,
+      take: page * PER_PAGE
+    })
+
+    const coursesCount = await prisma.course.count()
+    const pages = Math.ceil(coursesCount / PER_PAGE)
+
+    return {
+      courses: courses.map(course => PrismaCoursesMapper.toDomain(course)),
+      pages,
+      totalItems: coursesCount
+    }
+  }
+
   async create(course: Course): Promise<void> {
     const prismaMapper = PrismaCoursesMapper.toPrisma(course)
     await prisma.course.create({
