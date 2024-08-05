@@ -27,6 +27,42 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
     return studentPole ?? null
   }
 
+  async findLoginConfirmationMetricsByPoleId({ poleId }: { poleId: string; }): Promise<{ totalConfirmedSize: number; totalNotConfirmedSize: number; }> {
+    const studentPoles = this.items
+      .filter(item => item.poleId.toValue() === poleId)
+      .map(studentPole => {
+        const pole = this.polesRepository.items.find(pole => pole.id.equals(studentPole.poleId))
+        if (!pole) throw new Error(`Pole with ID ${studentPole.poleId.toValue()} does not exist`)
+
+        const studentCourse = this.studentsCoursesRepository.items.find(studentCourse => studentCourse.id.equals(studentPole.studentId))
+        if (!studentCourse) throw new Error(`Student with ID ${studentPole.studentId.toValue()} does not exist.`)
+        
+        const student = this.studentsRepository.items.find(student => student.id.equals(studentCourse.studentId))
+        if (!student) throw new Error(`Student with ID ${studentPole.studentId.toValue()} does not exist.`)
+
+        return StudentWithPole.create({
+          studentId: student.id,
+          username: student.username.value,
+          email: student.email.value,
+          civilId: student.civilId,
+          cpf: student.cpf.value,
+          birthday: student.birthday.value,
+          assignedAt: student.createdAt,
+          isLoginConfirmed: student.isLoginConfirmed,
+          poleId: pole.id,
+          pole: pole.name.value
+        })
+      })
+
+      const totalConfirmedSize = studentPoles.filter(item => item.isLoginConfirmed).length
+      const totalNotConfirmedSize = studentPoles.filter(item => !item.isLoginConfirmed).length
+
+      return {
+        totalConfirmedSize,
+        totalNotConfirmedSize
+      }
+  }
+
   async findManyByPoleId({
     poleId, 
     page, 

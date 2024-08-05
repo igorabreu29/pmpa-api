@@ -31,6 +31,41 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
     return PrismaStudentPoleMapper.toDomain(studentPole)
   }
 
+  async findLoginConfirmationMetricsByPoleId({ poleId }: { poleId: string; }): Promise<{ totalConfirmedSize: number; totalNotConfirmedSize: number; }> {
+    const studentLoginConfirmed = await prisma.userCourseOnPole.findMany({
+      where: {
+        poleId,
+        usersOnCourse: {
+          user: {
+            role: 'STUDENT'
+          }
+        },
+      },
+
+      include: {
+        pole: true,
+        usersOnCourse: {
+          select: {
+            user: true
+          }
+        }
+      }
+    })
+
+    const totalConfirmedSize = studentLoginConfirmed.filter(studentPole => {
+      return studentPole.usersOnCourse.user.isLoginConfirmed
+    }).length
+
+    const totalNotConfirmedSize = studentLoginConfirmed.filter(studentPole => {
+      return !studentPole.usersOnCourse.user.isLoginConfirmed
+    }).length
+
+    return {
+      totalConfirmedSize, 
+      totalNotConfirmedSize
+    }
+  }
+
   async findManyByPoleId({ 
     poleId, 
     page, 
@@ -44,9 +79,14 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
     pages: number; 
     totalItems: number; 
   }> {
-    const studentsPole = await prisma.userCourseOnPole.findMany({
+    const studentPoles = await prisma.userCourseOnPole.findMany({
       where: {
-        poleId
+        poleId,
+        usersOnCourse: {
+          user: {
+            role: 'STUDENT'
+          }
+        }
       },
       
       include: {
@@ -59,20 +99,25 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       },
 
       skip: (page - 1) * perPage,
-      take: page - 1
+      take: page * perPage
     })
 
     const studentsPoleCount = await prisma.userCourseOnPole.count({
       where: {
-        poleId
+        poleId,
+        usersOnCourse: {
+          user: {
+            role: 'STUDENT'
+          }
+        }
       }
     })
     const pages = Math.ceil(studentsPoleCount / perPage)
 
-    const studentsPoleMapper = studentsPole.map(studentPole => {
+    const studentsPoleMapper = studentPoles.map(studentPole => {
       return {
         ...studentPole.usersOnCourse.user,
-        pole: studentPole.pole
+        pole: studentPole.pole,
       }
     })
 
@@ -95,7 +140,8 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
           user: {
             username: {
               contains: query
-            }
+            },
+            role: 'STUDENT'
           }
         }
       },
