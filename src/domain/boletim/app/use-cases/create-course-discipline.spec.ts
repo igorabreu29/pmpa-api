@@ -2,7 +2,7 @@ import { InMemoryCoursesDisciplinesRepository } from 'test/repositories/in-memor
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
 import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
 import { describe, it, expect, beforeEach } from 'vitest'
-import { CreateCourseDiscipline } from './create-course-discipline.ts'
+import { CreateCourseDisciplineUseCase } from './create-course-discipline.ts'
 import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found-error.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
 import { makeDiscipline } from 'test/factories/make-discipline.ts'
@@ -12,7 +12,7 @@ import { ResourceAlreadyExistError } from '@/core/errors/use-case/resource-alrea
 let coursesRepository: InMemoryCoursesRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
 let courseDisciplineRepository: InMemoryCoursesDisciplinesRepository
-let sut: CreateCourseDiscipline
+let sut: CreateCourseDisciplineUseCase
 
 describe('Create Course Discipline', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('Create Course Discipline', () => {
     courseDisciplineRepository = new InMemoryCoursesDisciplinesRepository(
       disciplinesRepository
     )
-    sut = new CreateCourseDiscipline(
+    sut = new CreateCourseDisciplineUseCase(
       coursesRepository,
       disciplinesRepository,
       courseDisciplineRepository

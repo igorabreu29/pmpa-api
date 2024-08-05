@@ -16,7 +16,7 @@ interface CreateCourseDisciplineRequest {
 
 type CreateCourseDisciplineResponse = Either<ResourceNotFoundError | ResourceAlreadyExistError, null>
 
-export class CreateCourseDiscipline {
+export class CreateCourseDisciplineUseCase {
   constructor (
     private coursesRepository: CoursesRepository,
     private disciplinesRepository: DisciplinesRepository,

@@ -13,7 +13,7 @@ interface CreateCoursePoleRequest {
 
 type CreateCoursePoleResponse = Either<ResourceNotFoundError | ResourceAlreadyExistError, null>
 
-export class CreateCoursePole {
+export class CreateCoursePoleUseCase {
   constructor (
     private coursesRepository: CoursesRepository,
     private polesRepository: PolesRepository,

@@ -4,7 +4,7 @@ import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found
 import { makeCourse } from 'test/factories/make-course.ts'
 import { ResourceAlreadyExistError } from '@/core/errors/use-case/resource-already-exist-error.ts'
 import { InMemoryCoursesPolesRepository } from 'test/repositories/in-memory-courses-poles-repository.ts'
-import { CreateCoursePole } from './create-course-pole.ts'
+import { CreateCoursePoleUseCase } from './create-course-pole.ts'
 import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
 import { makePole } from 'test/factories/make-pole.ts'
 import { makeCoursePole } from 'test/factories/make-course-pole.ts'
@@ -12,14 +12,16 @@ import { makeCoursePole } from 'test/factories/make-course-pole.ts'
 let coursesRepository: InMemoryCoursesRepository
 let polesRepository: InMemoryPolesRepository
 let coursesPolesReposiry: InMemoryCoursesPolesRepository
-let sut: CreateCoursePole
+let sut: CreateCoursePoleUseCase
 
 describe('Create Course Pole', () => {
   beforeEach(() => {
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
-    coursesPolesReposiry = new InMemoryCoursesPolesRepository()
-    sut = new CreateCoursePole(
+    coursesPolesReposiry = new InMemoryCoursesPolesRepository(
+      polesRepository
+    )
+    sut = new CreateCoursePoleUseCase(
       coursesRepository,
       polesRepository,
       coursesPolesReposiry
