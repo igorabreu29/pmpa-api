@@ -7,18 +7,18 @@ import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 interface UpdateBehaviorUseCaseUseCaseRequest {
   id: string
-  january?: number | null
-  february?: number | null
-  march?: number | null
-  april?: number | null
-  may?: number | null
-  jun?: number | null
-  july?: number | null
-  august?: number | null
-  september?: number | null
-  october?: number | null
-  november?: number | null
-  december?: number | null
+  january?: number
+  february?: number
+  march?: number
+  april?: number
+  may?: number
+  jun?: number
+  july?: number
+  august?: number
+  september?: number
+  october?: number
+  november?: number
+  december?: number
   userId: string
   userIp: string
 
