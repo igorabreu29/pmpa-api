@@ -10,6 +10,7 @@ import { CourseDiscipline } from "../../enterprise/entities/course-discipline.ts
 import { Name } from "../../enterprise/entities/value-objects/name.ts"
 import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts"
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
+import type { InvalidDateError } from "@/core/errors/domain/invalid-date.ts"
 
 interface CreateCourseUseCaseRequest {
   formula: Formula
@@ -28,7 +29,8 @@ interface CreateCourseUseCaseRequest {
 
 type CreateCourseUseCaseResponse = Either<
    | ResourceAlreadyExistError
-   | InvalidNameError,
+   | InvalidNameError
+   | InvalidDateError,
    null
   >
 
