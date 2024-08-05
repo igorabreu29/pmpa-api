@@ -16,6 +16,7 @@ export class PrismaStudentWithPoleMapper {
       assignedAt: student.createdAt,
       username: student.username,
       birthday: student.birthday as Date,
+      isLoginConfirmed: student.isLoginConfirmed ? true : false,
       pole: student.pole.name,
       poleId: new UniqueEntityId(student.pole.id)
     })
