@@ -61,6 +61,7 @@ export class InMemoryManagersRepository implements ManagersRepository {
       birthday: manager.birthday.value,
       cpf: manager.cpf.value,
       email: manager.email.value,
+      isActive: manager.active,
       courses,
       poles
     })
@@ -118,6 +119,7 @@ export class InMemoryManagersRepository implements ManagersRepository {
           email: manager.email.value,
           birthday: manager.birthday.value,
           assignedAt: manager.createdAt,
+          isActive: manager.active,
           courses,
           poles
         })
