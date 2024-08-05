@@ -18,7 +18,7 @@ export class GetStudentProfileUseCase {
 
   async execute({ id }: GetStudentProfileUseCaseRequest): Promise<GetStudentProfileUseCaseResponse> {
     const student = await this.studentsRepository.findDetailsById(id)
-    if (!student) return left(new ResourceNotFoundError('Student not exist.'))
+    if (!student) return left(new ResourceNotFoundError('Student not found.'))
 
     return right({
       student
