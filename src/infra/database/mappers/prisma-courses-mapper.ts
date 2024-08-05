@@ -1,6 +1,5 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts';
 import { Course } from '@/domain/boletim/enterprise/entities/course.ts';
-import { StudentCourse } from '@/domain/boletim/enterprise/entities/student-course.ts';
 import { EndsAt } from '@/domain/boletim/enterprise/entities/value-objects/ends-at.ts';
 import { Name } from '@/domain/boletim/enterprise/entities/value-objects/name.ts';
 import { Prisma, Course as PrismaCourse } from '@prisma/client'
@@ -35,7 +34,7 @@ export class PrismaCoursesMapper {
       formula: course.formula,
       imageUrl: course.imageUrl,
       isActive: course.isActive,
-      isPeriod: course.isPeriod,
+      isPeriod: course.isPeriod
     }
   }
 }

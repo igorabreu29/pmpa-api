@@ -5,7 +5,7 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts'
 export class PrismaBehaviorsMapper {
   static toDomain(behavior: PrismaBehavior): Behavior {
     return Behavior.create({
-      courseId: new UniqueEntityId(behavior.id),
+      courseId: new UniqueEntityId(behavior.courseId),
       studentId: new UniqueEntityId(behavior.studentId),
       january: behavior.january ? Number(behavior.january) : null,
       february: behavior.february ? Number(behavior.february) : null,
@@ -20,7 +20,7 @@ export class PrismaBehaviorsMapper {
       november: behavior.november ? Number(behavior.november) : null,
       december: behavior.december ? Number(behavior.december) : null,
       currentYear: behavior.currentYear ?? new Date().getFullYear()
-    })
+    }, new UniqueEntityId(behavior.id))
   }
 
   static toPrisma(behavior: Behavior): Prisma.BehaviorUncheckedCreateInput {

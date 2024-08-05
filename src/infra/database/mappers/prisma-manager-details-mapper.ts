@@ -24,6 +24,7 @@ export class PrismaManagerDetailsMapper {
       civilId: Number(managerDetails.civilId),
       cpf: managerDetails.cpf,
       email: managerDetails.email,
+      isActive: managerDetails.isActive,
       assignedAt: managerDetails.createdAt,
       avatarUrl: managerDetails.avatarUrl ?? undefined,
       courses: managerDetails.courses.map(course => {
@@ -40,7 +41,7 @@ export class PrismaManagerDetailsMapper {
           isActive: course.isActive,
           isPeriod: course.isPeriod,
           startAt: course.startAt
-        })
+        }, new UniqueEntityId(course.id))
         if (courseOrError.isLeft()) throw new Error(courseOrError.value.message)
 
         return courseOrError.value

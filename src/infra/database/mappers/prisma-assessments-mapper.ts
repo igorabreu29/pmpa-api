@@ -5,14 +5,14 @@ import { Assessment } from '@/domain/boletim/enterprise/entities/assessment.ts'
 export class PrismaAssessmentsMapper {
   static toDomain(assessment: PrismaAssessment): Assessment {
     const assessmentOrError = Assessment.create({
-      courseId: new UniqueEntityId(assessment.id),
+      courseId: new UniqueEntityId(assessment.courseId),
       studentId: new UniqueEntityId(assessment.studentId),
       disciplineId: new UniqueEntityId(assessment.disciplineId),
       vf: Number(assessment.vf),
       avi: assessment.avi ? Number(assessment.avi) : null,
       avii: assessment.avii ? Number(assessment.avii) : null,
       vfe: assessment.vfe ? Number(assessment.vfe) : null
-    })
+    }, new UniqueEntityId(assessment.id))
     if (assessmentOrError.isLeft()) throw new Error(assessmentOrError.value.message)
 
     return assessmentOrError.value

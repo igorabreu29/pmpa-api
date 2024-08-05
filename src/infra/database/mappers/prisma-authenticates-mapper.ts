@@ -1,3 +1,4 @@
+import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts';
 import { formatCPF } from '@/core/utils/formatCPF.ts';
 import { Authenticate } from '@/domain/boletim/enterprise/entities/authenticate.ts';
 import { CPF } from '@/domain/boletim/enterprise/entities/value-objects/cpf.ts';
@@ -20,7 +21,7 @@ export class PrismaAuthenticatesMapper {
       passwordHash: passwordOrError.value,
       role: defineRoleAccessToPrisma(authenticate.role),
       isLoginConfirmed: authenticate.isLoginConfirmed ? true : false
-    })
+    }, new UniqueEntityId(authenticate.id))
     if (authenticateOrError.isLeft()) throw new Error(authenticateOrError.value.message)
 
     return authenticateOrError.value

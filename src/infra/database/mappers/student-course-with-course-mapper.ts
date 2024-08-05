@@ -1,5 +1,4 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts';
-import { StudentCourse } from '@/domain/boletim/enterprise/entities/student-course.ts';
 import { StudentCourseWithCourse } from '@/domain/boletim/enterprise/entities/value-objects/student-course-with-course.ts';
 import { Course, UserOnCourse } from '@prisma/client'
 

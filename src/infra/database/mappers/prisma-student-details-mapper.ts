@@ -25,6 +25,7 @@ export class PrismaStudentDetailsMapper {
       cpf: studentDetails.cpf,
       email: studentDetails.email,
       assignedAt: studentDetails.createdAt,
+      isActive: studentDetails.isActive,
       avatarUrl: studentDetails.avatarUrl ?? undefined,
       courses: studentDetails.courses.map(course => {
         const nameOrError = Name.create(course.name)
@@ -40,7 +41,7 @@ export class PrismaStudentDetailsMapper {
           isActive: course.isActive,
           isPeriod: course.isPeriod,
           startAt: course.startAt
-        })
+        }, new UniqueEntityId(course.id))
         if (courseOrError.isLeft()) throw new Error(courseOrError.value.message)
 
         return courseOrError.value
