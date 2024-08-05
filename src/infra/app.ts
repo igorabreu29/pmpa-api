@@ -22,6 +22,21 @@ import { createAssessment } from "./http/controllers/create-assessment.ts";
 import { createAssessmentBatch } from "./http/controllers/create-assessments-batch.ts";
 import { createBehavior } from "./http/controllers/create-behavior.ts";
 import { createBehaviorBatch } from "./http/controllers/create-behaviors-batch.ts";
+import { createCourse } from "./http/controllers/create-course.ts";
+import { createCoursePole } from "./http/controllers/create-course-pole.ts";
+import { createCourseDiscipline } from "./http/controllers/create-course-discipline.ts";
+import { createCourseHistoric } from "./http/controllers/create-course-historic.ts";
+import { updateAssessment } from "./http/controllers/update-assessment.ts";
+import { deleteAssessment } from "./http/controllers/delete-assessment.ts";
+import { updateBehavior } from "./http/controllers/update-behavior.ts";
+import { deleteBehavior } from "./http/controllers/delete-behavior.ts";
+import { getStudentProfile } from "./http/controllers/get-student-profile.ts";
+import { getManagerProfile } from "./http/controllers/get-manager-profile.ts";
+import { getAdministratorProfile } from "./http/controllers/get-administrator-profile.ts";
+import { getDeveloperProfile } from "./http/controllers/get-developer-profile.ts";
+import { getStudentCourses } from "./http/controllers/get-student-courses.ts";
+import { getCourseStudents } from "./http/controllers/get-course-students.ts";
+import { getCourseManagers } from "./http/controllers/get-course-managers.ts";
 
 export const app = fastify()
 
@@ -54,7 +69,22 @@ app.register(deleteAdministrator)
 app.register(createDeveloper)
 app.register(createAssessment)
 app.register(createAssessmentBatch)
+app.register(updateAssessment)
+app.register(deleteAssessment)
 app.register(createBehavior)
 app.register(createBehaviorBatch)
+app.register(updateBehavior)
+app.register(deleteBehavior)
+app.register(createCourse)
+app.register(createCoursePole)
+app.register(createCourseDiscipline)
+app.register(createCourseHistoric)
+app.register(getStudentProfile)
+app.register(getManagerProfile)
+app.register(getAdministratorProfile)
+app.register(getDeveloperProfile)
+app.register(getStudentCourses)
+app.register(getCourseStudents)
+app.register(getCourseManagers)
 
 app.setErrorHandler(errorHandler)
