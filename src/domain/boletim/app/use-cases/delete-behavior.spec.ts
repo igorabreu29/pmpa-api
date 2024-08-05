@@ -16,7 +16,9 @@ describe(('Delete Behavior Use Case'), () => {
   it ('should not be able to delete assessment if user access is student', async () => {
     const result = await sut.execute({
       id: 'not-found',
-      role: 'manager'
+      role: 'manager',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -26,7 +28,9 @@ describe(('Delete Behavior Use Case'), () => {
   it ('should not be able to delete assessment not existing', async () => {
     const result = await sut.execute({
       id: 'not-found',
-      role: 'manager'
+      role: 'manager',
+      userId: '',
+      userIp: ''
     })
 
     expect(result.isLeft()).toBe(true)
@@ -39,7 +43,9 @@ describe(('Delete Behavior Use Case'), () => {
 
     const result = await sut.execute({
       id: behavior.id.toValue(),
-      role: 'manager'
+      role: 'manager',
+      userId: 'user-1',
+      userIp: ''
     })
 
     expect(result.isRight()).toBe(true)
