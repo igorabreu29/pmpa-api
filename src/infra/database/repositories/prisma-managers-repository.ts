@@ -49,32 +49,14 @@ export class PrismaManagersRepository implements ManagersRepository {
       include: {
         usersOnCourses: {
           select: {
-            course: {
-              select: {
-                id: true,
-                name: true,
-                formula: true,
-                imageUrl: true,
-                endsAt: true,
-                isActive: true,
-                isPeriod: true,
-                startAt: true,
-              }
-            }
-          },
-          include: {
+            course: true,
             usersOnPoles: {
               select: {
-                pole: {
-                  select: {
-                    id: true,
-                    name: true
-                  }
-                }
+                pole: true
               }
             }
           }
-        }
+        },
       }
     })
 
@@ -123,15 +105,13 @@ export class PrismaManagersRepository implements ManagersRepository {
       include: {
         usersOnCourses: {
           select: {
-            course: true
-          },
-          include: {
+            course: true,
             usersOnPoles: {
               select: {
                 pole: true
               }
             }
-          }
+          },
         }
       }
     })

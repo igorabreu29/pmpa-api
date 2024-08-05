@@ -52,31 +52,13 @@ export class PrismaStudentsRepository implements StudentsRepository {
       include: {
         usersOnCourses: {
           select: {
-            course: {
+            course: true,
+            usersOnPoles: {
               select: {
-                id: true,
-                name: true,
-                formula: true,
-                imageUrl: true,
-                endsAt: true,
-                isActive: true,
-                isPeriod: true,
-                startAt: true,
+                pole: true
               }
             }
           },
-          include: {
-            usersOnPoles: {
-              select: {
-                pole: {
-                  select: {
-                    id: true,
-                    name: true
-                  }
-                }
-              }
-            }
-          }
         }
       }
     })
@@ -126,15 +108,13 @@ export class PrismaStudentsRepository implements StudentsRepository {
       include: {
         usersOnCourses: {
           select: {
-            course: true
-          },
-          include: {
+            course: true,
             usersOnPoles: {
               select: {
                 pole: true
               }
             }
-          }
+          },
         }
       }
     })
