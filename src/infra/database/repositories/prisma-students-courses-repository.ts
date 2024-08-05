@@ -84,12 +84,9 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     })
 
     const studentsCourseMapper = studentCourses.map(studentCourse => {
-      const poleExist = studentCourse.usersOnPoles.find(item => item.pole.id === studentCourse.id)
-      if (!poleExist) throw new Error('Pole not found.')
-
       return {
         ...studentCourse.user,
-        pole: poleExist.pole
+        pole: studentCourse.usersOnPoles[0].pole
       }
     })
 
