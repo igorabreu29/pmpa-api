@@ -37,6 +37,11 @@ import { getDeveloperProfile } from "./http/controllers/get-developer-profile.ts
 import { getStudentCourses } from "./http/controllers/get-student-courses.ts";
 import { getCourseStudents } from "./http/controllers/get-course-students.ts";
 import { getCourseManagers } from "./http/controllers/get-course-managers.ts";
+import { getManagerCourses } from "./http/controllers/get-manager-courses.ts";
+import { getCoursePoles } from "./http/controllers/get-course-poles.ts";
+import { getCourseStudentsByPole } from "./http/controllers/get-course-students-by-pole.ts";
+import { getLoginConfirmationMetrics } from "./http/controllers/get-login-confirmation-metrics.ts";
+import { getLoginConfirmationMetricsByManager } from "./http/controllers/get-login-confirmation-metrics-by-manager.ts";
 
 export const app = fastify()
 
@@ -85,6 +90,11 @@ app.register(getAdministratorProfile)
 app.register(getDeveloperProfile)
 app.register(getStudentCourses)
 app.register(getCourseStudents)
+app.register(getCourseStudentsByPole)
+app.register(getManagerCourses)
 app.register(getCourseManagers)
+app.register(getCoursePoles)
+app.register(getLoginConfirmationMetrics)
+app.register(getLoginConfirmationMetricsByManager)
 
 app.setErrorHandler(errorHandler)
