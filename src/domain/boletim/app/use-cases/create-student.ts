@@ -114,7 +114,8 @@ export class CreateStudentUseCase {
 
       const studentCourse = StudentCourse.create({
         studentId: studentWithCPF.id,
-        courseId: course.id
+        courseId: course.id,
+        active: true
       })
       await this.studentsCoursesRepository.create(studentCourse)
       
@@ -137,7 +138,8 @@ export class CreateStudentUseCase {
 
       const studentCourse = StudentCourse.create({
         studentId: studentWithEmail.id,
-        courseId: course.id
+        courseId: course.id,
+        active: true
       })
       await this.studentsCoursesRepository.create(studentCourse)
       
@@ -157,7 +159,8 @@ export class CreateStudentUseCase {
     
     const studentCourse = StudentCourse.create({
       studentId: student.id,
-      courseId: course.id
+      courseId: course.id,
+      active: true
     })
     await this.studentsCoursesRepository.create(studentCourse)
 

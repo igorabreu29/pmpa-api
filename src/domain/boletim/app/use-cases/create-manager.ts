@@ -115,7 +115,8 @@ export class CreateManagerUseCase {
 
       const managerCourse = ManagerCourse.create({
         managerId: managerWithCPF.id,
-        courseId: course.id
+        courseId: course.id,
+        active: true
       })
       await this.managersCoursesRepository.create(managerCourse)
       
@@ -138,7 +139,8 @@ export class CreateManagerUseCase {
 
       const managerCourse = ManagerCourse.create({
         managerId: managerWithEmail.id,
-        courseId: course.id
+        courseId: course.id,
+        active: true
       })
       await this.managersCoursesRepository.create(managerCourse)
       
@@ -158,7 +160,8 @@ export class CreateManagerUseCase {
     
     const managerCourse = ManagerCourse.create({
       managerId: manager.id,
-      courseId: course.id
+      courseId: course.id,
+      active: true
     })
     await this.managersCoursesRepository.create(managerCourse)
 
