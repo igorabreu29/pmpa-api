@@ -33,4 +33,5 @@ export abstract class ManagersCoursesRepository {
     totalItems: number
   }>
   abstract create(managerCourse: ManagerCourse): Promise<void>
+  abstract updateStatus(managerCourse: ManagerCourse): Promise<void>
 }

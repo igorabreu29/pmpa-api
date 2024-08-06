@@ -65,5 +65,7 @@ export abstract class StudentsCoursesRepository {
   abstract createMany(studentsCourses: StudentCourse[]): Promise<void>
 
   abstract save(studentCourse: StudentCourse): Promise<void>
+  abstract updateStatus(studentCourse: StudentCourse): Promise<void>
+
   abstract delete(studentCourse: StudentCourse): Promise<void>
 }
