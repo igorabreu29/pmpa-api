@@ -31,7 +31,10 @@ export class PrismaPolesRepository implements PolesRepository {
 
     const poles = await prisma.pole.findMany({
       skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE
+      take: page * PER_PAGE,
+      orderBy: {
+        name: 'asc'
+      }
     })
 
     const polesCount = await prisma.pole.count()
