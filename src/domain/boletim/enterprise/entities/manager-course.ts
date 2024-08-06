@@ -5,6 +5,7 @@ import { Optional } from "@/core/types/optional.ts";
 interface ManagerCourseProps {
   managerId: UniqueEntityId
   courseId: UniqueEntityId
+  active: boolean
   createdAt: Date
 }
 
@@ -15,6 +16,13 @@ export class ManagerCourse extends Entity<ManagerCourseProps> {
 
   get courseId() {
     return this.props.courseId
+  }
+
+  get active() {
+    return this.props.active
+  }
+  set active(value) {
+    this.props.active = value
   }
 
   get createdAt() {
