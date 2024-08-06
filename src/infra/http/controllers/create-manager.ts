@@ -5,7 +5,6 @@ import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { makeCreateStudentUseCase } from "@/infra/factories/make-create-student-use-case.ts";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
