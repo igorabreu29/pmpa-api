@@ -73,9 +73,9 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
-              status: 'approved second season'
+              status: 'approved second season',
             },
             behaviorsCount: behaviorAverageByPeriod.behaviorsCount
           },
@@ -131,7 +131,7 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
               status: 'approved second season'
             },
@@ -157,7 +157,7 @@ describe('Generate Students Classification', () => {
     ])
   })
 
-  it.todo ('should be able to generate students classification by course CHO formula', () => {
+  it ('should be able to generate students classification by course CHO formula', () => {
     const behaviorMonths = [
       {
         august: 7,
@@ -224,7 +224,7 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
               status: 'approved second season'
             },
@@ -282,7 +282,7 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
               status: 'approved second season'
             },
@@ -354,7 +354,7 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
               status: 'approved second season'
             },
@@ -391,7 +391,7 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
               status: 'approved second season'
             },
@@ -417,7 +417,7 @@ describe('Generate Students Classification', () => {
     ])
   })
 
-  it.todo ('should be able to generate students classification by course CGS formula', () => {
+  it ('should be able to generate students classification by course CGS formula', () => {
     const behaviorMonths = [
       {
         august: 7,
@@ -463,7 +463,7 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
               status: 'approved second season'
             },
@@ -500,7 +500,7 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
               status: 'approved second season'
             },
@@ -526,7 +526,7 @@ describe('Generate Students Classification', () => {
     ])
   })
 
-  it.todo ('should be able to generate students classification by course CPF formula', () => {
+  it ('should be able to generate students classification by course CPF formula', () => {
     const behaviorMonths = [
       {
         august: 7,
@@ -572,7 +572,7 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
               status: 'approved second season'
             },
@@ -609,7 +609,7 @@ describe('Generate Students Classification', () => {
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
-            status: {
+            studentAverageStatus: {
               concept: 'regular',
               status: 'approved second season'
             },

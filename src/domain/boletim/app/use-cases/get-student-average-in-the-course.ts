@@ -8,7 +8,6 @@ import { GetGeralStudentAverageStatusResponse } from "../utils/get-geral-student
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
 import { CoursesDisciplinesRepository } from "../repositories/courses-disciplines-repository.ts"
 import { AssessmentWithModule, formulas } from "../utils/verify-formula.ts"
-import type { DisciplinesRepository } from "../repositories/disciplines-repository.ts"
 
 interface GetStudentAverageInTheCourseUseCaseRequest {
   studentId: string
