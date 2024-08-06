@@ -24,7 +24,6 @@ interface ManagerProps {
   passwordHash: Password
   cpf: CPF
   role: ManagerRole
-  active: boolean
   avatarUrl?: string | null
   createdAt: Date
   birthday: Birthday
@@ -78,13 +77,6 @@ export class Manager extends AggregateRoot<ManagerProps> {
     return this.props.role
   }
 
-  get active() {
-    return this.props.active
-  }
-  set active(value) {
-    this.props.active = value
-  }
-
   get parent() {
     return this.props.parent
   }
@@ -136,7 +128,7 @@ export class Manager extends AggregateRoot<ManagerProps> {
   }
 
   static create(
-    props: Optional<ManagerProps, 'createdAt' | 'role' | 'active'>, 
+    props: Optional<ManagerProps, 'createdAt' | 'role'>, 
     id?: UniqueEntityId
   ): Either<
       | InvalidNameError
@@ -149,7 +141,6 @@ export class Manager extends AggregateRoot<ManagerProps> {
     const manager = new Manager({
       ...props,
       createdAt: props.createdAt ?? new Date(),
-      active: props.active ?? true,
       avatarUrl: props.avatarUrl ?? null,
       role: props.role ?? 'manager'
     }, id)
