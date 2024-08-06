@@ -8,6 +8,8 @@ interface StudentCourseDetailsProps {
   cpf: string
   assignedAt: Date
 
+  isActive: boolean
+
   courseId: UniqueEntityId
   course: string
 
