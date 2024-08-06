@@ -42,7 +42,7 @@ export async function authenticate(
     const redirectUrl = new URL('/students/login/confirmation', fullUrl)
 
     if (result.value.redirect) {
-      return res.status(301).redirect(redirectUrl.href)
+      return res.status(301).redirect(`${redirectUrl.href}?cpf=${cpf}`)
     }
 
     const { token } = result.value
