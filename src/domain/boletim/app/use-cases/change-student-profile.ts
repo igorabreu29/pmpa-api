@@ -55,7 +55,7 @@ export class ChangeStudentProfileUseCase {
     }
     student.birthday = birthdayOrError.value
 
-    await this.studentsRepository.save(student)
+    await this.studentsRepository.updateProfile(student)
 
     return right(null)
   }
