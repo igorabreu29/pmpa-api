@@ -5,7 +5,7 @@ import { CPF } from "@/domain/boletim/enterprise/entities/value-objects/cpf.ts";
 import { Email } from "@/domain/boletim/enterprise/entities/value-objects/email.ts";
 import { Name } from "@/domain/boletim/enterprise/entities/value-objects/name.ts";
 import { Password } from "@/domain/boletim/enterprise/entities/value-objects/password.ts";
-import { fa, faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 
 export function makeStudent(
   override: Partial<Student> = {},
