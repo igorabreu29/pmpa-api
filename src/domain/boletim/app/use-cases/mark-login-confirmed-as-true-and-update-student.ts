@@ -6,9 +6,9 @@ interface MarkLoginConfirmedAsTrueAndUpdateStudentRequest {
   studentCPF: string
   fatherName?: string
   motherName: string
-  militaryID: number
-  state: string
-  county: string
+  militaryId: number
+  state?: string
+  county?: string
   studentIp: string
 }
 
@@ -23,7 +23,7 @@ export class MarkLoginConfirmedAsTrueAndUpdateStudent {
     studentCPF,
     fatherName,
     motherName,
-    militaryID,
+    militaryId,
     state,
     county,
     studentIp
@@ -35,13 +35,13 @@ export class MarkLoginConfirmedAsTrueAndUpdateStudent {
       fatherName: fatherName || student.parent?.fatherName,
       motherName
     }
-    student.militaryId = militaryID || student.militaryId
+    student.militaryId = militaryId || student.militaryId
     student.state = state ?? student.state
     student.county = county ?? student.county
     student.ip = studentIp ?? student.ip
     
     student.isLoginConfirmed = true
-    await this.studentsRepository.save(student)
+    await this.studentsRepository.updateLoginConfirmed(student)
 
     return right(null)
   }
