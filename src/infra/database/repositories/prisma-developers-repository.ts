@@ -52,7 +52,7 @@ export class PrismaDevelopersRepository implements DevelopersRepository {
     await prisma.user.update({
       where: {
         id: prismaMapper.id,
-        role: 'MANAGER'
+        role: 'DEV'
       },
       data: prismaMapper
     })

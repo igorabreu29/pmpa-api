@@ -64,7 +64,8 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     const prismaMapper = PrismaAdministratorsMapper.toPrisma(admin)
     await prisma.user.update({
       where: {
-        id: prismaMapper.id
+        id: prismaMapper.id,
+        role: 'ADMIN'
       },
       data: prismaMapper
     })
