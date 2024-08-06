@@ -170,6 +170,46 @@ export class PrismaStudentsRepository implements StudentsRepository {
     })
   }
 
+  async updateLoginConfirmed(student: Student): Promise<void> {
+    await prisma.user.update({
+      where: {
+        id: student.id.toValue()
+      },
+
+      data: {
+        isLoginConfirmed: new Date(),
+
+        profile: {
+          create: {
+            fatherName: student.parent?.fatherName,
+            motherName: student.parent?.motherName,
+            county: student.county,
+            militaryId: student.militaryId,
+            state: student.state
+          }
+        }
+      }
+    })
+  }
+
+  async updateProfile(student: Student): Promise<void> {
+    const prismaMapper = PrismaStudentsMapper.toPrisma(student)
+    await prisma.user.update({
+      where: {
+        id: prismaMapper.id
+      },
+      data: {
+        ...prismaMapper,
+        profile: {
+          update: {
+            fatherName: student.parent?.fatherName,
+            motherName: student.parent?.motherName
+          }
+        }
+      }
+    })
+  }
+
   async delete(student: Student): Promise<void> {
     const prismaMapper = PrismaStudentsMapper.toPrisma(student)
 
