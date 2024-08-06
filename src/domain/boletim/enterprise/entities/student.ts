@@ -24,7 +24,6 @@ interface StudentProps {
   passwordHash: Password
   cpf: CPF
   role: StudentRole
-  active: boolean
   avatarUrl?: string | null
   birthday: Birthday 
   createdAt: Date
@@ -89,13 +88,6 @@ export class Student extends AggregateRoot<StudentProps> {
     this.props.birthday = value
   }
 
-  get active() {
-    return this.props.active
-  }
-  set active(value) {
-    this.props.active = value
-  }
-
   get isLoginConfirmed() {
     return this.props.isLoginConfirmed
   }
@@ -158,7 +150,7 @@ export class Student extends AggregateRoot<StudentProps> {
   }
 
   static create(
-    props: Optional<StudentProps, 'createdAt' | 'isLoginConfirmed' | 'role' | 'active'>, 
+    props: Optional<StudentProps, 'createdAt' | 'isLoginConfirmed' | 'role'>, 
     id?: UniqueEntityId): Either<
       | InvalidEmailError
       | InvalidCPFError
@@ -173,8 +165,7 @@ export class Student extends AggregateRoot<StudentProps> {
       createdAt: props.createdAt ?? new Date(),
       avatarUrl: props.avatarUrl ?? null,
       isLoginConfirmed: props.isLoginConfirmed ?? false,
-      role: props.role ?? 'student',
-      active: props.active ?? true
+      role: props.role ?? 'student'
     }, id)
 
     return right(student)
