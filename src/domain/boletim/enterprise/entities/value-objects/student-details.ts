@@ -12,7 +12,6 @@ interface StudentDetailsProps {
   birthday: Date
   civilId: number
   avatarUrl?: string
-  isActive: boolean
 
   courses: Course[]
   poles: Pole[]
@@ -49,10 +48,6 @@ export class StudentDetails extends ValueObject<StudentDetailsProps> {
 
   get avatarUrl() {
     return this.props.avatarUrl
-  }
-
-  get isActive() {
-    return this.props.isActive
   }
 
   get courses() {

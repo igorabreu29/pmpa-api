@@ -25,7 +25,6 @@ export class PrismaStudentDetailsMapper {
       cpf: studentDetails.cpf,
       email: studentDetails.email,
       assignedAt: studentDetails.createdAt,
-      isActive: studentDetails.isActive,
       avatarUrl: studentDetails.avatarUrl ?? undefined,
       courses: studentDetails.courses.map(course => {
         const nameOrError = Name.create(course.name)
