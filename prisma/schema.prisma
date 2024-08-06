@@ -59,6 +59,7 @@ model UserOnCourse {
   id        String   @id @default(cuid())
   userId    String
   courseId  String
+  isActive  Boolean
   createdAt DateTime @default(now()) @map("created_at")
 
   course       Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
