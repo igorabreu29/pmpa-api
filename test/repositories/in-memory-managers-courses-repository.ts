@@ -182,4 +182,9 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
   async create(managerCourse: ManagerCourse): Promise<void> {
     this.items.push(managerCourse)
   }
+
+  async updateStatus(managerCourse: ManagerCourse): Promise<void> {
+    const managerCourseIndex = this.items.findIndex(item => item.id.equals(managerCourse.id))
+    this.items[managerCourseIndex]
+  }
 }

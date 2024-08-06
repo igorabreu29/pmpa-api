@@ -179,6 +179,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
         return StudentCourseDetails.create({
           studentId: student.id,
           username: student.username.value,
+          isActive: studentCourse.active,
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
@@ -247,6 +248,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
         return StudentCourseDetails.create({
           studentId: student.id,
           username: student.username.value,
+          isActive: studentCourse.active,
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
@@ -291,6 +293,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
         return StudentCourseDetails.create({
           studentId: student.id,
           username: student.username.value,
+          isActive: studentCourse.active,
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
@@ -322,6 +325,11 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
   async save(studentCourse: StudentCourse): Promise<void> {
     const studentCourseIndex = this.items.findIndex(item => item.equals(studentCourse))
     this.items[studentCourseIndex] = studentCourse 
+  }
+
+  async updateStatus(studentCourse: StudentCourse): Promise<void> {
+    const studentCourseIndex = this.items.findIndex(item => item.id.equals(studentCourse.id))
+    this.items[studentCourseIndex].active = studentCourse.active
   }
 
   async delete(studentCourse: StudentCourse): Promise<void> {

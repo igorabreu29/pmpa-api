@@ -66,9 +66,8 @@ export class InMemoryStudentsRepository implements StudentsRepository {
       civilId: student.civilId ?? 0e2,
       birthday: student.birthday.value,
       assignedAt: student.createdAt,
-      isActive: student.active,
       courses,
-      poles
+      poles,
     })
   }
 
@@ -114,7 +113,6 @@ export class InMemoryStudentsRepository implements StudentsRepository {
           email: student.email.value,
           birthday: student.birthday.value,
           assignedAt: student.createdAt,
-          isActive: student.active,
           courses,
           poles
         })
@@ -140,6 +138,16 @@ export class InMemoryStudentsRepository implements StudentsRepository {
     this.items[studentIndex] = student
 
     DomainEvents.dispatchEventsForAggregate(student.id)
+  }
+
+  async updateLoginConfirmed(student: Student): Promise<void> {
+    const studentIndex = this.items.findIndex(item => item.id.equals(student.id))
+    this.items[studentIndex] = student
+  }
+
+  async updateProfile(student: Student): Promise<void> {
+    const studentIndex = this.items.findIndex(item => item.id.equals(student.id))
+    this.items[studentIndex] = student
   }
 
   async delete(student: Student): Promise<void> {
