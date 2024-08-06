@@ -113,6 +113,9 @@ export const formulas = {
     }
 
     const studentAverageStatus = getGeralStudentAverageStatus({ average: assessmentsAverageWithBehaviorAverage || assessmentsAverage, isRecovering: studentIsRecovering })
+    const isStudentSecondSeason = assessments.some(assessment => assessment?.status === 'second season')
+
+    studentAverageStatus.status = isStudentSecondSeason ? 'second season' : studentAverageStatus.status
 
     return {
       averageInform: {
