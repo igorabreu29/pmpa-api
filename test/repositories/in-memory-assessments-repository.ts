@@ -1,17 +1,32 @@
 import { DomainEvents } from "@/core/events/domain-events.ts";
-import { AssessmentsRepository, StudentAssessmentsByCourse, StudentAssessmentsByCourseAndPole } from "@/domain/boletim/app/repositories/assessments-repository.ts";
+import { AssessmentsRepository, StudentAssessmentsByCourse, StudentAssessmentsByStudentAndDisciplineAndCourseId } from "@/domain/boletim/app/repositories/assessments-repository.ts";
 import { Assessment } from "@/domain/boletim/enterprise/entities/assessment.ts";
 
 export class InMemoryAssessmentsRepository implements AssessmentsRepository {
   public items: Assessment[] = []
+  
+  async findById({ id }: { id: string; }): Promise<Assessment | null> {
+    const assessment = this.items.find(item => item.id.toValue() === id)
+    return assessment ?? null
+  }
 
   async findByStudentIdAndCourseId({ studentId, courseId }: StudentAssessmentsByCourse): Promise<Assessment | null> {
     const assessment = this.items.find(item => item.studentId.toValue() === studentId && item.courseId.toValue() === courseId)
     return assessment ?? null
   }
 
-  async findById({ id }: { id: string; }): Promise<Assessment | null> {
-    const assessment = this.items.find(item => item.id.toValue() === id)
+
+  async findByStudentAndDisciplineAndCourseId({
+    courseId, 
+    disciplineId, 
+    studentId
+  }: StudentAssessmentsByStudentAndDisciplineAndCourseId): Promise<Assessment | null> {
+    const assessment = this.items
+      .find(item => {
+        return item.studentId.toValue() === studentId &&
+          item.disciplineId.toValue() === disciplineId &&
+          item.courseId.toValue() === courseId
+      })
     return assessment ?? null
   }
 
