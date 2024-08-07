@@ -70,11 +70,11 @@ export class CreateDeveloperUseCase {
 
     const developer = developerOrError.value
 
-    const administratorAlreadyExistWithCPF = await this.developersRepository.findByCPF(cpf)
-    if (administratorAlreadyExistWithCPF) return left(new ResourceAlreadyExistError('Administrator already exist.'))
+    const developerAlreadyExistWithCPF = await this.developersRepository.findByCPF(cpf)
+    if (developerAlreadyExistWithCPF) return left(new ResourceAlreadyExistError('Developer already exist.'))
 
     const userAlreadyExistWithEmail = await this.developersRepository.findByEmail(email)
-    if (userAlreadyExistWithEmail) return left(new ResourceAlreadyExistError('Administrator already exist.'))
+    if (userAlreadyExistWithEmail) return left(new ResourceAlreadyExistError('Developer already exist.'))
 
     await this.developersRepository.create(developer)
 
