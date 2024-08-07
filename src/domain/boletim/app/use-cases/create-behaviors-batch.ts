@@ -86,11 +86,11 @@ export class CreateBehaviorsBatchUseCase {
         may: studentBehavior.may,
         jun: studentBehavior.jun,
         july: studentBehavior.july,
-        august: studentBehavior.january,
+        august: studentBehavior.august,
         september: studentBehavior.september,
-        october: studentBehavior.september,
-        november: studentBehavior.september,
-        december: studentBehavior.september,
+        october: studentBehavior.october,
+        november: studentBehavior.november,
+        december: studentBehavior.december,
       })
 
       return behavior
