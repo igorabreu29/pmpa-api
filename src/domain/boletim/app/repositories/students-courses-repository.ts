@@ -27,20 +27,6 @@ export abstract class StudentsCoursesRepository {
     totalItems: number
   }>
 
-  abstract findManyByCourseIdWithCourse({
-    courseId,
-    page,
-    perPage
-  }: {
-    courseId: string
-    page: number
-    perPage: number
-  }): Promise<{
-    studentsCourse: StudentCourseWithCourse[],
-    pages: number
-    totalItems: number
-  }>
-
   abstract findManyDetailsByCourseId({
     courseId,
     page,
