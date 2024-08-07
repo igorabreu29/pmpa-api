@@ -27,14 +27,14 @@ export class OnAssessmentBatchCreated implements EventHandler {
 
     if (course && reporter) {
       await this.sendReportBatch.execute({
-        title: 'Notas adicionadas em lote',
+        title: 'Notas em lote',
         content: `
           IP: ${reporterIp} \n
           Course: ${course.name.value} \n
           Remetente: ${reporter.username.value} \n
           Link do arquivo: ${assessmentBatch.fileLink} \n
           Data: ${ocurredAt} \n
-          ${reporter.username.value} adicionou notas em lote
+          ${reporter.username.value} adicionou/atualizou notas em lote
         `,
         reporterId: reporter.id.toValue(),
         reporterIp,
