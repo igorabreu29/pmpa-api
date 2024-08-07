@@ -45,7 +45,7 @@ describe(('Update Assessment Use Case'), () => {
 
     const result = await sut.execute({
       id: assessment.id.toValue(),
-      vf: assessment.vf,
+      vf: 5,
       avi: -1,
       userId: '',
       userIp: '',
