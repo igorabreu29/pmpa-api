@@ -39,13 +39,16 @@ describe('Create Behaviors Batch Use Case', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository,
     )
     polesRepository = new InMemoryPolesRepository()    
   
     coursesRepository = new InMemoryCoursesRepository()
     behaviorsRepository = new InMemoryBehaviorsRepository()
-    behaviorsBatchRepository = new InMemoryBehaviorsBatchRepository()
+    behaviorsBatchRepository = new InMemoryBehaviorsBatchRepository(
+      behaviorsRepository
+    )
 
     studentsRepository = new InMemoryStudentsRepository(
       studentsCoursesRepository,
