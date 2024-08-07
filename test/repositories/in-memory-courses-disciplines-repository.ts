@@ -1,4 +1,4 @@
-import { CoursesDisciplinesRepository } from "@/domain/boletim/app/repositories/courses-disciplines-repository.ts";
+import { CoursesDisciplinesRepository, type FindManyByCourseIdWithDiscipline } from "@/domain/boletim/app/repositories/courses-disciplines-repository.ts";
 import { CourseDiscipline } from "@/domain/boletim/enterprise/entities/course-discipline.ts";
 import type { InMemoryDisciplinesRepository } from "./in-memory-disciplines-repository.ts";
 import { CourseWithDiscipline } from "@/domain/boletim/enterprise/entities/value-objects/course-with-discipline.ts";
@@ -40,6 +40,24 @@ export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesR
       disciplineName: discipline.name.value,
       module: courseDiscipline.module
     })
+  }
+
+  async findManyByCourseIdWithDiscipliine({ courseId }: FindManyByCourseIdWithDiscipline): Promise<CourseWithDiscipline[]> {
+    const courseDisciplines = this.items
+      .filter(item => item.courseId.toValue() === courseId)  
+      .map(courseDiscipline => {
+        const discipline = this.disciplinesRepository.items.find(item => item.id.equals(courseDiscipline.disciplineId))
+        if (!discipline) throw new Error(`Discipline with ID ${courseDiscipline.disciplineId.toValue()} does not exist`)
+
+        return CourseWithDiscipline.create({
+          courseId: courseDiscipline.courseId,
+          disciplineId: discipline.id,
+          disciplineName: discipline.name.value,
+          module: courseDiscipline.module
+        })
+      })
+
+    return courseDisciplines
   }
 
   async create(courseDiscipline: CourseDiscipline): Promise<void> {
