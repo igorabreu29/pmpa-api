@@ -1,10 +1,7 @@
-import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { makeDiscipline } from "test/factories/make-discipline.ts";
-import { makePole } from "test/factories/make-pole.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
-import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { makeStudent } from "test/factories/make-student.ts";
 import { InMemoryAssessmentsBatchRepository } from "test/repositories/in-memory-assessments-batch-repository.ts";
 import { InMemoryAssessmentsRepository } from "test/repositories/in-memory-assessments-repository.ts";
@@ -20,6 +17,7 @@ import { ConflictError } from "./errors/conflict-error.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { UpdateAssessmentsBatchUseCase } from "./update-assessments-batch.ts";
 import { makeAssessment } from "test/factories/make-assessment.ts";
+import { CPF } from "../../enterprise/entities/value-objects/cpf.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -261,20 +259,17 @@ describe('Update Assessments Batch Use Case', () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
+    const cpfOrError = CPF.create('000.000.000-11')
+    if (cpfOrError.isLeft()) return
+
     const student1 = makeStudent()
-    const student2 = makeStudent()
+    const student2 = makeStudent({ cpf: cpfOrError.value })
     studentsRepository.create(student1)
     studentsRepository.create(student2)
 
-    const studentCourse1 = makeStudentCourse({ studentId: student1.id, courseId: course.id })
-    const studentCourse2 = makeStudentCourse({ studentId: student2.id, courseId: course.id })
-    studentsCoursesRepository.create(studentCourse1)
-    studentsCoursesRepository.create(studentCourse2)
-
     const discipline1 = makeDiscipline()
-    disciplinesRepository.create(discipline1)
-
     const discipline2 = makeDiscipline()
+    disciplinesRepository.create(discipline1)
     disciplinesRepository.create(discipline2)
 
     const assessment = makeAssessment({
@@ -312,8 +307,6 @@ describe('Update Assessments Batch Use Case', () => {
       fileName: '',
       role: 'dev' 
     })
-
-    console.log(assessmentsRepository.items)
 
     expect(result.isRight()).toBe(true)
     expect(assessmentsRepository.items).toMatchObject([

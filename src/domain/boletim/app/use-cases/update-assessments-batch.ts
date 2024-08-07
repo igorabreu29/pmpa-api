@@ -1,7 +1,6 @@
 import { Either, left, right } from "@/core/either.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
-import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts"
 import { DisciplinesRepository } from "../repositories/disciplines-repository.ts"
 import { Assessment } from "@/domain/boletim/enterprise/entities/assessment.ts"
 import { AssessmentsRepository } from "../repositories/assessments-repository.ts"
@@ -17,9 +16,9 @@ import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
 interface StudentAssessment {
   cpf: string
   disciplineName: string
+  vf?: number
   avi?: number
   avii?: number
-  vf: number
   vfe?: number
 }
 
@@ -60,21 +59,19 @@ export class UpdateAssessmentsBatchUseCase {
       const discipline = await this.disciplinesRepository.findByName(studentAssessment.disciplineName)
       if (!discipline) return new ResourceNotFoundError('Discipline not found.')
 
-      const assessment = await this.assessmentsRepository.findByStudentIdAndCourseId({ studentId: student.id.toValue(), courseId: course.id.toValue() })
+      const assessment = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({
+        studentId: student.id.toValue(),
+        disciplineId: discipline.id.toValue(),
+        courseId: course.id.toValue()
+      })
       if (!assessment) return new ResourceNotFoundError('Assessment not found.')
 
-      const assessmentOrError = Assessment.create({
-        courseId: course.id,
-        disciplineId: discipline.id,
-        studentId: student.id,
-        vf: studentAssessment.vf ?? assessment.vf,
-        avi: studentAssessment.avi ?? assessment.avi,
-        avii: studentAssessment.avii ?? assessment.avii,
-        vfe: studentAssessment.vfe ?? assessment.vfe
-      }, assessment.id)
-      if (assessmentOrError.isLeft()) return assessmentOrError.value
+      assessment.vf = studentAssessment.vf ?? assessment.vf
+      assessment.avi = studentAssessment.avi ?? assessment.avi
+      assessment.avii = studentAssessment.avii ?? assessment.avii,
+      assessment.vfe = studentAssessment.vfe ?? assessment.vfe
 
-      return assessmentOrError.value  
+      return assessment
     }))
 
     const error = assessmentsBatchOrError.find(item => item instanceof Error)

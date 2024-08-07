@@ -54,7 +54,9 @@ describe('Create Assessments Batch Use Case', () => {
     coursesRepository = new InMemoryCoursesRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     assessmentsRepository = new InMemoryAssessmentsRepository()
-    assessmentsBatchRepository = new InMemoryAssessmentsBatchRepository()
+    assessmentsBatchRepository = new InMemoryAssessmentsBatchRepository(
+      assessmentsRepository
+    )
 
     studentsRepository = new InMemoryStudentsRepository(
       studentsCoursesRepository,
@@ -138,28 +140,19 @@ describe('Create Assessments Batch Use Case', () => {
         cpf: 'not-exist',
         disciplineName: 'random',
         poleName: '',
-        avi: null,
-        avii: null,
         vf: 0,
-        vfe: null,
       },
       {
         cpf: 'not-exist',
         disciplineName: 'random',
         poleName: '',
-        avi: null,
-        avii: null,
         vf: 0,
-        vfe: null,
       },
       {
         cpf: 'not-exist',
         disciplineName: 'random',
         poleName: '',
-        avi: null,
-        avii: null,
         vf: 0,
-        vfe: null,
       },
     ]
 
@@ -203,19 +196,13 @@ describe('Create Assessments Batch Use Case', () => {
         cpf: student1.cpf.value,
         disciplineName: 'random',
         poleName: '',
-        avi: null,
-        avii: null,
         vf: 0,
-        vfe: null,
       },
       {
         cpf: student2.cpf.value,
         disciplineName: 'random',
         poleName: '',
-        avi: null,
-        avii: null,
         vf: 0,
-        vfe: null,
       },
     ]
     const result = await sut.execute({ 
@@ -273,19 +260,13 @@ describe('Create Assessments Batch Use Case', () => {
         cpf: student1.cpf.value,
         disciplineName: discipline.name.value,
         poleName: '',
-        avi: null,
-        avii: null,
         vf: 0,
-        vfe: null,
       },
       {
         cpf: student2.cpf.value,
         disciplineName: discipline.name.value,
         poleName: '',
-        avi: null,
-        avii: null,
         vf: 0,
-        vfe: null,
       },
     ]
     const result = await sut.execute({ 
@@ -334,19 +315,15 @@ describe('Create Assessments Batch Use Case', () => {
         cpf: student1.cpf.value,
         disciplineName: discipline1.name.value,
         poleName: pole.name.value,
-        avi: 7,
-        avii: null,
         vf: 3,
-        vfe: null,
+        avi: 7,
       },
       {
         cpf: student2.cpf.value,
         disciplineName: discipline2.name.value,
         poleName: pole.name.value,
-        avi: 10,
-        avii: null,
         vf: 7,
-        vfe: null,
+        avi: 10,
       },
     ]
     const result = await sut.execute({ 
