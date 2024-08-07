@@ -21,7 +21,6 @@ model User {
   password String
 
   username         String
-  isActive         Boolean
   avatarUrl        String?
   isLoginConfirmed DateTime?
   birthday         DateTime?
