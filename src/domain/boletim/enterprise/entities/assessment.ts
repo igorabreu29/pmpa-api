@@ -9,7 +9,7 @@ interface AssessmentProps {
   studentId: UniqueEntityId
   courseId: UniqueEntityId
   disciplineId: UniqueEntityId
-  vf: number
+  vf: number | null
   avi: number | null
   avii: number | null
   vfe: number | null
@@ -64,6 +64,8 @@ export class Assessment extends AggregateRoot<AssessmentProps> {
     props: Optional<AssessmentProps, 'avi' | 'avii' | 'vfe'>,
     id?: UniqueEntityId
   ): Either<ConflictError, Assessment> {
+    if (!props.vf) return left(new ConflictError('VF is missing'))
+
     if (props.avi && (
         props.avi > 10 || props.avi < 0
       )
