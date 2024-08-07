@@ -166,4 +166,9 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
       this.items.push(studentPole)
     })
   }
+
+  async delete(studentPole: StudentPole): Promise<void> {
+    const studentPoleIndex = this.items.findIndex(item => item.equals(studentPole))
+    this.items.splice(studentPoleIndex, 1)
+  }
 }

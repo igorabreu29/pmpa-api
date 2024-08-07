@@ -23,8 +23,8 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
   }
 
   async findByManagerIdAndCourseId({ managerId, courseId }: { managerId: string; courseId: string; }): Promise<ManagerCourse | null> {
-    const studentCourse = this.items.find(item => item.managerId.toValue() === managerId && item.courseId.toValue() === courseId)
-    return studentCourse ?? null
+    const managerCourse = this.items.find(item => item.managerId.toValue() === managerId && item.courseId.toValue() === courseId)
+    return managerCourse ?? null
   }
 
   async findDetailsByManagerAndCourseId({ 
@@ -186,5 +186,13 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
   async updateStatus(managerCourse: ManagerCourse): Promise<void> {
     const managerCourseIndex = this.items.findIndex(item => item.id.equals(managerCourse.id))
     this.items[managerCourseIndex] = managerCourse
+  }
+
+  async delete(managerCourse: ManagerCourse): Promise<void> {
+    const managerPoleIndex = this.managersPolesRepository.items.findIndex(item => item.managerId.equals(managerCourse.id))
+    this.managersPolesRepository.items.splice(managerPoleIndex, 1)
+
+    const managerCourseIndex = this.items.findIndex(item => item.equals(managerCourse))
+    this.items.splice(managerCourseIndex, 1)
   }
 }
