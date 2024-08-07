@@ -17,7 +17,6 @@ import { deleteAdministrator } from "./http/controllers/delete-administrator.ts"
 import { createDeveloper } from "./http/controllers/create-developer.ts";
 import { changeStudentStatus } from "./http/controllers/change-student-status.ts";
 import { changeManagerStatus } from "./http/controllers/change-manager-status.ts";
-import { changeAdministratorStatus } from "./http/controllers/change-administrator-status.ts";
 import { createAssessment } from "./http/controllers/create-assessment.ts";
 import { createAssessmentBatch } from "./http/controllers/create-assessments-batch.ts";
 import { createBehavior } from "./http/controllers/create-behavior.ts";
@@ -77,7 +76,6 @@ app.register(updateManager)
 app.register(changeManagerStatus)
 app.register(createAdministrator)
 app.register(updateAdministrator)
-app.register(changeAdministratorStatus)
 app.register(deleteAdministrator)
 app.register(createDeveloper)
 app.register(createAssessment)
