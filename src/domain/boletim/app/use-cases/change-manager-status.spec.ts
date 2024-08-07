@@ -75,12 +75,12 @@ describe('Change Manager Status Use Case', () => {
     const manager = makeManager()
     managersRepository.create(manager)
 
-    const managerCourse = makeManagerCourse({ courseId: course.id, managerId: manager.id, active: true })
+    const managerCourse = makeManagerCourse({ courseId: course.id, managerId: manager.id })
     managersCoursesRepository.create(managerCourse)
 
     const result = await sut.execute({ id: manager.id.toValue(), courseId: course.id.toValue(), status: false, role: 'admin' })
 
     expect(result.isRight()).toBe(true)
-    expect(managersCoursesRepository.items[0].active).toBe(false)
+    expect(managersCoursesRepository.items[0].isActive).toBe(false)
   })
 })

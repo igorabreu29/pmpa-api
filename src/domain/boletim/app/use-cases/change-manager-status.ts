@@ -38,7 +38,7 @@ export class ChangeManagerStatusUseCase {
     })
     if (!managerCourse) return left(new ResourceNotFoundError('Manager does not be present on the course.'))
 
-    managerCourse.active = status
+    managerCourse.isActive = status
     await this.managerCoursesRepository.updateStatus(managerCourse)
 
     return right(null)
