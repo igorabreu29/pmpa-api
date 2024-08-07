@@ -4,4 +4,4 @@
 - Atualizar notas em lote
 - Atualizar estudantes e gerentes
 - Caixa de texto para desativar aluno
-- Criar certficados
+- Criar certificados
