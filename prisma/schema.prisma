@@ -33,6 +33,7 @@ model User {
   assessments    Assessment[]
   behaviors      Behavior[]
   usersOnCourses UserOnCourse[]
+  Report         Report[]
 
   @@map("users")
 }
@@ -212,4 +213,24 @@ model Behavior {
   course Course @relation(fields: [courseId], references: [id])
 
   @@map("behaviors")
+}
+
+enum Action {
+  ADD
+  REMOVE
+  UPDATE
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  reporterId String
+  title      String
+  content    String
+  filename   String?
+  filelink   String?
+  ip         String
+  createdAt  DateTime @default(now()) @map("created_at")
+  action     Action   @default(ADD)
+
+  reporter User @relation(fields: [reporterId], references: [id])
 }
