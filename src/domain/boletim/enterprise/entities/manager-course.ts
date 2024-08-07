@@ -5,7 +5,7 @@ import { Optional } from "@/core/types/optional.ts";
 interface ManagerCourseProps {
   managerId: UniqueEntityId
   courseId: UniqueEntityId
-  active: boolean
+  isActive: boolean
   createdAt: Date
 }
 
@@ -18,21 +18,22 @@ export class ManagerCourse extends Entity<ManagerCourseProps> {
     return this.props.courseId
   }
 
-  get active() {
-    return this.props.active
+  get isActive() {
+    return this.props.isActive
   }
-  set active(value) {
-    this.props.active = value
+  set isActive(value) {
+    this.props.isActive = value
   }
 
   get createdAt() {
     return this.props.createdAt
   }
 
-  static create(props: Optional<ManagerCourseProps, 'createdAt'>, id?: UniqueEntityId) {
+  static create(props: Optional<ManagerCourseProps, 'createdAt' | 'isActive'>, id?: UniqueEntityId) {
     return new ManagerCourse({
       ...props,
-      createdAt: props.createdAt ?? new Date()
+      createdAt: props.createdAt ?? new Date(),
+      isActive: props.isActive ?? true
     }, id)
   }
 }

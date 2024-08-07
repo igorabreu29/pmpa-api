@@ -38,7 +38,7 @@ export class ChangeStudentStatusUseCase {
     })
     if (!studentCourse) return left(new ResourceNotFoundError('Student does not be present on the course.'))
 
-    studentCourse.active = status
+    studentCourse.isActive = status
     await this.studentCoursesRepository.updateStatus(studentCourse)
 
     return right(null)
