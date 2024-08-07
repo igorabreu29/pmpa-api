@@ -87,6 +87,6 @@ describe('Change Student Status Use Case', () => {
     const result = await sut.execute({ id: student.id.toValue(), courseId: course.id.toValue(), status: false, role: 'manager' })
 
     expect(result.isRight()).toBe(true)
-    expect(studentsCoursesRepository.items[0].active).toBe(false)
+    expect(studentsCoursesRepository.items[0].isActive).toBe(false)
   })
 })
