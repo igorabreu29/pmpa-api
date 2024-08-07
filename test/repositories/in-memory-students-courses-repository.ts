@@ -290,6 +290,9 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
   }
 
   async delete(studentCourse: StudentCourse): Promise<void> {
+    const studentPoleIndex = this.studentsPolesRepository.items.findIndex(item => item.studentId.equals(studentCourse.id))
+    this.studentsPolesRepository.items.splice(studentPoleIndex, 1)
+
     const studentCourseIndex = this.items.findIndex(item => item.equals(studentCourse))
     this.items.splice(studentCourseIndex, 1)
   }
