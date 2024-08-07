@@ -19,7 +19,7 @@ interface CreateAssessmentUseCaseRequest {
   studentId: string
   courseId: string
   disciplineId: string
-  vf: number
+  vf: number | null
   avi?: number
   avii?: number
   vfe?: number
