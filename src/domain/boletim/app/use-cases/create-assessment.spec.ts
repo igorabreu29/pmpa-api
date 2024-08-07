@@ -57,9 +57,6 @@ describe(('Create Assessment Use Case'), () => {
       courseId: '',
       disciplineId: '',
       vf: 2,
-      vfe: null,
-      avi: null,
-      avii: null,
       userIp: '',
       userId: '',
       role: 'student'
@@ -78,9 +75,6 @@ describe(('Create Assessment Use Case'), () => {
       courseId: assessment.courseId.toValue(),
       disciplineId: assessment.disciplineId.toValue(),
       vf: 2,
-      vfe: null,
-      avi: null,
-      avii: null,
       userIp: '',
       userId: '',
       role: 'manager'
@@ -102,9 +96,6 @@ describe(('Create Assessment Use Case'), () => {
       courseId: assessment.courseId.toValue(),
       disciplineId: assessment.disciplineId.toValue(),
       vf: 2,
-      vfe: null,
-      avi: null,
-      avii: null,
       userIp: '',
       userId: '',
       role: 'manager'
@@ -129,9 +120,6 @@ describe(('Create Assessment Use Case'), () => {
       courseId: assessment.courseId.toValue(),
       disciplineId: assessment.disciplineId.toValue(),
       vf: 2,
-      vfe: null,
-      avi: null,
-      avii: null,
       userIp: '',
       userId: '',
       role: 'manager'
@@ -164,9 +152,6 @@ describe(('Create Assessment Use Case'), () => {
       courseId: assessment.courseId.toValue(),
       disciplineId: assessment.disciplineId.toValue(),
       vf: 2,
-      vfe: null,
-      avi: null,
-      avii: null,
       userIp: '',
       userId: '',
       role: 'manager'
@@ -196,9 +181,6 @@ describe(('Create Assessment Use Case'), () => {
       courseId: assessment.courseId.toValue(),
       disciplineId: assessment.disciplineId.toValue(),
       vf: 2,
-      vfe: null,
-      avi: null,
-      avii: null,
       userIp: '',
       userId: '',
       role: 'manager'
@@ -206,6 +188,32 @@ describe(('Create Assessment Use Case'), () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)
+  })
+
+  it ('should not be able to create assessment if vf does not exist', async () => {
+    vi.setSystemTime(new Date('2022-1-5'))
+
+    const course = makeCourse()
+    coursesRepository.create(course)
+
+    const discipline = makeDiscipline()
+    disciplinesRepository.create(discipline)
+
+    const student = makeStudent()
+    studentsRepository.create(student)
+
+    const result = await sut.execute({
+      studentId: student.id.toValue(),
+      courseId: course.id.toValue(),
+      disciplineId: discipline.id.toValue(),
+      vf: null,
+      userIp: '',
+      userId: '',
+      role: 'manager'
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ConflictError)
   })
 
   it ('should not be able to create asssessment if avi is less than 0', async () => {
@@ -226,8 +234,6 @@ describe(('Create Assessment Use Case'), () => {
       disciplineId: discipline.id.toValue(),
       vf: 5,
       avi: -1,
-      avii: null,
-      vfe: null,
       userIp: '',
       userId: '',
       role: 'manager'
@@ -256,7 +262,6 @@ describe(('Create Assessment Use Case'), () => {
       vf: 5,
       avi: 5,
       avii: -1,
-      vfe: null,
       userIp: '',
       userId: '',
       role: 'manager'
@@ -283,8 +288,6 @@ describe(('Create Assessment Use Case'), () => {
       courseId: course.id.toValue(),
       disciplineId: discipline.id.toValue(),
       vf: 5,
-      avi: null,
-      avii: null,
       vfe: -1,
       userIp: '',
       userId: '',
@@ -312,9 +315,7 @@ describe(('Create Assessment Use Case'), () => {
       courseId: course.id.toValue(),
       disciplineId: discipline.id.toValue(),
       vf: 5,
-      avi: null,
       avii: 10,
-      vfe: null,
       userIp: '',
       userId: '',
       role: 'manager'
@@ -342,9 +343,6 @@ describe(('Create Assessment Use Case'), () => {
       courseId: course.id.toValue(),
       disciplineId: discipline.id.toValue(),
       vf: 5,
-      vfe: null,
-      avi: null,
-      avii: null,
       userIp: '',
       userId: '',
       role: 'manager'
