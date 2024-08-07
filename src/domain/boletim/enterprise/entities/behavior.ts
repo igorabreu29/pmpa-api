@@ -124,8 +124,8 @@ export class Behavior extends AggregateRoot<BehaviorProps> {
 
   static create(props: Optional<BehaviorProps, 'currentYear'>, id?: UniqueEntityId) {
     const behavior = new Behavior({
-      currentYear: new Date().getFullYear(),
       ...props,
+      currentYear: new Date().getFullYear(),
     }, id)
     return behavior
   }
