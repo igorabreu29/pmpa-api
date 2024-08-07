@@ -7,7 +7,7 @@ export function makeDiscipline(
   override: Partial<Discipline> = {},
   id?: UniqueEntityId
 ) {
-  const nameOrError = Name.create(faker.company.name())
+  const nameOrError = Name.create(faker.lorem.slug())
   if (nameOrError.isLeft()) throw new Error(nameOrError.value.message)
 
   const disciplineOrError = Discipline.create({
