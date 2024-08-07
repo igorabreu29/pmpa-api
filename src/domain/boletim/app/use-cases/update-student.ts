@@ -1,25 +1,25 @@
 import { left, right, type Either } from "@/core/either.ts";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import type { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
+import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
+import type { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
 import type { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
+import type { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
+import { formatCPF } from "@/core/utils/formatCPF.ts";
+import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { StudentCourse } from "../../enterprise/entities/student-course.ts";
+import { StudentPole } from "../../enterprise/entities/student-pole.ts";
 import { Birthday } from "../../enterprise/entities/value-objects/birthday.ts";
 import { CPF } from "../../enterprise/entities/value-objects/cpf.ts";
 import { Email } from "../../enterprise/entities/value-objects/email.ts";
 import { Name } from "../../enterprise/entities/value-objects/name.ts";
 import { Password } from "../../enterprise/entities/value-objects/password.ts";
-import type { StudentsRepository } from "../repositories/students-repository.ts";
-import type { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
-import type { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
-import type { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
-import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
-import { formatCPF } from "@/core/utils/formatCPF.ts";
 import { StudentEvent } from "../../enterprise/events/student-event.ts";
-import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts";
 import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts";
-import { StudentCourse } from "../../enterprise/entities/student-course.ts";
-import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { StudentPole } from "../../enterprise/entities/student-pole.ts";
+import type { StudentsRepository } from "../repositories/students-repository.ts";
 
 interface UpdateStudentUseCaseRequest {
   id: string
@@ -86,7 +86,7 @@ export class UpdateStudentUseCase {
     const student = await this.studentsRepository.findById(id)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
 
-    const studentCourse = await this.studentCoursesRepository.findByStudentIdAndCourseId({
+    let studentCourse = await this.studentCoursesRepository.findByStudentIdAndCourseId({
       courseId,
       studentId: student.id.toValue()
     })
@@ -100,7 +100,7 @@ export class UpdateStudentUseCase {
 
       const studentPole = StudentPole.create({
         poleId: new UniqueEntityId(poleId),
-        studentId: studentCourse.id
+        studentId: newStudentCourse.id
       })
 
       await Promise.all([
@@ -108,6 +108,8 @@ export class UpdateStudentUseCase {
         this.studentCoursesRepository.create(newStudentCourse),
         this.studentPolesRepository.create(studentPole)
       ])
+
+      studentCourse = newStudentCourse
     }
 
     const studentPole = await this.studentPolesRepository.findByStudentIdAndPoleId({
@@ -115,12 +117,20 @@ export class UpdateStudentUseCase {
       studentId: studentCourse.id.toValue()
     })
     if (!studentPole) {
+      const currentStudentPole = await this.studentPolesRepository.findByStudentId({
+        studentId: studentCourse.id.toValue()
+      })
+      if (!currentStudentPole) return left(new ResourceNotFoundError('Student pole not found.'))
+
       const newStudentPole = StudentPole.create({
         poleId: new UniqueEntityId(poleId),
         studentId: studentCourse.id
       })
 
-      await this.studentPolesRepository.create(newStudentPole)
+      await Promise.all([
+        this.studentPolesRepository.delete(currentStudentPole),
+        this.studentPolesRepository.create(newStudentPole)
+      ])
     }
 
     const cpfFormatted = formatCPF(student.cpf.value)
