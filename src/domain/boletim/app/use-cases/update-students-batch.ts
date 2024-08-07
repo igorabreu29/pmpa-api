@@ -1,13 +1,14 @@
 import { Either, left, right } from "@/core/either.ts"
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
+import type { Role } from "../../enterprise/entities/authenticate.ts"
 import { StudentBatch } from "../../enterprise/entities/student-batch.ts"
 import { StudentCourse } from "../../enterprise/entities/student-course.ts"
 import { StudentPole } from "../../enterprise/entities/student-pole.ts"
 import { Student } from "../../enterprise/entities/student.ts"
 import { Birthday } from "../../enterprise/entities/value-objects/birthday.ts"
-import { CPF } from "../../enterprise/entities/value-objects/cpf.ts"
 import { Email } from "../../enterprise/entities/value-objects/email.ts"
 import { Name } from "../../enterprise/entities/value-objects/name.ts"
 import { Password } from "../../enterprise/entities/value-objects/password.ts"
@@ -17,8 +18,6 @@ import { StudentsBatchRepository } from "../repositories/students-batch-reposito
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts"
 import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts"
 import { StudentsRepository } from "../repositories/students-repository.ts"
-import type { Role } from "../../enterprise/entities/authenticate.ts"
-import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
 
 interface StudentCreated {
   student: Student
@@ -69,20 +68,20 @@ export class UpdateStudentsBatchUseCase {
 
     const studentsOrError = await Promise.all(students.map(async (student) => {
       const course = await this.coursesRepository.findByName(student.courseName)
-      if (!course) return left(new ResourceNotFoundError('Student not found.'))
+      if (!course) return new ResourceNotFoundError('Course not found.')
 
       const pole = await this.polesRepository.findByName(student.poleName)
       if (!pole) return new ResourceNotFoundError('Pole not found.')
 
       const studentExist = await this.studentsRepository.findByCPF(student.cpf)
-      if (!studentExist) return left(new ResourceNotFoundError('Student not found.'))
+      if (!studentExist) return new ResourceNotFoundError('Student not found.')
 
-      const studentCourse = await this.studentCoursesRepository.findByStudentIdAndCourseId({
+      let studentCourse = await this.studentCoursesRepository.findByStudentIdAndCourseId({
         studentId: studentExist.id.toValue(),
         courseId: currentCourse.id.toValue()
       })
-      if (!studentCourse) return left(new ResourceAlreadyExistError('Student is not present on this course.'))
-
+      if (!studentCourse) return new ResourceAlreadyExistError('Student is not present on this course.')
+        
       if (!studentCourse.courseId.equals(course.id)) {
         const newStudentCourse = StudentCourse.create({
           courseId: course.id,
@@ -91,14 +90,16 @@ export class UpdateStudentsBatchUseCase {
   
         const studentPole = StudentPole.create({
           poleId: pole.id,
-          studentId: studentCourse.id
+          studentId: newStudentCourse.id
         })
-        
+
         await Promise.all([
           this.studentCoursesRepository.delete(studentCourse),
           this.studentCoursesRepository.create(newStudentCourse),
           this.studentPolesRepository.create(studentPole)
         ])
+
+        studentCourse = newStudentCourse
       }
 
       const studentPole = await this.studentPolesRepository.findByStudentIdAndPoleId({
@@ -106,12 +107,20 @@ export class UpdateStudentsBatchUseCase {
         studentId: studentCourse.id.toValue()
       })
       if (!studentPole) {
+        const currentStudentPole = await this.studentPolesRepository.findByStudentId({
+          studentId: studentCourse.id.toValue()
+        })
+        if (!currentStudentPole) return new ResourceNotFoundError('Student pole not found.')
+
         const newStudentPole = StudentPole.create({
           poleId: pole.id,
           studentId: studentCourse.id
         })
   
-        await this.studentPolesRepository.create(newStudentPole)
+        await Promise.all([
+          this.studentPolesRepository.delete(currentStudentPole),
+          this.studentPolesRepository.create(newStudentPole)
+        ])
       }
 
       const nameOrError = Name.create(student.username ?? studentExist.username.value)
@@ -142,7 +151,7 @@ export class UpdateStudentsBatchUseCase {
 
     const studentsCreated = studentsOrError as StudentCreated[]
     const studentBatch = StudentBatch.create({
-      courseId: currentCourse.id,
+      courseId: studentsCreated[0].studentCourse.courseId,
       userId: new UniqueEntityId(userId),
       userIp,
       students: studentsCreated,
