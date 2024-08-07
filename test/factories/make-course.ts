@@ -8,7 +8,7 @@ export function makeCourse(
   override: Partial<Course> = {},
   id?: UniqueEntityId
 ) {
-  const nameOrError = Name.create(faker.person.fullName())
+  const nameOrError = Name.create(faker.lorem.slug())
   if (nameOrError.isLeft()) throw new Error(nameOrError.value.message)
 
   const endsAt = new Date()
