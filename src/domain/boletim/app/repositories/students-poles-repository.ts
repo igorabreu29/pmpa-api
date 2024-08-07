@@ -30,4 +30,6 @@ export abstract class StudentsPolesRepository {
   
   abstract create(studentPole: StudentPole): Promise<void>
   abstract createMany(studentsPoles: StudentPole[]): Promise<void>
+
+  abstract delete(studentPole: StudentPole): Promise<void>
 }
