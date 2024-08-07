@@ -37,6 +37,7 @@ describe('Create Students Batch Use Case', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
 
@@ -57,7 +58,6 @@ describe('Create Students Batch Use Case', () => {
       polesRepository,
       studentsPolesRepository,
       studentsBatchRepository,
-      hasher
     )
   })
   
