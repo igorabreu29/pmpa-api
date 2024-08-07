@@ -34,4 +34,5 @@ export abstract class ManagersCoursesRepository {
   }>
   abstract create(managerCourse: ManagerCourse): Promise<void>
   abstract updateStatus(managerCourse: ManagerCourse): Promise<void>
+  abstract delete(managerCourse: ManagerCourse): Promise<void>
 }
