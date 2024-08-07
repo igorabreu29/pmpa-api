@@ -22,12 +22,11 @@ export class InMemoryAssessmentsBatchRepository implements AssessmentsBatchRepos
     const assessmentBatchIndex = this.items.findIndex(item => item.id.equals(assessmentBatch.id))
     this.items[assessmentBatchIndex] = assessmentBatch
 
-    console.log(this.assessmentsRepository.items)
-    console.log(assessmentBatch.assessments)
-
     assessmentBatch.assessments.forEach(assessment => {{
       const assessmentIndex = this.assessmentsRepository.items.findIndex(item => item.id.equals(assessment.id))
       this.assessmentsRepository.items[assessmentIndex] = assessment
     }})
+
+    DomainEvents.dispatchEventsForAggregate(assessmentBatch.id)
   }
 }
