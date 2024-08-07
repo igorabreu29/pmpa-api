@@ -8,7 +8,7 @@ export function makeManagerCourse(
   return ManagerCourse.create({
     courseId: new UniqueEntityId(),
     managerId: new UniqueEntityId(),
-    active: true,
+    isActive: true,
     ...override
   }, id)
 }

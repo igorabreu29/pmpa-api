@@ -86,7 +86,7 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
     totalItems: number; 
   }> {
     const allManagersCourses = this.items
-      .filter(item => item.courseId.toValue() === courseId)
+      .filter(item => item.courseId.toValue() === courseId && item.isActive)
       .map(managerCourse => {
         const manager = this.managersRepository.items.find(item => {
           return item.id.equals(managerCourse.managerId)
@@ -185,6 +185,6 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
 
   async updateStatus(managerCourse: ManagerCourse): Promise<void> {
     const managerCourseIndex = this.items.findIndex(item => item.id.equals(managerCourse.id))
-    this.items[managerCourseIndex]
+    this.items[managerCourseIndex] = managerCourse
   }
 }

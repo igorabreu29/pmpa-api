@@ -25,7 +25,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
 
   async findManyByCourseIdWithPole({ courseId }: { courseId: string; }): Promise<StudentWithPole[]> {
     const studentsCourses = this.items
-      .filter(item => item.courseId.toValue() === courseId)
+      .filter(item => item.courseId.toValue() === courseId && item.isActive)
       .map(studentCourse =>{ 
         const student = this.studentsRepository.items.find(item => {
           return item.id.equals(studentCourse.studentId)
@@ -100,46 +100,6 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     }
   }
 
-  async findManyByCourseIdWithCourse ({ 
-    courseId, 
-    page, 
-    perPage 
-  }: { 
-    courseId: string
-    page: number
-    perPage: number
-  }): Promise<{ 
-    studentsCourse: StudentCourseWithCourse[]
-    pages: number
-    totalItems: number
-  }> {
-    const allStudentCourses = this.items
-      .filter(item => {
-        return item.courseId.toValue() === courseId
-      })
-      .map(studentCourse => {
-        const course = this.coursesRepository.items.find(item => item.id.equals(studentCourse.courseId))
-        if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist.`) 
-
-        return StudentCourseWithCourse.create({
-          studentCourseId: studentCourse.id,
-          studentId: studentCourse.studentId,
-          courseId: studentCourse.courseId,
-          course: course.name.value,
-          courseImageUrl: course.imageUrl        
-        })
-      })
-
-    const studentsCourse = allStudentCourses.slice((page - 1) * perPage, page * perPage)
-    const pages = Math.ceil(allStudentCourses.length / perPage)
-
-    return {
-      studentsCourse,
-      pages,
-      totalItems: allStudentCourses.length
-    }
-  }
-
   async findManyDetailsByCourseId({ 
     courseId, 
     page, 
@@ -154,7 +114,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     totalItems: number; 
   }> {
     const allStudentsCourses = this.items
-      .filter(item => item.courseId.toValue() === courseId)
+      .filter(item => item.courseId.toValue() === courseId && item.isActive)
       .map(studentCourse => {
         const student = this.studentsRepository.items.find(item => {
           return item.id.equals(studentCourse.studentId)
@@ -179,7 +139,6 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
         return StudentCourseDetails.create({
           studentId: student.id,
           username: student.username.value,
-          isActive: studentCourse.active,
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
@@ -248,7 +207,6 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
         return StudentCourseDetails.create({
           studentId: student.id,
           username: student.username.value,
-          isActive: studentCourse.active,
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
@@ -293,7 +251,6 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
         return StudentCourseDetails.create({
           studentId: student.id,
           username: student.username.value,
-          isActive: studentCourse.active,
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
@@ -329,7 +286,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
 
   async updateStatus(studentCourse: StudentCourse): Promise<void> {
     const studentCourseIndex = this.items.findIndex(item => item.id.equals(studentCourse.id))
-    this.items[studentCourseIndex].active = studentCourse.active
+    this.items[studentCourseIndex] = studentCourse
   }
 
   async delete(studentCourse: StudentCourse): Promise<void> {

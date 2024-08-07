@@ -8,7 +8,7 @@ export function makeStudentCourse(
   return StudentCourse.create({
     courseId: new UniqueEntityId(),
     studentId: new UniqueEntityId(),
-    active: true,
+    isActive: true,
     ...override
   }, id)
 }
