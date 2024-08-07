@@ -14,12 +14,18 @@ import type { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday
 import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { formatCPF } from "@/core/utils/formatCPF.ts";
 import { ManagerEvent } from "../../enterprise/events/manager-event.ts";
+import { ManagersCoursesRepository } from "../repositories/managers-courses-repository.ts";
+import { ManagersPolesRepository } from "../repositories/managers-poles-repository.ts";
+import { ManagerCourse } from "../../enterprise/entities/manager-course.ts";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import { ManagerPole } from "../../enterprise/entities/manager-pole.ts";
 
 interface UpdateManagerUseCaseRequest {
-  userId: string
-  userIp: string
-
   id: string
+  courseId: string
+  newCourseId: string
+  poleId: string
+
   role: string
   username?: string
   email?: string
@@ -32,8 +38,9 @@ interface UpdateManagerUseCaseRequest {
   birthday?: Date
   state?: string
   county?: string
-  courseId?: string
-  poleId?: string
+
+  userId: string
+  userIp: string
 }
 
 type UpdateManagerUseCaseResponse = Either<
@@ -48,11 +55,16 @@ type UpdateManagerUseCaseResponse = Either<
 
 export class UpdateManagerUseCase {
   constructor (
-    private managersRepository: ManagersRepository
+    private managersRepository: ManagersRepository,
+    private managerCoursesRepository: ManagersCoursesRepository,
+    private managerPolesRepository: ManagersPolesRepository
   ) {}
 
   async execute({
     id,
+    courseId, 
+    newCourseId,
+    poleId,
     role,
     username,
     email,
@@ -72,6 +84,43 @@ export class UpdateManagerUseCase {
       
     const manager = await this.managersRepository.findById(id)
     if (!manager) return left(new ResourceNotFoundError('manager not found.'))
+
+    const managerCourse = await this.managerCoursesRepository.findByManagerIdAndCourseId({
+      courseId,
+      managerId: manager.id.toValue()
+    })
+    if (!managerCourse) return left(new ResourceNotFoundError('Manager is not present on this course.'))
+
+    if (managerCourse.courseId.toValue() !== newCourseId) {
+      const newManagerCourse = ManagerCourse.create({
+        courseId: new UniqueEntityId(newCourseId),
+        managerId: manager.id,
+      })
+
+      const managerPole = ManagerPole.create({
+        poleId: new UniqueEntityId(poleId),
+        managerId: managerCourse.id
+      })
+
+      await Promise.all([
+        this.managerCoursesRepository.delete(managerCourse),
+        this.managerCoursesRepository.create(newManagerCourse),
+        this.managerPolesRepository.create(managerPole)
+      ])
+    }
+
+    const managerPole = await this.managerPolesRepository.findByManagerIdAndPoleId({
+      poleId,
+      managerId: managerCourse.id.toValue()
+    })
+    if (!managerPole) {
+      const newManagerPole = ManagerPole.create({
+        poleId: new UniqueEntityId(poleId),
+        managerId: managerCourse.id
+      })
+
+      await this.managerPolesRepository.create(newManagerPole)
+    }
 
     const cpfFormatted = formatCPF(manager.cpf.value)
     

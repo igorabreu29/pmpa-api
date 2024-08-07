@@ -9,6 +9,8 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { Name } from '../../enterprise/entities/value-objects/name.ts'
 import { UpdateManagerUseCase } from './update-manager.ts'
 import { makeManager } from 'test/factories/make-manager.ts'
+import { makeManagerCourse } from 'test/factories/make-manager-course.ts'
+import { makeManagerPole } from 'test/factories/make-manager-pole.ts'
 
 let managersCoursesRepository: InMemoryManagersCoursesRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -37,38 +39,124 @@ describe('Update Manager Use Case', () => {
       polesRepository
     )
     sut = new UpdateManagerUseCase (
-      managersRepository
+      managersRepository,
+      managersCoursesRepository,
+      managersPolesRepository,
     )
   })
 
-  it ('should not be able to update a manager if access is student or manager', async () => {
+  it ('should not be able to update a manager if access is manager or manager', async () => {
     const manager = makeManager()
     managersRepository.create(manager)
 
-    const result = await sut.execute({ id: manager.id.toValue(), role: 'manager', username: '', userId: '', userIp: '' })
+    const result = await sut.execute({ 
+      id: manager.id.toValue(), 
+      role: 'manager', 
+      courseId: '',
+      newCourseId: '',
+      poleId: '',
+      userId: '', 
+      userIp: '' ,
+    })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotAllowedError)
   })
 
   it ('should not be able to update a manager that does not exist', async () => {
-    const result = await sut.execute({ id: 'not-found', role: '', userId: '', userIp: '' })
+    const result = await sut.execute({ 
+      id: 'not-found', 
+      role: '', 
+      courseId: '',
+      newCourseId: '',
+      poleId: '',
+      userId: '', 
+      userIp: '' 
+    })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+  })
+
+  it ('should not be able to update manager if manager is not in the course', async () => {
+    const manager = makeManager()
+    managersRepository.create(manager)
+
+    const result = await sut.execute({ 
+      id: manager.id.toValue(), 
+      role: 'admin', 
+      courseId: 'not-found',
+      newCourseId: 'course-1',
+      poleId: 'pole-1',
+      userId: '', 
+      userIp: '' 
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+  })
+
+  it ('should be able to update a manager course', async () => {
+    const manager = makeManager()
+    managersRepository.create(manager)
+
+    const managerCourse = makeManagerCourse({
+      managerId: manager.id
+    })
+    managersCoursesRepository.create(managerCourse)
+
+    const result = await sut.execute({ 
+      id: manager.id.toValue(), 
+      role: 'admin', 
+      courseId: managerCourse.courseId.toValue(),
+      newCourseId: 'new-course',
+      poleId: 'pole-1',
+      userId: '', 
+      userIp: '' 
+    })
+
+    expect(result.isRight()).toBe(true)
+    expect(managersCoursesRepository.items[0]).toMatchObject({
+      courseId: {
+        value: 'new-course'
+      }
+    })
+    expect(managersPolesRepository.items[0]).toMatchObject({
+      poleId: {
+        value: 'pole-1'
+      }
+    })
   })
 
   it ('should be able to update a manager', async () => {
     const nameOrError = Name.create('John Doe')
     if (nameOrError.isLeft()) return
     
-    const manager = makeManager({ username: nameOrError.value, civilId: 1234567 })
+    const manager = makeManager({ username: nameOrError.value })
     managersRepository.create(manager)
 
-    const result = await sut.execute({ id: manager.id.toValue(), role: 'admin', username: 'Josh Ned', civilId: 12345, userId: '', userIp: '' })
+    const managerCourse = makeManagerCourse({
+      managerId: manager.id,
+    })
+    managersCoursesRepository.create(managerCourse)
+
+    const managerPole = makeManagerPole({
+      managerId: managerCourse.id
+    })
+    managersPolesRepository.create(managerPole)
+
+    const result = await sut.execute({ 
+      id: manager.id.toValue(), 
+      role: 'admin', 
+      username: 'Josh Ned', 
+      courseId: managerCourse.courseId.toValue(),
+      newCourseId: managerCourse.courseId.toValue(),
+      poleId: managerPole.poleId.toValue(),
+      userId: '', 
+      userIp: '' 
+    })
 
     expect(result.isRight()).toBe(true)
     expect(managersRepository.items[0].username.value).toEqual('Josh Ned')
-    expect(managersRepository.items[0].civilId).toEqual(12345)
   })
 })

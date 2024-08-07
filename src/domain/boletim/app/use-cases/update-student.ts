@@ -15,9 +15,18 @@ import type { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { formatCPF } from "@/core/utils/formatCPF.ts";
 import { StudentEvent } from "../../enterprise/events/student-event.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
+import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts";
+import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts";
+import { StudentCourse } from "../../enterprise/entities/student-course.ts";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import { StudentPole } from "../../enterprise/entities/student-pole.ts";
 
 interface UpdateStudentUseCaseRequest {
   id: string
+  courseId: string
+  newCourseId: string
+  poleId: string
+
   role: Role
   username?: string
   email?: string
@@ -47,11 +56,16 @@ type UpdateStudentUseCaseResponse = Either<
 
 export class UpdateStudentUseCase {
   constructor (
-    private studentsRepository: StudentsRepository
+    private studentsRepository: StudentsRepository,
+    private studentCoursesRepository: StudentsCoursesRepository,
+    private studentPolesRepository: StudentsPolesRepository
   ) {}
 
   async execute({
     id,
+    courseId,
+    newCourseId,
+    poleId,
     role,
     username,
     email,
@@ -71,7 +85,44 @@ export class UpdateStudentUseCase {
 
     const student = await this.studentsRepository.findById(id)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
-    
+
+    const studentCourse = await this.studentCoursesRepository.findByStudentIdAndCourseId({
+      courseId,
+      studentId: student.id.toValue()
+    })
+    if (!studentCourse) return left(new ResourceNotFoundError('Student is not present on this course.'))
+
+    if (studentCourse.courseId.toValue() !== newCourseId) {
+      const newStudentCourse = StudentCourse.create({
+        courseId: new UniqueEntityId(newCourseId),
+        studentId: student.id,
+      })
+
+      const studentPole = StudentPole.create({
+        poleId: new UniqueEntityId(poleId),
+        studentId: studentCourse.id
+      })
+
+      await Promise.all([
+        this.studentCoursesRepository.delete(studentCourse),
+        this.studentCoursesRepository.create(newStudentCourse),
+        this.studentPolesRepository.create(studentPole)
+      ])
+    }
+
+    const studentPole = await this.studentPolesRepository.findByStudentIdAndPoleId({
+      poleId,
+      studentId: studentCourse.id.toValue()
+    })
+    if (!studentPole) {
+      const newStudentPole = StudentPole.create({
+        poleId: new UniqueEntityId(poleId),
+        studentId: studentCourse.id
+      })
+
+      await this.studentPolesRepository.create(newStudentPole)
+    }
+
     const cpfFormatted = formatCPF(student.cpf.value)
     
     const nameOrError = Name.create(username ?? student.username.value)
