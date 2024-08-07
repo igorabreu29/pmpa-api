@@ -93,7 +93,6 @@ export class CreateStudentsBatchUseCase {
         const studentCourse = StudentCourse.create({
           courseId: new UniqueEntityId(course.id.toValue()),
           studentId: studentWithCPF.id,
-          active: true
         })
 
         const studentAlreadyBePresentInPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
@@ -119,7 +118,6 @@ export class CreateStudentsBatchUseCase {
         const studentCourse = StudentCourse.create({
           courseId: new UniqueEntityId(course.id.toValue()),
           studentId: studentWithEmail.id,
-          active: true
         })
 
         const studentAlreadyBePresentInPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
@@ -152,7 +150,6 @@ export class CreateStudentsBatchUseCase {
       const studentCourse = StudentCourse.create({
         courseId: new UniqueEntityId(course.id.toValue()),
         studentId: studentCreated.id,
-        active: true
       })
 
       const studentPole = StudentPole.create({
