@@ -41,7 +41,7 @@ export async function changeManagerStatus(
     const result = await useCase.execute({
       id,
       status,
-      role
+      role,
     })
 
     if (result.isLeft()) {
