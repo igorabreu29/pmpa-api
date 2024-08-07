@@ -19,6 +19,7 @@ import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts";
 import { CreateAssessmentsBatchUseCase } from "./create-assessments-batch.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { makeAssessment } from "test/factories/make-assessment.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -173,6 +174,7 @@ describe('Create Assessments Batch Use Case', () => {
     })
 
     expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })  
 
   it ('should not be able to create assessments batch if discipline does not exist', async () => {
@@ -227,6 +229,7 @@ describe('Create Assessments Batch Use Case', () => {
     })
 
     expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
   it ('should not be able to create assessments batch if the student already has the assessment', async () => {
@@ -253,10 +256,22 @@ describe('Create Assessments Batch Use Case', () => {
     const discipline = makeDiscipline()
     disciplinesRepository.create(discipline)
 
+    const assessment = makeAssessment({
+      courseId: course.id,
+      disciplineId: discipline.id,
+      studentId: student1.id
+    })
+    const assessment2 = makeAssessment({
+      courseId: course.id,
+      disciplineId: discipline.id,
+      studentId: student2.id
+    })
+    assessmentsRepository.createMany([assessment, assessment2])
+
     const studentAssessments = [
       {
         cpf: student1.cpf.value,
-        disciplineName: 'random',
+        disciplineName: discipline.name.value,
         poleName: '',
         avi: null,
         avii: null,
@@ -265,7 +280,7 @@ describe('Create Assessments Batch Use Case', () => {
       },
       {
         cpf: student2.cpf.value,
-        disciplineName: 'random',
+        disciplineName: discipline.name.value,
         poleName: '',
         avi: null,
         avii: null,
@@ -283,7 +298,8 @@ describe('Create Assessments Batch Use Case', () => {
       role: 'admin' 
     })
 
-      expect(result.isLeft()).toBe(true)
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)
   })
 
   it ('should be able to create assessments batch', async () => {

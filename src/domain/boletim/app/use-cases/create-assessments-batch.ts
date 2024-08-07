@@ -14,11 +14,6 @@ import dayjs from "dayjs"
 import type { Role } from "../../enterprise/entities/authenticate.ts"
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
 
-interface Error {
-  name: string
-  message: string
-}
-
 interface StudentAssessment {
   cpf: string
   disciplineName: string
@@ -39,7 +34,11 @@ interface CreateAssessmentsBatchUseCaseRequest {
   role: Role
 }
 
-type CreateAssessmentsBatchUseCaseResponse = Either<ResourceNotFoundError| NotAllowedError, null>
+type CreateAssessmentsBatchUseCaseResponse = Either<
+ | ResourceNotFoundError
+ | ResourceAlreadyExistError
+ | ConflictError
+ | NotAllowedError, null>
 
 export class CreateAssessmentsBatchUseCase {
   constructor (
@@ -66,7 +65,7 @@ export class CreateAssessmentsBatchUseCase {
       if (!discipline) return new ResourceNotFoundError('Discipline not found.')
 
       const assessmentAlreadyExistToStudent = await this.assessmentsRepository.findByStudentIdAndCourseId({ studentId: student.id.toValue(), courseId: course.id.toValue() })
-      if (assessmentAlreadyExistToStudent) new ResourceAlreadyExistError('Assessment already released to the student')
+      if (assessmentAlreadyExistToStudent) return new ResourceAlreadyExistError('Assessment already released to the student')
 
       const assessmentOrError = Assessment.create({
         courseId: course.id,
