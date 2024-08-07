@@ -24,7 +24,6 @@ export class PrismaManagerDetailsMapper {
       civilId: Number(managerDetails.civilId),
       cpf: managerDetails.cpf,
       email: managerDetails.email,
-      isActive: managerDetails.isActive,
       assignedAt: managerDetails.createdAt,
       avatarUrl: managerDetails.avatarUrl ?? undefined,
       courses: managerDetails.courses.map(course => {

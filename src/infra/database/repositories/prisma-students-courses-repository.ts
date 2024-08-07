@@ -70,7 +70,8 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
   async findManyByCourseIdWithPole({ courseId }: { courseId: string; }): Promise<StudentWithPole[]> {
     const studentCourses = await prisma.userOnCourse.findMany({
       where: {
-        courseId
+        courseId,
+        isActive: true
       },
       
       include: {
@@ -95,51 +96,6 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     })
   }
 
-  async findManyByCourseIdWithCourse({ 
-    courseId, 
-    page, 
-    perPage 
-  }: { 
-    courseId: string; 
-    page: number; 
-    perPage: number; 
-  }): Promise<{
-     studentsCourse: StudentCourseWithCourse[]; 
-     pages: number; 
-     totalItems: number; 
-    }> {
-      const studentsCourse = await prisma.userOnCourse.findMany({
-        where: {
-          courseId,
-        },
-  
-        include: {
-          course: true
-        },
-  
-        skip: (page - 1) * perPage,
-        take: page * perPage
-      })
-  
-      const studentsCourseMapper = studentsCourse.map(studentCourse => ({
-        ...studentCourse,
-        course: studentCourse.course
-      }))
-  
-      const studentsCourseCount = await prisma.userOnCourse.count({
-        where: {
-          courseId,
-        }
-      })
-      const pages = Math.ceil(studentsCourseCount / perPage)
-  
-      return {
-        studentsCourse: studentsCourseMapper.map(studentCourse => PrismaStudentCourseWithCourseMapper.toDomain(studentCourse)),
-        pages,
-        totalItems: studentsCourseCount       
-      }
-  }
-
   async findManyDetailsByCourseId({ 
     courseId, 
     page, 
@@ -155,7 +111,8 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
   }> {
     const studentsCourse = await prisma.userOnCourse.findMany({
       where: {
-        courseId
+        courseId,
+        isActive: true
       },
 
       include: {
@@ -263,6 +220,18 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
         id: prismaMapper.id,
       },
       data: prismaMapper
+    })
+  }
+
+  async updateStatus(studentCourse: StudentCourse): Promise<void> {
+    const prismaMapper = PrismaStudentCourseMapper.toPrisma(studentCourse)
+    await prisma.userOnCourse.update({
+      where: {
+        id: prismaMapper.id
+      },
+      data: {
+        isActive: prismaMapper.isActive
+      }
     })
   }
 

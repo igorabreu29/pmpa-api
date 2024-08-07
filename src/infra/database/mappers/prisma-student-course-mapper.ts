@@ -7,7 +7,7 @@ export class PrismaStudentCourseMapper {
     return StudentCourse.create({
       courseId: new UniqueEntityId(studentCourse.courseId),
       studentId: new UniqueEntityId(studentCourse.userId),
-      active: studentCourse.isActive,
+      isActive: studentCourse.isActive,
       createdAt: studentCourse.createdAt
     }, new UniqueEntityId(studentCourse.id))
   }
@@ -17,7 +17,7 @@ export class PrismaStudentCourseMapper {
       id: studentCourse.id.toValue(),
       courseId: studentCourse.courseId.toValue(),
       userId: studentCourse.studentId.toValue(),
-      isActive: studentCourse.active,
+      isActive: studentCourse.isActive,
       createdAt: studentCourse.createdAt
     }
   }

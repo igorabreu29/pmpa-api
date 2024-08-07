@@ -62,7 +62,8 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
   async findManyDetailsByCourseId({ courseId, page, perPage }: { courseId: string; page: number; perPage: number; }): Promise<{ managersCourse: ManagerCourseDetails[]; pages: number; totalItems: number; }> {
     const managerCourses = await prisma.userOnCourse.findMany({
       where: {
-        courseId
+        courseId,
+        isActive: true
       },
 
       skip: (page - 1) * perPage,
@@ -141,6 +142,18 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
     const prismaMapper = PrismaManagersCoursesMapper.toPrisma(managerCourse)
     await prisma.userOnCourse.create({
       data: prismaMapper
+    })
+  }
+
+  async updateStatus(managerCourse: ManagerCourse): Promise<void> {
+    const prismaMapper = PrismaManagersCoursesMapper.toPrisma(managerCourse)
+    await prisma.userOnCourse.update({
+      where: {
+        id: prismaMapper.id
+      },
+      data: {
+        isActive: prismaMapper.isActive
+      }
     })
   }
 }
