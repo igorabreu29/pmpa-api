@@ -21,7 +21,6 @@ interface DeveloperProps {
   passwordHash: Password
   cpf: CPF
   role: DeveloperRole
-  active: boolean
   avatarUrl?: string | null
   civilId: number
   birthday: Birthday
@@ -65,13 +64,6 @@ export class Developer extends Entity<DeveloperProps> {
     return this.props.role
   }
 
-  get active() {
-    return this.props.active
-  }
-  set active(value) {
-    this.props.active = value
-  }
-
   get civilId() {
     return this.props.civilId
   }
@@ -91,7 +83,7 @@ export class Developer extends Entity<DeveloperProps> {
   }
 
   static create(
-    props: Optional<DeveloperProps, 'createdAt' | 'role' | 'active'>, 
+    props: Optional<DeveloperProps, 'createdAt' | 'role'>, 
     id?: UniqueEntityId
   ): Either<
       | InvalidNameError
@@ -106,7 +98,6 @@ export class Developer extends Entity<DeveloperProps> {
       createdAt: props.createdAt ?? new Date(),
       avatarUrl: props.avatarUrl ?? null,
       role: props.role ?? 'dev',
-      active: props.active ?? true
     }, id)
 
     return right(developer)

@@ -22,7 +22,6 @@ interface AdministratorProps {
   passwordHash: Password
   cpf: CPF
   role: AdministratorRole
-  active: boolean
   avatarUrl?: string | null
   createdAt: Date
 
@@ -71,13 +70,6 @@ export class Administrator extends AggregateRoot<AdministratorProps> {
     return this.props.role
   }
 
-  get active() {
-    return this.props.active
-  }
-  set active(value) {
-    this.props.active = value
-  }
-
   get civilId() {
     return this.props.civilId
   }
@@ -101,7 +93,7 @@ export class Administrator extends AggregateRoot<AdministratorProps> {
   }
 
   static create(
-    props: Optional<AdministratorProps, 'createdAt' | 'role' | 'active'>, 
+    props: Optional<AdministratorProps, 'createdAt' | 'role'>, 
     id?: UniqueEntityId
   ): Either<
       | InvalidNameError
@@ -116,7 +108,6 @@ export class Administrator extends AggregateRoot<AdministratorProps> {
       createdAt: props.createdAt ?? new Date(),
       avatarUrl: props.avatarUrl ?? null,
       role: props.role ?? 'admin',
-      active: props.active ?? true
     }, id)
 
     return right(administrator)
