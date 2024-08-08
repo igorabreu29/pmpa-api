@@ -117,7 +117,7 @@ describe('Update Student (e2e)', () => {
     })
 
     expect(studentUpdated?.username).toEqual('Jenny Doe')
-    expect(studentUpdated?.usersOnCourses[0].courseId).toEqual(course.id)
+    expect(studentUpdated?.usersOnCourses[0].courseId).toEqual(newCourse.id)
     expect(studentUpdated?.usersOnCourses[0].usersOnPoles[0].poleId).toEqual(pole.id)
   })
 })
