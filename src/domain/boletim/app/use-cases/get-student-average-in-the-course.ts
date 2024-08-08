@@ -13,6 +13,7 @@ interface GetStudentAverageInTheCourseUseCaseRequest {
   studentId: string
   courseId: string
   isPeriod: boolean
+  hasBehavior?: boolean
 }
 
 interface Month {
@@ -34,7 +35,7 @@ type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError,
   grades: {
     averageInform: {
       geralAverage: number | string;
-      behaviorAverageStatus: GenerateBehaviorStatus[]
+      behaviorAverageStatus: GenerateBehaviorStatus[] | GenerateBehaviorStatus
       behaviorsCount: number
       studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
@@ -58,6 +59,16 @@ type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError,
   behaviorMonths: Month[]
 }>
 
+export interface BehaviorAverage {
+  behaviorAverage: {
+    behaviorAverageStatus: GenerateBehaviorStatus[];
+    behaviorsCount: number;
+  } | {
+      behaviorAverageStatus: GenerateBehaviorStatus;
+      behaviorsCount: number;
+  }
+}
+
 export class GetStudentAverageInTheCourseUseCase {
   constructor (
     private assessmentsRepository: AssessmentsRepository,
@@ -68,44 +79,57 @@ export class GetStudentAverageInTheCourseUseCase {
   async execute({
     studentId,
     courseId,
-    isPeriod
+    isPeriod,
+    hasBehavior = true
 }: GetStudentAverageInTheCourseUseCaseRequest): Promise<GetStudentAverageInTheCourseUseCaseResponse> {
     const assessments = await this.assessmentsRepository.findManyByStudentIdAndCourseId({
       studentId,
       courseId
     })
+
+    let { behaviorAverage }: BehaviorAverage = {
+      behaviorAverage: {
+        behaviorAverageStatus: [],
+        behaviorsCount: 0
+      }
+    }
+
+    let behaviorMonths: Month[] = []
+
+    if (hasBehavior) {
+      const behaviors = await this.behaviorsRepository.findManyByStudentIdAndCourseId({ studentId, courseId })
+      behaviorMonths = behaviors.map(({
+        january,
+        february,
+        march,
+        april,
+        may,
+        jun,
+        july,
+        august,
+        september,
+        october,
+        november,
+        december,
+      }) => ({
+        january,
+        february,
+        march,
+        april,
+        may,
+        jun,
+        july,
+        august,
+        september,
+        october,
+        november,
+        december,
+      }))
+      
+      behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod })
+    }
     
-    const behaviors = await this.behaviorsRepository.findManyByStudentIdAndCourseId({ studentId, courseId })
-    const behaviorMonths = behaviors.map(({
-      january,
-      february,
-      march,
-      april,
-      may,
-      jun,
-      july,
-      august,
-      september,
-      october,
-      november,
-      december,
-    }) => ({
-      january,
-      february,
-      march,
-      april,
-      may,
-      jun,
-      july,
-      august,
-      september,
-      october,
-      november,
-      december,
-    }))
-
-    const behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod })
-
+  
     const assessmentWithDisciplineModule = await Promise.all(assessments.map(async assessment => {
       const studentCondition = generateAssessmentAverage({ 
         vf: !assessment.vf ? -1 : assessment.vf, 
@@ -133,12 +157,12 @@ export class GetStudentAverageInTheCourseUseCase {
 
     const gradesByFormula = formulas[isPeriod ? 'period' : 'module']({
       assessments: assessmentWithDisciplineModule,
-      behaviorAverage,
+      behaviorAverage: hasBehavior ? behaviorAverage : undefined,
     })
 
     return right({
       grades: gradesByFormula,
-      behaviorMonths
+      behaviorMonths: hasBehavior ? behaviorMonths : []
     })
   }
 }
