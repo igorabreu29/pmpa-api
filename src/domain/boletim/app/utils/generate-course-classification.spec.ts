@@ -6,7 +6,7 @@ import { GenerateBehaviorStatus } from './get-behavior-average-status.ts'
 import { Status } from './get-assessment-average-status.ts'
 
 describe('Generate Students Classification', () => {
-  it ('should be able to generate students classification by course CFO formula', () => {
+  it ('should be able to generate students classification by period', () => {
     const behaviorMonths = [
       {
         august: 7,
@@ -157,7 +157,7 @@ describe('Generate Students Classification', () => {
     ])
   })
 
-  it ('should be able to generate students classification by course CHO formula', () => {
+  it ('should be able to generate students classification by module', () => {
     const behaviorMonths = [
       {
         august: 7,
