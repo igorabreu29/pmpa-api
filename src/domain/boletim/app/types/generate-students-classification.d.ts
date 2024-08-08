@@ -6,7 +6,7 @@ export interface StudentClassficationByPeriod {
   studentAverage: {
     averageInform: {
       geralAverage: number | string;
-      behaviorAverageStatus: GenerateBehaviorStatus[]
+      behaviorAverageStatus: GenerateBehaviorStatus[] | GenerateBehaviorStatus
       behaviorsCount: number
       studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
