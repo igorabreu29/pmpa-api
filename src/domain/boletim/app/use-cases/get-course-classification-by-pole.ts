@@ -9,14 +9,14 @@ import { classificationByCourseFormula } from "../utils/generate-course-classifi
 import { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error.ts";
 import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
 
-interface GetCourseClassificationByManagerUseCaseRequest {
+interface GetCourseClassificationByPoleUseCaseRequest {
   courseId: string
   page: number
   managerId?: string
   poleId?: string
 }
 
-type GetCourseClassificationByManagerUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError | Error[], {
+type GetCourseClassificationByPoleUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError | Error[], {
   studentsWithAverage: StudentClassficationByPeriod[] | StudentClassficationByModule[]
 }>
 
@@ -29,7 +29,7 @@ export class GetCourseClassificationByPoleUseCase {
     private getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
   ) {}
 
-  async execute({ managerId, courseId, page, poleId }: GetCourseClassificationByManagerUseCaseRequest): Promise<GetCourseClassificationByManagerUseCaseResponse> {
+  async execute({ managerId, courseId, page, poleId }: GetCourseClassificationByPoleUseCaseRequest): Promise<GetCourseClassificationByPoleUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
