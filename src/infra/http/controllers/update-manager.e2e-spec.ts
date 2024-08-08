@@ -102,10 +102,22 @@ describe('Update Manager (e2e)', () => {
       },
 
       select: {
-        username: true
+        username: true,
+        usersOnCourses: {
+          select: {
+            courseId: true,
+            usersOnPoles: {
+              select: {
+                poleId: true
+              }
+            }
+          }
+        }
       }
     })
 
     expect(managerUpdated?.username).toEqual('Jenny Doe')
+    expect(managerUpdated?.usersOnCourses[0].courseId).toEqual(newCourse.id)
+    expect(managerUpdated?.usersOnCourses[0].usersOnPoles[0].poleId).toEqual(pole.id)
   })
 })
