@@ -26,6 +26,7 @@ describe('Get Student Profile Use Case', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
 
