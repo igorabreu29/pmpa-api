@@ -5,6 +5,8 @@ import request from 'supertest'
 import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
 
+import bcrypt from 'bcryptjs'
+
 describe('Update Manager (e2e)', () => {
   beforeAll(async () => {
     await app.ready()
@@ -24,7 +26,7 @@ describe('Update Manager (e2e)', () => {
         civilId: '02345',
         cpf: '00000000000',
         email: 'john@acne.com', 
-        password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
+        password: await bcrypt.hash('node-20', 8),
         role: 'ADMIN'
       }
     })
@@ -67,7 +69,7 @@ describe('Update Manager (e2e)', () => {
         civilId: '02346',
         cpf: '12345678911',
         email: 'july@acne.com', 
-        password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
+        password: await bcrypt.hash('node-20', 8),
         role: 'MANAGER',
         birthday: transformDate('01/04/2001'),
 
