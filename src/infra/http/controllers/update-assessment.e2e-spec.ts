@@ -60,7 +60,6 @@ describe('Update Assessment (e2e)', () => {
       email: 'igor29nahan@gmail.com',
       birthday: transformDate('29/01/2006'),
       civilId: '00000',
-      isActive: true
     }
 
     const student = await prisma.user.create({

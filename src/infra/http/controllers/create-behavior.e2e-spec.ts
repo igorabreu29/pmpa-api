@@ -7,7 +7,7 @@ import { transformDate } from '@/infra/utils/transform-date.ts'
 
 import bcrypt from 'bcryptjs'
 
-describe('Create Assessment (e2e)', () => {
+describe('Create Behavior (e2e)', () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -54,7 +54,6 @@ describe('Create Assessment (e2e)', () => {
       email: 'igor29nahan@gmail.com',
       birthday: transformDate('29/01/2006'),
       civilId: '00000',
-      isActive: true
     }
 
     const student = await prisma.user.create({

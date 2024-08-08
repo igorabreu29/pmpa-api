@@ -51,7 +51,6 @@ describe('Delete Manager (e2e)', () => {
       email: 'igor29nahan@gmail.com',
       birthday: '29/01/2006',
       civilId: '20234',
-      isActive: true
     }
 
     const manager = await prisma.user.create({

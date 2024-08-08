@@ -61,7 +61,6 @@ describe('Create Assessments Batch (e2e)', () => {
         email: 'igor29nahan@gmail.com',
         birthday: transformDate('29/01/2006'),
         civilId: '00000',
-        isActive: true,
       },
       {
         username: 'John',
@@ -70,7 +69,6 @@ describe('Create Assessments Batch (e2e)', () => {
         email: 'john@gmail.com',
         birthday: transformDate('29/01/2006'),
         civilId: '00000',
-        isActive: true,
       },
     ]
 

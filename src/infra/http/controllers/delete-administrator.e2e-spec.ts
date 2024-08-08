@@ -44,7 +44,6 @@ describe('Delete Administrator (e2e)', () => {
       email: 'igor29nahan@gmail.com',
       birthday: '29/01/2006',
       civilId: '20234',
-      isActive: true
     }
 
     const administrator = await prisma.user.create({
