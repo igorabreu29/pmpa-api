@@ -6,7 +6,7 @@ export class PrismaManagersPolesMapper {
   static toDomain(managerPole: UserCourseOnPole): ManagerPole {
     return ManagerPole.create({
       poleId: new UniqueEntityId(managerPole.poleId),
-      managerId: new UniqueEntityId(managerPole.id),
+      managerId: new UniqueEntityId(managerPole.userOnCourseId),
       createdAt: managerPole.createdAt
     }, new UniqueEntityId(managerPole.id))
   }
