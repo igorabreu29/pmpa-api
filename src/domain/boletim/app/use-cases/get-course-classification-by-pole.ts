@@ -16,7 +16,7 @@ interface GetCourseClassificationByPoleUseCaseRequest {
   poleId?: string
 }
 
-type GetCourseClassificationByPoleUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError | Error[], {
+type GetCourseClassificationByPoleUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError, {
   studentsWithAverage: StudentClassficationByPeriod[] | StudentClassficationByModule[]
 }>
 
@@ -58,7 +58,7 @@ export class GetCourseClassificationByPoleUseCase {
         isPeriod: course.isPeriod
       })
 
-      if (studentAverage.isLeft()) return new ResourceNotFoundError(studentAverage.value.message)
+      if (studentAverage.isLeft()) return studentAverage.value
       
       return {
         studentAverage: studentAverage.value.grades,
@@ -68,8 +68,8 @@ export class GetCourseClassificationByPoleUseCase {
       }
     }))
 
-    const errors = studentsWithAverageOrError.filter(item => item instanceof ResourceNotFoundError)
-    if (errors.length) return left(errors.map(error => error))
+    const error = studentsWithAverageOrError.find(item => item instanceof ResourceNotFoundError)
+    if (error) return left(error)
 
     switch (course.formula) {
       case 'CGS': 

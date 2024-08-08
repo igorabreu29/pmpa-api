@@ -12,7 +12,7 @@ interface GetCourseClassificationUseCaseRequest {
   page: number
 }
 
-type GetCourseClassificationUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError | Error[], {
+type GetCourseClassificationUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError, {
   studentsWithAverage: StudentClassficationByPeriod[] | StudentClassficationByModule[]
 }>
 
@@ -36,7 +36,7 @@ export class GetCourseClassificationUseCase {
         isPeriod: course.isPeriod
       })
 
-      if (studentAverage.isLeft()) return new ResourceNotFoundError(studentAverage.value.message)
+      if (studentAverage.isLeft()) return studentAverage.value
       
       return {
         studentAverage: studentAverage.value.grades,
@@ -47,8 +47,8 @@ export class GetCourseClassificationUseCase {
     }))
 
 
-    const errors = studentsWithAverageOrError.filter(item => item instanceof ResourceNotFoundError)
-    if (errors.length) return left(errors.map(error => error))
+    const error = studentsWithAverageOrError.find(item => item instanceof ResourceNotFoundError)
+    if (error) return left(error)
 
     switch (course.formula) {
       case 'CGS': 
