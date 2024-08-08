@@ -33,4 +33,13 @@ export class PrismaManagersPolesRepository implements ManagersPolesRepository {
       data: prismaMapper
     })
   }
+
+  async delete(managerPole: ManagerPole): Promise<void> {
+    const prismaMapper = PrismaManagersPolesMapper.toPrisma(managerPole)
+    await prisma.userCourseOnPole.delete({
+      where: {
+        id: prismaMapper.id
+      }
+    })
+  }
 }

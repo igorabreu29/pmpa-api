@@ -17,4 +17,9 @@ export class InMemoryManagersPolesRepository implements ManagersPolesRepository 
   async create(managerPole: ManagerPole): Promise<void> {
     this.items.push(managerPole)
   }
+
+  async delete(managerPole: ManagerPole): Promise<void> {
+    const managerPoleIndex = this.items.findIndex(item => item.equals(managerPole))
+    this.items.splice(managerPoleIndex, 1)
+  }
 }

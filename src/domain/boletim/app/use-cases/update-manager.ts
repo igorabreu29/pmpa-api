@@ -80,12 +80,12 @@ export class UpdateManagerUseCase {
     userId,
     userIp
   }: UpdateManagerUseCaseRequest): Promise<UpdateManagerUseCaseResponse> {
-    if (role === 'student' || role === 'manager') return left(new NotAllowedError())
+    if (role === 'manager' || role === 'manager') return left(new NotAllowedError())
       
     const manager = await this.managersRepository.findById(id)
     if (!manager) return left(new ResourceNotFoundError('manager not found.'))
 
-    const managerCourse = await this.managerCoursesRepository.findByManagerIdAndCourseId({
+    let managerCourse = await this.managerCoursesRepository.findByManagerIdAndCourseId({
       courseId,
       managerId: manager.id.toValue()
     })
@@ -99,7 +99,7 @@ export class UpdateManagerUseCase {
 
       const managerPole = ManagerPole.create({
         poleId: new UniqueEntityId(poleId),
-        managerId: managerCourse.id
+        managerId: newManagerCourse.id
       })
 
       await Promise.all([
@@ -107,6 +107,8 @@ export class UpdateManagerUseCase {
         this.managerCoursesRepository.create(newManagerCourse),
         this.managerPolesRepository.create(managerPole)
       ])
+
+      managerCourse = newManagerCourse
     }
 
     const managerPole = await this.managerPolesRepository.findByManagerIdAndPoleId({
@@ -114,12 +116,20 @@ export class UpdateManagerUseCase {
       managerId: managerCourse.id.toValue()
     })
     if (!managerPole) {
+      const currentManagerPole = await this.managerPolesRepository.findByManagerId({
+        managerId: managerCourse.id.toValue()
+      })
+      if (!currentManagerPole) return left(new ResourceNotFoundError('Manager pole not found.'))
+
       const newManagerPole = ManagerPole.create({
         poleId: new UniqueEntityId(poleId),
         managerId: managerCourse.id
       })
-
-      await this.managerPolesRepository.create(newManagerPole)
+      
+      await Promise.all([
+        this.managerPolesRepository.delete(currentManagerPole),
+        this.managerPolesRepository.create(newManagerPole)
+      ])
     }
 
     const cpfFormatted = formatCPF(manager.cpf.value)

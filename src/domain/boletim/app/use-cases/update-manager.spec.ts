@@ -11,6 +11,9 @@ import { UpdateManagerUseCase } from './update-manager.ts'
 import { makeManager } from 'test/factories/make-manager.ts'
 import { makeManagerCourse } from 'test/factories/make-manager-course.ts'
 import { makeManagerPole } from 'test/factories/make-manager-pole.ts'
+import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts'
+import { makeCourse } from 'test/factories/make-course.ts'
+import { makePole } from 'test/factories/make-pole.ts'
 
 let managersCoursesRepository: InMemoryManagersCoursesRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -22,15 +25,16 @@ let sut: UpdateManagerUseCase
 
 describe('Update Manager Use Case', () => { 
   beforeEach(() => {
+    coursesRepository = new InMemoryCoursesRepository()
+    managersPolesRepository = new InMemoryManagersPolesRepository()
+    polesRepository = new InMemoryPolesRepository()
+
     managersCoursesRepository = new InMemoryManagersCoursesRepository(
       managersRepository,
       coursesRepository,
       managersPolesRepository,
       polesRepository
     )
-    coursesRepository = new InMemoryCoursesRepository()
-    managersPolesRepository = new InMemoryManagersPolesRepository()
-    polesRepository = new InMemoryPolesRepository()
 
     managersRepository = new InMemoryManagersRepository (
       managersCoursesRepository,
@@ -101,9 +105,16 @@ describe('Update Manager Use Case', () => {
     managersRepository.create(manager)
 
     const managerCourse = makeManagerCourse({
-      managerId: manager.id
+      managerId: manager.id,
+      courseId: new UniqueEntityId('course')
     })
     managersCoursesRepository.create(managerCourse)
+
+    const managerPole = makeManagerPole({
+      managerId: managerCourse.id,
+      poleId: new UniqueEntityId('pole')
+    })
+    managersPolesRepository.create(managerPole)
 
     const result = await sut.execute({ 
       id: manager.id.toValue(), 
@@ -121,9 +132,48 @@ describe('Update Manager Use Case', () => {
         value: 'new-course'
       }
     })
+
     expect(managersPolesRepository.items[0]).toMatchObject({
       poleId: {
         value: 'pole-1'
+      }
+    })
+  })
+
+  it ('should be able to update a manager pole', async () => {
+    const manager = makeManager()
+    managersRepository.create(manager)
+
+    const course = makeCourse()
+    const pole = makePole()
+
+    const managerCourse = makeManagerCourse({
+      managerId: manager.id,
+      courseId: course.id
+    })
+    managersCoursesRepository.create(managerCourse)
+
+    const managerPole = makeManagerPole({
+      managerId: managerCourse.id,
+      poleId: pole.id
+    })
+    managersPolesRepository.create(managerPole)
+
+    const result = await sut.execute({ 
+      id: manager.id.toValue(), 
+      role: 'admin', 
+      courseId: course.id.toValue(),
+      newCourseId: course.id.toValue(),
+      poleId: 'new-pole',
+      userId: '', 
+      userIp: '' 
+    })
+
+    expect(result.isRight()).toBe(true)
+    expect(managersPolesRepository.items[0]).toMatchObject({
+      managerId: managerCourse.id,
+      poleId: {
+        value: 'new-pole'
       }
     })
   })
@@ -155,7 +205,7 @@ describe('Update Manager Use Case', () => {
       userId: '', 
       userIp: '' 
     })
-
+    
     expect(result.isRight()).toBe(true)
     expect(managersRepository.items[0].username.value).toEqual('Josh Ned')
   })
