@@ -33,7 +33,7 @@ model User {
   assessments    Assessment[]
   behaviors      Behavior[]
   usersOnCourses UserOnCourse[]
-  Report         Report[]
+  reports        Report[]
 
   @@map("users")
 }
@@ -59,7 +59,7 @@ model UserOnCourse {
   id        String   @id @default(cuid())
   userId    String
   courseId  String
-  isActive  Boolean
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now()) @map("created_at")
 
   course       Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
