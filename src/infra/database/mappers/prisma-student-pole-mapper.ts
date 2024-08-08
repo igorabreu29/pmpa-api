@@ -6,7 +6,7 @@ export class PrismaStudentPoleMapper {
   static toDomain(studentPole: UserCourseOnPole): StudentPole {
     return StudentPole.create({
       poleId: new UniqueEntityId(studentPole.poleId),
-      studentId: new UniqueEntityId(studentPole.id),
+      studentId: new UniqueEntityId(studentPole.userOnCourseId),
       createdAt: studentPole.createdAt
     }, new UniqueEntityId(studentPole.id))
   }
