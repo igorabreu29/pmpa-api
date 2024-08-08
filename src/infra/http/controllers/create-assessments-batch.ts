@@ -3,7 +3,6 @@ import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { z } from "zod";
-import { makeCreateAssessmentUseCase } from "@/infra/factories/make-create-assessment-use-case.ts";
 import { NotAllowed } from "../errors/not-allowed.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
@@ -21,9 +20,9 @@ interface ExcelAssessmentsBatch {
     cpf: string
     disciplineName: string
     vf: number
-    avi: number | null
-    avii: number | null
-    vfe: number | null
+    avi?: number
+    avii?: number
+    vfe?: number
   }[]
 }
 
