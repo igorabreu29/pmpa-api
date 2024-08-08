@@ -58,7 +58,7 @@ export const classifyStudentsByCFPFormula = (studentsWithAverage: StudentClassfi
     }
 
     if (studentABirthday !== studentBBirthday) {
-      return studentBBirthday - studentABirthday
+      return studentABirthday - studentBBirthday
     }
 
     return 0
@@ -89,7 +89,7 @@ export const classifyStudentsByCGSAndCASFormula = (studentsWithAverage: StudentC
     }
 
     if (studentABirthday !== studentBBirthday) {
-      return studentBBirthday - studentABirthday
+      return studentABirthday - studentBBirthday
     }
 
     return 0
