@@ -46,7 +46,6 @@ export class PrismaAdministratorsMapper {
       email: administrator.email.value,
       password: administrator.passwordHash.value,
       civilId: String(administrator.civilId),
-      isActive: administrator.active,
       birthday: administrator.birthday.value,
       avatarUrl: administrator.avatarUrl,
       createdAt: administrator.createdAt,
