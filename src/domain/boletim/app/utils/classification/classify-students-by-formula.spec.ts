@@ -3,10 +3,10 @@ import { Status } from "../get-assessment-average-status.ts";
 import { GenerateBehaviorStatus } from "../get-behavior-average-status.ts";
 import { StudentClassficationByModule } from "../../types/generate-students-classification.js";
 import { generateBehaviorAverage } from "../generate-behavior-average.ts";
-import { classifyStudentsByCFPFormula } from "./classify-students-by-formula.ts";
+import { classifyStudentsByCFPFormula, classifyStudentsByCGSAndCASFormula } from "./classify-students-by-formula.ts";
 
 describe('Classify Students By Formula', () => {
-  it.skip ('should be able to classify students by CFP formula', () => {
+  it ('should be able to classify students by CFP formula', () => {
     const behaviorMonths = [
       {
         august: 7,
@@ -103,6 +103,32 @@ describe('Classify Students By Formula', () => {
     
     const result = classifyStudentsByCFPFormula(studentsWithAverage)
     
+    expect(result).toMatchObject([
+      {
+        studentAverage: {
+          assessments: [
+            {
+              id: 'assessment-3',
+            },
+            {
+              id: 'assessment-4',
+            },
+          ]
+        },
+      },
+      {
+        studentAverage: {
+          assessments: [
+            {
+              id: 'assessment-1',
+            },
+            {
+              id: 'assessment-2',
+            },
+          ]
+        }
+      }
+    ])
   })
 
   it ('should be able to classify students by CGS And CAS formula', () => {
@@ -148,6 +174,7 @@ describe('Classify Students By Formula', () => {
               status: 'second season' as Status
             },
           ],
+
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
@@ -200,9 +227,7 @@ describe('Classify Students By Formula', () => {
       }
     ]
 
-    const result = classifyStudentsByCFPFormula(studentsWithAverage)
-    // console.log(result[0].studentAverage.assessments)
-    // console.log(result[1].studentAverage.assessments)
+    const result = classifyStudentsByCGSAndCASFormula(studentsWithAverage)
 
     expect(result).toMatchObject([
       {

@@ -53,11 +53,13 @@ export const classifyStudentsByCFPFormula = (studentsWithAverage: StudentClassfi
     const studentABirthday = Number(studentA.studentBirthday?.getTime())
     const studentBBirthday = Number(studentB.studentBirthday?.getTime())
 
-    if (geralAverageStudentA < geralAverageStudentB) return 1
-    if (geralAverageStudentA > geralAverageStudentB) return -1
+    if (geralAverageStudentA !== geralAverageStudentB) {
+      return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+    }
 
-    if (studentABirthday < studentBBirthday) return -1
-    if (studentABirthday > studentBBirthday) return 1
+    if (studentABirthday !== studentBBirthday) {
+      return studentBBirthday - studentABirthday
+    }
 
     return 0
   })
@@ -68,27 +70,27 @@ export const classifyStudentsByCGSAndCASFormula = (studentsWithAverage: StudentC
     const geralAverageStudentA = studentA.studentAverage.averageInform.geralAverage
     const geralAverageStudentB = studentB.studentAverage.averageInform.geralAverage
 
-    console.log(studentA)
-    console.log(studentB)
-
     const studentAStatusAssessmentEqualApproved = studentA.studentAverage.assessments.filter(assessment => {
       return assessment.status === 'approved'
     })
     const studentBStatusAssessmentEqualApproved = studentB.studentAverage.assessments.filter(assessment => {
       return assessment.status === 'approved'
     })
-
+    
     const studentABirthday = Number(studentA.studentBirthday?.getTime())
     const studentBBirthday = Number(studentB.studentBirthday?.getTime())
 
-    if (geralAverageStudentA < geralAverageStudentB) return 1
-    if (geralAverageStudentA > geralAverageStudentB) return -1
+    if (geralAverageStudentA !== geralAverageStudentB) {
+      return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+    }
 
-    if (studentAStatusAssessmentEqualApproved?.length < studentBStatusAssessmentEqualApproved?.length) return 1
-    if (studentAStatusAssessmentEqualApproved?.length > studentBStatusAssessmentEqualApproved?.length) return -1
+    if (studentAStatusAssessmentEqualApproved?.length !== studentBStatusAssessmentEqualApproved?.length) {
+      return studentBStatusAssessmentEqualApproved?.length - studentAStatusAssessmentEqualApproved?.length
+    }
 
-    if (studentABirthday < studentBBirthday) return -1
-    if (studentABirthday > studentBBirthday) return 1
+    if (studentABirthday !== studentBBirthday) {
+      return studentBBirthday - studentABirthday
+    }
 
     return 0
   })
