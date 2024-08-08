@@ -102,10 +102,22 @@ describe('Update Student (e2e)', () => {
       },
 
       select: {
-        username: true
+        username: true,
+        usersOnCourses: {
+          select: {
+            courseId: true,
+            usersOnPoles: {
+              select: {
+                poleId: true
+              }
+            }
+          }
+        }
       }
     })
 
     expect(studentUpdated?.username).toEqual('Jenny Doe')
+    expect(studentUpdated?.usersOnCourses[0].courseId).toEqual(course.id)
+    expect(studentUpdated?.usersOnCourses[0].usersOnPoles[0].poleId).toEqual(pole.id)
   })
 })
