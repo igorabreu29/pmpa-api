@@ -14,6 +14,7 @@ interface GetCourseClassificationByPoleUseCaseRequest {
   page: number
   managerId?: string
   poleId?: string
+  hasBehavior?: boolean
 }
 
 type GetCourseClassificationByPoleUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError, {
@@ -29,7 +30,7 @@ export class GetCourseClassificationByPoleUseCase {
     private getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
   ) {}
 
-  async execute({ managerId, courseId, page, poleId }: GetCourseClassificationByPoleUseCaseRequest): Promise<GetCourseClassificationByPoleUseCaseResponse> {
+  async execute({ managerId, courseId, page, poleId, hasBehavior = true }: GetCourseClassificationByPoleUseCaseRequest): Promise<GetCourseClassificationByPoleUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
@@ -55,7 +56,8 @@ export class GetCourseClassificationByPoleUseCase {
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({
         studentId: student.studentId.toValue(),
         courseId,
-        isPeriod: course.isPeriod
+        isPeriod: course.isPeriod,
+        hasBehavior
       })
 
       if (studentAverage.isLeft()) return studentAverage.value

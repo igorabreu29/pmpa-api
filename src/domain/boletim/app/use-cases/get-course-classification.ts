@@ -10,6 +10,7 @@ import { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error
 interface GetCourseClassificationUseCaseRequest {
   courseId: string
   page: number
+  hasBehavior?: boolean
 }
 
 type GetCourseClassificationUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError, {
@@ -23,7 +24,7 @@ export class GetCourseClassificationUseCase {
     private getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
   ) {}
 
-  async execute({ courseId, page }: GetCourseClassificationUseCaseRequest): Promise<GetCourseClassificationUseCaseResponse> {
+  async execute({ courseId, page, hasBehavior = true }: GetCourseClassificationUseCaseRequest): Promise<GetCourseClassificationUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
@@ -33,7 +34,8 @@ export class GetCourseClassificationUseCase {
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({
         studentId: student.studentId.toValue(),
         courseId,
-        isPeriod: course.isPeriod
+        isPeriod: course.isPeriod,
+        hasBehavior
       })
 
       if (studentAverage.isLeft()) return studentAverage.value
