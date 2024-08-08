@@ -173,4 +173,105 @@ describe('Get Classfication Course Use Case', () => {
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject(expected)
   })
+
+  it ('should be able to get geral course classification without behavior', async () => {
+    const course = makeCourse({ formula: 'CAS' }, new UniqueEntityId('course-1'))
+    coursesRepository.create(course)
+
+    const pole1 = makePole()
+    const pole2 = makePole()
+    polesRepository.createMany([pole1, pole2])
+
+    const student1 = makeStudent({}, new UniqueEntityId('student-1'))
+    const student2 = makeStudent({}, new UniqueEntityId('student-2'))
+    studentsRepository.create(student1)
+    studentsRepository.create(student2)
+
+    const studentCourse1 = makeStudentCourse({ studentId: student1.id, courseId: course.id })
+    const studentCourse2 = makeStudentCourse({ studentId: student2.id, courseId: course.id })
+    studentsCoursesRepository.create(studentCourse1)
+    studentsCoursesRepository.create(studentCourse2)
+
+    const studentPole1 = makeStudentPole({ studentId: studentCourse1.id, poleId: pole1.id })
+    const studentPole2 = makeStudentPole({ studentId: studentCourse2.id, poleId: pole2.id })
+    studentsPolesRepository.create(studentPole1)
+    studentsPolesRepository.create(studentPole2)
+
+    const behavior = behaviorsRepository.items.find(item => {
+      return item.studentId.equals(student1.id)
+    })
+    if (!behavior) return
+    behaviorsRepository.delete(behavior)
+
+    const behavior2 = behaviorsRepository.items.find(item => {
+      return item.studentId.equals(student2.id)
+    })
+    if (!behavior2) return
+    behaviorsRepository.delete(behavior2)
+
+    const result = await sut.execute({
+      courseId: 'course-1',
+      page: 1,
+      hasBehavior: false
+    })
+
+    const expected = {
+      studentsWithAverage: [
+        {
+          studentAverage: {
+            averageInform: {
+              geralAverage: 8.167,
+              behaviorAverageStatus: [],
+              studentAverageStatus: { concept: 'very good', status: 'approved' }
+            },
+
+            assessments: [
+              {
+                module: 1,
+                average: 7
+              },
+              {
+                module: 2,
+                average: 9
+              },
+              {
+                module: 3,
+                average: 8.5
+              },
+            ],
+            assessmentsCount: 3
+          },
+        },
+        
+        {
+          studentAverage: {
+            averageInform: {
+              geralAverage: 7.933,
+              behaviorAverageStatus: [],
+              studentAverageStatus: { concept: 'good', status: 'second season' }
+            },
+
+            assessments: [
+              {
+                module: 1,
+                average: 7.2
+              },
+              {
+                module: 2,
+                average: 6.6
+              },
+              {
+                module: 3,
+                average: 10
+              },
+            ],
+            assessmentsCount: 3
+          },
+        },
+      ]
+    }
+
+    expect(result.isRight()).toBe(true)
+    expect(result.value).toMatchObject(expected)
+  })
 })
