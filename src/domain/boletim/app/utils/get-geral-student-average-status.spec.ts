@@ -11,7 +11,7 @@ describe('Geral Student Average Status', () => {
     })
   
     it (
-      'should be able to receive concept "very goodapproved second season" and status "approved second season" if the student is recovering and the average is greater than or equal 8 and less than 10', 
+      'should be able to receive concept "very good" and status "approved second season" if the student is recovering and the average is greater than or equal 8 and less than 10', 
       () => {
         const geralStudentAverageStatus = getGeralStudentAverageStatus({ average: 8, isRecovering: true })
   
