@@ -1,4 +1,4 @@
-import type { CoursesDisciplinesRepository } from "@/domain/boletim/app/repositories/courses-disciplines-repository.ts";
+import type { CoursesDisciplinesRepository, FindManyByCourseIdWithDiscipline } from "@/domain/boletim/app/repositories/courses-disciplines-repository.ts";
 import type { CourseDiscipline } from "@/domain/boletim/enterprise/entities/course-discipline.ts";
 import type { CourseWithDiscipline } from "@/domain/boletim/enterprise/entities/value-objects/course-with-discipline.ts";
 import { prisma } from "../lib/prisma.ts";
@@ -44,6 +44,22 @@ export class PrismaCourseDisciplinesRepository implements CoursesDisciplinesRepo
     if (!courseDiscipline) return null
 
     return PrismaCourseWithDisciplineMapper.toDomain(courseDiscipline)
+  }
+
+  async findManyByCourseIdWithDiscipliine({
+    courseId
+  }: FindManyByCourseIdWithDiscipline): Promise<CourseWithDiscipline[]> {
+    const courseDisciplines = await prisma.courseOnDiscipline.findMany({
+      where: {
+        courseId
+      },
+
+      include: {
+        discipline: true
+      }
+    })
+
+    return courseDisciplines.map(courseDiscipline => PrismaCourseWithDisciplineMapper.toDomain(courseDiscipline))
   }
 
   async create(courseDiscipline: CourseDiscipline): Promise<void> {

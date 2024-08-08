@@ -11,4 +11,11 @@ export class PrismaAssessmentsBathcRepository implements AssessmentsBatchReposit
       data: prismaMapper
     })
   }
+
+  async save(assessmentBatch: AssessmentBatch): Promise<void> {
+    const prismaMapper = assessmentBatch.assessments.map(assessment => PrismaAssessmentsMapper.toPrisma(assessment))
+    await prisma.assessment.createMany({
+      data: prismaMapper
+    })
+  }
 }

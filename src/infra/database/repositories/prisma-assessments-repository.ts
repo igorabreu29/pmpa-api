@@ -1,4 +1,4 @@
-import { AssessmentsRepository, StudentAssessmentsByCourse } from "@/domain/boletim/app/repositories/assessments-repository.ts";
+import { AssessmentsRepository, StudentAssessmentsByCourse, StudentAssessmentsByStudentAndDisciplineAndCourseId } from "@/domain/boletim/app/repositories/assessments-repository.ts";
 import { Assessment } from "@/domain/boletim/enterprise/entities/assessment.ts";
 import { prisma } from "../lib/prisma.ts";
 import { PrismaAssessmentsMapper } from "../mappers/prisma-assessments-mapper.ts";
@@ -19,6 +19,19 @@ export class PrismaAssessmentsRepository implements AssessmentsRepository {
     const assessment = await prisma.assessment.findFirst({
       where: {
         studentId,
+        courseId
+      }
+    }) 
+    if (!assessment) return null
+
+    return PrismaAssessmentsMapper.toDomain(assessment)
+  }
+
+  async findByStudentAndDisciplineAndCourseId({ courseId, disciplineId, studentId }: StudentAssessmentsByStudentAndDisciplineAndCourseId): Promise<Assessment | null> {
+    const assessment = await prisma.assessment.findFirst({
+      where: {
+        studentId,
+        disciplineId,
         courseId
       }
     }) 

@@ -156,4 +156,13 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
       }
     })
   }
+
+  async delete(managerCourse: ManagerCourse): Promise<void> {
+    const prismaMapper = PrismaManagersCoursesMapper.toPrisma(managerCourse)
+    await prisma.userOnCourse.delete({
+      where: {
+        id: prismaMapper.id
+      }
+    })
+  }
 }

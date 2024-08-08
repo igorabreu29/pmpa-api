@@ -186,4 +186,13 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       data: prismaMapper
     })
   }
+
+  async delete(studentPole: StudentPole): Promise<void> {
+    const prismaMapper = PrismaStudentPoleMapper.toPrisma(studentPole)
+    await prisma.userCourseOnPole.delete({
+      where: {
+        id: prismaMapper.id,
+      }
+    })
+  }
 }
