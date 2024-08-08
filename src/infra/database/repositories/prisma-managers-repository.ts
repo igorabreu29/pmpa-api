@@ -73,7 +73,6 @@ export class PrismaManagersRepository implements ManagersRepository {
       birthday: managerDetails.birthday,
       assignedAt: managerDetails.createdAt,
       role: managerDetails.role,
-      isActive: managerDetails.isActive,
       isLoginConfirmed: managerDetails.isLoginConfirmed,
       createdAt: managerDetails.createdAt,
       courses: managerDetails.usersOnCourses.map(item => {
@@ -128,7 +127,6 @@ export class PrismaManagersRepository implements ManagersRepository {
         birthday: manager.birthday,
         assignedAt: manager.createdAt,
         role: manager.role,
-        isActive: manager.isActive,
         isLoginConfirmed: manager.isLoginConfirmed,
         createdAt: manager.createdAt,
         courses: manager.usersOnCourses.map(item => {

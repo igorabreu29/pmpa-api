@@ -76,7 +76,6 @@ export class PrismaStudentsRepository implements StudentsRepository {
       birthday: studentDetails.birthday,
       assignedAt: studentDetails.createdAt,
       role: studentDetails.role,
-      isActive: studentDetails.isActive,
       isLoginConfirmed: studentDetails.isLoginConfirmed,
       createdAt: studentDetails.createdAt,
       courses: studentDetails.usersOnCourses.map(item => {
@@ -131,7 +130,6 @@ export class PrismaStudentsRepository implements StudentsRepository {
         birthday: student.birthday,
         assignedAt: student.createdAt,
         role: student.role,
-        isActive: student.isActive,
         isLoginConfirmed: student.isLoginConfirmed,
         createdAt: student.createdAt,
         courses: student.usersOnCourses.map(item => {
