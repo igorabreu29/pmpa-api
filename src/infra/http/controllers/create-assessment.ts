@@ -28,9 +28,9 @@ export async function createAssessment(
           courseId: z.string().cuid(),
           studentId: z.string().cuid(),
           vf: z.number().min(0),
-          avi: z.number().nullable().default(null),
-          avii: z.number().nullable().default(null),
-          vfe: z.number().nullable().default(null),
+          avi: z.number().optional(),
+          avii: z.number().optional(),
+          vfe: z.number().optional(),
         })
       }
     }, async (req, res) => {
