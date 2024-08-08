@@ -53,32 +53,58 @@ export const formulas = {
       })
     }
 
-    const { behaviorAverageStatus, behaviorsCount } = behaviorAverage as BehaviorAveragePerPeriod
+    let geralAverageWithBehavior: number | null = null
+    
+    if (behaviorAverage) {
+      const { behaviorAverageStatus } = behaviorAverage as BehaviorAveragePerPeriod
+      
+      let weightPerPeriod = 0
+      const averagesWithWeight = behaviorAverageStatus.map((item, index) => {
+        const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module${index + 1}`]?.reduce((previousAverage, currentAverage) => {
+          return Number(previousAverage) + Number(currentAverage.average)
+        }, 0)
+        
+        const periodAverageWithWeight = calculatesAverageWithWeight({ 
+            assessmentAverage: assessmentsAveragePerPeriod,
+            assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module${index + 1}`]?.length, 
+            behaviorAveragePerPeriod: item.behaviorAverage, 
+            weight: weightPerPeriod || 1 
+          })
+          
+        if (periodAverageWithWeight && index === 2) weightPerPeriod += 2
+        if (periodAverageWithWeight && index !== 2) weightPerPeriod += 1
+  
+        return periodAverageWithWeight
+      })
+  
+      geralAverageWithBehavior = averagesWithWeight.reduce((previousModuleAverage, currentModuleAverage) => previousModuleAverage + currentModuleAverage, 0) / weightPerPeriod
+    }
 
     let weightPerPeriod = 0
+    let geralAverage: number = 0
 
-    const averagesWithWeight = behaviorAverageStatus.map((item, index) => {
-      const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module${index + 1}`]?.reduce((previousAverage, currentAverage) => {
+    for (let i = 1; i <= 3; i++) {
+      const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module${i}`]?.reduce((previousAverage, currentAverage) => {
         return Number(previousAverage) + Number(currentAverage.average)
       }, 0)
       
       const periodAverageWithWeight = calculatesAverageWithWeight({ 
           assessmentAverage: assessmentsAveragePerPeriod,
-          assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module${index + 1}`]?.length, 
-          behaviorAveragePerPeriod: item.behaviorAverage, 
+          assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module${i}`]?.length, 
+          behaviorAveragePerPeriod: 0, 
           weight: weightPerPeriod || 1 
         })
         
-      if (periodAverageWithWeight && index === 2) weightPerPeriod += 2
-      if (periodAverageWithWeight && index !== 2) weightPerPeriod += 1
+      if (periodAverageWithWeight && i === 3) weightPerPeriod += 2
+      if (periodAverageWithWeight && i !== 3) weightPerPeriod += 1
 
-      return periodAverageWithWeight
-    })
+      geralAverage += periodAverageWithWeight
+    }
 
-    const isStudentRecovering = assessments.some((item) => item?.isRecovering)
-    const geralAverage = averagesWithWeight.reduce((previousModuleAverage, currentModuleAverage) => previousModuleAverage + currentModuleAverage, 0) / weightPerPeriod
-    
-    const studentAverageStatus = getGeralStudentAverageStatus({ average: geralAverage, isRecovering: isStudentRecovering })
+    const geralAverageWithWeight = geralAverage / weightPerPeriod
+
+    const isStudentRecovering = assessments.some((item) => item?.isRecovering)    
+    const studentAverageStatus = getGeralStudentAverageStatus({ average: geralAverageWithBehavior || geralAverageWithWeight, isRecovering: isStudentRecovering })
 
     const isStudentSecondSeason = assessments.some(assessment => assessment?.status === 'second season')
 
@@ -86,9 +112,9 @@ export const formulas = {
 
     return {
       averageInform: {
-        geralAverage: Number(geralAverage.toFixed(3)), 
-        behaviorAverageStatus,
-        behaviorsCount,
+        geralAverage: geralAverageWithBehavior ? Number(geralAverageWithBehavior.toFixed(3)) : Number(geralAverageWithWeight.toFixed(3)), 
+        behaviorAverageStatus: behaviorAverage ? behaviorAverage.behaviorAverageStatus : [],
+        behaviorsCount: behaviorAverage ? behaviorAverage.behaviorsCount : 0,
         studentAverageStatus
       },
       assessments: {
