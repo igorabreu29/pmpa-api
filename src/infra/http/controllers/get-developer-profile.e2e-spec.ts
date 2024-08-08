@@ -22,7 +22,6 @@ describe('Get Developer Profile (e2e)', () => {
         civilId: '02345',
         cpf: '00000000000',
         email: 'john@acne.com', 
-        isActive: true,
         password: await bcrypt.hash('node-20', 8),
         birthday: transformDate('02/01/2006'),
         role: 'DEV'

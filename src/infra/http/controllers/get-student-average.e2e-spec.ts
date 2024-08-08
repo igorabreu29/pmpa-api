@@ -30,7 +30,6 @@ describe('Get Student Average (e2e)', () => {
         civilId: '02345',
         cpf: '00000000000',
         email: 'john@acne.com', 
-        isActive: true,
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
         birthday: transformDate('01/02/2001'),

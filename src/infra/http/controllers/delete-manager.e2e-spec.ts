@@ -24,7 +24,6 @@ describe('Delete Manager (e2e)', () => {
         civilId: '02345',
         cpf: '00000000000',
         email: 'john@acne.com', 
-        isActive: true,
         password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
         role: 'ADMIN'
       }

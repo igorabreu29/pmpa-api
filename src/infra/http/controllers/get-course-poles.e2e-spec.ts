@@ -45,7 +45,6 @@ describe('Get Course Poles (e2e)', () => {
         civilId: '02345',
         cpf: '00000000001',
         email: 'jey@acne.com', 
-        isActive: true,
         password: await bcrypt.hash('node-21', 8),
         role: 'ADMIN'
       }

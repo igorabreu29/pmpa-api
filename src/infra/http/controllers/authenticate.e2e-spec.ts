@@ -21,7 +21,6 @@ describe('Authenticate (e2e)', () => {
         email: '',
         username: 'igor',
         role: 'DEV',
-        isActive: true,
         civilId: '00009'
       }
     })

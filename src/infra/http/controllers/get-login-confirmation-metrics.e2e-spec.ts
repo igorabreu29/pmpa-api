@@ -54,7 +54,6 @@ describe('Get Login Confirmation Metrics (e2e)', () => {
         civilId: '02345',
         cpf: '00000000000',
         email: 'john@acne.com', 
-        isActive: true,
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
         birthday: transformDate('01/02/2001'),
@@ -78,7 +77,6 @@ describe('Get Login Confirmation Metrics (e2e)', () => {
         civilId: '02345',
         cpf: '00000000020',
         email: 'jelly@acne.com', 
-        isActive: true,
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
         birthday: transformDate('01/02/2001'),
@@ -102,7 +100,6 @@ describe('Get Login Confirmation Metrics (e2e)', () => {
         civilId: '02345',
         cpf: '00000000011',
         email: 'jonas@acne.com', 
-        isActive: true,
         password: await bcrypt.hash('node-20', 8),
         birthday: transformDate('01/02/2001'),
         
@@ -133,7 +130,6 @@ describe('Get Login Confirmation Metrics (e2e)', () => {
         civilId: '02345',
         cpf: '00000000001',
         email: 'jey@acne.com', 
-        isActive: true,
         password: await bcrypt.hash('node-21', 8),
         role: 'ADMIN'
       }

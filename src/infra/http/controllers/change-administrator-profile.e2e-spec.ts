@@ -23,7 +23,6 @@ describe('Change Administrator Profile (e2e)', () => {
         civilId: '02346',
         cpf: '12345678911',
         email: 'july@acne.com', 
-        isActive: true,
         password: await bcrypt.hash('node-20', 8),
         role: 'ADMIN',
         isLoginConfirmed: new Date(),

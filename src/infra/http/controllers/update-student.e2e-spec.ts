@@ -24,7 +24,6 @@ describe('Update Student (e2e)', () => {
         civilId: '02345',
         cpf: '00000000000',
         email: 'john@acne.com', 
-        isActive: true,
         password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
         role: 'ADMIN'
       }
@@ -44,7 +43,6 @@ describe('Update Student (e2e)', () => {
         civilId: '02346',
         cpf: '12345678911',
         email: 'july@acne.com', 
-        isActive: true,
         password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
         role: 'STUDENT',
         birthday: transformDate('01/04/2001')

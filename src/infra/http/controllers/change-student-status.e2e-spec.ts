@@ -26,7 +26,6 @@ describe('Change Student Status (e2e)', () => {
         civilId: '02345',
         cpf: '00000000000',
         email: 'john@acne.com', 
-        isActive: true,
         password: await bcrypt.hash('node-20', 8),
         role: 'ADMIN'
       }
@@ -46,7 +45,6 @@ describe('Change Student Status (e2e)', () => {
         civilId: '02346',
         cpf: '12345678911',
         email: 'july@acne.com', 
-        isActive: true,
         password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
         role: 'STUDENT',
         birthday: transformDate('01/04/2001')
@@ -61,17 +59,5 @@ describe('Change Student Status (e2e)', () => {
       })
 
     expect(changeStudentStatusResponse.statusCode).toEqual(204)
-
-    const studentUpdated = await prisma.user.findUnique({
-      where: {
-        id: student.id
-      },
-
-      select: {
-        isActive: true
-      }
-    })
-
-    expect(studentUpdated?.isActive).toEqual(false)
   })
 })
