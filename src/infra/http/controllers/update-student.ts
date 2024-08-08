@@ -28,6 +28,9 @@ export async function updateStudent(
           id: z.string().cuid()
         }),
         body: z.object({
+          courseId: z.string().cuid(),
+          newCourseId: z.string().cuid(),
+          poleId: z.string().cuid(),
           username: z.string().min(3).max(50).optional(),
           email: z.string().email().optional(),
           cpf: z.string().min(14).max(14).optional(),
@@ -45,13 +48,13 @@ export async function updateStudent(
           motherName: z.string().min(3).max(50).optional(),
           fatherName: z.string().min(3).max(50).optional(),
           state: z.string().optional(),
-          county: z.string().optional()
+          county: z.string().optional(),
         })
       },
     }, 
   async (req, res) => {
     const { id } = req.params
-    const { username, email, cpf, password, birthday, civilId, militaryId, county, state, motherName, fatherName } = req.body
+    const { username, email, cpf, password, birthday, civilId, militaryId, county, state, motherName, fatherName, courseId, newCourseId, poleId } = req.body
     const { payload: { sub, role } } = req.user
 
     const ip = req.ip
@@ -59,6 +62,9 @@ export async function updateStudent(
     const useCase = makeUpdateStudentUseCase()
     const result = await useCase.execute({
       id,
+      courseId,
+      newCourseId,
+      poleId,
       username,
       email,
       cpf,
@@ -72,7 +78,7 @@ export async function updateStudent(
       county,
       state,
       motherName,
-      fatherName
+      fatherName,
     })
 
     if (result.isLeft()) {

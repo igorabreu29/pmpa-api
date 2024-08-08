@@ -37,6 +37,30 @@ describe('Update Student (e2e)', () => {
       })
     const { token } = authenticateResponse.body
 
+    const course = await prisma.course.create({
+      data: {
+        endsAt,
+        formula: 'CAS',
+        imageUrl: '',
+        name: 'course'
+      }
+    })
+
+    const newCourse = await prisma.course.create({
+      data: {
+        endsAt,
+        formula: 'CGS',
+        imageUrl: '',
+        name: 'cgs-course'
+      }
+    })
+    
+    const pole = await prisma.pole.create({
+      data: {
+        name: 'pole'
+      }
+    })
+
     const student = await prisma.user.create({
       data: {
         username: 'John Doe',
@@ -45,7 +69,18 @@ describe('Update Student (e2e)', () => {
         email: 'july@acne.com', 
         password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
         role: 'STUDENT',
-        birthday: transformDate('01/04/2001')
+        birthday: transformDate('01/04/2001'),
+
+        usersOnCourses: {
+          create: {
+            courseId: course.id,
+            usersOnPoles: {
+              create: {
+                poleId: pole.id
+              }
+            }
+          }
+        }
       }
     })
 
@@ -53,7 +88,10 @@ describe('Update Student (e2e)', () => {
       .put(`/students/${student.id}`)
       .set('Authorization', `Bearer ${token}`)
       .send({
-        username: 'Jenny Doe'
+        username: 'Jenny Doe',
+        courseId: course.id,
+        newCourseId: newCourse.id,
+        poleId: pole.id
       })
 
     expect(updateStudentResponse.statusCode).toEqual(204)

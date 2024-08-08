@@ -29,6 +29,9 @@ export async function updateManager(
           id: z.string().cuid()
         }),
         body: z.object({
+          courseId: z.string().cuid(),
+          newCourseId: z.string().cuid(),
+          poleId: z.string().cuid(),
           username: z.string().min(3).max(50).optional(),
           email: z.string().email().optional(),
           cpf: z.string().min(14).max(14).optional(),
@@ -52,7 +55,7 @@ export async function updateManager(
     }, 
   async (req, res) => {
     const { id } = req.params
-    const { username, email, cpf, password, birthday, civilId, militaryId, county, state, motherName, fatherName } = req.body
+    const { username, email, cpf, password, birthday, civilId, militaryId, county, state, motherName, fatherName, courseId, newCourseId, poleId } = req.body
     const { payload: { sub, role } } = req.user
 
     const ip = req.ip
@@ -60,6 +63,9 @@ export async function updateManager(
     const useCase = makeUpdateManagerUseCase()
     const result = await useCase.execute({
       id,
+      courseId,
+      newCourseId,
+      poleId,
       username,
       email,
       cpf,

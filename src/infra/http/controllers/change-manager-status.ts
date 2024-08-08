@@ -21,10 +21,11 @@ export async function changeManagerStatus(
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .patch('/managers/:id/status', {
+    .patch('/courses/:courseId/managers/:id/status', {
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({
+          courseId: z.string().cuid(),
           id: z.string().cuid()
         }),
         body: z.object({
@@ -33,12 +34,13 @@ export async function changeManagerStatus(
       },
     }, 
   async (req, res) => {
-    const { id } = req.params
+    const { id, courseId } = req.params
     const { status } = req.body
     const { payload: { role } } = req.user
 
     const useCase = makeChangeManagerStatusUseCase()
     const result = await useCase.execute({
+      courseId,
       id,
       status,
       role,

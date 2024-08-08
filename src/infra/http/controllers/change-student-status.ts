@@ -21,10 +21,11 @@ export async function changeStudentStatus(
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .patch('/students/:id/status', {
+    .patch('/courses/:courseId/students/:id/status', {
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         params: z.object({
+          courseId: z.string().cuid(),
           id: z.string().cuid()
         }),
         body: z.object({
@@ -33,7 +34,7 @@ export async function changeStudentStatus(
       },
     }, 
   async (req, res) => {
-    const { id } = req.params
+    const { id, courseId } = req.params
     const { status } = req.body
     const { payload: { role } } = req.user
 
@@ -41,7 +42,8 @@ export async function changeStudentStatus(
     const result = await useCase.execute({
       id,
       status,
-      role
+      role,
+      courseId
     })
 
     if (result.isLeft()) {
