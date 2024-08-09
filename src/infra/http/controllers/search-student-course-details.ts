@@ -15,7 +15,7 @@ export async function searchStudentCourseDetails(
   app
     .withTypeProvider<ZodTypeProvider>()
     .get('/courses/:id/students/search', {
-      onRequest: [verifyJWT, verifyUserRole(['manager'])],
+      onRequest: [verifyJWT, verifyUserRole(['manager', 'admin', 'dev'])],
       schema: {
         params: z.object({
           id: z.string().cuid()
