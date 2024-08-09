@@ -5,20 +5,20 @@ import { StudentCourseDetails } from "../../enterprise/entities/value-objects/st
 import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts";
 import { PolesRepository } from "../repositories/poles-repository.ts";
 
-interface SearchStudentPoleDetailsUseCaseRequest {
+interface SearchStudentCourseByPoleDetailsUseCaseRequest {
   courseId: string
   poleId: string
   query: string
   page: number
 }
 
-type SearchStudentPoleDetailsUseCaseResponse = Either<ResourceNotFoundError, {
+type SearchStudentCourseByPoleDetailsUseCaseResponse = Either<ResourceNotFoundError, {
   students: StudentCourseDetails[]
   pages: number
   totalItems: number
 }>
 
-export class SearchStudentPoleDetailsUseCase {
+export class SearchStudentCourseByPoleDetailsUseCase {
   constructor (
     private coursesRepository: CoursesRepository,
     private polesRepository: PolesRepository,
@@ -30,7 +30,7 @@ export class SearchStudentPoleDetailsUseCase {
     poleId,
     query,
     page
-  }: SearchStudentPoleDetailsUseCaseRequest): Promise<SearchStudentPoleDetailsUseCaseResponse> {
+  }: SearchStudentCourseByPoleDetailsUseCaseRequest): Promise<SearchStudentCourseByPoleDetailsUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 

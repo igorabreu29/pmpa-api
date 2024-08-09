@@ -2,7 +2,7 @@ import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-r
 import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
 import { describe, it, expect, beforeEach } from 'vitest'
-import { SearchStudentPoleDetailsUseCase } from './search-student-pole-details.ts'
+import { SearchStudentCourseByPoleDetailsUseCase } from './search-student-course-by-pole-details.ts'
 import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository.ts'
 import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-students-courses-repository.ts'
 import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found-error.ts'
@@ -20,7 +20,7 @@ let coursesRepository: InMemoryCoursesRepository
 let polesRepository: InMemoryPolesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
 
-let sut: SearchStudentPoleDetailsUseCase
+let sut: SearchStudentCourseByPoleDetailsUseCase
 
 describe('Search Student Pole Details', () => {
   beforeEach(() => {
@@ -46,7 +46,7 @@ describe('Search Student Pole Details', () => {
       polesRepository
     )
 
-    sut = new SearchStudentPoleDetailsUseCase (
+    sut = new SearchStudentCourseByPoleDetailsUseCase (
       coursesRepository,
       polesRepository,
       studentsPolesRepository
