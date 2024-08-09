@@ -132,7 +132,13 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
     poleId, 
     query, 
     page 
-  }: SearchManyDetailsByPole): Promise<StudentCourseDetails[]> {
+  }: SearchManyDetailsByPole): Promise<{
+    studentCoursesDetails: StudentCourseDetails[]
+    pages: number
+    totalItems: number
+  }> {
+    const PER_PAGE = 10
+
     const studentPoles = await prisma.userCourseOnPole.findMany({
       where: {
         poleId,
@@ -156,8 +162,8 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
         pole: true
       },
 
-      skip: (page - 1) * 10,
-      take: page * 10
+      skip: (page - 1) * PER_PAGE,
+      take: page * PER_PAGE
     })
 
     const studentPolesMapper = studentPoles.map(studentPole => {
@@ -167,10 +173,30 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
         pole: studentPole.pole
       }
     })
-    
-    return studentPolesMapper.map(studentCourse => {
-      return PrismaStudentCourseDetailsMapper.toDomain(studentCourse)
+
+    const studentPolesCount = await prisma.userCourseOnPole.count({
+      where: {
+        poleId,
+        usersOnCourse: {
+          user: {
+            username: {
+              contains: query
+            },
+            role: 'STUDENT'
+          }
+        }
+      },
     })
+
+    const pages = Math.ceil(studentPolesCount / PER_PAGE)
+    
+    return {
+      studentCoursesDetails: studentPolesMapper.map(studentCourse => {
+        return PrismaStudentCourseDetailsMapper.toDomain(studentCourse)
+      }),
+      pages,
+      totalItems: studentPolesCount
+    }
   }
 
   async create(studentPole: StudentPole): Promise<void> {
