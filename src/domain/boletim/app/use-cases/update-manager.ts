@@ -106,9 +106,9 @@ export class UpdateManagerUseCase {
         this.managerCoursesRepository.delete(managerCourse),
         this.managerCoursesRepository.create(newManagerCourse),
       ])
-
-      await this.managerPolesRepository.create(managerPole)
       
+      await this.managerPolesRepository.create(managerPole)
+
       managerCourse = newManagerCourse
     }
 
