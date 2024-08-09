@@ -83,14 +83,14 @@ describe('Search Student Course Details (e2e)', () => {
   })
   
   it ('GET /courses/:id/students/search', async () => {
-    const manager = await prisma.user.create({
+    const developer = await prisma.user.create({
       data: {
         username: 'July Doe',
         civilId: '02346',
         cpf: '12345678911',
         email: 'july@acne.com', 
         password: await bcrypt.hash('node-21', 8),
-        role: 'MANAGER',
+        role: 'DEV',
         birthday: transformDate('01/04/2001')
       }
     })
@@ -98,7 +98,7 @@ describe('Search Student Course Details (e2e)', () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: manager.cpf,
+        cpf: developer.cpf,
         password: 'node-21'
       })
     const { token } = authenticateResponse.body
