@@ -136,8 +136,12 @@ describe('Search Student Pole Details', () => {
     const pole = makePole()
     polesRepository.create(pole)
 
-    for (let i = 1; i <= 12; i++) {
-      const studentNameOrError = Name.create(`john-${i}`)
+    const letters = [
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'
+    ]
+
+    for (let i = 0; i < 12; i++) {
+      const studentNameOrError = Name.create(`john-${letters[i]}`)
       if (studentNameOrError.isLeft()) return
 
       const student = makeStudent({ username: studentNameOrError.value })
@@ -158,14 +162,15 @@ describe('Search Student Pole Details', () => {
     })
 
     expect(result.isRight()).toBe(true)
-    expect(studentsRepository.items).toHaveLength(12)
     expect(result.value).toMatchObject({
+      pages: 2,
+      totalItems: 12,
       students: [
         {
-          username: 'john-11'
+          username: 'john-k'
         },
         {
-          username: 'john-12'
+          username: 'john-l'
         }
       ]
     })

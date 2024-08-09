@@ -112,12 +112,17 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
       }
     }
 
-  async searchManyDetailsByPoleId({ poleId, query, page }: SearchManyDetailsByPole): Promise<StudentCourseDetails[]> {
-    const studentPoles = this.items
+  async searchManyDetailsByPoleId({ poleId, query, page }: SearchManyDetailsByPole): Promise<{
+    studentCoursesDetails: StudentCourseDetails[]
+    pages: number
+    totalItems: number
+  }> {
+    const PER_PAGE = 10
+
+    const allStudentCoursesDetails = this.items
       .filter(item => {
         return item.poleId.toValue() === poleId
       })
-      .slice((page - 1) * 10, page * 10)
       .map(studentPole => {
         const studentCourse = this.studentsCoursesRepository.items.find(item => {
           return item.id.equals(studentPole.studentId)
@@ -154,7 +159,15 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
         return studentA.username.localeCompare(studentB.username)
       })
 
-    return studentPoles
+    const studentCoursesDetails = allStudentCoursesDetails.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+    const totalItems = allStudentCoursesDetails.length
+    const pages = Math.ceil(totalItems / PER_PAGE)
+
+    return {
+      studentCoursesDetails,
+      pages,
+      totalItems
+    }
   }
 
   async create(studentPole: StudentPole): Promise<void> {

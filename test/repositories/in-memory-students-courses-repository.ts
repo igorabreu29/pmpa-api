@@ -229,12 +229,17 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
       }
   }
 
-  async searchManyDetailsByCourseId({ courseId, query, page }: SearchManyDetails): Promise<StudentCourseDetails[]> {
-    const studentCourses = this.items
+  async searchManyDetailsByCourseId({ courseId, query, page }: SearchManyDetails): Promise<{
+    studentCoursesDetails: StudentCourseDetails[]
+    pages: number
+    totalItems: number
+  }> {
+    const PER_PAGE = 10
+
+    const allStudentCoursesDetails = this.items
       .filter(item => {
         return item.courseId.toValue() === courseId
       })
-      .slice((page - 1) * 10, page * 10)
       .map(studentCourse => {
         const student = this.studentsRepository.items.find(item => item.id.equals(studentCourse.studentId))
         if (!student) throw new Error(`Student with ID ${studentCourse.studentId.toValue()} does not exist`)
@@ -265,8 +270,19 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
       .filter(studentDetails => {
         return studentDetails.username.toLowerCase().includes(query.toLowerCase())
       })
+      .sort((studentA, studentB) => {
+        return studentA.username.localeCompare(studentB.username)
+      })
 
-    return studentCourses
+    const studentCoursesDetails = allStudentCoursesDetails.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+    const totalItems = allStudentCoursesDetails.length
+    const pages = Math.ceil(totalItems / PER_PAGE)
+
+    return {
+      studentCoursesDetails,
+      pages,
+      totalItems
+    }
   }
 
   async create(studentCourse: StudentCourse): Promise<void> {

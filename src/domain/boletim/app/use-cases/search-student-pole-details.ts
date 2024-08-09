@@ -14,6 +14,8 @@ interface SearchStudentPoleDetailsUseCaseRequest {
 
 type SearchStudentPoleDetailsUseCaseResponse = Either<ResourceNotFoundError, {
   students: StudentCourseDetails[]
+  pages: number
+  totalItems: number
 }>
 
 export class SearchStudentPoleDetailsUseCase {
@@ -35,14 +37,16 @@ export class SearchStudentPoleDetailsUseCase {
     const pole = await this.polesRepository.findById(poleId)
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
-    const students = await this.studentsPolesRepository.searchManyDetailsByPoleId({
+    const { studentCoursesDetails: students, pages, totalItems } = await this.studentsPolesRepository.searchManyDetailsByPoleId({
       poleId,
       query,
       page
     })
 
     return right({
-      students
+      students,
+      pages,
+      totalItems
     })
   }
 }

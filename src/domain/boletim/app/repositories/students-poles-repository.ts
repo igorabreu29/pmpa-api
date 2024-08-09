@@ -26,7 +26,11 @@ export abstract class StudentsPolesRepository {
     poleId,
     query,
     page
-  }: SearchManyDetailsByPole): Promise<StudentCourseDetails[]>
+  }: SearchManyDetailsByPole): Promise<{
+    studentCoursesDetails: StudentCourseDetails[]
+    pages: number
+    totalItems: number
+  }>
   
   abstract create(studentPole: StudentPole): Promise<void>
   abstract createMany(studentsPoles: StudentPole[]): Promise<void>
