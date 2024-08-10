@@ -110,6 +110,13 @@ export const formulas = {
 
     studentAverageStatus.status = isStudentSecondSeason ? 'second season' : studentAverageStatus.status
 
+    const assessmentTotalVF = assessments.filter(assessment => assessment?.vf !== null).length
+    const assessmentTotalAVI = assessments.filter(assessment => assessment?.avi !== null).length
+    const assessmentTotalAVII = assessments.filter(assessment => assessment?.avii !== null).length
+    
+    const assessmentsCount = 
+      assessmentTotalVF + assessmentTotalAVI + assessmentTotalAVII
+
     return {
       averageInform: {
         geralAverage: geralAverageWithBehavior ? Number(geralAverageWithBehavior.toFixed(3)) : Number(geralAverageWithWeight.toFixed(3)), 
@@ -120,7 +127,7 @@ export const formulas = {
       assessments: {
         ...assessmentsPerPeriod
       },
-      assessmentsCount: assessments.length,
+      assessmentsCount,
     }
   },
 
@@ -143,6 +150,13 @@ export const formulas = {
 
     studentAverageStatus.status = isStudentSecondSeason ? 'second season' : studentAverageStatus.status
 
+    const assessmentTotalVF = assessments.filter(assessment => assessment?.vf !== null).length
+    const assessmentTotalAVI = assessments.filter(assessment => assessment?.avi !== null).length
+    const assessmentTotalAVII = assessments.filter(assessment => assessment?.avii !== null).length
+    
+    const assessmentsCount = 
+      assessmentTotalVF + assessmentTotalAVI + assessmentTotalAVII
+
     return {
       averageInform: {
         geralAverage: behaviorAverage ? Number(assessmentsAverageWithBehaviorAverage.toFixed(3)) : Number(assessmentsAverage.toFixed(3)),
@@ -151,7 +165,7 @@ export const formulas = {
         studentAverageStatus
       },
       assessments,
-      assessmentsCount: assessments.length,
+      assessmentsCount,
     }
   }
 }
