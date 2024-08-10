@@ -12,7 +12,9 @@ interface SearchStudentsDetailsManagerUseCaseRequest {
 
 type SearchStudentsDetailsManagerUseCaseResponse = Either<ResourceNotFoundError, {
   students: {
-    studentsByPole: StudentCourseDetails[]
+    studentsByPole: StudentCourseDetails[],
+    pages: number
+    totalItems: number
   }[]
 }>
 
@@ -27,9 +29,11 @@ export class SearchStudentsDetailsManagerUseCase {
     if (!manager) return left(new ResourceNotFoundError('Manager not found.'))
 
     const students = await Promise.all(manager.poles.map(async (pole) => {
-      const studentsByPole = await this.studentsPolesRepository.searchManyDetailsByPoleId({ poleId: pole.id.toValue(), query, page })
+      const { studentCoursesDetails: studentsByPole, pages, totalItems } = await this.studentsPolesRepository.searchManyDetailsByPoleId({ poleId: pole.id.toValue(), query, page })
       return {
-        studentsByPole
+        studentsByPole,
+        pages,
+        totalItems
       }
     }))
 

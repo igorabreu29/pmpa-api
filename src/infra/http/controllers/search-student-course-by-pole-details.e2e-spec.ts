@@ -5,11 +5,12 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 import bcrypt from 'bcryptjs'
 import request from 'supertest'
-import { Course } from '@prisma/client'
+import { Course, Pole } from '@prisma/client'
 
 let course: Course
+let pole: Pole
 
-describe('Search Student Course Details (e2e)', () => {
+describe('Search Student Course By Pole Details (e2e)', () => {
   beforeAll(async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
@@ -23,7 +24,7 @@ describe('Search Student Course Details (e2e)', () => {
       }
     })
 
-    const pole = await prisma.pole.create({
+    pole = await prisma.pole.create({
       data: {
         name: 'pole-1'
       }
@@ -82,7 +83,7 @@ describe('Search Student Course Details (e2e)', () => {
     await app.close()
   })
   
-  it ('GET /courses/:id/students/search', async () => {
+  it ('GET /courses/:id/poles/:poleId/students/search', async () => {
     const developer = await prisma.user.create({
       data: {
         username: 'July Doe',
@@ -104,7 +105,7 @@ describe('Search Student Course Details (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .get(`/courses/${course.id}/students/search?query=Jo&page=1`)
+      .get(`/courses/${course.id}/poles/${pole.id}/students/search?query=Jo&page=1`)
       .set('Authorization', `Bearer ${token}`)
       .send()
 

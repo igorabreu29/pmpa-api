@@ -45,7 +45,11 @@ export abstract class StudentsCoursesRepository {
     courseId,
     query,
     page
-  }: SearchManyDetails): Promise<StudentCourseDetails[]>
+  }: SearchManyDetails): Promise<{
+    studentCoursesDetails: StudentCourseDetails[]
+    pages: number
+    totalItems: number
+  }>
 
   abstract create(studentCourse: StudentCourse): Promise<void>
   abstract createMany(studentsCourses: StudentCourse[]): Promise<void>

@@ -5,11 +5,14 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 import bcrypt from 'bcryptjs'
 import request from 'supertest'
-import { Course } from '@prisma/client'
+import { Course, Pole } from '@prisma/client'
 
 let course: Course
+let course2: Course
+let pole: Pole
+let pole2: Pole
 
-describe('Search Student Course Details (e2e)', () => {
+describe('Search Student Course By Pole Details (e2e)', () => {
   beforeAll(async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
@@ -23,13 +26,28 @@ describe('Search Student Course Details (e2e)', () => {
       }
     })
 
-    const pole = await prisma.pole.create({
+    course2 = await prisma.course.create({
+      data: {
+        endsAt,
+        formula: 'CGS',
+        imageUrl: '',
+        name: 'cgs-course',
+      }
+    })
+
+    pole = await prisma.pole.create({
       data: {
         name: 'pole-1'
       }
     })
 
-    await prisma.user.create({
+    pole2 = await prisma.pole.create({
+      data: {
+        name: 'pole-2'
+      }
+    })
+
+    const student = await prisma.user.create({
       data: {
         username: 'John Doe',
         civilId: '02345',
@@ -38,18 +56,31 @@ describe('Search Student Course Details (e2e)', () => {
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
         birthday: transformDate('01/02/2001'),
-        
-        usersOnCourses: {
+      },
+    })
+
+    await prisma.userOnCourse.create({
+      data: {
+        courseId: course.id,
+        userId: student.id,
+        usersOnPoles: {
           create: {
-            courseId: course.id,
-            usersOnPoles: {
-              create: {
-                poleId: pole.id
-              }
-            }
+            poleId: pole.id
           }
         }
-      },
+      }
+    })
+
+    await prisma.userOnCourse.create({
+      data: {
+        courseId: course2.id,
+        userId: student.id,
+        usersOnPoles: {
+          create: {
+            poleId: pole2.id
+          }
+        }
+      }
     })
 
     await prisma.user.create({
@@ -82,41 +113,85 @@ describe('Search Student Course Details (e2e)', () => {
     await app.close()
   })
   
-  it ('GET /courses/:id/students/search', async () => {
-    const developer = await prisma.user.create({
+  it ('GET /manager/students/search', async () => {
+    const manager = await prisma.user.create({
       data: {
         username: 'July Doe',
         civilId: '02346',
         cpf: '12345678911',
         email: 'july@acne.com', 
         password: await bcrypt.hash('node-21', 8),
-        role: 'DEV',
-        birthday: transformDate('01/04/2001')
+        role: 'MANAGER',
+        birthday: transformDate('01/04/2001'),
+
+        usersOnCourses: {
+          create: {
+            courseId: course2.id,
+            usersOnPoles: {
+              create: {
+                poleId: pole2.id
+              }
+            }
+          }
+        }
+      }
+    })
+
+    await prisma.userOnCourse.create({
+      data: {
+        courseId: course.id,
+        userId: manager.id,
+
+        usersOnPoles: {
+          create: {
+            poleId: pole.id
+          }
+        }
       }
     })
 
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: developer.cpf,
+        cpf: manager.cpf,
         password: 'node-21'
       })
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .get(`/courses/${course.id}/students/search?query=Jo&page=1`)
+      .get(`/manager/students/search?query=Jo&page=1`)
       .set('Authorization', `Bearer ${token}`)
       .send()
 
-    const { students } = response.body
+    const { studentsByPole } = response.body
     
     expect(response.statusCode).toEqual(200)
-    expect(students).toMatchObject([
+    expect(studentsByPole).toMatchObject([
       {
-        cpf: '00000000000'
+        students: [
+          {
+            cpf: '00000000000',
+            course: {
+              name: 'cgs-course'
+            }
+          }
+        ]
       },
       {
-        cpf: '00000000011'
+        students: [
+          {
+            cpf: '00000000000',
+            course: {
+              name: 'cas-course'
+            }
+          },
+          {
+            cpf: '00000000011',
+            course: {
+              name: 'cas-course'
+            }
+          }
+        ]
       }
     ])
   })

@@ -12,6 +12,8 @@ interface SearchStudentCourseDetailsUseCaseRequest {
 
 type SearchStudentCourseDetailsUseCaseResponse = Either<ResourceNotFoundError, {
   students: StudentCourseDetails[]
+  pages: number
+  totalItems: number
 }>
 
 export class SearchStudentCourseDetailsUseCase {
@@ -28,14 +30,16 @@ export class SearchStudentCourseDetailsUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
-    const students = await this.studentsCoursesRepository.searchManyDetailsByCourseId({
+    const { studentCoursesDetails: students, pages, totalItems } = await this.studentsCoursesRepository.searchManyDetailsByCourseId({
       courseId,
       query,
       page
     })
 
     return right({
-      students
+      students,
+      pages,
+      totalItems
     })
   }
 }

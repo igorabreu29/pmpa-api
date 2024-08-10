@@ -106,8 +106,8 @@ export class UpdateStudentUseCase {
       await Promise.all([
         this.studentCoursesRepository.delete(studentCourse),
         this.studentCoursesRepository.create(newStudentCourse),
-        this.studentPolesRepository.create(studentPole)
       ])
+      await this.studentPolesRepository.create(studentPole)
 
       studentCourse = newStudentCourse
     }
