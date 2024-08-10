@@ -48,7 +48,7 @@ describe('Verify Formulas', () => {
           vfe: 0,
           module: 3,
           average: 8,
-          isRecovering: false,
+          isRecovering: true,
           status: 'approved' as Status
         },
       ]
