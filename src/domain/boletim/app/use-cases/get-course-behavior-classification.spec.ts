@@ -90,9 +90,9 @@ describe('Get Course Behavior Classification', () => {
     studentsPolesRepository.create(studentPole2)
 
     const behavior = makeBehavior({
-      january: 8,
-      february: 8,
-      march: 8,
+      january: 4,
+      february: 3,
+      march: 2,
       april: 8,
       studentId: student1.id,
       courseId: course.id
@@ -118,7 +118,7 @@ describe('Get Course Behavior Classification', () => {
         {
           behaviorAverage: {
             behaviorAverageStatus: {
-              behaviorAverage: 8,
+              behaviorAverage: 7.5,
               status: 'approved'
             },
             behaviorsCount: 4
@@ -127,8 +127,8 @@ describe('Get Course Behavior Classification', () => {
         {
           behaviorAverage: {
             behaviorAverageStatus: {
-              behaviorAverage: 7.5,
-              status: 'approved'
+              behaviorAverage: 4.25,
+              status: 'disapproved'
             },
             behaviorsCount: 4
           }

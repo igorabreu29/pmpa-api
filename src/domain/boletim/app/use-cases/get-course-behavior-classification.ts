@@ -87,13 +87,13 @@ export class GetCourseBehaviorClassification {
 
     switch (course.formula) {
       case 'CGS': 
-        const classifiedByCGSFormula = classifyStudentsByModuleFormula(behaviors as CourseBehaviorClassificationByModule[])
+        const classifiedByCGSFormula = classifyStudentsByCGSAndCASFormula(behaviors as CourseBehaviorClassificationByModule[])
         return right({ studentsWithBehaviorAverage: classifiedByCGSFormula })
       case 'CAS': 
-        const classifiedByCASFormula = classifyStudentsByModuleFormula(behaviors as CourseBehaviorClassificationByModule[])
+        const classifiedByCASFormula = classifyStudentsByCGSAndCASFormula(behaviors as CourseBehaviorClassificationByModule[])
         return right({ studentsWithBehaviorAverage: classifiedByCASFormula })
       case 'CFP': 
-        const classifiedByCFPFormula = classifyStudentsByModuleFormula(behaviors as CourseBehaviorClassificationByModule[])
+        const classifiedByCFPFormula = classifyStudentsByCPFFormula(behaviors as CourseBehaviorClassificationByModule[])
         return right({ studentsWithBehaviorAverage: classifiedByCFPFormula })
       case 'CFO': 
         const classifiedByCFOFormula = classifyStudentsByPeriodFormula(behaviors as CourseBehaviorClassificationByPeriod[])
@@ -142,7 +142,34 @@ export const classifyStudentsByPeriodFormula = (behaviorsAverage: CourseBehavior
   })
 }
 
-export const classifyStudentsByModuleFormula = (behaviorsAverage: CourseBehaviorClassificationByModule[]) => {
+export const classifyStudentsByCGSAndCASFormula = (behaviorsAverage: CourseBehaviorClassificationByModule[]) => {
+  return behaviorsAverage.sort((studentA, studentB) => {
+    const geralAverageStudentA = studentA.behaviorAverage.behaviorAverageStatus.behaviorAverage
+    const geralAverageStudentB = studentB.behaviorAverage.behaviorAverageStatus.behaviorAverage
+
+    const isApprovedStudentA = studentA.behaviorAverage.behaviorAverageStatus.status === 'approved'
+    const isApprovedStudentB = studentB.behaviorAverage.behaviorAverageStatus.status === 'approved'
+    
+    const studentABirthday = Number(studentA.studentBirthday?.getTime())
+    const studentBBirthday = Number(studentB.studentBirthday?.getTime())
+
+    if (geralAverageStudentA !== geralAverageStudentB) {
+      return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+    }
+
+    if (isApprovedStudentA !== isApprovedStudentB) {
+      return Number(isApprovedStudentB) - Number(isApprovedStudentB)
+    }
+
+    if (studentABirthday !== studentBBirthday) {
+      return studentABirthday - studentBBirthday
+    }
+
+    return 0
+  })
+}
+
+export const classifyStudentsByCPFFormula = (behaviorsAverage: CourseBehaviorClassificationByModule[]) => {
   return behaviorsAverage.sort((studentA, studentB) => {
     const geralAverageStudentA = studentA.behaviorAverage.behaviorAverageStatus.behaviorAverage
     const geralAverageStudentB = studentB.behaviorAverage.behaviorAverageStatus.behaviorAverage
