@@ -34,12 +34,17 @@ export const classifyStudentsByPeriodFormula = (studentsWithAverage: StudentClas
       if (studentABirthday > studentBBirthday) return -1
     }
 
-    if (geralAverageStudentA < geralAverageStudentB) return 1
-    if (geralAverageStudentA > geralAverageStudentB) return -1
-    if (totalRecoveringFromStudentA < totalRecoveringFromStudentB) return -1
-    if (totalRecoveringFromStudentA > totalRecoveringFromStudentB) return 1
-    if (studentABirthday < studentBBirthday) return -1
-    if (studentABirthday > studentBBirthday) return 1
+    if (geralAverageStudentA !== geralAverageStudentB) {
+      return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+    }
+
+    if (totalRecoveringFromStudentA !== totalRecoveringFromStudentB) {
+      return totalRecoveringFromStudentB - totalRecoveringFromStudentA
+    }
+
+    if (studentABirthday !== studentBBirthday) {
+      return studentABirthday - studentBBirthday
+    }
 
     return 0
   })
