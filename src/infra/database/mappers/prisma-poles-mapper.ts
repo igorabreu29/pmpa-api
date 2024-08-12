@@ -4,14 +4,14 @@ import { Name } from '@/domain/boletim/enterprise/entities/value-objects/name.ts
 import { Prisma, Pole as PrismaPole } from '@prisma/client';
 
 export class PrismaPolesMapper {
-  static toDomain(course: PrismaPole): Pole {
-    const nameOrError = Name.create(course.name)
+  static toDomain(pole: PrismaPole): Pole {
+    const nameOrError = Name.create(pole.name)
 
     if (nameOrError.isLeft()) throw new Error(nameOrError.value.message)
 
     const poleOrError = Pole.create({
       name: nameOrError.value
-    }, new UniqueEntityId(course.id))
+    }, new UniqueEntityId(pole.id))
     if (poleOrError.isLeft()) throw new Error(poleOrError.value.message)
     
     return poleOrError.value
