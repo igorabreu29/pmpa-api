@@ -110,7 +110,7 @@ describe('Search Students Details By Manager Use Case', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      searchs: [
+      students: [
         {
           id: student.id,
           username: student.username
