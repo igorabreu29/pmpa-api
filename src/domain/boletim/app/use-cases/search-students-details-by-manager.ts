@@ -2,7 +2,8 @@ import { Either, left, right } from "@/core/either.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { StudentCourseDetails } from "../../enterprise/entities/value-objects/student-course-details.ts";
 import { ManagersRepository } from "../repositories/managers-repository.ts";
-import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts";
+import { SearchsRepository } from "../repositories/searchs-repository.ts";
+import { Search } from "../../enterprise/entities/search.ts";
 
 interface SearchStudentsDetailsManagerUseCaseRequest {
   managerId: string
@@ -11,34 +12,33 @@ interface SearchStudentsDetailsManagerUseCaseRequest {
 }
 
 type SearchStudentsDetailsManagerUseCaseResponse = Either<ResourceNotFoundError, {
-  students: {
-    studentsByPole: StudentCourseDetails[],
-    pages: number
-    totalItems: number
-  }[]
+  students: Search[]
+  pages: number
+  totalItems: number
 }>
 
 export class SearchStudentsDetailsManagerUseCase {
   constructor (
     private managersRepository: ManagersRepository,
-    private studentsPolesRepository: StudentsPolesRepository
+    private searchsRepository: SearchsRepository
   ) {}
 
   async execute({ managerId, query, page }: SearchStudentsDetailsManagerUseCaseRequest): Promise<SearchStudentsDetailsManagerUseCaseResponse> {
     const manager = await this.managersRepository.findDetailsById(managerId)
     if (!manager) return left(new ResourceNotFoundError('Manager not found.'))
 
-    const students = await Promise.all(manager.poles.map(async (pole) => {
-      const { studentCoursesDetails: studentsByPole, pages, totalItems } = await this.studentsPolesRepository.searchManyDetailsByPoleId({ poleId: pole.id.toValue(), query, page })
-      return {
-        studentsByPole,
-        pages,
-        totalItems
-      }
-    }))
+    const { searchs: students, pages, totalItems } = await this.searchsRepository.searchManyDetails({
+      page,
+      query,
+      role: 'manager',
+      courses: manager.courses,
+      poles: manager.poles
+    })
 
     return right({
-      students
+      students,
+      pages,
+      totalItems
     })
   }
 }
