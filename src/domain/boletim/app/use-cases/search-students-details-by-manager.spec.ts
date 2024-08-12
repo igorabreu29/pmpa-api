@@ -18,16 +18,16 @@ import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students
 import { beforeEach, describe, expect, it } from 'vitest'
 import { Name } from '../../enterprise/entities/value-objects/name.ts'
 import { SearchStudentsDetailsManagerUseCase } from './search-students-details-by-manager.ts'
+import { InMemorySearchsRepository } from 'test/repositories/in-memory-searchs-repository.ts'
+import { makeSearch } from 'test/factories/make-search.ts'
 
 let coursesRepository: InMemoryCoursesRepository
 let polesRepository: InMemoryPolesRepository
-let managersRepository: InMemoryManagersRepository
-let studentsRepository: InMemoryStudentsRepository
-let studentsCoursesRepository: InMemoryStudentsCoursesRepository
-
 let managersCoursesRepository: InMemoryManagersCoursesRepository
 let managersPolesRepository: InMemoryManagersPolesRepository
-let studentsPolesRepository: InMemoryStudentsPolesRepository
+
+let managersRepository: InMemoryManagersRepository
+let searchsRepository: InMemorySearchsRepository
 
 let sut: SearchStudentsDetailsManagerUseCase
 
@@ -35,18 +35,6 @@ describe('Search Students Details By Manager Use Case', () => {
   beforeEach(() => {
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
-    studentsRepository = new InMemoryStudentsRepository(
-      studentsCoursesRepository,
-      coursesRepository,
-      studentsPolesRepository,
-      polesRepository
-    )
-    studentsCoursesRepository = new InMemoryStudentsCoursesRepository(
-      studentsRepository,
-      coursesRepository,
-      studentsPolesRepository,
-      polesRepository
-    )
 
     managersCoursesRepository = new InMemoryManagersCoursesRepository(
       managersRepository,
@@ -62,18 +50,11 @@ describe('Search Students Details By Manager Use Case', () => {
       managersPolesRepository,
       polesRepository
     )
-    studentsPolesRepository = new InMemoryStudentsPolesRepository(
-      studentsRepository,
-      studentsCoursesRepository,
-      coursesRepository,
-      polesRepository
-    )
+    searchsRepository = new InMemorySearchsRepository()
 
     sut = new SearchStudentsDetailsManagerUseCase(
-      // managersCoursesRepository,
-      // managersPolesRepository,
       managersRepository,
-      studentsPolesRepository,
+      searchsRepository
     )
   })
 
@@ -116,47 +97,24 @@ describe('Search Students Details By Manager Use Case', () => {
     if (nameOrError.isLeft()) return
     if (nameOrError2.isLeft()) return
 
-    const student = makeStudent({ username: nameOrError.value })
-    const student2 = makeStudent({ username: nameOrError2.value })
-    studentsRepository.createMany([student, student2])
-
-    const studentCourse = makeStudentCourse({ studentId: student.id, courseId: course.id })
-    const studentCourse2 = makeStudentCourse({ studentId: student.id, courseId: course2.id })
-    const studentCourse3 = makeStudentCourse({ studentId: student2.id, courseId: course.id })
-    const studentCourse4 = makeStudentCourse({ studentId: student2.id, courseId: course2.id })
-    studentsCoursesRepository.createMany([studentCourse, studentCourse2, studentCourse3, studentCourse4])
-
-    const studentPole = makeStudentPole({ studentId: studentCourse.id, poleId: pole.id })
-    const studentPole2 = makeStudentPole({ studentId: studentCourse2.id, poleId: pole2.id })
-    const studentPole3 = makeStudentPole({ studentId: studentCourse3.id, poleId: pole.id })
-    const studentPole4 = makeStudentPole({ studentId: studentCourse4.id, poleId: pole2.id })
-    studentsPolesRepository.createMany([studentPole, studentPole2, studentPole3, studentPole4])
+    const student = makeSearch({ username: nameOrError.value, role: 'student', courses: [course, course2], poles: [pole, pole2] })
+    const student2 = makeSearch({ username: nameOrError2.value, role: 'student', courses: [course], poles: [pole] })
+    searchsRepository.items.push(student)
+    searchsRepository.items.push(student2)
 
     const result = await sut.execute({
       managerId: manager.id.toValue(),
       page: 1,
       query: 'Doe'
     })
-    
+
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      students: [
+      searchs: [
         {
-          studentsByPole: [
-            {
-              username: 'John Doe',
-              pole: pole.name.value
-            }
-          ]
-        },
-        {
-          studentsByPole: [
-            {
-              username: 'John Doe',
-              pole: pole2.name.value
-            }
-          ],
-        },
+          id: student.id,
+          username: student.username
+        }
       ]
     })
   })
