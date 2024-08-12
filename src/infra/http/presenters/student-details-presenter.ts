@@ -23,7 +23,6 @@ export class StudentDetailsPresenter {
       password: '',
       avatarUrl: studentDetails.avatarUrl ? studentDetails.avatarUrl : null,
       birthday: studentDetails.birthday,
-      isActive: studentDetails.isActive,
       courses: studentDetails.courses.map(course => ({
         id: course.id.toValue(),
         endsAt: course.endsAt.value,

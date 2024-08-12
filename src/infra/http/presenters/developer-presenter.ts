@@ -12,7 +12,6 @@ export class DeveloperPresenter {
       password: '',
       avatarUrl: developer.avatarUrl ? developer.avatarUrl : null,
       birthday: developer.birthday.value,
-      isActive: developer.active,
     }
   }
 }

@@ -22,7 +22,6 @@ export class ManagerDetailsPresenter {
       password: '',
       avatarUrl: managerDetails.avatarUrl ? managerDetails.avatarUrl : null,
       birthday: managerDetails.birthday,
-      isActive: managerDetails.isActive,
       courses: managerDetails.courses.map(course => ({
         id: course.id.toValue(),
         endsAt: course.endsAt.value,
