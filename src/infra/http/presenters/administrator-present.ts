@@ -12,7 +12,6 @@ export class AdministratorPresenter {
       password: '',
       avatarUrl: administrator.avatarUrl ? administrator.avatarUrl : null,
       birthday: administrator.birthday.value,
-      isActive: administrator.active,
     }
   }
 }
