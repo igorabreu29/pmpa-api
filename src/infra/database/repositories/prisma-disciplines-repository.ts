@@ -26,6 +26,28 @@ export class PrismaDisciplinesRepository implements DisciplinesRepository {
     return PrismaDisciplinesMapper.toDomain(discipline)
   }
 
+  async findMany(page: number): Promise<{ disciplines: Discipline[]; pages: number; totalItems: number; }> {
+    const PER_PAGE = 10
+
+    const disciplines = await prisma.discipline.findMany({
+      skip: (page - 1) * PER_PAGE,
+      take: page * PER_PAGE,
+
+      orderBy: {
+        name: 'asc'
+      }
+    })
+
+    const disciplinesCount = await prisma.discipline.count()
+    const pages = Math.ceil(disciplinesCount / PER_PAGE)
+
+    return {
+      disciplines: disciplines.map(discipline => PrismaDisciplinesMapper.toDomain(discipline)),
+      pages,
+      totalItems: disciplinesCount
+    }
+  }
+
   async create(discipline: Discipline): Promise<void> {
     const prismaMapper = PrismaDisciplinesMapper.toPrisma(discipline)
     await prisma.discipline.create({

@@ -14,6 +14,23 @@ export class InMemoryDisciplinesRepository implements DisciplinesRepository {
     return discipline ?? null
   }
 
+  async findMany(page: number): Promise<{ disciplines: Discipline[]; pages: number; totalItems: number; }> {
+    const PER_PAGE = 10
+
+    const disciplines = this.items
+      .slice((page - 1) * PER_PAGE, page * PER_PAGE)
+      .sort((a, b) => a.name.value.localeCompare(b.name.value))
+
+    const totalItems = this.items.length
+    const pages = Math.ceil(totalItems / PER_PAGE)
+
+    return {
+      disciplines,
+      pages,
+      totalItems
+    }
+  }
+
   async create(discipline: Discipline): Promise<void> {
     this.items.push(discipline)
   }
