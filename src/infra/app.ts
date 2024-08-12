@@ -51,7 +51,7 @@ import { getStudentAverage } from "./http/controllers/get-student-average.ts";
 import { studentConfirmLoginAndUpdate } from "./http/controllers/student-confirm-login-and-update.ts";
 import { searchStudentCourseDetails } from "./http/controllers/search-student-course-details.ts";
 import { searchStudentCourseByPoleDetails } from "./http/controllers/search-student-course-by-pole-details.ts";
-import { searchStudentCourseByManagerDetails } from "./http/controllers/search-student-course-by-manager.ts";
+import { searchStudentsCourseByManagerDetails } from "./http/controllers/search-students-course-by-manager.ts";
 
 export const app = fastify()
 
@@ -115,6 +115,6 @@ app.register(studentConfirmLoginAndUpdate)
 app.register(getStudentAverage)
 app.register(searchStudentCourseDetails)
 app.register(searchStudentCourseByPoleDetails)
-app.register(searchStudentCourseByManagerDetails)
+app.register(searchStudentsCourseByManagerDetails)
 
 app.setErrorHandler(errorHandler)
