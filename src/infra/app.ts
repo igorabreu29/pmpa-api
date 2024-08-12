@@ -54,6 +54,7 @@ import { searchStudentCourseByPoleDetails } from "./http/controllers/search-stud
 import { searchStudentsCourseByManagerDetails } from "./http/controllers/search-students-course-by-manager.ts";
 import { search } from "./http/controllers/search.ts";
 import { getCourseDisciplines } from "./http/controllers/get-course-disciplines.ts";
+import { getDisciplines } from "./http/controllers/get-disciplines.ts";
 
 export const app = fastify()
 
@@ -113,6 +114,7 @@ app.register(changeManagerProfile)
 app.register(changeAdministratorProfile)
 app.register(changeDeveloperProfile)
 app.register(getPoles)
+app.register(getDisciplines)
 app.register(getCourses)
 app.register(studentConfirmLoginAndUpdate)
 app.register(getStudentAverage)
