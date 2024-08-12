@@ -7,6 +7,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { makeSearchStudentDetailsByManagerUseCase } from "@/infra/factories/make-search-students-details-by-manager.ts";
+import { SearchPresenter } from "../presenters/search-presenter.ts";
 
 export async function searchStudentsCourseByManagerDetails(
   app: FastifyInstance
@@ -46,7 +47,7 @@ export async function searchStudentsCourseByManagerDetails(
       const { students, pages, totalItems } = result.value
 
       return res.status(200).send({
-        students,
+        students: students.map(student => SearchPresenter.toHTTP(student)),
         pages,
         totalItems
       })
