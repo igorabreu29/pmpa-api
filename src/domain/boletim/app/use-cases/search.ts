@@ -1,5 +1,4 @@
 import { Either, right } from "@/core/either.ts";
-import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { SearchsRepository } from "../repositories/searchs-repository.ts";
 import { Search } from "../../enterprise/entities/search.ts";
 import { Role } from "../../enterprise/entities/authenticate.ts";
