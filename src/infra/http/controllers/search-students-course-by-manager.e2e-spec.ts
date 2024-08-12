@@ -165,9 +165,14 @@ describe('Search Students Course By Manager (e2e)', () => {
 
     const { students } = response.body
 
-    console.log(students)
-    
     expect(response.statusCode).toEqual(200)
-    expect(students)
+    expect(students).toMatchObject([
+      {
+        username: 'John Doe'
+      },
+      {
+        username: 'Jonas Doe'
+      },
+    ])
   })
 })
