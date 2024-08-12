@@ -18,6 +18,10 @@ export class PrismaSearchsRepository implements SearchsRepository {
           },
         },
 
+        orderBy: {
+          username: 'asc'
+        },
+
         skip: (page - 1) * PER_PAGE,
         take: page * PER_PAGE,
 
@@ -28,7 +32,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
           civilId: true,
           role: true,
           usersOnCourses: {
-            select: {
+            include: {
               course: true,
               usersOnPoles: {
                 select: {
@@ -51,8 +55,14 @@ export class PrismaSearchsRepository implements SearchsRepository {
           poles: search.usersOnCourses.map(item => item.usersOnPoles[0].pole)
         }))
         .filter(search => {
-          return search.courses.some(course => courses?.includes(PrismaCoursesMapper.toDomain(course))) &&
-            search.poles.some(pole => poles?.includes(PrismaPolesMapper.toDomain(pole)))
+          return search.courses.some(item => {
+            const courseMapper = PrismaCoursesMapper.toDomain(item)
+            return courses?.map(course => course.id.equals(courseMapper.id))
+          }) &&
+            search.poles.some(pole => {
+              const poleMapper = PrismaPolesMapper.toDomain(pole)
+              return poles?.some(pole => pole.id.equals(poleMapper.id))
+            })
         })
 
         const searchsCount = await prisma.user.count({
@@ -78,6 +88,10 @@ export class PrismaSearchsRepository implements SearchsRepository {
           username: {
             contains: query
           }
+        },
+
+        orderBy: {
+          username: 'asc'
         },
 
         skip: (page - 1) * PER_PAGE,
@@ -127,6 +141,10 @@ export class PrismaSearchsRepository implements SearchsRepository {
         username: {
           contains: query
         }
+      },
+
+      orderBy: {
+        username: 'asc'
       },
 
       skip: (page - 1) * PER_PAGE,

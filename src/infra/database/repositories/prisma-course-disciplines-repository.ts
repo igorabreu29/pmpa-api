@@ -56,6 +56,12 @@ export class PrismaCourseDisciplinesRepository implements CoursesDisciplinesRepo
 
       include: {
         discipline: true
+      },
+
+      orderBy: {
+        discipline: {
+          name: 'asc'
+        }
       }
     })
 
