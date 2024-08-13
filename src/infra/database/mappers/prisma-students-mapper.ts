@@ -46,7 +46,6 @@ export class PrismaStudentsMapper {
       email: student.email.value,
       password: student.passwordHash.value,
       civilId: String(student.civilId),
-      isActive: student.active,
       birthday: student.birthday.value,
       avatarUrl: student.avatarUrl,
       createdAt: student.createdAt,
