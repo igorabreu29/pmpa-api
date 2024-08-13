@@ -57,7 +57,7 @@ export interface ExcelBehaviorsBatch {
 
 export function createStudentsBatchExcelToJSON(fileUrl: string) {
   const data: ExcelCreateStudentsBatch = excelToJSON({
-    sourceFile: resolve(import.meta.dirname, `../../../../${fileUrl}`),
+    sourceFile: resolve(import.meta.dirname, `../../../${fileUrl}`),
     header: {
       rows: 1
     },
@@ -82,7 +82,7 @@ export function createStudentsBatchExcelToJSON(fileUrl: string) {
 
 export function updateStudentsBatchExcelToJSON(fileUrl: string) {
   const data: ExcelUpdateStudentsBatch = excelToJSON({
-    sourceFile: resolve(import.meta.dirname, `../../../../${fileUrl}`),
+    sourceFile: resolve(import.meta.dirname, `../../../${fileUrl}`),
     header: {
       rows: 1
     },
@@ -107,7 +107,7 @@ export function updateStudentsBatchExcelToJSON(fileUrl: string) {
 
 export function assessmentsBatchExcelToJSON(fileUrl: string) {
   const data: ExcelAssessmentsBatch = excelToJSON({
-    sourceFile: resolve(import.meta.dirname, `../../../../${fileUrl}`),
+    sourceFile: resolve(import.meta.dirname, `../../../${fileUrl}`),
     header: {
       rows: 1
     },
@@ -131,7 +131,7 @@ export function assessmentsBatchExcelToJSON(fileUrl: string) {
 
 export function behaviorsBatchExcelToJSON(fileUrl: string) {
   const data: ExcelBehaviorsBatch = excelToJSON({
-    sourceFile: resolve(import.meta.dirname, `../../../../${fileUrl}`),
+    sourceFile: resolve(import.meta.dirname, `../../../${fileUrl}`),
     header: {
       rows: 1
     },
