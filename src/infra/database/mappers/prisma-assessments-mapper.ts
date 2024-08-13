@@ -24,7 +24,7 @@ export class PrismaAssessmentsMapper {
       courseId: assessment.courseId.toValue(),
       studentId: assessment.studentId.toValue(),
       disciplineId: assessment.disciplineId.toValue(),
-      vf: assessment.vf,
+      vf: assessment.vf ? assessment.vf : 0,
       avi: assessment.avi,
       avii: assessment.avii,
       vfe: assessment.vfe
