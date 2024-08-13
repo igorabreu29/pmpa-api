@@ -1,5 +1,4 @@
 import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
-import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
