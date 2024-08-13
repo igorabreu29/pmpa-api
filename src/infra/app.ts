@@ -5,7 +5,7 @@ import { authenticate } from "./http/controllers/authenticate.ts";
 import { createStudent } from "./http/controllers/create-student.ts";
 import { errorHandler } from "./error-handler.ts";
 import { resolve } from "node:path";
-import { createStudentsBatch } from "./http/controllers/create-students-batch.ts";
+import { createStudentBatch } from "./http/controllers/create-students-batch.ts";
 import { deleteStudent } from "./http/controllers/delete-student.ts";
 import { updateStudent } from "./http/controllers/update-student.ts";
 import { createManager } from "./http/controllers/create-manager.ts";
@@ -55,6 +55,9 @@ import { searchStudentsCourseByManagerDetails } from "./http/controllers/search-
 import { search } from "./http/controllers/search.ts";
 import { getCourseDisciplines } from "./http/controllers/get-course-disciplines.ts";
 import { getDisciplines } from "./http/controllers/get-disciplines.ts";
+import { updateAssessmentBatch } from "./http/controllers/update-assessments-batch.ts";
+import { updateBehaviorBatch } from "./http/controllers/update-behaviors-batch.ts";
+import { updateStudentBatch } from "./http/controllers/update-students-batch.ts";
 
 export const app = fastify()
 
@@ -72,8 +75,9 @@ app.setSerializerCompiler(serializerCompiler)
 
 app.register(authenticate)
 app.register(createStudent)
-app.register(createStudentsBatch)
+app.register(createStudentBatch)
 app.register(updateStudent)
+app.register(updateStudentBatch)
 app.register(changeStudentStatus)
 app.register(deleteStudent)
 app.register(createManager)
@@ -87,10 +91,12 @@ app.register(createDeveloper)
 app.register(createAssessment)
 app.register(createAssessmentBatch)
 app.register(updateAssessment)
+app.register(updateAssessmentBatch)
 app.register(deleteAssessment)
 app.register(createBehavior)
 app.register(createBehaviorBatch)
 app.register(updateBehavior)
+app.register(updateBehaviorBatch)
 app.register(deleteBehavior)
 app.register(createCourse)
 app.register(createCoursePole)
