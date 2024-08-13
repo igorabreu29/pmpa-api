@@ -1,5 +1,4 @@
 import { left, right, type Either } from "@/core/either.ts";
-import { Attachment } from "../../enterprise/entities/attachment.ts";
 import type { StudentsRepository } from "../repositories/students-repository.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 
