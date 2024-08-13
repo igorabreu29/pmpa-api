@@ -29,4 +29,18 @@ export class PrismaStudentsBatchRepository implements StudentsBatchRepository {
       })
     }
   }
+
+  async save(studentBatch: StudentBatch): Promise<void> {
+    const prismaMapper = studentBatch.students.map(({ student }) => PrismaStudentsMapper.toPrisma(student))
+
+    await Promise.all(prismaMapper.map(async item => {
+      await prisma.user.update({
+        where: {
+          id: item.id
+        },
+
+        data: item
+      })
+    }))
+  }
 }
