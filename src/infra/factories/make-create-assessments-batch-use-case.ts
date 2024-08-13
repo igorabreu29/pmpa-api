@@ -1,4 +1,3 @@
-import { CreateAssessmentUseCase } from "@/domain/boletim/app/use-cases/create-assessment.ts";
 import { PrismaAssessmentsRepository } from "../database/repositories/prisma-assessments-repository.ts";
 import { PrismaCoursesRepository } from "../database/repositories/prisma-courses-repository.ts";
 import { PrismaDisciplinesRepository } from "../database/repositories/prisma-disciplines-repository.ts";
