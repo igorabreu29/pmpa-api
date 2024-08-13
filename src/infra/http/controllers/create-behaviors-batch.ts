@@ -13,26 +13,8 @@ import { ConflictError } from "@/domain/boletim/app/use-cases/errors/conflict-er
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { makeCreateBehaviorsBatchUseCase } from "@/infra/factories/make-create-behaviors-batch-use-case.ts";
 import { upload } from "@/infra/libs/multer.ts";
-import { resolve } from "node:path";
-import excelToJson from "convert-excel-to-json";
+import { behaviorsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
 
-interface ExcelBehaviorsBatch {
-  [key: string]: {
-    cpf: string
-    january: number | null
-    february: number | null
-    march: number | null
-    april: number | null
-    may: number | null
-    jun: number | null
-    july: number | null
-    august: number | null
-    september: number | null
-    october: number | null
-    november: number | null
-    december: number | null
-  }[]
-}
 
 export async function createBehaviorBatch(
   app: FastifyInstance
@@ -61,34 +43,8 @@ export async function createBehaviorBatch(
 
       const fullUrl = req.protocol.concat('://').concat(req.hostname)
       const fileUrl = new URL(`/uploads/${filename}`, fullUrl)
-  
-      const converted: ExcelBehaviorsBatch = excelToJson({
-        sourceFile: resolve(import.meta.dirname, `../../../../${fileUrl.pathname}`),
-        header: {
-          rows: 1,
-        },
-        columnToKey: {
-          A: 'cpf',
-          B: 'january',
-          C: 'february',
-          D: 'march',
-          E: 'april',
-          F: 'may',
-          G: 'jun',
-          H: 'july',
-          I: 'august',
-          J: 'september',
-          K: 'october',
-          L: 'november',
-          M: 'december'
-        },
-        sheets: ['Página1'],
-      })
 
-      const studentBehaviors = converted['Página1'].map(item => ({
-        ...item,
-        cpf: String(item.cpf)
-      }))
+      const studentBehaviors = behaviorsBatchExcelToJSON(fileUrl.pathname)
 
       const ip = req.ip
 

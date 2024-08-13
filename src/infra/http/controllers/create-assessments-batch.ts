@@ -11,20 +11,9 @@ import { Conflict } from "../errors/conflict-error.ts";
 import { ConflictError } from "@/domain/boletim/app/use-cases/errors/conflict-error.ts";
 import { makeCreateAssessmentsBatchUseCase } from "@/infra/factories/make-create-assessments-batch-use-case.ts";
 import { upload } from "@/infra/libs/multer.ts";
-import excelToJson from "convert-excel-to-json";
-import { resolve } from "node:path";
 import { ClientError } from "../errors/client-error.ts";
+import { assessmentsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
 
-interface ExcelAssessmentsBatch {
-  [key: string]: {
-    cpf: string
-    disciplineName: string
-    vf: number
-    avi?: number
-    avii?: number
-    vfe?: number
-  }[]
-}
 
 export async function createAssessmentBatch(
   app: FastifyInstance
@@ -52,27 +41,8 @@ export async function createAssessmentBatch(
 
       const fullUrl = req.protocol.concat('://').concat(req.hostname)
       const fileUrl = new URL(`/uploads/${filename}`, fullUrl)
-  
-      const converted: ExcelAssessmentsBatch = excelToJson({
-        sourceFile: resolve(import.meta.dirname, `../../../../${fileUrl.pathname}`),
-        header: {
-          rows: 1,
-        },
-        columnToKey: {
-          A: 'cpf',
-          B: 'disciplineName',
-          C: 'vf',
-          D: 'avi',
-          E: 'avii',
-          F: 'vfe',
-        },
-        sheets: ['Página1'],
-      })
 
-      const studentAssessments = converted['Página1'].map(item => ({
-        ...item,
-        cpf: String(item.cpf)
-      }))
+      const studentAssessments = assessmentsBatchExcelToJSON(fileUrl.pathname)
 
       const ip = req.ip
 

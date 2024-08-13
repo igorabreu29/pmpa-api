@@ -7,8 +7,6 @@ import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { makeCreateStudentsBatchUseCase } from "@/infra/factories/make-create-students-batch-use-case.ts";
 
-import excelToJSON from 'convert-excel-to-json';
-import { resolve } from "node:path";
 import { upload } from "@/infra/libs/multer.ts";
 import { z } from "zod";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
@@ -20,20 +18,9 @@ import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
+import { createStudentsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
 
-interface ExcelStudentsBatch {
-  [key: string]: {
-    username: string
-    cpf: string
-    email: string
-    civilId: number
-    courseName: string
-    poleName: string
-    birthday: Date
-  }[]
-}
-
-export async function createStudentsBatch(
+export async function createStudentBatch(
   app: FastifyInstance
 ) {
   app
@@ -55,27 +42,7 @@ export async function createStudentsBatch(
     const fullUrl = req.protocol.concat('://').concat(req.hostname)
     const fileUrl = new URL(`/uploads/${filename}`, fullUrl)
 
-    const converted: ExcelStudentsBatch = excelToJSON({
-      sourceFile: resolve(import.meta.dirname, `../../../../${fileUrl.pathname}`),
-      header: {
-        rows: 1
-      },
-      columnToKey: {
-        A: 'cpf',
-        B: 'username',
-        C: 'email',
-        D: 'civilId',
-        E: 'birthday',
-        F: 'courseName',
-        G: 'poleName',
-      },
-      sheets: ['Página1'],
-    })
-
-    const students = converted['Página1'].map(item => ({
-      ...item,
-      cpf: String(item.cpf)
-    }))
+    const students = createStudentsBatchExcelToJSON(fileUrl.pathname)
 
     const ip = req.ip
 
