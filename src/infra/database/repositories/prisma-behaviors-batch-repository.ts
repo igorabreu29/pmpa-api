@@ -14,8 +14,8 @@ export class PrismaBehaviorsBatchRepository implements BehaviorsBatchRepository 
   async save(behaviorBatch: BehaviorBatch): Promise<void> {
     const prismaMapper = behaviorBatch.behaviors.map(behavior => PrismaBehaviorsMapper.toPrisma(behavior))
 
-    await Promise.all(prismaMapper.map(item => {
-      prisma.behavior.update({
+    await Promise.all(prismaMapper.map(async item => {
+      await prisma.behavior.update({
         where: {
           id: item.id
         },
