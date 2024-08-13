@@ -49,7 +49,9 @@ describe('Update Students Batch Use Case', () => {
       polesRepository
     )
 
-    studentsBatchRepository = new InMemoryStudentsBatchRepository()
+    studentsBatchRepository = new InMemoryStudentsBatchRepository(
+      studentsRepository
+    )
 
     sut = new UpdateStudentsBatchUseCase (
       studentsRepository,

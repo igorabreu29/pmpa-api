@@ -98,7 +98,7 @@ export class UpdateStudentsBatchUseCase {
           this.studentCoursesRepository.create(newStudentCourse),
         ])
         
-        this.studentPolesRepository.create(studentPole)
+        await this.studentPolesRepository.create(studentPole)
 
         studentCourse = newStudentCourse
       }
@@ -159,7 +159,7 @@ export class UpdateStudentsBatchUseCase {
       fileName,
       fileLink
     })
-    await this.studentsBatchRepository.create(studentBatch)
+    await this.studentsBatchRepository.save(studentBatch)
 
     return right(null)
   }
