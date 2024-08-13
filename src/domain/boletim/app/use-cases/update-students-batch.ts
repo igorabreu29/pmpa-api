@@ -96,8 +96,9 @@ export class UpdateStudentsBatchUseCase {
         await Promise.all([
           this.studentCoursesRepository.delete(studentCourse),
           this.studentCoursesRepository.create(newStudentCourse),
-          this.studentPolesRepository.create(studentPole)
         ])
+        
+        this.studentPolesRepository.create(studentPole)
 
         studentCourse = newStudentCourse
       }
