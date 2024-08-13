@@ -58,6 +58,7 @@ import { getDisciplines } from "./http/controllers/get-disciplines.ts";
 import { updateAssessmentBatch } from "./http/controllers/update-assessments-batch.ts";
 import { updateBehaviorBatch } from "./http/controllers/update-behaviors-batch.ts";
 import { updateStudentBatch } from "./http/controllers/update-students-batch.ts";
+import { changeStudentAvatar } from "./http/controllers/change-student-avatar.ts";
 
 export const app = fastify()
 
@@ -79,6 +80,7 @@ app.register(createStudentBatch)
 app.register(updateStudent)
 app.register(updateStudentBatch)
 app.register(changeStudentStatus)
+app.register(changeStudentAvatar)
 app.register(deleteStudent)
 app.register(createManager)
 app.register(deleteManager)

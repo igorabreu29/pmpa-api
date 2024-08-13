@@ -16,7 +16,7 @@ let polesRepository: InMemoryPolesRepository
 let studentsRepository: InMemoryStudentsRepository
 let sut: ChangeStudentAvatarUseCase
 
-describe('Create Attachment Use Case', () => {
+describe('Change Student Avatar Use Case', () => {
   beforeEach(() => {
     studentsRepository = new InMemoryStudentsRepository(
       studentCoursesRepository,
