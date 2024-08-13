@@ -75,8 +75,6 @@ describe('Create Behaviors Batch (e2e)', () => {
       .set('Authorization', `Bearer ${token}`)
       .attach('excel', 'test/upload/behaviors.xlsx')
 
-    console.log(response.body)
-
     expect(response.statusCode).toEqual(201)
 
     const behaviors = await prisma.behavior.findMany()

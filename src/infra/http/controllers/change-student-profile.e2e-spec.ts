@@ -33,8 +33,6 @@ describe('Change Student Profile (e2e)', () => {
       }
     })
 
-    console.log(student)
-
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
