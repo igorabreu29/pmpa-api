@@ -16,7 +16,11 @@
     "pretest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
     "test:e2e": "vitest run --c ./vitest.config.e2e.ts",
     "test:e2e:watch": "vitest --c ./vitest.config.e2e.ts",
-    "dev": "tsx watch --env-file .env src/infra/http/server.ts"
+    "dev": "tsx watch --env-file .env src/infra/http/server.ts",
+    "db:up": "docker compose up -d",
+    "db:deploy": "prisma migrate deploy",
+    "db:generate": "prisma generate",
+    "app:setup": "run-s db:up --delay=1000 db:deploy db:generate"
   },
   "keywords": [],
   "author": "igorabreu29",
