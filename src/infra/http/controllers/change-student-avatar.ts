@@ -23,7 +23,7 @@ export async function changeStudentAvatar(
   app
     .withTypeProvider<ZodTypeProvider>()
     .patch('/students/avatar', {
-      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
+      onRequest: [verifyJWT, verifyUserRole(['student'])],
       preHandler: upload.single('avatar'),
     }, 
   async (req, res) => {
