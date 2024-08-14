@@ -294,7 +294,7 @@ describe('Generate Students Classification', () => {
       }
     ]
 
-    const result = classificationByCourseFormula['CHO']((studentsWithAverage as StudentClassficationByPeriod[]))
+    const result = classificationByCourseFormula['CFO']((studentsWithAverage as StudentClassficationByPeriod[]))
 
     expect(result).toMatchObject([
       {
