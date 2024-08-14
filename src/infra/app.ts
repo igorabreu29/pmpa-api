@@ -59,6 +59,9 @@ import { updateAssessmentBatch } from "./http/controllers/update-assessments-bat
 import { updateBehaviorBatch } from "./http/controllers/update-behaviors-batch.ts";
 import { updateStudentBatch } from "./http/controllers/update-students-batch.ts";
 import { changeStudentAvatar } from "./http/controllers/change-student-avatar.ts";
+import { changeManagerAvatar } from "./http/controllers/change-manager-avatar.ts";
+import { changeAdministratorAvatar } from "./http/controllers/change-administrator-avatar.ts";
+import { changeDeveloperAvatar } from "./http/controllers/change-developer-avatar.ts";
 
 export const app = fastify()
 
@@ -79,17 +82,24 @@ app.register(createStudent)
 app.register(createStudentBatch)
 app.register(updateStudent)
 app.register(updateStudentBatch)
+app.register(changeStudentProfile)
 app.register(changeStudentStatus)
 app.register(changeStudentAvatar)
 app.register(deleteStudent)
 app.register(createManager)
 app.register(deleteManager)
 app.register(updateManager)
+app.register(changeManagerProfile)
 app.register(changeManagerStatus)
+app.register(changeManagerAvatar)
 app.register(createAdministrator)
 app.register(updateAdministrator)
+app.register(changeAdministratorProfile)
+app.register(changeAdministratorAvatar)
 app.register(deleteAdministrator)
 app.register(createDeveloper)
+app.register(changeDeveloperProfile)
+app.register(changeDeveloperAvatar)
 app.register(createAssessment)
 app.register(createAssessmentBatch)
 app.register(updateAssessment)
@@ -117,10 +127,6 @@ app.register(getCoursePoles)
 app.register(getCourseDisciplines)
 app.register(getLoginConfirmationMetrics)
 app.register(getLoginConfirmationMetricsByManager)
-app.register(changeStudentProfile)
-app.register(changeManagerProfile)
-app.register(changeAdministratorProfile)
-app.register(changeDeveloperProfile)
 app.register(getPoles)
 app.register(getDisciplines)
 app.register(getCourses)
