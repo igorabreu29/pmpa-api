@@ -1,49 +1,91 @@
 import { StudentClassficationByModule, StudentClassficationByPeriod } from "../../types/generate-students-classification.js"
 
-export const classifyStudentsByPeriodFormula = (studentsWithAverage: StudentClassficationByPeriod[]) => {
+export const classifyStudentsByCFOFormula = (studentsWithAverage: StudentClassficationByPeriod[]) => {
   return studentsWithAverage.sort((studentA, studentB) => {
-    const studentAIsRecoveringInTheThirdModule = studentA.studentAverage.assessments['module3']?.some(student => student.isRecovering)
-    const studentBIsRecoveringInTheThirdModule = studentB.studentAverage.assessments['module3']?.some(student => student.isRecovering)
-
     const geralAverageStudentA = studentA.studentAverage.averageInform.geralAverage
     const geralAverageStudentB = studentB.studentAverage.averageInform.geralAverage
 
-    const totalFromStudentAThatIsRecoveringInModule1 = studentA.studentAverage.assessments['module1']?.filter(student => student.average < 7) 
-    const totalFromStudentAThatIsRecoveringInModule2 = studentA.studentAverage.assessments['module2']?.filter(student => student.average < 7) 
-    const totalFromStudentAThatIsRecoveringInModule3 = studentA.studentAverage.assessments['module3']?.filter(student => student.average < 7) 
+    const isSecondSeasonInThirdModuleStudentA = studentA.studentAverage.assessments['module3']?.filter(assessment => assessment.status !== 'approved')?.length
+    const isSecondSeasonInThirdModuleStudentB = studentB.studentAverage.assessments['module3']?.filter(assessment => assessment.status !== 'approved')?.length
 
-    const totalFromStudentBThatIsRecoveringInModule1 = studentB.studentAverage.assessments['module1']?.filter(student => student.average < 7) 
-    const totalFromStudentBThatIsRecoveringInModule2 = studentB.studentAverage.assessments['module2']?.filter(student => student.average < 7) 
-    const totalFromStudentBThatIsRecoveringInModule3 = studentB.studentAverage.assessments['module3']?.filter(student => student.average < 7) 
+    const totalAssessmentsApprovedInFirstModuleStudentA = studentA.studentAverage.assessments['module1']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInSecondModuleStudentA = studentA.studentAverage.assessments['module2']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInThirdModuleStudentA = studentA.studentAverage.assessments['module3']?.filter(student => student.status === 'approved') 
 
-    const totalRecoveringFromStudentA = 
-      totalFromStudentAThatIsRecoveringInModule1?.length + totalFromStudentAThatIsRecoveringInModule2?.length + totalFromStudentAThatIsRecoveringInModule3?.length
+    const totalAssessmentsApprovedInFirstModuleStudentB = studentB.studentAverage.assessments['module1']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInSecondModuleStudentB = studentB.studentAverage.assessments['module2']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInThirdModuleStudentB = studentB.studentAverage.assessments['module3']?.filter(student => student.status === 'approved') 
 
-    const totalRecoveringFromStudentB = 
-      totalFromStudentBThatIsRecoveringInModule1?.length + totalFromStudentBThatIsRecoveringInModule2?.length + totalFromStudentBThatIsRecoveringInModule3?.length
+    const totalAssessmentsApprovedStudentA = 
+    totalAssessmentsApprovedInFirstModuleStudentA?.length + totalAssessmentsApprovedInSecondModuleStudentA?.length + totalAssessmentsApprovedInThirdModuleStudentA?.length
+
+    const totalAssessmentsApprovedStudentB = 
+      totalAssessmentsApprovedInFirstModuleStudentB?.length + totalAssessmentsApprovedInSecondModuleStudentB?.length + totalAssessmentsApprovedInThirdModuleStudentB?.length
 
     const studentABirthday = Number(studentA.studentBirthday?.getTime())
     const studentBBirthday = Number(studentB.studentBirthday?.getTime())
 
-    if (!studentAIsRecoveringInTheThirdModule && !studentBIsRecoveringInTheThirdModule) {
-      if (geralAverageStudentA < geralAverageStudentB) return 1
-      if (geralAverageStudentA > geralAverageStudentB) return -1
-      if (totalRecoveringFromStudentA < totalRecoveringFromStudentB) return 1
-      if (totalRecoveringFromStudentA > totalRecoveringFromStudentB) return -1
-      if (studentABirthday < studentBBirthday) return 1
-      if (studentABirthday > studentBBirthday) return -1
+    if (!isSecondSeasonInThirdModuleStudentA && !isSecondSeasonInThirdModuleStudentB) {
+      if (geralAverageStudentA !== geralAverageStudentB) {
+        return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+      }
+
+      if (totalAssessmentsApprovedStudentA !== totalAssessmentsApprovedStudentB) {
+        return totalAssessmentsApprovedStudentB - totalAssessmentsApprovedStudentA
+      }
+
+      if (studentABirthday !== studentBBirthday) {
+        return studentABirthday - studentBBirthday
+      }
     }
 
-    if (geralAverageStudentA !== geralAverageStudentB) {
-      return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+    if (isSecondSeasonInThirdModuleStudentA && isSecondSeasonInThirdModuleStudentB) {
+      if (geralAverageStudentA !== geralAverageStudentB) {
+        return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+      }
+
+      if (totalAssessmentsApprovedStudentA !== totalAssessmentsApprovedStudentB) {
+        return totalAssessmentsApprovedStudentB - totalAssessmentsApprovedStudentA
+      }
+
+      if (studentABirthday !== studentBBirthday) {
+        return studentABirthday - studentBBirthday
+      }
     }
 
-    if (totalRecoveringFromStudentA !== totalRecoveringFromStudentB) {
-      return totalRecoveringFromStudentB - totalRecoveringFromStudentA
+    return 0
+  })
+}
+
+export const classifyStudentsByCHOFormula = (studentsWithAverage: StudentClassficationByModule[]) => {
+  return studentsWithAverage.sort((studentA, studentB) => {
+    const geralAverageStudentA = studentA.studentAverage.averageInform.geralAverage
+    const geralAverageStudentB = studentB.studentAverage.averageInform.geralAverage
+    
+    const isSecondSeasonStudentA = studentA.studentAverage.averageInform.studentAverageStatus.status !== 'approved'
+    const isSecondSeasonStudentB = studentB.studentAverage.averageInform.studentAverageStatus.status !== 'approved'
+
+    const totalQuantityApprovedInFirstSeasonStudentA = studentA.studentAverage.assessments.filter(assessment => assessment.status === 'approved').length
+    const totalQuantityApprovedInFirstSeasonStudentB = studentB.studentAverage.assessments.filter(assessment => assessment.status === 'approved').length
+
+    if (!isSecondSeasonStudentA && !isSecondSeasonStudentA)  {
+      if (geralAverageStudentA !== geralAverageStudentB) {
+        return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+      }
+
+      if (totalQuantityApprovedInFirstSeasonStudentA !== totalQuantityApprovedInFirstSeasonStudentB) {
+        return totalQuantityApprovedInFirstSeasonStudentB - totalQuantityApprovedInFirstSeasonStudentA
+      }
     }
 
-    if (studentABirthday !== studentBBirthday) {
-      return studentABirthday - studentBBirthday
+    if (isSecondSeasonStudentA && isSecondSeasonStudentB) {
+      if (geralAverageStudentA !== geralAverageStudentB) {
+        return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+      }
+
+      if (totalQuantityApprovedInFirstSeasonStudentA !== totalQuantityApprovedInFirstSeasonStudentB) {
+        return totalQuantityApprovedInFirstSeasonStudentB - totalQuantityApprovedInFirstSeasonStudentA
+      }
     }
 
     return 0
