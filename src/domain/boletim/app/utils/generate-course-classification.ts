@@ -1,5 +1,5 @@
 import { StudentClassficationByModule, StudentClassficationByPeriod } from "../types/generate-students-classification.js";
-import { classifyStudentsByCFPFormula, classifyStudentsByCGSAndCASFormula, classifyStudentsByPeriodFormula } from "./classification/classify-students-by-formula.ts";
+import { classifyStudentsByCFOFormula, classifyStudentsByCFPFormula, classifyStudentsByCGSAndCASFormula, classifyStudentsByCHOFormula } from "./classification/classify-students-by-formula.ts";
 
 export const classificationByCourseFormula = {
   CGS: (studentsWithAverage: StudentClassficationByModule[]) => {
@@ -14,11 +14,11 @@ export const classificationByCourseFormula = {
     return classifyStudentsByCFPFormula(studentsWithAverage)
   },
 
-  CFO: (studentsWithAverage: StudentClassficationByPeriod[]) => {
-    return classifyStudentsByPeriodFormula(studentsWithAverage)
+  CHO: (studentsWithAverage: StudentClassficationByModule[]) => {
+    return classifyStudentsByCHOFormula(studentsWithAverage)
   },
 
-  CHO: (studentsWithAverage: StudentClassficationByPeriod[]) => {
-    return classifyStudentsByPeriodFormula(studentsWithAverage)
+  CFO: (studentsWithAverage: StudentClassficationByPeriod[]) => {
+    return classifyStudentsByCFOFormula(studentsWithAverage)
   },
 } 
