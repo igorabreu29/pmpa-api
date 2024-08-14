@@ -84,7 +84,7 @@ export class GetCourseClassificationByPoleUseCase {
         const classifiedByCFPFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
         return right({ studentsWithAverage: classifiedByCFPFormula })
       case 'CFO': 
-        const classifiedByCFOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByPeriod[])
+        const classifiedByCFOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
         return right({ studentsWithAverage: classifiedByCFOFormula })
       case 'CHO': 
         const classifiedByCHOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByPeriod[])
