@@ -76,7 +76,7 @@ export function createStudentsBatchExcelToJSON(fileUrl: string) {
 
   return students.map(item => ({
     ...item,
-    cpf: String(item.cpf)
+    cpf: formatCPF(String(item.cpf))
   })) 
 }
 
@@ -101,7 +101,7 @@ export function updateStudentsBatchExcelToJSON(fileUrl: string) {
 
   return students.map(item => ({
     ...item,
-    cpf: formatCPF(String(item.cpf))
+    cpf: String(item.cpf)
   })) 
 }
 
