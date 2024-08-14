@@ -19,6 +19,7 @@ export const upload = multer({
     fileFilter: (req, file, callback) => {
         const allowedMimes = [
             'image/jpeg',
+            'image/jpg',
             'image/png',
             'image/pjpeg',
             'image/gif',
