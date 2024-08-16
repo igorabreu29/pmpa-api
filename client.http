@@ -14,11 +14,11 @@ POST {{baseUrl}}/students
 Content-Type: application/json
 
 {
-    "username": "Igor",
-    "cpf": "053.999.702-10",
+    "username": "John Doe",
+    "cpf": "000.000.000-00",
     "password": "node-20",
-    "email": "igor29nahan@gmail.com",
-    "birthday": "29/01/2006",
+    "email": "johndoe@acne.com",
+    "birthday": "01/01/2002",
     "civilId": 12345,
     "courseId": "clz1f0f2v000013hh4mwb399j",
     "poleId": "clz1f0xk4000113hhfg6euud4"
@@ -26,9 +26,20 @@ Content-Type: application/json
 
 ###
 PUT {{baseUrl}}/students/clza1ixu40001jbjg0jsegv4q
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InN1YiI6Ijc1YmE1MDhmLTRhMzYtNDI2My04MzM1LTM5ZDcxZGExNGI1ZCIsInJvbGUiOiJhZG1pbiJ9LCJpYXQiOjE3MjI0NDc3MDgsImV4cCI6MTcyMjQ1MTMwOH0.7R-1S-y9WXi_trL9vKNsIP-h2mp_q9fbGNWzqu5ZSF8
+Authorization: Bearer 
 Content-Type: application/json
 
 {
   "username": "Jenny Doe"
+}
+
+###
+POST {{baseUrl}}/disciplines/clzvpod3x0001cr5d472l09o1/assessment
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "courseId": "clzvpng4g0000cr5dt18f8gvh",
+  "studentId": "clzvpq6j90002cr5d33gid05p",
+  "vf": 6
 }
