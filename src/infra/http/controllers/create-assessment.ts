@@ -12,6 +12,7 @@ import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-alrea
 import { Conflict } from "../errors/conflict-error.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { ConflictError } from "@/domain/boletim/app/use-cases/errors/conflict-error.ts";
+import { makeOnAssessmentCreated } from "@/infra/factories/make-on-assessment-created.ts";
 
 export async function createAssessment(
   app: FastifyInstance
@@ -41,6 +42,7 @@ export async function createAssessment(
 
       const ip = req.ip
 
+      makeOnAssessmentCreated()
       const useCase = makeCreateAssessmentUseCase()
       const result = await useCase.execute({
         courseId,
