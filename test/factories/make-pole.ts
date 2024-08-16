@@ -7,7 +7,7 @@ export function makePole(
   override: Partial<Pole> = {},
   id?: UniqueEntityId
 ) {
-  const nameOrError = Name.create(faker.lorem.words(6))
+  const nameOrError = Name.create(faker.lorem.word())
   if (nameOrError.isLeft()) throw new Error('Invalid name')
 
   const poleOrError = Pole.create({
