@@ -5,6 +5,7 @@ import { PrismaManagersMapper } from "../mappers/prisma-managers-mapper.ts";
 import { ManagerDetails } from "@/domain/boletim/enterprise/entities/value-objects/manager-details.ts";
 import { PrismaManagerDetailsMapper } from "../mappers/prisma-manager-details-mapper.ts";
 import { SearchManyDetails } from "@/domain/boletim/app/repositories/students-courses-repository.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class PrismaManagersRepository implements ManagersRepository {
   async findById(id: string): Promise<Manager | null> {
@@ -147,11 +148,8 @@ export class PrismaManagersRepository implements ManagersRepository {
   async create(manager: Manager): Promise<void> {
     const prismaMapper = PrismaManagersMapper.toPrisma(manager)
     await prisma.user.create({ data: prismaMapper })
-  }
 
-  async createMany(managers: Manager[]): Promise<void> {
-    const prismaMapper = managers.map(manager => PrismaManagersMapper.toPrisma(manager))
-    await prisma.user.createMany({ data: prismaMapper })
+    DomainEvents.dispatchEventsForAggregate(manager.id)
   }
 
   async save(manager: Manager): Promise<void> {
@@ -163,6 +161,8 @@ export class PrismaManagersRepository implements ManagersRepository {
       },
       data: prismaMapper
     })
+
+    DomainEvents.dispatchEventsForAggregate(manager.id)
   }
 
   async delete(manager: Manager): Promise<void> {
@@ -173,5 +173,7 @@ export class PrismaManagersRepository implements ManagersRepository {
         id: prismaMapper.id,
       },
     })
+
+    DomainEvents.dispatchEventsForAggregate(manager.id)
   }
 }

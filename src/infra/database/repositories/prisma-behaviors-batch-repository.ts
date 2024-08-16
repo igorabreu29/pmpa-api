@@ -2,6 +2,7 @@ import { BehaviorsBatchRepository } from "@/domain/boletim/app/repositories/beha
 import { BehaviorBatch } from "@/domain/boletim/enterprise/entities/behavior-batch.ts";
 import { PrismaBehaviorsMapper } from "../mappers/prisma-behaviors-mapper.ts";
 import { prisma } from "../lib/prisma.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class PrismaBehaviorsBatchRepository implements BehaviorsBatchRepository {
   async create(behaviorBatch: BehaviorBatch): Promise<void> {
@@ -9,6 +10,8 @@ export class PrismaBehaviorsBatchRepository implements BehaviorsBatchRepository 
     await prisma.behavior.createMany({
       data: prismaMapper
     })
+
+    DomainEvents.dispatchEventsForAggregate(behaviorBatch.id)
   }
 
   async save(behaviorBatch: BehaviorBatch): Promise<void> {
@@ -23,5 +26,7 @@ export class PrismaBehaviorsBatchRepository implements BehaviorsBatchRepository 
         data: item
       })
     }))
+
+    DomainEvents.dispatchEventsForAggregate(behaviorBatch.id)
   }
 }

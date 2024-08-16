@@ -2,6 +2,7 @@ import { AdministratorsRepository, SearchAdministratorsDetails } from "@/domain/
 import { Administrator } from "@/domain/boletim/enterprise/entities/administrator.ts";
 import { prisma } from "../lib/prisma.ts";
 import { PrismaAdministratorsMapper } from "../mappers/prisma-administrators-mapper.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class PrismaAdministratorsRepository implements AdministratorsRepository {
   async findById(id: string): Promise<Administrator | null> {
@@ -58,6 +59,8 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     await prisma.user.create({
       data: prismaMapper
     })
+
+    DomainEvents.dispatchEventsForAggregate(admin.id)
   }
 
   async save(admin: Administrator): Promise<void> {
@@ -69,6 +72,8 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
       },
       data: prismaMapper
     })
+
+    DomainEvents.dispatchEventsForAggregate(admin.id)
   }
 
   async delete(admin: Administrator): Promise<void> {
@@ -78,5 +83,7 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
         id: prismaMapper.id
       },
     })
+    
+    DomainEvents.dispatchEventsForAggregate(admin.id)
   }
 }

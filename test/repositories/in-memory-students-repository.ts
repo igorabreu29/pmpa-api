@@ -143,6 +143,8 @@ export class InMemoryStudentsRepository implements StudentsRepository {
   async updateLoginConfirmed(student: Student): Promise<void> {
     const studentIndex = this.items.findIndex(item => item.id.equals(student.id))
     this.items[studentIndex] = student
+
+    DomainEvents.dispatchEventsForAggregate(student.id)
   }
 
   async updateProfile(student: Student): Promise<void> {

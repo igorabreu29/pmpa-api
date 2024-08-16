@@ -2,6 +2,7 @@ import { BehaviorsRepository } from "@/domain/boletim/app/repositories/behaviors
 import { prisma } from "../lib/prisma.ts";
 import { PrismaBehaviorsMapper } from "../mappers/prisma-behaviors-mapper.ts";
 import { Behavior } from "@/domain/boletim/enterprise/entities/behavior.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class PrismaBehaviorsRepository implements BehaviorsRepository {
   async findById({ id }: { id: string }): Promise<Behavior | null> {
@@ -43,13 +44,8 @@ export class PrismaBehaviorsRepository implements BehaviorsRepository {
     await prisma.behavior.create({
       data: prismaMapper
     })
-  }
 
-  async createMany(behaviors: Behavior[]): Promise<void> {
-    const prismaMapper = behaviors.map(behavior => PrismaBehaviorsMapper.toPrisma(behavior))
-    await prisma.behavior.createMany({
-      data: prismaMapper
-    })
+    DomainEvents.dispatchEventsForAggregate(behavior.id)
   }
 
   async update(behavior: Behavior): Promise<void> {
@@ -60,6 +56,8 @@ export class PrismaBehaviorsRepository implements BehaviorsRepository {
       },
       data: prismaMapper
     })
+
+    DomainEvents.dispatchEventsForAggregate(behavior.id)
   }
 
   async delete(behavior: Behavior): Promise<void> {
@@ -69,5 +67,7 @@ export class PrismaBehaviorsRepository implements BehaviorsRepository {
         id: prismaMapper.id
       },
     })
+
+    DomainEvents.dispatchEventsForAggregate(behavior.id)
   }
 }

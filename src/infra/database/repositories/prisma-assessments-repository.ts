@@ -2,6 +2,7 @@ import { AssessmentsRepository, StudentAssessmentsByCourse, StudentAssessmentsBy
 import { Assessment } from "@/domain/boletim/enterprise/entities/assessment.ts";
 import { prisma } from "../lib/prisma.ts";
 import { PrismaAssessmentsMapper } from "../mappers/prisma-assessments-mapper.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class PrismaAssessmentsRepository implements AssessmentsRepository {
   async findById({ id }: { id: string; }): Promise<Assessment | null> {
@@ -56,6 +57,8 @@ export class PrismaAssessmentsRepository implements AssessmentsRepository {
     await prisma.assessment.create({
       data: prismaMapper
     })
+
+    DomainEvents.dispatchEventsForAggregate(assessment.id)
   }
 
   async createMany(assessments: Assessment[]): Promise<void> {
@@ -73,6 +76,8 @@ export class PrismaAssessmentsRepository implements AssessmentsRepository {
       },
       data: prismaMapper
     })
+
+    DomainEvents.dispatchEventsForAggregate(assessment.id)
   }
 
   async delete(assessment: Assessment): Promise<void> {
@@ -82,5 +87,7 @@ export class PrismaAssessmentsRepository implements AssessmentsRepository {
         id: prismaMapper.id
       },
     })
+
+    DomainEvents.dispatchEventsForAggregate(assessment.id)
   }
 }

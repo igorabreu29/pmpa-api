@@ -4,6 +4,7 @@ import { StudentDetails } from "@/domain/boletim/enterprise/entities/value-objec
 import { prisma } from "../lib/prisma.ts";
 import { PrismaStudentsMapper } from "../mappers/prisma-students-mapper.ts";
 import { PrismaStudentDetailsMapper } from "../mappers/prisma-student-details-mapper.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class PrismaStudentsRepository implements StudentsRepository {
   async findById(id: string): Promise<Student | null> {
@@ -150,6 +151,8 @@ export class PrismaStudentsRepository implements StudentsRepository {
   async create(student: Student): Promise<void> {
     const prismaMapper = PrismaStudentsMapper.toPrisma(student)
     await prisma.user.create({ data: prismaMapper })
+
+    DomainEvents.dispatchEventsForAggregate(student.id)
   }
 
   async createMany(students: Student[]): Promise<void> {
@@ -188,6 +191,8 @@ export class PrismaStudentsRepository implements StudentsRepository {
         }
       }
     })
+
+    DomainEvents.dispatchEventsForAggregate(student.id)
   }
 
   async updateProfile(student: Student): Promise<void> {
@@ -216,5 +221,7 @@ export class PrismaStudentsRepository implements StudentsRepository {
         id: prismaMapper.id,
       },
     })
+
+    DomainEvents.dispatchEventsForAggregate(student.id)
   }
 }

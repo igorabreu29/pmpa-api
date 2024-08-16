@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma.ts";
 import { PrismaStudentsMapper } from "../mappers/prisma-students-mapper.ts";
 import { PrismaStudentCourseMapper } from "../mappers/prisma-student-course-mapper.ts";
 import { PrismaStudentPoleMapper } from "../mappers/prisma-student-pole-mapper.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class PrismaStudentsBatchRepository implements StudentsBatchRepository {
   async create(studentsBatch: StudentBatch): Promise<void> {
@@ -28,6 +29,8 @@ export class PrismaStudentsBatchRepository implements StudentsBatchRepository {
         }
       })
     }
+
+    DomainEvents.dispatchEventsForAggregate(studentsBatch.id)
   }
 
   async save(studentBatch: StudentBatch): Promise<void> {
@@ -42,5 +45,7 @@ export class PrismaStudentsBatchRepository implements StudentsBatchRepository {
         data: item
       })
     }))
+
+    DomainEvents.dispatchEventsForAggregate(studentBatch.id)
   }
 }
