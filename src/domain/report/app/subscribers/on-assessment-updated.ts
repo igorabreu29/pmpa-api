@@ -1,11 +1,11 @@
 import { DomainEvents } from "@/core/events/domain-events.ts";
 import { EventHandler } from "@/core/events/event-handler.ts";
 import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-repository.ts";
-import { DisciplinesRepository } from "@/domain/boletim/app/repositories/disiciplines-repository.ts";
 import { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
 import { AssessmentEvent } from "@/domain/boletim/enterprise/events/assessment-event.ts";
 import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import { SendReportUseCase } from "../use-cases/send-report.ts";
+import type { DisciplinesRepository } from "@/domain/boletim/app/repositories/disciplines-repository.ts";
 
 export class OnAssessmentUpdated implements EventHandler {
   constructor (
