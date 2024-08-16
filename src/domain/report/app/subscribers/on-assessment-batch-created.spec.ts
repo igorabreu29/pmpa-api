@@ -9,6 +9,9 @@ import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportBatchUseCase, SendReportBatchUseCaseRequest, SendReportBatchUseCaseResponse } from '../use-cases/send-report-batch.ts'
 import { OnAssessmentBatchCreated } from './on-assessment-batch-created.ts'
+import type { InMemoryAssessmentsRepository } from 'test/repositories/in-memory-assessments-repository.ts'
+
+let assessmentsRepository: InMemoryAssessmentsRepository
 
 let reportersRepository: InMemoryReportersRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -28,7 +31,9 @@ describe('On Assessment Batch Created', () => {
     reportersRepository = new InMemoryReportersRepository()
 
     reportsBatchRepository = new InMemoryReportsBatchRepository()
-    assessmentsBatchRepository = new InMemoryAssessmentsBatchRepository()
+    assessmentsBatchRepository = new InMemoryAssessmentsBatchRepository(
+      assessmentsRepository
+    )
 
     sendReportBatchUseCase = new SendReportBatchUseCase(
       reportsBatchRepository
@@ -43,7 +48,7 @@ describe('On Assessment Batch Created', () => {
     )
   })
 
-  it ('should send a report when an assessment batch is created', async () => {
+  it ('should send a report when an assessments are created', async () => {
     const course = makeCourse()
     const reporter = makeReporter()
 

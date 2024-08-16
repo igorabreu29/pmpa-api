@@ -9,6 +9,9 @@ import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportBatchUseCase, SendReportBatchUseCaseRequest, SendReportBatchUseCaseResponse } from '../use-cases/send-report-batch.ts'
 import { OnBehaviorBatchCreated } from './on-behavior-batch-created.ts'
+import { InMemoryBehaviorsRepository } from 'test/repositories/in-memory-behaviors-repository.ts'
+
+let behaviorsRepository: InMemoryBehaviorsRepository
 
 let reportersRepository: InMemoryReportersRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -24,11 +27,15 @@ let sendReportBatchExecuteSpy: MockInstance<
 
 describe('On Behavior Batch Created', () => {
   beforeEach(() => {
+    behaviorsRepository = new InMemoryBehaviorsRepository()
+
     coursesRepository = new InMemoryCoursesRepository()
     reportersRepository = new InMemoryReportersRepository()
 
     reportsBatchRepository = new InMemoryReportsBatchRepository()
-    behaviorsBatchRepository = new InMemoryBehaviorsBatchRepository()
+    behaviorsBatchRepository = new InMemoryBehaviorsBatchRepository(
+      behaviorsRepository
+    )
 
     sendReportBatchUseCase = new SendReportBatchUseCase(
       reportsBatchRepository
@@ -43,7 +50,7 @@ describe('On Behavior Batch Created', () => {
     )
   })
 
-  it ('should send a report when an behavior batch is created', async () => {
+  it ('should send a report when an behaviors are created', async () => {
     const course = makeCourse()
     const reporter = makeReporter()
 

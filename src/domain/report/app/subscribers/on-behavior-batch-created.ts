@@ -3,7 +3,7 @@ import { DomainEvents } from "@/core/events/domain-events.ts";
 import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-repository.ts";
 import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import { SendReportBatchUseCase } from "../use-cases/send-report-batch.ts";
-import { BehaviorBatchCreatedEvent } from "@/domain/boletim/enterprise/events/behavior-batch-created-event.ts";
+import { BehaviorBatchEvent } from "@/domain/boletim/enterprise/events/behavior-batch-event.ts";
 
 export class OnBehaviorBatchCreated implements EventHandler {
   constructor (
@@ -17,11 +17,11 @@ export class OnBehaviorBatchCreated implements EventHandler {
   setupSubscriptions(): void {
     DomainEvents.register(
       this.sendNewBehaviorBatchReport.bind(this),
-      BehaviorBatchCreatedEvent.name
+      BehaviorBatchEvent.name
     )
   }
 
-  private async sendNewBehaviorBatchReport({ behaviorBatch, reporterIp, ocurredAt }: BehaviorBatchCreatedEvent) {
+  private async sendNewBehaviorBatchReport({ behaviorBatch, reporterIp, ocurredAt }: BehaviorBatchEvent) {
     const course = await this.coursesRepository.findById(behaviorBatch.courseId.toValue())
     const reporter = await this.reportersRepository.findById({ id: behaviorBatch.userId.toValue() })
 

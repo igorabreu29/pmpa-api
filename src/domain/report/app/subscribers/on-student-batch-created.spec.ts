@@ -9,6 +9,15 @@ import { SendReportBatchUseCase, SendReportBatchUseCaseRequest, SendReportBatchU
 import { InMemoryStudentsBatchRepository } from 'test/repositories/in-memory-students-batch-repository.ts'
 import { makeStudentBatch } from 'test/factories/make-student-batch.ts'
 import { OnStudentBatchCreated } from './on-student-batch-created.ts'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository.ts'
+import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-students-courses-repository.ts'
+import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
+import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
+
+let studentsCoursesRepository: InMemoryStudentsCoursesRepository
+let studentsPolesRepository: InMemoryStudentsPolesRepository
+let polesRepository: InMemoryPolesRepository
+let studentsRepository: InMemoryStudentsRepository
 
 let reportersRepository: InMemoryReportersRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -25,10 +34,32 @@ let sendReportBatchExecuteSpy: MockInstance<
 describe('On Assessment Batch Created', () => {
   beforeEach(() => {
     coursesRepository = new InMemoryCoursesRepository()
+    polesRepository = new InMemoryPolesRepository()
+    studentsCoursesRepository = new InMemoryStudentsCoursesRepository(
+      studentsRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
+    studentsPolesRepository = new InMemoryStudentsPolesRepository(
+      studentsRepository,
+      studentsCoursesRepository,
+      coursesRepository,
+      polesRepository
+    )
+    studentsRepository = new InMemoryStudentsRepository(
+      studentsCoursesRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
+
     reportersRepository = new InMemoryReportersRepository()
 
     reportsBatchRepository = new InMemoryReportsBatchRepository()
-    studentsBatchRepository = new InMemoryStudentsBatchRepository()
+    studentsBatchRepository = new InMemoryStudentsBatchRepository(
+      studentsRepository
+    )
 
     sendReportBatchUseCase = new SendReportBatchUseCase(
       reportsBatchRepository
@@ -43,7 +74,7 @@ describe('On Assessment Batch Created', () => {
     )
   })
 
-  it ('should send a report when an assessment batch is created', async () => {
+  it ('should send a report when an students are created', async () => {
     const course = makeCourse()
     const reporter = makeReporter()
 

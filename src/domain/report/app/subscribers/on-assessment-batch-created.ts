@@ -2,7 +2,7 @@ import { EventHandler } from "@/core/events/event-handler.ts";
 import { DomainEvents } from "@/core/events/domain-events.ts";
 import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-repository.ts";
 import { ReportersRepository } from "../repositories/reporters-repository.ts";
-import { AssessmentBatchCreatedEvent } from "@/domain/boletim/enterprise/events/assessment-batch-created-event.ts";
+import { AssessmentBatchEvent } from "@/domain/boletim/enterprise/events/assessment-batch-event.ts";
 import { SendReportBatchUseCase } from "../use-cases/send-report-batch.ts";
 
 export class OnAssessmentBatchCreated implements EventHandler {
@@ -17,11 +17,11 @@ export class OnAssessmentBatchCreated implements EventHandler {
   setupSubscriptions(): void {
     DomainEvents.register(
       this.sendNewAssessmentBatchReport.bind(this),
-      AssessmentBatchCreatedEvent.name
+      AssessmentBatchEvent.name
     )
   }
 
-  private async sendNewAssessmentBatchReport({ assessmentBatch, reporterIp, ocurredAt }: AssessmentBatchCreatedEvent) {
+  private async sendNewAssessmentBatchReport({ assessmentBatch, reporterIp, ocurredAt }: AssessmentBatchEvent) {
     const course = await this.coursesRepository.findById(assessmentBatch.courseId.toValue())
     const reporter = await this.reportersRepository.findById({ id: assessmentBatch.userId.toValue() })
 
