@@ -5,7 +5,7 @@ import { AssessmentEvent } from "@/domain/boletim/enterprise/events/assessment-e
 import { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
 import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-repository.ts";
 import { ReportersRepository } from "../repositories/reporters-repository.ts";
-import { DisciplinesRepository } from "@/domain/boletim/app/repositories/disiciplines-repository.ts";
+import type { DisciplinesRepository } from "@/domain/boletim/app/repositories/disciplines-repository.ts";
 
 export class OnAssessmentCreated implements EventHandler {
   constructor (
