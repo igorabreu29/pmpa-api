@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { z } from "zod";
-import { makeGetStudentAverageInTheCourseUseCase } from "@/infra/factories/male-get-student-average-in-the-course-use-case.ts";
+import { makeGetStudentAverageInTheCourseUseCase } from "@/infra/factories/make-get-student-average-in-the-course-use-case.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
