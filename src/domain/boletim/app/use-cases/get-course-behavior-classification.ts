@@ -4,32 +4,35 @@ import type { StudentsCoursesRepository } from "../repositories/students-courses
 import { left, right, type Either } from "@/core/either.ts"
 import type { BehaviorsRepository } from "../repositories/behaviors-repository.ts"
 import { generateBehaviorAverage } from "../utils/generate-behavior-average.ts"
-import { classifyStudentsByGradeBehaviorCGSAndCASFormula, classifyStudentsByGradeBehaviorCPFFormula, type CourseBehaviorClassificationByModule } from "../utils/classification/classify-students-by-grade-behavior.ts"
-import { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error.ts"
+import { classifyStudentsByGradeBehaviorFormula, type BehaviorClassification, type BehaviorByModule } from "../utils/classification/classify-students-by-grade-behavior.ts"
+import type { CoursesPoleRepository } from "../repositories/courses-poles-repository.ts"
 
-interface GetCourseBehaviorClassificationRequest {
+interface GetCourseBehaviorClassificationUseCaseRequest {
   courseId: string
   page: number
 }
 
-type GetCourseBehaviorClassificationResponse = Either<ResourceNotFoundError, {
-  studentsWithBehaviorAverage: CourseBehaviorClassificationByModule[]
+type GetCourseBehaviorClassificationUseCaseResponse = Either<ResourceNotFoundError, {
+  behaviorAverageGroupedByPole: BehaviorClassification[]
 }>
 
-export class GetCourseBehaviorClassification {
+export class GetCourseBehaviorClassificationUseCase {
   constructor (
     private coursesRepository: CoursesRepository,
+    private coursesPolesRepository: CoursesPoleRepository,
     private studentsCoursesRepository: StudentsCoursesRepository,
     private behaviorsRepository: BehaviorsRepository
   ) {}
 
-  async execute({ courseId, page }: GetCourseBehaviorClassificationRequest): Promise<GetCourseBehaviorClassificationResponse> {
+  async execute({ courseId, page }: GetCourseBehaviorClassificationUseCaseRequest): Promise<GetCourseBehaviorClassificationUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
+    const coursePoles = await this.coursesPolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
+
     const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
 
-    const behaviors = await Promise.all(students.map(async student => {
+    const studentsWithBehaviorAverage = await Promise.all(students.map(async student => {
       const behaviors = await this.behaviorsRepository.findManyByStudentIdAndCourseId({ studentId: student.studentId.toValue(), courseId })
       const behaviorMonths = behaviors.map(({
         january,
@@ -65,22 +68,31 @@ export class GetCourseBehaviorClassification {
         behaviorAverage,
         studentBirthday: student.birthday,
         studentCivilID: student.civilId,
-        studentPole: student.pole
+        studentPole: {
+          id: student.poleId,
+          name: student.pole,
+        }
       }
     }))
 
-    switch (course.formula) {
-      case 'CGS': 
-        const classifiedByCGSFormula = classifyStudentsByGradeBehaviorCGSAndCASFormula(behaviors as CourseBehaviorClassificationByModule[])
-        return right({ studentsWithBehaviorAverage: classifiedByCGSFormula })
-      case 'CAS': 
-        const classifiedByCASFormula = classifyStudentsByGradeBehaviorCGSAndCASFormula(behaviors as CourseBehaviorClassificationByModule[])
-        return right({ studentsWithBehaviorAverage: classifiedByCASFormula })
-      case 'CFP': 
-        const classifiedByCFPFormula = classifyStudentsByGradeBehaviorCPFFormula(behaviors as CourseBehaviorClassificationByModule[])
-        return right({ studentsWithBehaviorAverage: classifiedByCFPFormula })
-      default: 
-        throw new InvalidCourseFormulaError(`This ${course.formula} does not exist.`)
-    }
+    const behaviorAverageGroupedByPole = coursePoles.map(coursePole => {
+      const studentsGroup = studentsWithBehaviorAverage.filter(item => item.studentPole.id.equals(coursePole.id)) as BehaviorByModule[]
+      const behaviorAverageByPole = studentsGroup
+        .reduce((acc, item) => acc + item.behaviorAverage.behaviorAverageStatus.behaviorAverage, 0) / studentsGroup.length
+
+      return {
+        behaviorAverageByPole: {
+          poleId: coursePole.id.toValue(),
+          name: coursePole.name.value,
+          average: Number(behaviorAverageByPole.toFixed(3)),
+        }
+      }
+    })
+
+    const behaviorsClassification = classifyStudentsByGradeBehaviorFormula(behaviorAverageGroupedByPole)
+
+    return right({
+      behaviorAverageGroupedByPole: behaviorsClassification
+    })
   }
 }
