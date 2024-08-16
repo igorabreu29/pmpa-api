@@ -8,7 +8,7 @@ export class PrismaAssessmentsMapper {
       courseId: new UniqueEntityId(assessment.courseId),
       studentId: new UniqueEntityId(assessment.studentId),
       disciplineId: new UniqueEntityId(assessment.disciplineId),
-      vf: Number(assessment.vf),
+      vf: assessment.vf ? Number(assessment.vf) : null,
       avi: assessment.avi ? Number(assessment.avi) : null,
       avii: assessment.avii ? Number(assessment.avii) : null,
       vfe: assessment.vfe ? Number(assessment.vfe) : null
@@ -24,7 +24,7 @@ export class PrismaAssessmentsMapper {
       courseId: assessment.courseId.toValue(),
       studentId: assessment.studentId.toValue(),
       disciplineId: assessment.disciplineId.toValue(),
-      vf: assessment.vf ? assessment.vf : 0,
+      vf: assessment.vf,
       avi: assessment.avi,
       avii: assessment.avii,
       vfe: assessment.vfe
