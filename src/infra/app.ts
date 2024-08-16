@@ -62,6 +62,10 @@ import { changeStudentAvatar } from "./http/controllers/change-student-avatar.ts
 import { changeManagerAvatar } from "./http/controllers/change-manager-avatar.ts";
 import { changeAdministratorAvatar } from "./http/controllers/change-administrator-avatar.ts";
 import { changeDeveloperAvatar } from "./http/controllers/change-developer-avatar.ts";
+import { getClassification } from "./http/controllers/get-classification.ts";
+import { getClassificationByPole } from "./http/controllers/get-classification-by-pole.ts";
+import { getClassificationByManager } from "./http/controllers/get-classification-by-manager.ts";
+import { getBehaviorClassification } from "./http/controllers/get-behavior-classification.ts";
 
 export const app = fastify()
 
@@ -136,5 +140,9 @@ app.register(searchStudentCourseDetails)
 app.register(searchStudentCourseByPoleDetails)
 app.register(searchStudentsCourseByManagerDetails)
 app.register(search)
+app.register(getClassification)
+app.register(getClassificationByPole)
+app.register(getClassificationByManager)
+app.register(getBehaviorClassification)
 
 app.setErrorHandler(errorHandler)
