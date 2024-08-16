@@ -9,6 +9,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { makeDeleteBehaviorUseCase } from "@/infra/factories/make-delete-behavior-use-case.ts";
+import { makeOnBehaviorDeleted } from "@/infra/factories/make-on-behavior-deleted.ts";
 
 export async function deleteBehavior(
   app: FastifyInstance
@@ -29,6 +30,7 @@ export async function deleteBehavior(
 
       const ip = req.ip
 
+      makeOnBehaviorDeleted()
       const useCase = makeDeleteBehaviorUseCase()
       const result = await useCase.execute({
         id,

@@ -15,6 +15,7 @@ import { NotFound } from "../errors/not-found.ts";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { transformDate } from "@/infra/utils/transform-date.ts";
+import { makeOnStudentCreated } from "@/infra/factories/make-on-student-created.ts";
 
 export async function createStudent(
   app: FastifyInstance
@@ -41,6 +42,7 @@ export async function createStudent(
 
     const ip = req.ip
 
+    makeOnStudentCreated()
     const useCase = makeCreateStudentUseCase()
     const result = await useCase.execute({
       username,

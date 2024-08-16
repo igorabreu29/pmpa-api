@@ -4,7 +4,6 @@ import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { makeUpdateStudentUseCase } from "@/infra/factories/make-update-student-use-case.ts";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
@@ -16,6 +15,7 @@ import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { NotAllowed } from "../errors/not-allowed.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { makeUpdateManagerUseCase } from "@/infra/factories/make-update-manager-use-case.ts";
+import { makeOnManagerUpdated } from "@/infra/factories/make-on-manager-updated.ts";
 
 export async function updateManager(
   app: FastifyInstance
@@ -60,6 +60,7 @@ export async function updateManager(
 
     const ip = req.ip
 
+    makeOnManagerUpdated()
     const useCase = makeUpdateManagerUseCase()
     const result = await useCase.execute({
       id,

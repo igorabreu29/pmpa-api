@@ -15,6 +15,7 @@ import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { transformDate } from "@/infra/utils/transform-date.ts";
 import { makeCreateManagerUseCase } from "@/infra/factories/make-create-manager-use-case.ts";
+import { makeOnManagerCreated } from "@/infra/factories/make-on-manager-created.ts";
 
 export async function createManager(
   app: FastifyInstance
@@ -41,6 +42,7 @@ export async function createManager(
 
     const ip = req.ip
 
+    makeOnManagerCreated()
     const useCase = makeCreateManagerUseCase()
     const result = await useCase.execute({
       username,

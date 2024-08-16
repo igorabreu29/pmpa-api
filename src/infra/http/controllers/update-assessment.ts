@@ -3,16 +3,15 @@ import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { z } from "zod";
-import { makeCreateAssessmentUseCase } from "@/infra/factories/make-create-assessment-use-case.ts";
 import { NotAllowed } from "../errors/not-allowed.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { NotFound } from "../errors/not-found.ts";
-import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { Conflict } from "../errors/conflict-error.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { ConflictError } from "@/domain/boletim/app/use-cases/errors/conflict-error.ts";
 import { makeUpdateAssessmentUseCase } from "@/infra/factories/make-update-assessment-use-case.ts";
+import { makeOnAssessmentUpdated } from "@/infra/factories/make-on-assessment-updated.ts";
 
 export async function updateAssessment(
   app: FastifyInstance
@@ -40,6 +39,7 @@ export async function updateAssessment(
 
       const ip = req.ip
 
+      makeOnAssessmentUpdated()
       const useCase = makeUpdateAssessmentUseCase()
       const result = await useCase.execute({
         id,

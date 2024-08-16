@@ -5,6 +5,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
+import { makeOnStudentLoginConfirmed } from "@/infra/factories/make-on-student-login-confirmed.ts";
 
 export async function studentConfirmLoginAndUpdate(
   app: FastifyInstance
@@ -31,6 +32,7 @@ export async function studentConfirmLoginAndUpdate(
 
       const ip = req.ip
 
+      makeOnStudentLoginConfirmed()
       const useCase = makeMarkLoginConfirmedAsTrueAndUpdateStudentUseCase()
       const result = await useCase.execute({
         studentCPF: cpf,

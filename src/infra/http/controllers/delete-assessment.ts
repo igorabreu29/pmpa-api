@@ -7,11 +7,9 @@ import { NotAllowed } from "../errors/not-allowed.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { NotFound } from "../errors/not-found.ts";
-import { Conflict } from "../errors/conflict-error.ts";
 import { ClientError } from "../errors/client-error.ts";
-import { ConflictError } from "@/domain/boletim/app/use-cases/errors/conflict-error.ts";
-import { makeUpdateAssessmentUseCase } from "@/infra/factories/make-update-assessment-use-case.ts";
 import { makeDeleteAssessmentUseCase } from "test/factories/make-delete-assessment-use-case.ts";
+import { makeOnAssessmentDeleted } from "@/infra/factories/make-on-assessment-deleted.ts";
 
 export async function deleteAssessment(
   app: FastifyInstance
@@ -32,6 +30,7 @@ export async function deleteAssessment(
 
       const ip = req.ip
 
+      makeOnAssessmentDeleted()
       const useCase = makeDeleteAssessmentUseCase()
       const result = await useCase.execute({
         id,

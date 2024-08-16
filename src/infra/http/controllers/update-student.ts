@@ -15,6 +15,7 @@ import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { NotAllowed } from "../errors/not-allowed.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { makeOnStudentUpdated } from "@/infra/factories/make-on-student-updated.ts";
 
 export async function updateStudent(
   app: FastifyInstance
@@ -59,6 +60,7 @@ export async function updateStudent(
 
     const ip = req.ip
 
+    makeOnStudentUpdated()
     const useCase = makeUpdateStudentUseCase()
     const result = await useCase.execute({
       id,

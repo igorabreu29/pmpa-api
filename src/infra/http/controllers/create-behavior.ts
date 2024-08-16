@@ -12,6 +12,7 @@ import { ClientError } from "../errors/client-error.ts";
 import { ConflictError } from "@/domain/boletim/app/use-cases/errors/conflict-error.ts";
 import { makeCreateBehaviorUseCase } from "@/infra/factories/make-create-behavior-use-case.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
+import { makeOnBehaviorCreated } from "@/infra/factories/make-on-behavior-created.ts";
 
 export async function createBehavior(
   app: FastifyInstance
@@ -62,6 +63,7 @@ export async function createBehavior(
 
       const ip = req.ip
 
+      makeOnBehaviorCreated()
       const useCase = makeCreateBehaviorUseCase()
       const result = await useCase.execute({
         courseId,

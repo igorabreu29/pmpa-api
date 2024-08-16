@@ -6,10 +6,10 @@ import { ClientError } from "../errors/client-error.ts";
 import { NotFound } from "../errors/not-found.ts";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
-import { makeDeleteStudentUseCase } from "@/infra/factories/make-delete-student-use-case.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { NotAllowed } from "../errors/not-allowed.ts";
 import { makeDeleteManagerUseCase } from "@/infra/factories/make-delete-manager-use-case.ts";
+import { makeOnManagerDeleted } from "@/infra/factories/make-on-manager-deleted.ts";
 
 export async function deleteManager(
   app: FastifyInstance
@@ -30,6 +30,7 @@ export async function deleteManager(
 
     const ip = req.ip
 
+    makeOnManagerDeleted()
     const useCase = makeDeleteManagerUseCase()
     const result = await useCase.execute({
       id,

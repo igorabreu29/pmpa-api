@@ -10,9 +10,9 @@ import { NotFound } from "../errors/not-found.ts";
 import { Conflict } from "../errors/conflict-error.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { ConflictError } from "@/domain/boletim/app/use-cases/errors/conflict-error.ts";
-import { makeCreateBehaviorUseCase } from "@/infra/factories/make-create-behavior-use-case.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { makeUpdateBehaviorUseCase } from "@/infra/factories/make-update-behavior-use-case.ts";
+import { makeOnBehaviorUpdated } from "@/infra/factories/make-on-behavior-updated.ts";
 
 export async function updateBehavior(
   app: FastifyInstance
@@ -61,6 +61,7 @@ export async function updateBehavior(
 
       const ip = req.ip
 
+      makeOnBehaviorUpdated()
       const useCase = makeUpdateBehaviorUseCase()
       const result = await useCase.execute({
         id,

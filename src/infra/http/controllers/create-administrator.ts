@@ -4,7 +4,6 @@ import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
-import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
@@ -14,6 +13,7 @@ import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { transformDate } from "@/infra/utils/transform-date.ts";
 import { makeCreateAdministratorUseCase } from "@/infra/factories/make-create-administrator-use-case.ts";
+import { makeOnAdministratorCreated } from "@/infra/factories/make-on-administrator-created.ts";
 
 export async function createAdministrator(
   app: FastifyInstance
@@ -39,6 +39,7 @@ export async function createAdministrator(
 
     const ip = req.ip
 
+    makeOnAdministratorCreated()
     const useCase = makeCreateAdministratorUseCase()
     const result = await useCase.execute({
       username,

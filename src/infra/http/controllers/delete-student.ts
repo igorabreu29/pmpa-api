@@ -9,6 +9,7 @@ import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { makeDeleteStudentUseCase } from "@/infra/factories/make-delete-student-use-case.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { NotAllowed } from "../errors/not-allowed.ts";
+import { makeOnStudentDeleted } from "@/infra/factories/make-on-student-deleted.ts";
 
 export async function deleteStudent(
   app: FastifyInstance
@@ -29,6 +30,7 @@ export async function deleteStudent(
 
     const ip = req.ip
 
+    makeOnStudentDeleted()
     const useCase = makeDeleteStudentUseCase()
     const result = await useCase.execute({
       id,
