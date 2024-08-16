@@ -1,7 +1,7 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Batch, BatchProps } from "./batch.ts";
 import { Behavior } from "./behavior.ts";
-import { BehaviorBatchCreatedEvent } from "../events/behavior-batch-created-event.ts";
+import { BehaviorBatchEvent } from "../events/behavior-batch-event.ts";
 
 interface BehaviorBatchProps extends BatchProps {
   behaviors: Behavior[]
@@ -17,7 +17,7 @@ export class BehaviorBatch extends Batch<BehaviorBatchProps> {
 
     const isNewBehaviorBatch = !id
     if (isNewBehaviorBatch) {
-      behaviorBatch.addDomainEvent(new BehaviorBatchCreatedEvent({
+      behaviorBatch.addDomainEvent(new BehaviorBatchEvent({
         behaviorBatch,
         reporterIp: behaviorBatch.userIp
       }))

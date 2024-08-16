@@ -1,6 +1,6 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Assessment } from "./assessment.ts";
-import { AssessmentBatchCreatedEvent } from "../events/assessment-batch-created-event.ts";
+import { AssessmentBatchEvent } from "../events/assessment-batch-event.ts";
 import { Batch, BatchProps } from "./batch.ts";
 
 interface AssessmentBatchProps extends BatchProps {
@@ -17,7 +17,7 @@ export class AssessmentBatch extends Batch<AssessmentBatchProps> {
 
     const isNewAssessmentBatch = !id
     if (isNewAssessmentBatch) {
-      assessmentBatch.addDomainEvent(new AssessmentBatchCreatedEvent({
+      assessmentBatch.addDomainEvent(new AssessmentBatchEvent({
         assessmentBatch,
         reporterIp: assessmentBatch.userIp
       }))
