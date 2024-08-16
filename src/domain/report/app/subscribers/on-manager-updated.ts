@@ -4,7 +4,7 @@ import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import { SendReportUseCase } from "../use-cases/send-report.ts";
 import { ManagerEvent } from "@/domain/boletim/enterprise/events/manager-event.ts";
 
-export class OnManagerCreated implements EventHandler {
+export class OnManagerUpdated implements EventHandler {
   constructor (
     private reportersRepository: ReportersRepository,
     private sendReport: SendReportUseCase
@@ -24,7 +24,7 @@ export class OnManagerCreated implements EventHandler {
 
     if (reporter) {
       await this.sendReport.execute({
-        title: 'Estudante criado',
+        title: 'Gerente atualizado',
         content: `
           IP: ${reporterIp} \n
           Remetente: ${reporter.username.value} \n

@@ -28,7 +28,7 @@ export class OnManagerCreated implements EventHandler {
 
     if (reporter && course) {
       await this.sendReport.execute({
-        title: 'Estudante criado',
+        title: 'Gerente criado',
         content: `
           IP: ${reporterIp} \n
           Remetente: ${reporter.username.value} \n

@@ -12,7 +12,7 @@ import { InMemoryReportsRepository } from 'test/repositories/in-memory-reports-r
 import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
-import { OnManagerDeleted } from './on-manager-deleted.ts'
+import { OnManagerUpdated } from './on-manager-updated.ts'
 
 let managersCoursesRepository: InMemoryManagersCoursesRepository
 let managersPolesRepository: InMemoryManagersPolesRepository
@@ -58,7 +58,7 @@ describe('On Manager Updated', () => {
     
     sendReportExecuteSpy = vi.spyOn(sendReportUseCase, 'execute')
 
-    new OnManagerDeleted (
+    new OnManagerUpdated (
       reportersRepository,
       sendReportUseCase
     )
