@@ -62,10 +62,10 @@ export class GetCourseClassificationUseCase {
       case 'CFP': 
         const classifiedByCFPFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
         return right({ studentsWithAverage: classifiedByCFPFormula })
-      case 'CFO': 
+      case 'CHO': 
         const classifiedByCFOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
         return right({ studentsWithAverage: classifiedByCFOFormula })
-      case 'CHO': 
+      case 'CFO': 
         const classifiedByCHOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByPeriod[])
         return right({ studentsWithAverage: classifiedByCHOFormula })
       default: 
