@@ -1,8 +1,8 @@
 import type { StudentDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-details.ts";
-import { PrismaCoursesMapper } from "@/infra/database/mappers/prisma-courses-mapper.ts";
+import { dayjs } from '@/infra/libs/dayjs.ts'
+
 import { 
   Prisma,
-  User as PrismaStudent,
   Pole as PrismaPole,
   Course as PrismaCourse
  } from "@prisma/client";
@@ -22,7 +22,7 @@ export class StudentDetailsPresenter {
       username: studentDetails.username,
       password: '',
       avatarUrl: studentDetails.avatarUrl ? studentDetails.avatarUrl : null,
-      birthday: studentDetails.birthday,
+      birthday: dayjs(studentDetails.birthday).format('DD/MM/YYYY'),
       courses: studentDetails.courses.map(course => ({
         id: course.id.toValue(),
         endsAt: course.endsAt.value,

@@ -1,5 +1,6 @@
 import type { Developer } from "@/domain/boletim/enterprise/entities/developer.ts";
 import type { Prisma } from "@prisma/client";
+import { dayjs } from '@/infra/libs/dayjs.ts'
 
 export class DeveloperPresenter {
   static toHTTP(developer: Developer): Prisma.UserUncheckedCreateInput {
@@ -11,7 +12,7 @@ export class DeveloperPresenter {
       username: developer.username.value,
       password: '',
       avatarUrl: developer.avatarUrl ? developer.avatarUrl : null,
-      birthday: developer.birthday.value,
+      birthday: dayjs(developer.birthday.value).format('DD/MM/YYYY'),
     }
   }
 }
