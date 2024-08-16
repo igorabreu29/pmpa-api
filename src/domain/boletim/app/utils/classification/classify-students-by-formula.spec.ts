@@ -591,7 +591,7 @@ describe('Classify Students By Formula', () => {
       },
     ]
 
-    const behaviorAverageByPeriod = generateBehaviorAverage({ behaviorMonths })
+    const behaviorAverageByPeriod = generateBehaviorAverage({ behaviorMonths, isPeriod: true })
 
     const studentsWithAverage: StudentClassficationByPeriod[] = [
       {
@@ -713,8 +713,26 @@ describe('Classify Students By Formula', () => {
     ]
 
     const result = classifyStudentsByCFOFormula(studentsWithAverage)
-    for (const item of result) {
-      console.log(item.studentAverage.averageInform)
-    }
+
+    expect(result).toMatchObject([
+      {
+        studentAverage: {
+          averageInform: {
+            studentAverageStatus: {
+              status: 'approved'
+            }
+          }
+        }
+      },
+      {
+        studentAverage: {
+          averageInform: {
+            studentAverageStatus: {
+              status: 'approved second season'
+            }
+          }
+        }
+      },
+    ])
   })
 })

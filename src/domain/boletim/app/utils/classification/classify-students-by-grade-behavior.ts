@@ -1,56 +1,34 @@
+import type { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
 import type { GenerateBehaviorStatus } from "../get-behavior-average-status.ts"
 
-export interface CourseBehaviorClassificationByModule {
+export interface BehaviorByModule {
   behaviorAverage: {
     behaviorAverageStatus: GenerateBehaviorStatus
     behaviorsCount: number
   }
   studentBirthday: Date
   studentCivilID: number
-  studentPole: string
+  studentPole: {
+    id: UniqueEntityId
+    name: string
+  }
 }
 
-export const classifyStudentsByGradeBehaviorCGSAndCASFormula = (behaviorsAverage: CourseBehaviorClassificationByModule[]) => {
-  return behaviorsAverage.sort((studentA, studentB) => {
-    const geralAverageStudentA = studentA.behaviorAverage.behaviorAverageStatus.behaviorAverage
-    const geralAverageStudentB = studentB.behaviorAverage.behaviorAverageStatus.behaviorAverage
+export interface BehaviorClassification {
+  behaviorAverageByPole: {
+    poleId: string
+    name: string
+    average: number
+  }
+}
 
-    const isApprovedStudentA = studentA.behaviorAverage.behaviorAverageStatus.status === 'approved'
-    const isApprovedStudentB = studentB.behaviorAverage.behaviorAverageStatus.status === 'approved'
-    
-    const studentABirthday = Number(studentA.studentBirthday?.getTime())
-    const studentBBirthday = Number(studentB.studentBirthday?.getTime())
+export const classifyStudentsByGradeBehaviorFormula = (behaviorsAverage: BehaviorClassification[]) => {
+  return behaviorsAverage.sort((studentA, studentB) => {
+    const geralAverageStudentA = studentA.behaviorAverageByPole.average
+    const geralAverageStudentB = studentB.behaviorAverageByPole.average
 
     if (geralAverageStudentA !== geralAverageStudentB) {
       return Number(geralAverageStudentB) - Number(geralAverageStudentA)
-    }
-
-    if (isApprovedStudentA !== isApprovedStudentB) {
-      return Number(isApprovedStudentB) - Number(isApprovedStudentB)
-    }
-
-    if (studentABirthday !== studentBBirthday) {
-      return studentABirthday - studentBBirthday
-    }
-
-    return 0
-  })
-}
-
-export const classifyStudentsByGradeBehaviorCPFFormula = (behaviorsAverage: CourseBehaviorClassificationByModule[]) => {
-  return behaviorsAverage.sort((studentA, studentB) => {
-    const geralAverageStudentA = studentA.behaviorAverage.behaviorAverageStatus.behaviorAverage
-    const geralAverageStudentB = studentB.behaviorAverage.behaviorAverageStatus.behaviorAverage
-    
-    const studentABirthday = Number(studentA.studentBirthday?.getTime())
-    const studentBBirthday = Number(studentB.studentBirthday?.getTime())
-
-    if (geralAverageStudentA !== geralAverageStudentB) {
-      return Number(geralAverageStudentB) - Number(geralAverageStudentA)
-    }
-
-    if (studentABirthday !== studentBBirthday) {
-      return studentABirthday - studentBBirthday
     }
 
     return 0
