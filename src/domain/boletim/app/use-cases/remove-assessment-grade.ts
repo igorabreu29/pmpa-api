@@ -4,7 +4,6 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { AssessmentsRepository } from "../repositories/assessments-repository.ts";
 import { Role } from "../../enterprise/entities/authenticate.ts";
 import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
-import { Assessment } from "../../enterprise/entities/assessment.ts";
 
 interface RemoveAssessmentGradeUseCaseRequest {
   id: string
