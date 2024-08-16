@@ -29,6 +29,10 @@ export class Report extends Entity<ReportProps> {
   get ip() {
     return this.props.ip
   }
+
+  get action() {
+    return this.props.action
+  }
   
   get createdAt() {
     return this.props.createdAt
