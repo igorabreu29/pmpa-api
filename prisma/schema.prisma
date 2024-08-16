@@ -178,7 +178,7 @@ model Assessment {
   courseId     String
   disciplineId String
 
-  vf   Decimal
+  vf   Decimal?
   avi  Decimal?
   avii Decimal?
   vfe  Decimal?
