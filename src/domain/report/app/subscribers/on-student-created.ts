@@ -22,8 +22,11 @@ export class OnStudentCreated implements EventHandler {
   }
 
   private async sendNewStudentReport({ student, courseId, reporterId, reporterIp, ocurredAt }: StudentEvent) {
-    const reporter = await this.reportersRepository.findById({ id: reporterId })
-    const course = await this.coursesRepository.findById(String(courseId))
+    const [reporter, course] = await Promise.all([
+      this.reportersRepository.findById({ id: reporterId }),
+      this.coursesRepository.findById(String(courseId))
+    ])
+
 
     if (reporter && course) {
       await this.sendReport.execute({

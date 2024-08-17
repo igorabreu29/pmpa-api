@@ -1,11 +1,11 @@
 import { EventHandler } from "@/core/events/event-handler.ts";
 import { SendReportUseCase } from "../use-cases/send-report.ts";
 import { DomainEvents } from "@/core/events/domain-events.ts";
-import { DisciplinesRepository } from "@/domain/boletim/app/repositories/disiciplines-repository.ts";
 import { AssessmentEvent } from "@/domain/boletim/enterprise/events/assessment-event.ts";
 import { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
 import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-repository.ts";
 import { ReportersRepository } from "../repositories/reporters-repository.ts";
+import type { DisciplinesRepository } from "@/domain/boletim/app/repositories/disciplines-repository.ts";
 
 export class OnAssessmentDeleted implements EventHandler {
   constructor (
@@ -26,10 +26,12 @@ export class OnAssessmentDeleted implements EventHandler {
   }
 
   private async sendDeleteAssessmentReport({ assessment, reporterId, reporterIp, ocurredAt }: AssessmentEvent) {
-    const course = await this.coursesRepository.findById(assessment.courseId.toValue())
-    const discipline = await this.disciplinesRepository.findById(assessment.disciplineId.toValue())
-    const reporter = await this.reportersRepository.findById({ id: reporterId })
-    const student = await this.studentsRepository.findById(assessment.studentId.toValue())
+    const [course, discipline, reporter, student] = await Promise.all([
+      this.coursesRepository.findById(assessment.courseId.toValue()),
+      this.disciplinesRepository.findById(assessment.disciplineId.toValue()),
+      this.reportersRepository.findById({ id: reporterId }),
+      this.studentsRepository.findById(assessment.studentId.toValue())
+    ])
 
     if (course && discipline && reporter && student) {
       await this.sendReport.execute({

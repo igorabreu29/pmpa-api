@@ -23,8 +23,10 @@ export class OnManagerCreated implements EventHandler {
   }
 
   private async sendNewManagerReport({ manager, courseId, reporterId, reporterIp, ocurredAt }: ManagerEvent) {
-    const reporter = await this.reportersRepository.findById({ id: reporterId })
-    const course = await this.coursesRepository.findById(String(courseId))
+    const [reporter, course] = await Promise.all([
+      this.reportersRepository.findById({ id: reporterId }),
+      this.coursesRepository.findById(String(courseId))
+    ])
 
     if (reporter && course) {
       await this.sendReport.execute({

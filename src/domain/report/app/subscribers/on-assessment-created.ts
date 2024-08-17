@@ -26,10 +26,12 @@ export class OnAssessmentCreated implements EventHandler {
   }
 
   private async sendNewAssessmentReport({ assessment, reporterId, reporterIp, ocurredAt }: AssessmentEvent) {
-    const course = await this.coursesRepository.findById(assessment.courseId.toValue())
-    const discipline = await this.disciplinesRepository.findById(assessment.disciplineId.toValue())
-    const reporter = await this.reportersRepository.findById({ id: reporterId })
-    const student = await this.studentsRepository.findById(assessment.studentId.toValue())
+    const [course, discipline, reporter, student] = await Promise.all([
+      this.coursesRepository.findById(assessment.courseId.toValue()),
+      this.disciplinesRepository.findById(assessment.disciplineId.toValue()),
+      this.reportersRepository.findById({ id: reporterId }),
+      this.studentsRepository.findById(assessment.studentId.toValue())
+    ])
 
     if (course && discipline && reporter && student) {
       await this.sendReport.execute({

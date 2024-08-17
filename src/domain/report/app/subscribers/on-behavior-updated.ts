@@ -24,9 +24,11 @@ export class OnBehaviorUpdated implements EventHandler {
   }
 
   private async sendUpdateBehaviorReport({ behavior, reporterId, reporterIp, ocurredAt }: BehaviorEvent) {
-    const course = await this.coursesRepository.findById(behavior.courseId.toValue())
-    const reporter = await this.reportersRepository.findById({ id: reporterId })
-    const student = await this.studentsRepository.findById(behavior.studentId.toValue())
+    const [course, reporter, student] = await Promise.all([
+      this.coursesRepository.findById(behavior.courseId.toValue()),
+      this.reportersRepository.findById({ id: reporterId }),
+      this.studentsRepository.findById(behavior.studentId.toValue())
+    ])
 
     if (course && reporter && student) {
       await this.sendReport.execute({
