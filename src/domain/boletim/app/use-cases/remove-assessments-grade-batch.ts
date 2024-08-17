@@ -66,10 +66,10 @@ export class RemoveAssessmentsGradeBatchUseCase {
       })
       if (!assessment) return new ResourceNotFoundError('Assessment not found.')
 
-      assessment.vf = studentAssessment.vf === -1 ? null : assessment.vf
-      assessment.avi = studentAssessment.avi === -1 ? null : assessment.avi
-      assessment.avii = studentAssessment.avii === -1 ? null : assessment.avii,
-      assessment.vfe = studentAssessment.vfe === -1 ? null : assessment.vfe
+      assessment.vf = studentAssessment.vf ? null : assessment.vf
+      assessment.avi = studentAssessment.avi ? null : assessment.avi
+      assessment.avii = studentAssessment.avii ? null : assessment.avii,
+      assessment.vfe = studentAssessment.vfe ? null : assessment.vfe
 
       return assessment
     }))
