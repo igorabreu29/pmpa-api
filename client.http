@@ -34,12 +34,12 @@ Content-Type: application/json
 }
 
 ###
-POST {{baseUrl}}/disciplines/clzvpod3x0001cr5d472l09o1/assessment
-Authorization: Bearer 
+POST {{baseUrl}}/disciplines/clzy42e4p0005rn3lv4n60xa9/assessment
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InN1YiI6ImNsenkydWFmMzAwMDNybjNsN3pkNHdxNXYiLCJyb2xlIjoiZGV2In0sImlhdCI6MTcyMzg5NzM1MywiZXhwIjoxNzIzOTAwOTUzfQ.Aa6yHsyY2I1gQunFuWc4vh1icqmKXBCP0SM5WxSX-mA
 Content-Type: application/json
 
 {
-  "courseId": "clzvpng4g0000cr5dt18f8gvh",
-  "studentId": "clzvpq6j90002cr5d33gid05p",
+  "courseId": "clzy2q0vr0000rn3lh46bujpf",
+  "studentId": "clzy2scec0002rn3lc2qiz7yy",
   "vf": 6
 }
