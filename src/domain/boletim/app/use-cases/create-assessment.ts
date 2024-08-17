@@ -63,7 +63,7 @@ export class CreateAssessmentUseCase {
     const student = await this.studentsRepository.findById(studentId)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
 
-    const assessmentAlreadyAdded = await this.assessmentsRepository.findByStudentIdAndCourseId({ studentId, courseId }) 
+    const assessmentAlreadyAdded = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({ studentId, courseId, disciplineId }) 
     if (assessmentAlreadyAdded) return left(new ResourceAlreadyExistError('Assessment already exist.'))
 
     const assessmentOrError = Assessment.create({
