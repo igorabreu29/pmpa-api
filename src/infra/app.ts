@@ -66,6 +66,7 @@ import { getClassification } from "./http/controllers/get-classification.ts";
 import { getClassificationByPole } from "./http/controllers/get-classification-by-pole.ts";
 import { getClassificationByManager } from "./http/controllers/get-classification-by-manager.ts";
 import { getBehaviorClassification } from "./http/controllers/get-behavior-classification.ts";
+import { removeAssessmentGrade } from "./http/controllers/remove-assessment-grade.ts";
 
 export const app = fastify()
 
@@ -108,6 +109,7 @@ app.register(createAssessment)
 app.register(createAssessmentBatch)
 app.register(updateAssessment)
 app.register(updateAssessmentBatch)
+app.register(removeAssessmentGrade)
 app.register(deleteAssessment)
 app.register(createBehavior)
 app.register(createBehaviorBatch)
