@@ -76,6 +76,8 @@ export class DomainEvents {
       for (const handler of handlers) {
         handler(event)
       }
+
+      this.handlersMap[eventClassName] = []
     }
   }
 }
