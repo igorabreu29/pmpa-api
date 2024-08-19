@@ -27,7 +27,6 @@ export class OnStudentCreated implements EventHandler {
       this.coursesRepository.findById(String(courseId))
     ])
 
-
     if (reporter && course) {
       await this.sendReport.execute({
         title: 'Estudante criado',
