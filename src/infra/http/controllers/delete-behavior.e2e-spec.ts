@@ -6,37 +6,14 @@ import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
 
 import bcrypt from 'bcryptjs'
+import { Behavior } from '@prisma/client'
+
+let behavior: Behavior
 
 describe('Delete Behavior (e2e)', () => {
   beforeAll(async () => {
-    await app.ready()
-  })
-
-  afterAll(async () => {
-    await app.close()
-  })
-
-  it ('DELETE /behaviors/:id', async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
-
-    const administrator = await prisma.user.create({
-      data: {
-        username: 'John Doe',
-        civilId: '02345',
-        cpf: '00000000000',
-        email: 'john@acne.com', 
-        password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
-        role: 'ADMIN'
-      }
-    })
-    const authenticateResponse = await request(app.server)
-      .post('/credentials/auth')
-      .send({
-        cpf: administrator.cpf,
-        password: 'node-20'
-      })
-    const { token } = authenticateResponse.body
 
     const course = await prisma.course.create({
       data: {
@@ -60,13 +37,39 @@ describe('Delete Behavior (e2e)', () => {
       data
     })
 
-    const behavior = await prisma.behavior.create({
+    behavior = await prisma.behavior.create({
       data: {
         studentId: student.id,
         courseId: course.id,
         january: 7,
       }
     })
+
+    await app.ready()
+  })
+
+  afterAll(async () => {
+    await app.close()
+  })
+
+  it ('DELETE /behaviors/:id', async () => {
+    const administrator = await prisma.user.create({
+      data: {
+        username: 'John Doe',
+        civilId: '02345',
+        cpf: '00000000000',
+        email: 'john@acne.com', 
+        password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
+        role: 'ADMIN'
+      }
+    })
+    const authenticateResponse = await request(app.server)
+      .post('/credentials/auth')
+      .send({
+        cpf: administrator.cpf,
+        password: 'node-20'
+      })
+    const { token } = authenticateResponse.body
 
     const response = await request(app.server)
       .delete(`/behaviors/${behavior.id}`)

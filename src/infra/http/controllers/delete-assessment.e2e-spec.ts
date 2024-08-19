@@ -6,37 +6,14 @@ import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
 
 import bcrypt from 'bcryptjs'
+import { Assessment } from '@prisma/client'
+
+let assessment: Assessment
 
 describe('Delete Assessment (e2e)', () => {
   beforeAll(async () => {
-    await app.ready()
-  })
-
-  afterAll(async () => {
-    await app.close()
-  })
-
-  it ('DELETE /assessments/:id', async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
-
-    const administrator = await prisma.user.create({
-      data: {
-        username: 'John Doe',
-        civilId: '02345',
-        cpf: '00000000000',
-        email: 'john@acne.com', 
-        password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
-        role: 'ADMIN'
-      }
-    })
-    const authenticateResponse = await request(app.server)
-      .post('/credentials/auth')
-      .send({
-        cpf: administrator.cpf,
-        password: 'node-20'
-      })
-    const { token } = authenticateResponse.body
 
     const course = await prisma.course.create({
       data: {
@@ -66,7 +43,7 @@ describe('Delete Assessment (e2e)', () => {
       data
     })
 
-    const assessment = await prisma.assessment.create({
+    assessment = await prisma.assessment.create({
       data: {
         studentId: student.id,
         disciplineId: discipline.id,
@@ -75,6 +52,32 @@ describe('Delete Assessment (e2e)', () => {
       }
     })
 
+    await app.ready()
+  })
+
+  afterAll(async () => {
+    await app.close()
+  })
+
+  it ('DELETE /assessments/:id', async () => {
+    const administrator = await prisma.user.create({
+      data: {
+        username: 'John Doe',
+        civilId: '02345',
+        cpf: '00000000000',
+        email: 'john@acne.com', 
+        password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
+        role: 'ADMIN'
+      }
+    })
+    const authenticateResponse = await request(app.server)
+      .post('/credentials/auth')
+      .send({
+        cpf: administrator.cpf,
+        password: 'node-20'
+      })
+    const { token } = authenticateResponse.body
+    
     const response = await request(app.server)
       .delete(`/assessments/${assessment.id}`)
       .set('Authorization', `Bearer ${token}`)
