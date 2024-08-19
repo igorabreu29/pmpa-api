@@ -1,7 +1,9 @@
-import type { ReportsRepository } from "@/domain/report/app/repositories/reports-repository.ts";
+import type { FindManyProps, ReportsRepository } from "@/domain/report/app/repositories/reports-repository.ts";
 import type { Report } from "@/domain/report/enterprise/entities/report.ts";
+import { Report as PrismaReport } from '@prisma/client'
 import { prisma } from "../lib/prisma.ts";
 import { PrismaReportsMapper } from "../mappers/prisma-reports-mapper.ts";
+import { convertActionToPrisma } from "@/infra/utils/convert-action-by-layer.ts";
 
 export class PrismaReportsRepository implements ReportsRepository {
   async findByTitle({ title }: { title: string; }): Promise<Report | null> {
@@ -14,6 +16,22 @@ export class PrismaReportsRepository implements ReportsRepository {
     if (!report) return null
 
     return PrismaReportsMapper.toDomain(report)
+  }
+
+  async findMany({ action }: FindManyProps): Promise<Report[]> {
+    let reports: PrismaReport[] = []
+
+    if (!action.length) {
+      reports = await prisma.report.findMany()
+    }
+
+    reports = await prisma.report.findMany({
+      where: {
+        action: convertActionToPrisma(action)
+      }
+    })
+
+    return reports.map(report => PrismaReportsMapper.toDomain(report))
   }
   
   async create(report: Report): Promise<void> {

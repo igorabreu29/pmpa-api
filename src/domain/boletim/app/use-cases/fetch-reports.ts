@@ -1,10 +1,9 @@
 import { right, type Either } from "@/core/either.ts";
 import type { ReportsRepository } from "@/domain/report/app/repositories/reports-repository.ts";
-import type { Report, TypeAction } from "@/domain/report/enterprise/entities/report.ts";
+import type { Report } from "@/domain/report/enterprise/entities/report.ts";
 
 interface FetchReportsUseCaseRequest {
-  page: number
-  action?: TypeAction
+  action: string
 }
 
 type FetchReportsUseCaseResponse = Either<null, {
@@ -16,8 +15,8 @@ export class FetchReportsUseCase {
     private reportsRepository: ReportsRepository
   ) {}
 
-  async execute({ page, action }: FetchReportsUseCaseRequest): Promise<FetchReportsUseCaseResponse> {
-    const reports = await this.reportsRepository.findMany({ page, action })
+  async execute({ action }: FetchReportsUseCaseRequest): Promise<FetchReportsUseCaseResponse> {
+    const reports = await this.reportsRepository.findMany({ action })
     return right({
       reports,
     })

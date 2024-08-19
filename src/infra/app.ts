@@ -68,8 +68,14 @@ import { getClassificationByManager } from "./http/controllers/get-classificatio
 import { getBehaviorClassification } from "./http/controllers/get-behavior-classification.ts";
 import { removeAssessmentGrade } from "./http/controllers/remove-assessment-grade.ts";
 import { removeAssessmentsGradeBatch } from "./http/controllers/remove-assessments-grade-batch.ts";
+import { getReports } from "./http/controllers/get-reports.ts";
 
 export const app = fastify()
+app.register(import("@fastify/cors"), {
+  origin: [
+    'http://localhost:3000'
+  ]
+})
 
 app.register(import('@fastify/jwt'), {
   secret: env.JWT_SECRET
@@ -148,5 +154,6 @@ app.register(getClassification)
 app.register(getClassificationByPole)
 app.register(getClassificationByManager)
 app.register(getBehaviorClassification)
+app.register(getReports)
 
 app.setErrorHandler(errorHandler)

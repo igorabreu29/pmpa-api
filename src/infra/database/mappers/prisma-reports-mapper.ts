@@ -1,5 +1,6 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Report } from "@/domain/report/enterprise/entities/report.ts";
+import { convertActionToDomain, convertActionToPrisma } from "@/infra/utils/convert-action-by-layer.ts";
 import type { Prisma, Report as PrismaReport } from "@prisma/client";
 
 export class PrismaReportsMapper {
@@ -8,7 +9,9 @@ export class PrismaReportsMapper {
       reporterId: report.reporterId,
       title: report.title,
       content: report.content,
-      action: 'add',
+      fileLink: report.filelink ?? undefined,
+      fileName: report.filename ?? undefined,
+      action: convertActionToDomain(report.action),
       ip: report.ip,
       createdAt: report.createdAt,
     }, new UniqueEntityId(report.id))
@@ -20,7 +23,9 @@ export class PrismaReportsMapper {
       reporterId: report.reporterId,
       title: report.title,
       content: report.content,
-      action: 'ADD',
+      filelink: report.fileLink,
+      filename: report.fileName,
+      action: convertActionToPrisma(report.action),
       ip: report.ip,
       createdAt: report.createdAt
     }
