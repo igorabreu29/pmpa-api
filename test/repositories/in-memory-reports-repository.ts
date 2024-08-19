@@ -11,7 +11,8 @@ export class InMemoryReportsRepository implements ReportsRepository {
 
   async findMany({ action }: FindManyProps): Promise<Report[]> {
     const reports = this.items
-      .filter(item => item.action === action)
+      .filter(item => item.action.includes(action))
+      .sort((a, b) => a.title.localeCompare(b.title))
 
     return reports
   }
