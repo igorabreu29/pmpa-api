@@ -9,24 +9,11 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { NotFound } from "../errors/not-found.ts";
 import { Conflict } from "../errors/conflict-error.ts";
 import { ConflictError } from "@/domain/boletim/app/use-cases/errors/conflict-error.ts";
-import { makeCreateAssessmentsBatchUseCase } from "@/infra/factories/make-create-assessments-batch-use-case.ts";
 import { upload } from "@/infra/libs/multer.ts";
-import excelToJson from "convert-excel-to-json";
-import { resolve } from "node:path";
 import { ClientError } from "../errors/client-error.ts";
 import { makeUpdateAssessmentsBatchUseCase } from "@/infra/factories/make-update-assessment-batch-use-case.ts";
 import { assessmentsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
-
-interface ExcelAssessmentsBatch {
-  [key: string]: {
-    cpf: string
-    disciplineName: string
-    vf?: number
-    avi?: number
-    avii?: number
-    vfe?: number
-  }[]
-}
+import { makeOnAssessmentBatchUpdated } from "@/infra/factories/make-on-assessment-batch-updated.ts";
 
 export async function updateAssessmentBatch(
   app: FastifyInstance
@@ -59,6 +46,7 @@ export async function updateAssessmentBatch(
       
       const ip = req.ip
 
+      makeOnAssessmentBatchUpdated()
       const useCase = makeUpdateAssessmentsBatchUseCase()
       const result = await useCase.execute({
         courseId,

@@ -14,6 +14,7 @@ import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-alrea
 import { upload } from "@/infra/libs/multer.ts";
 import { makeUpdateBehaviorsBatchUseCase } from "@/infra/factories/make-update-behaviors-batch-use-case.ts";
 import { behaviorsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
+import { makeOnBehaviorBatchUpdated } from "@/infra/factories/make-on-behavior-batch-updated.ts";
 
 export async function updateBehaviorBatch(
   app: FastifyInstance
@@ -47,6 +48,7 @@ export async function updateBehaviorBatch(
 
       const ip = req.ip
 
+      makeOnBehaviorBatchUpdated()
       const useCase = makeUpdateBehaviorsBatchUseCase()
       const result = await useCase.execute({
         courseId,

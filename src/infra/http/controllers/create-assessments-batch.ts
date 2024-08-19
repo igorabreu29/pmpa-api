@@ -13,6 +13,7 @@ import { makeCreateAssessmentsBatchUseCase } from "@/infra/factories/make-create
 import { upload } from "@/infra/libs/multer.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { assessmentsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
+import { makeOnAssessmentBatchCreated } from "@/infra/factories/make-on-assessment-batch-created.ts";
 
 
 export async function createAssessmentBatch(
@@ -46,6 +47,7 @@ export async function createAssessmentBatch(
 
       const ip = req.ip
 
+      makeOnAssessmentBatchCreated()
       const useCase = makeCreateAssessmentsBatchUseCase()
       const result = await useCase.execute({
         courseId,

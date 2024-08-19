@@ -14,6 +14,7 @@ import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-alrea
 import { makeCreateBehaviorsBatchUseCase } from "@/infra/factories/make-create-behaviors-batch-use-case.ts";
 import { upload } from "@/infra/libs/multer.ts";
 import { behaviorsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
+import { makeOnBehaviorBatchCreated } from "@/infra/factories/make-on-behavior-batch-created.ts";
 
 
 export async function createBehaviorBatch(
@@ -48,6 +49,7 @@ export async function createBehaviorBatch(
 
       const ip = req.ip
 
+      makeOnBehaviorBatchCreated()
       const useCase = makeCreateBehaviorsBatchUseCase()
       const result = await useCase.execute({
         courseId,

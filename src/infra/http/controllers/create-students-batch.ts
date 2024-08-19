@@ -19,6 +19,7 @@ import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { createStudentsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
+import { makeOnStudentBatchCreated } from "@/infra/factories/make-on-student-batch-created.ts";
 
 export async function createStudentBatch(
   app: FastifyInstance
@@ -46,6 +47,7 @@ export async function createStudentBatch(
 
     const ip = req.ip
 
+    makeOnStudentBatchCreated()
     const useCase = makeCreateStudentsBatchUseCase()
     const result = await useCase.execute({
       courseName: students[0].courseName,
