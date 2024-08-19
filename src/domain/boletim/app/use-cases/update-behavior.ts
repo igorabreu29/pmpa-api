@@ -1,9 +1,9 @@
 import { Either, left, right } from "@/core/either.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { BehaviorsRepository } from "../repositories/behaviors-repository.ts";
-import { BehaviorEvent } from "../../enterprise/events/behavior-event.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { BehaviorUpdatedEvent } from "../../enterprise/events/behavior-updated-event.ts";
 
 interface UpdateBehaviorUseCaseUseCaseRequest {
   id: string
@@ -68,7 +68,7 @@ export class UpdateBehaviorUseCaseUseCase {
     behavior.november = november || behavior.november
     behavior.december = december || behavior.december
 
-    behavior.addDomainBehaviorEvent(new BehaviorEvent({
+    behavior.addDomainBehaviorEvent(new BehaviorUpdatedEvent({
       behavior,
       reporterId: userId,
       reporterIp: userIp

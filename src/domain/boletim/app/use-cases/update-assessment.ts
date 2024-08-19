@@ -3,9 +3,9 @@ import { AssessmentsRepository } from "../repositories/assessments-repository.ts
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
 import { Assessment } from "../../enterprise/entities/assessment.ts";
-import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { AssessmentUpdatedEvent } from "../../enterprise/events/assessment-updated-event.ts";
 
 interface UpdateAssessmentUseCaseUseCaseRequest {
   id: string
@@ -53,7 +53,7 @@ export class UpdateAssessmentUseCaseUseCase {
     if (assessmentOrError.isLeft()) return left(assessmentOrError.value)
     const assessmentCreated = assessmentOrError.value
 
-    assessmentCreated.addDomainAssessmentEvent(new AssessmentEvent({
+    assessmentCreated.addDomainAssessmentEvent(new AssessmentUpdatedEvent({
       assessment: assessmentCreated,
       reporterId: userId,
       reporterIp: userIp

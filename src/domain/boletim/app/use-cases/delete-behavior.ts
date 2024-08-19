@@ -4,6 +4,7 @@ import { BehaviorsRepository } from "../repositories/behaviors-repository.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { BehaviorEvent } from "../../enterprise/events/behavior-event.ts";
+import { BehaviorDeletedEvent } from "../../enterprise/events/behavior-deleted-event.ts";
 
 interface DeleteBehaviorUseCaseUseCaseRequest {
   id: string
@@ -31,7 +32,7 @@ export class DeleteBehaviorUseCaseUseCase {
     const behavior = await this.behaviorsRepository.findById({ id }) 
     if (!behavior) return left(new ResourceNotFoundError('Behavior not found.'))
 
-    behavior.addDomainBehaviorEvent(new BehaviorEvent({
+    behavior.addDomainBehaviorEvent(new BehaviorDeletedEvent({
       behavior,
       reporterId: userId,
       reporterIp: userIp

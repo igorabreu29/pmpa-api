@@ -90,7 +90,13 @@ export class CreateBehaviorUseCase {
       november,
       december,
     })
-    behavior.addDomainBehaviorEvent(new BehaviorEvent({ behavior, reporterId: userId, reporterIp: userIp }))
+    behavior.addDomainBehaviorEvent(new BehaviorEvent({
+      behavior, 
+      courseName: course.name.value,
+      studentName: student.username.value,
+      reporterId: userId, 
+      reporterIp: userIp
+    }))
     await this.behaviorsRepository.create(behavior)
 
     return right(null)

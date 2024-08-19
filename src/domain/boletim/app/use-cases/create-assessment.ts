@@ -9,10 +9,10 @@ import { StudentsRepository } from "../repositories/students-repository.ts";
 import { DisciplinesRepository } from "../repositories/disciplines-repository.ts";
 
 import dayjs from "dayjs";
-import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
+import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
 
 interface CreateAssessmentUseCaseRequest {
   userId: string
@@ -80,6 +80,9 @@ export class CreateAssessmentUseCase {
 
     assessment.addDomainAssessmentEvent(new AssessmentEvent({
       assessment,
+      courseName: course.name.value,
+      disciplineName: discipline.name.value,
+      studentName: student.username.value,
       reporterId: userId,
       reporterIp: userIp
     }))
