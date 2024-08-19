@@ -1,8 +1,7 @@
 import { Report, type TypeAction } from "../../enterprise/entities/report.ts";
 
 export interface FindManyProps {
-  page: number
-  action?: TypeAction
+  action: string
 }
 
 export abstract class ReportsRepository {
