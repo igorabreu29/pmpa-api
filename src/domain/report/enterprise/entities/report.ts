@@ -9,6 +9,8 @@ interface ReportProps {
   title: string
   content: string
   ip: string
+  fileName?: string
+  fileLink?: string
   createdAt: Date
   action: TypeAction
 } 
@@ -28,6 +30,14 @@ export class Report extends Entity<ReportProps> {
 
   get ip() {
     return this.props.ip
+  }
+
+  get fileName() {
+    return this.props.fileName
+  }
+
+  get fileLink() {
+    return this.props.fileLink
   }
 
   get action() {
