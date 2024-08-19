@@ -1,4 +1,3 @@
-import { AssessmentEvent } from '@/domain/boletim/enterprise/events/assessment-event.ts'
 import { makeAssessment } from 'test/factories/make-assessment.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
 import { makeDiscipline } from 'test/factories/make-discipline.ts'
@@ -17,6 +16,7 @@ import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
 import { OnAssessmentUpdated } from './on-assessment-updated.ts'
+import { AssessmentUpdatedEvent } from '@/domain/boletim/enterprise/events/assessment-updated-event.ts'
 
 let studensCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -49,6 +49,7 @@ describe('On Assessment Created', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studensCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     polesRepository = new InMemoryPolesRepository()
@@ -92,7 +93,7 @@ describe('On Assessment Created', () => {
     reportersRepository.items.push(reporter)
 
     const assessment = makeAssessment({ courseId: course.id, studentId: student.id, disciplineId: discipline.id })
-    assessment.addDomainAssessmentEvent(new AssessmentEvent({ assessment, reporterId: reporter.id.toValue(), reporterIp: '' }))
+    assessment.addDomainAssessmentEvent(new AssessmentUpdatedEvent({ assessment, reporterId: reporter.id.toValue(), reporterIp: '' }))
 
     assessment.vf = 10
 

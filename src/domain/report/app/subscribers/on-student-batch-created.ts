@@ -22,8 +22,10 @@ export class OnStudentBatchCreated implements EventHandler {
   }
 
   private async sendNewStudentBatchReport({ studentBatch, reporterIp, ocurredAt }: StudentBatchEvent) {
-    const course = await this.coursesRepository.findById(studentBatch.courseId.toValue())
-    const reporter = await this.reportersRepository.findById({ id: studentBatch.userId.toValue() })
+    const [course, reporter] = await Promise.all([
+      this.coursesRepository.findById(studentBatch.courseId.toValue()),
+      this.reportersRepository.findById({ id: studentBatch.userId.toValue() })
+    ])
 
     if (course && reporter) {
       await this.sendReportBatch.execute({

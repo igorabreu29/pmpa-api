@@ -5,6 +5,7 @@ import { StudentsRepository } from "@/domain/boletim/app/repositories/students-r
 import { SendReportUseCase } from "../use-cases/send-report.ts";
 import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import { BehaviorEvent } from "@/domain/boletim/enterprise/events/behavior-event.ts";
+import { BehaviorUpdatedEvent } from "@/domain/boletim/enterprise/events/behavior-updated-event.ts";
 
 export class OnBehaviorUpdated implements EventHandler {
   constructor (
@@ -19,11 +20,11 @@ export class OnBehaviorUpdated implements EventHandler {
   setupSubscriptions(): void {
     DomainEvents.register(
       this.sendUpdateBehaviorReport.bind(this),
-      BehaviorEvent.name
+      BehaviorUpdatedEvent.name
     )
   }
 
-  private async sendUpdateBehaviorReport({ behavior, reporterId, reporterIp, ocurredAt }: BehaviorEvent) {
+  private async sendUpdateBehaviorReport({ behavior, reporterId, reporterIp, ocurredAt }: BehaviorUpdatedEvent) {
     const [course, reporter, student] = await Promise.all([
       this.coursesRepository.findById(behavior.courseId.toValue()),
       this.reportersRepository.findById({ id: reporterId }),

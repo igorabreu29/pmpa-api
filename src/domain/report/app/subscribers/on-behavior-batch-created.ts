@@ -22,8 +22,10 @@ export class OnBehaviorBatchCreated implements EventHandler {
   }
 
   private async sendNewBehaviorBatchReport({ behaviorBatch, reporterIp, ocurredAt }: BehaviorBatchEvent) {
-    const course = await this.coursesRepository.findById(behaviorBatch.courseId.toValue())
-    const reporter = await this.reportersRepository.findById({ id: behaviorBatch.userId.toValue() })
+    const [course, reporter] = await Promise.all([
+      this.coursesRepository.findById(behaviorBatch.courseId.toValue()),
+      this.reportersRepository.findById({ id: behaviorBatch.userId.toValue() })
+    ])
 
     if (course && reporter) {
       await this.sendReportBatch.execute({

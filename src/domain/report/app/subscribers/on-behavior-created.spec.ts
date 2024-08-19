@@ -16,11 +16,6 @@ import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
 import { OnBehaviorCreated } from './on-behavior-created.ts'
 
-let studensCoursesRepository: InMemoryStudentsCoursesRepository
-let studentsPolesRepository: InMemoryStudentsPolesRepository
-let polesRepository: InMemoryPolesRepository
-
-let studentsRepository: InMemoryStudentsRepository
 let reportersRepository: InMemoryReportersRepository
 let coursesRepository: InMemoryCoursesRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
@@ -35,27 +30,6 @@ let sendReportExecuteSpy: MockInstance<
 
 describe('On Behavior Created', () => {
   beforeEach(() => {
-    studensCoursesRepository = new InMemoryStudentsCoursesRepository(
-      studentsRepository,
-      coursesRepository,
-      studentsPolesRepository,
-      polesRepository
-    )
-
-    coursesRepository = new InMemoryCoursesRepository()
-    studentsPolesRepository = new InMemoryStudentsPolesRepository(
-      studentsRepository,
-      studensCoursesRepository,
-      polesRepository
-    )
-    polesRepository = new InMemoryPolesRepository()
-
-    studentsRepository = new InMemoryStudentsRepository(
-      studensCoursesRepository,
-      coursesRepository,
-      studentsPolesRepository,
-      polesRepository
-    )
     reportersRepository = new InMemoryReportersRepository()
 
     reportsRepository = new InMemoryReportsRepository()
@@ -68,25 +42,20 @@ describe('On Behavior Created', () => {
     sendReportExecuteSpy = vi.spyOn(sendReportUseCase, 'execute')
 
     new OnBehaviorCreated (
-      studentsRepository,
       reportersRepository,
-      coursesRepository,
       sendReportUseCase
     )
   })
 
   it ('should send a report when an behavior is created', async () => {
-    const course = makeCourse()
-    const student = makeStudent()
     const reporter = makeReporter()
-
-    coursesRepository.create(course)
-    studentsRepository.create(student)
     reportersRepository.items.push(reporter)
 
-    const behavior = makeBehavior({ courseId: course.id, studentId: student.id })
+    const behavior = makeBehavior()
     behavior.addDomainBehaviorEvent(new BehaviorEvent({
       behavior,
+      courseName: '',
+      studentName: '',
       reporterId: reporter.id.toValue(),
       reporterIp: ''
     }))

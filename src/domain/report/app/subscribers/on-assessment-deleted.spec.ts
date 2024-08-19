@@ -17,6 +17,7 @@ import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
 import { OnAssessmentDeleted } from './on-assessment-deleted.ts'
+import { AssessmentDeletedEvent } from '@/domain/boletim/enterprise/events/assessment-deleted-event.ts'
 
 let studensCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -49,6 +50,7 @@ describe('On Assessment Deleted', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studensCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     polesRepository = new InMemoryPolesRepository()
@@ -92,7 +94,7 @@ describe('On Assessment Deleted', () => {
     reportersRepository.items.push(reporter)
 
     const assessment = makeAssessment({ courseId: course.id, studentId: student.id, disciplineId: discipline.id })
-    assessment.addDomainAssessmentEvent(new AssessmentEvent({ assessment, reporterId: reporter.id.toValue(), reporterIp: '' }))
+    assessment.addDomainAssessmentEvent(new AssessmentDeletedEvent({ assessment, reporterId: reporter.id.toValue(), reporterIp: '' }))
     assessmentsRepository.delete(assessment)
 
     await waitFor(() => {

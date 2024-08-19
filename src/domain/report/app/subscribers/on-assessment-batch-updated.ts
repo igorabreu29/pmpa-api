@@ -22,8 +22,10 @@ export class OnAssessmentBatchUpdated implements EventHandler {
   }
 
   private async sendUpdateAssessmentBatchReport({ assessmentBatch, reporterIp, ocurredAt }: AssessmentBatchEvent) {
-    const course = await this.coursesRepository.findById(assessmentBatch.courseId.toValue())
-    const reporter = await this.reportersRepository.findById({ id: assessmentBatch.userId.toValue() })
+    const [course, reporter] = await Promise.all([
+      this.coursesRepository.findById(assessmentBatch.courseId.toValue()),
+      this.reportersRepository.findById({ id: assessmentBatch.userId.toValue() })
+    ])
 
     if (course && reporter) {
       await this.sendReportBatch.execute({

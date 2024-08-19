@@ -1,11 +1,11 @@
 import { EventHandler } from "@/core/events/event-handler.ts";
 import { SendReportUseCase } from "../use-cases/send-report.ts";
 import { DomainEvents } from "@/core/events/domain-events.ts";
-import { AssessmentEvent } from "@/domain/boletim/enterprise/events/assessment-event.ts";
 import { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
 import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-repository.ts";
 import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import type { DisciplinesRepository } from "@/domain/boletim/app/repositories/disciplines-repository.ts";
+import { AssessmentDeletedEvent } from "@/domain/boletim/enterprise/events/assessment-deleted-event.ts";
 
 export class OnAssessmentDeleted implements EventHandler {
   constructor (
@@ -21,11 +21,11 @@ export class OnAssessmentDeleted implements EventHandler {
   setupSubscriptions(): void {
     DomainEvents.register(
       this.sendDeleteAssessmentReport.bind(this),
-      AssessmentEvent.name
+      AssessmentDeletedEvent.name
     )
   }
 
-  private async sendDeleteAssessmentReport({ assessment, reporterId, reporterIp, ocurredAt }: AssessmentEvent) {
+  private async sendDeleteAssessmentReport({ assessment, reporterId, reporterIp, ocurredAt }: AssessmentDeletedEvent) {
     const [course, discipline, reporter, student] = await Promise.all([
       this.coursesRepository.findById(assessment.courseId.toValue()),
       this.disciplinesRepository.findById(assessment.disciplineId.toValue()),

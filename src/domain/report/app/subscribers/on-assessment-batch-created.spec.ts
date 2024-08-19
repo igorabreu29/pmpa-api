@@ -10,6 +10,7 @@ import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportBatchUseCase, SendReportBatchUseCaseRequest, SendReportBatchUseCaseResponse } from '../use-cases/send-report-batch.ts'
 import { OnAssessmentBatchCreated } from './on-assessment-batch-created.ts'
 import type { InMemoryAssessmentsRepository } from 'test/repositories/in-memory-assessments-repository.ts'
+import { InMemoryReportsRepository } from 'test/repositories/in-memory-reports-repository.ts'
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 
@@ -17,7 +18,7 @@ let reportersRepository: InMemoryReportersRepository
 let coursesRepository: InMemoryCoursesRepository
 let assessmentsBatchRepository: InMemoryAssessmentsBatchRepository
 
-let reportsBatchRepository: InMemoryReportsBatchRepository
+let reportsRepository: InMemoryReportsRepository
 let sendReportBatchUseCase: SendReportBatchUseCase
 
 let sendReportBatchExecuteSpy: MockInstance<
@@ -30,13 +31,13 @@ describe('On Assessment Batch Created', () => {
     coursesRepository = new InMemoryCoursesRepository()
     reportersRepository = new InMemoryReportersRepository()
 
-    reportsBatchRepository = new InMemoryReportsBatchRepository()
+    reportsRepository = new InMemoryReportsRepository()
     assessmentsBatchRepository = new InMemoryAssessmentsBatchRepository(
       assessmentsRepository
     )
 
     sendReportBatchUseCase = new SendReportBatchUseCase(
-      reportsBatchRepository
+      reportsRepository
     )
     
     sendReportBatchExecuteSpy = vi.spyOn(sendReportBatchUseCase, 'execute')

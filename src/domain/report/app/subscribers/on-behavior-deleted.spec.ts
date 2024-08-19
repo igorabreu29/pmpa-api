@@ -15,6 +15,7 @@ import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
 import { OnBehaviorDeleted } from './on-behavior-deleted.ts'
+import { BehaviorDeletedEvent } from '@/domain/boletim/enterprise/events/behavior-deleted-event.ts'
 
 let studensCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -46,6 +47,7 @@ describe('On Behavior Created', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studensCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     polesRepository = new InMemoryPolesRepository()
@@ -85,7 +87,7 @@ describe('On Behavior Created', () => {
     reportersRepository.items.push(reporter)
 
     const behavior = makeBehavior({ courseId: course.id, studentId: student.id })
-    behavior.addDomainBehaviorEvent(new BehaviorEvent({
+    behavior.addDomainBehaviorEvent(new BehaviorDeletedEvent({
       behavior,
       reporterId: reporter.id.toValue(),
       reporterIp: ''

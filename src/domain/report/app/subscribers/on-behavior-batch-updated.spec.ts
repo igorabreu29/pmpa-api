@@ -10,6 +10,7 @@ import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportBatchUseCase, SendReportBatchUseCaseRequest, SendReportBatchUseCaseResponse } from '../use-cases/send-report-batch.ts'
 import { InMemoryBehaviorsRepository } from 'test/repositories/in-memory-behaviors-repository.ts'
 import { OnBehaviorBatchUpdated } from './on-behavior-batch-updated.ts'
+import { InMemoryReportsRepository } from 'test/repositories/in-memory-reports-repository.ts'
 
 let behaviorsRepository: InMemoryBehaviorsRepository
 
@@ -17,7 +18,7 @@ let reportersRepository: InMemoryReportersRepository
 let coursesRepository: InMemoryCoursesRepository
 let behaviorsBatchRepository: InMemoryBehaviorsBatchRepository
 
-let reportsBatchRepository: InMemoryReportsBatchRepository
+let reportsRepository: InMemoryReportsRepository
 let sendReportBatchUseCase: SendReportBatchUseCase
 
 let sendReportBatchExecuteSpy: MockInstance<
@@ -32,13 +33,13 @@ describe('On Behavior Batch Updated', () => {
     coursesRepository = new InMemoryCoursesRepository()
     reportersRepository = new InMemoryReportersRepository()
 
-    reportsBatchRepository = new InMemoryReportsBatchRepository()
+    reportsRepository = new InMemoryReportsRepository()
     behaviorsBatchRepository = new InMemoryBehaviorsBatchRepository(
       behaviorsRepository
     )
 
     sendReportBatchUseCase = new SendReportBatchUseCase(
-      reportsBatchRepository
+      reportsRepository
     )
     
     sendReportBatchExecuteSpy = vi.spyOn(sendReportBatchUseCase, 'execute')
