@@ -1,8 +1,6 @@
 import { Either, left, right } from "@/core/either.ts";
-import { ReportBatch } from "../../enterprise/entities/report-batch.ts";
-import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { ReportsBatchRepository } from "../repositories/reports-batch-repository.ts";
-import { TypeAction } from "../../enterprise/entities/report.ts";
+import { Report, TypeAction } from "../../enterprise/entities/report.ts";
+import { ReportsRepository } from "../repositories/reports-repository.ts";
 
 export interface SendReportBatchUseCaseRequest {
   reporterId: string
@@ -15,28 +13,28 @@ export interface SendReportBatchUseCaseRequest {
 }
 
 export type SendReportBatchUseCaseResponse = Either<null, {
-  reportBatch: ReportBatch
+  report: Report
 }>
 
 export class SendReportBatchUseCase {
   constructor(
-    private reportsBatchRepository: ReportsBatchRepository
+    private reportsRepository: ReportsRepository
   ) {}
 
   async execute({ title, content, reporterIp, reporterId, fileLink, fileName, action }: SendReportBatchUseCaseRequest): Promise<SendReportBatchUseCaseResponse> {
-    const reportBatch = ReportBatch.create({
+    const report = Report.create({
       title,
       content,
       ip: reporterIp, 
-      reporterId: new UniqueEntityId(reporterId),
+      reporterId,
       fileLink,
       fileName,
       action
     })
-    await this.reportsBatchRepository.create(reportBatch)
+    await this.reportsRepository.create(report)
 
     return right({
-      reportBatch
+      report
     })
   }
 }
