@@ -3,6 +3,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { StudentsRepository } from "../repositories/students-repository.ts";
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts";
 import { StudentCourseWithCourse } from "../../enterprise/entities/value-objects/student-course-with-course.ts";
+import { StudentWithCourse } from "../../enterprise/entities/value-objects/student-with-course.ts";
 
 interface FetchStudentCoursesUseCaseRequest {
   studentId: string
@@ -11,7 +12,7 @@ interface FetchStudentCoursesUseCaseRequest {
 }
 
 type FetchStudentCoursesUseCaseResponse = Either<ResourceNotFoundError, {
-  courses: StudentCourseWithCourse[],
+  courses: StudentWithCourse[],
   pages: number,
   totalItems: number
 }>
@@ -27,7 +28,7 @@ export class FetchStudentCoursesUseCase {
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
 
     const { studentCourses, pages, totalItems } = await this.studentsCoursesRepository.findManyByStudentIdWithCourse({ studentId, page, perPage })
-    
+
     return right({ courses: studentCourses, pages, totalItems })
   }
 }

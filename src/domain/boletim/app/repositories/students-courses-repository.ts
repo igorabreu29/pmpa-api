@@ -1,6 +1,7 @@
 import { StudentCourse } from "../../enterprise/entities/student-course.ts";
 import { StudentCourseDetails } from "../../enterprise/entities/value-objects/student-course-details.ts";
 import { StudentCourseWithCourse } from "../../enterprise/entities/value-objects/student-course-with-course.ts";
+import { StudentWithCourse } from "../../enterprise/entities/value-objects/student-with-course.ts";
 import type { StudentWithPole } from "../../enterprise/entities/value-objects/student-with-pole.ts";
 
 export interface SearchManyDetails {
@@ -22,7 +23,7 @@ export abstract class StudentsCoursesRepository {
     page: number
     perPage: number
   }): Promise<{
-    studentCourses: StudentCourseWithCourse[],
+    studentCourses: StudentWithCourse[],
     pages: number
     totalItems: number
   }>

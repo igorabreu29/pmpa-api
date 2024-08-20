@@ -82,13 +82,13 @@ describe('Get Student Courses (e2e)', () => {
     expect(response.statusCode).toEqual(200)
     expect(courses).toMatchObject([
       {
-        userId: student.id,
+        id: student.id,
         course: {
           name: 'CAS',
         } 
       },
       {
-        userId: student.id,
+        id: student.id,
         course: {
           name: 'CGS',
         } 

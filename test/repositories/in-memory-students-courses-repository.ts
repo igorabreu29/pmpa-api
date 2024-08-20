@@ -7,6 +7,7 @@ import { InMemoryPolesRepository } from "./in-memory-poles-repository.ts";
 import { InMemoryStudentsPolesRepository } from "./in-memory-students-poles-repository.ts";
 import { StudentWithPole } from "@/domain/boletim/enterprise/entities/value-objects/student-with-pole.ts";
 import { StudentCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-course-details.ts";
+import { StudentWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/student-with-course.ts";
 
 export class InMemoryStudentsCoursesRepository implements StudentsCoursesRepository {
   public items: StudentCourse[] = []
@@ -64,12 +65,12 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     studentId, 
     page, 
     perPage 
-  }: { 
+  }: {  
     studentId: string
     page: number
     perPage: number
   }): Promise<{ 
-    studentCourses: StudentCourseWithCourse[]
+    studentCourses: StudentWithCourse[]
     pages: number
     totalItems: number
   }> {
@@ -81,12 +82,18 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
         const course = this.coursesRepository.items.find(item => item.id.equals(studentCourse.courseId))
         if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist.`) 
 
-        return StudentCourseWithCourse.create({
-          studentCourseId: studentCourse.id,
+        const student = this.studentsRepository.items.find(item => item.id.equals(studentCourse.studentId))
+        if (!student) throw new Error(`Student with ID ${studentCourse.studentId.toValue()} does not exist.`) 
+
+        return StudentWithCourse.create({
           studentId: studentCourse.studentId,
           courseId: studentCourse.courseId,
           course: course.name.value,
-          courseImageUrl: course.imageUrl        
+          assignedAt: studentCourse.createdAt,
+          cpf: student.cpf.value,
+          email: student.email.value,
+          imageUrl: course.imageUrl,
+          username: student.username.value
         })
       })
 
