@@ -33,7 +33,7 @@ describe('Create Behavior (e2e)', () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: administrator.cpf,
+        cpf: '000.000.000-00',
         password: 'node-20'
       })
     const { token } = authenticateResponse.body
@@ -49,7 +49,7 @@ describe('Create Behavior (e2e)', () => {
 
     const data = {
       username: 'Jony',
-      cpf: '000.111.000-11',
+      cpf: '00011100011',
       password: await bcrypt.hash('node-20', 8),
       email: 'igor29nahan@gmail.com',
       birthday: transformDate('29/01/2006'),

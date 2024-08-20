@@ -73,7 +73,7 @@ describe('Remove Assessment Grade (e2e)', () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: administrator.cpf,
+        cpf: '000.000.000-00',
         password: 'node-20'
       })
     const { token } = authenticateResponse.body
@@ -84,8 +84,6 @@ describe('Remove Assessment Grade (e2e)', () => {
       .send({
         vf: -1
       })
-
-    console.log(app.log)
 
     expect(response.statusCode).toEqual(204)
   })

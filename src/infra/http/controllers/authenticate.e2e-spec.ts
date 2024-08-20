@@ -26,7 +26,7 @@ describe('Authenticate (e2e)', () => {
     })
 
     const data = {
-      cpf: '05399970210',
+      cpf: '053.999.702-10',
       password: 'node-20'
     }
 

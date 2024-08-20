@@ -33,7 +33,7 @@ describe('Change Administrator Profile (e2e)', () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: administrator.cpf,
+        cpf: '123.456.789-11',
         password: 'node-20'
       })
     const { token } = authenticateResponse.body

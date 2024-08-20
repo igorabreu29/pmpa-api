@@ -153,7 +153,7 @@ describe('Search Students Course By Manager (e2e)', () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: manager.cpf,
+        cpf: '123.456.789-11',
         password: 'node-21'
       })
     const { token } = authenticateResponse.body

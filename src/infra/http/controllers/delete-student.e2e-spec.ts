@@ -29,21 +29,6 @@ describe('Delete Student (e2e)', () => {
       }
     })
 
-    const course = await prisma.course.create({
-      data: {
-        endsAt,
-        formula: 'CAS',
-        imageUrl: '',
-        name: 'CAS',
-      }
-    })
-
-    const pole = await prisma.pole.create({
-      data: {
-        name: 'pole-1'
-      }
-    })
-
     const data = {
       username: 'Jony',
       cpf: '00011100011',
@@ -63,7 +48,7 @@ describe('Delete Student (e2e)', () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: administrator.cpf,
+        cpf: '000.000.000-00',
         password: 'node-20'
       })
     const { token } = authenticateResponse.body

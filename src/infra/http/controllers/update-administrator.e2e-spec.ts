@@ -32,7 +32,7 @@ describe('Update Administrator (e2e)', () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: developer.cpf,
+        cpf: '000.000.000-00',
         password: 'node-20'
       })
     const { token } = authenticateResponse.body

@@ -98,7 +98,7 @@ describe('Get Course Students By Pole (e2e)', () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: administrator.cpf,
+        cpf: '000.000.000-01',
         password: 'node-21'
       })
     const { token } = authenticateResponse.body
