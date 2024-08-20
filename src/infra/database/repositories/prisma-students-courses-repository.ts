@@ -8,6 +8,8 @@ import { PrismaStudentCourseDetailsMapper } from "../mappers/prisma-student-with
 import { StudentCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-course-details.ts";
 import { StudentWithPole } from "@/domain/boletim/enterprise/entities/value-objects/student-with-pole.ts";
 import { PrismaStudentWithPoleMapper } from "../mappers/student-with-pole-mapper.ts";
+import { StudentWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/student-with-course.ts";
+import { PrismaStudentWithCourseMapper } from "../mappers/prisma-student-with-course-mapper.ts";
 
 export class PrismaStudentsCoursesRepository implements StudentsCoursesRepository {
   async findByStudentIdAndCourseId({ studentId, courseId }: { studentId: string; courseId: string; }): Promise<StudentCourse | null> {
@@ -31,39 +33,42 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     page: number
     perPage: number
   }): Promise<{ 
-    studentCourses: StudentCourseWithCourse[]
+    studentCourses: StudentWithCourse[]
     pages: number
     totalItems: number
   }> {
     const studentCourses = await prisma.userOnCourse.findMany({
       where: {
-        userId: studentId,
-      },
-
-      include: {
-        course: true
+        userId: studentId
       },
 
       skip: (page - 1) * perPage,
-      take: page * perPage
+      take: page * perPage,
+
+      include: {
+        course: true,
+        user: true,
+      }
     })
 
-    const studentCoursesMapper = studentCourses.map(studentCourse => ({
-      ...studentCourse,
-      course: studentCourse.course
-    }))
+    const studentCoursesMapper = studentCourses.map(studentCourses => {
+      return {
+        ...studentCourses.user,
+        course: studentCourses.course
+      }
+    })
 
     const studentCoursesCount = await prisma.userOnCourse.count({
       where: {
         userId: studentId,
-      }
+      },
     })
     const pages = Math.ceil(studentCoursesCount / perPage)
 
     return {
-      studentCourses: studentCoursesMapper.map(studentCourse => PrismaStudentCourseWithCourseMapper.toDomain(studentCourse)),
+      studentCourses: studentCoursesMapper.map(studentCourse => PrismaStudentWithCourseMapper.toDomain(studentCourse)),
       pages,
-      totalItems: studentCoursesCount       
+      totalItems: studentCoursesCount
     }
   }
 
