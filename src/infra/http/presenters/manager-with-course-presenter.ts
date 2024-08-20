@@ -13,6 +13,7 @@ export class ManagerWithCoursePresenter {
       email: managerWithCourse.email,
       cpf: managerWithCourse.cpf,
       course: {
+        id: managerWithCourse.courseId.toValue(),
         name: managerWithCourse.course,
         imageUrl: managerWithCourse.imageUrl
       },
