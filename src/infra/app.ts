@@ -73,8 +73,9 @@ import { getReports } from "./http/controllers/get-reports.ts";
 export const app = fastify()
 app.register(import("@fastify/cors"), {
   origin: [
-    'http://localhost:3000'
-  ]
+    'http://localhost:5173'
+  ],
+  credentials: true
 })
 
 app.register(import('@fastify/jwt'), {
