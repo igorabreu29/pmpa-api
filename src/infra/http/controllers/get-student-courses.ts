@@ -6,7 +6,7 @@ import { makeFetchStudentCoursesUseCase } from "@/infra/factories/make-fetch-stu
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
-import { StudentCourseWithCoursePresenter } from "../presenters/student-course-with-course-presenter.ts";
+import { StudentWithCoursePresenter } from "../presenters/student-with-course-presenter.ts";
 
 export async function getStudentCourses(
   app: FastifyInstance
@@ -45,7 +45,7 @@ export async function getStudentCourses(
 
         const { courses, pages, totalItems } = result.value
 
-        const coursesPresenter = courses.map(course => StudentCourseWithCoursePresenter.toHTTP(course))
+        const coursesPresenter = courses.map(course => StudentWithCoursePresenter.toHTTP(course))
 
         return res.status(200).send({
           courses: coursesPresenter,
