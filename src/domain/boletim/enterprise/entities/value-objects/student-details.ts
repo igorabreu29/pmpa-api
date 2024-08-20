@@ -2,6 +2,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { ValueObject } from "@/core/entities/value-object.ts";
 import { Course } from "../course.ts";
 import { Pole } from "../pole.ts";
+import { Role } from "../authenticate.ts";
 
 interface StudentDetailsProps {
   studentId: UniqueEntityId
@@ -12,6 +13,7 @@ interface StudentDetailsProps {
   birthday: Date
   civilId: number
   avatarUrl?: string
+  role: Role
 
   courses: Course[]
   poles: Pole[]
