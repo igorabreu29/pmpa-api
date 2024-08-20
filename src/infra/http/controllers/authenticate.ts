@@ -6,6 +6,7 @@ import { z } from "zod";
 import { ClientError } from "../errors/client-error.ts";
 import { env } from "@/infra/env/index.ts";
 import { UnauthorizedError } from "../errors/unauthorized-error.ts";
+import { CPF } from "@/domain/boletim/enterprise/entities/value-objects/cpf.ts";
 
 export async function authenticate(
   app: FastifyInstance
@@ -13,7 +14,9 @@ export async function authenticate(
   app.withTypeProvider<ZodTypeProvider>().post('/credentials/auth', {
     schema: {
       body: z.object({
-        cpf: z.string().min(11),
+        cpf: z.string().min(14).transform(input => {
+          return CPF.format(input)
+        }),
         password: z.string().min(6).max(14)
       })
     }
