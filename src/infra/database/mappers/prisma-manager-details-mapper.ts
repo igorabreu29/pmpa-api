@@ -4,6 +4,7 @@ import { Pole } from '@/domain/boletim/enterprise/entities/pole.ts';
 import { EndsAt } from '@/domain/boletim/enterprise/entities/value-objects/ends-at.ts';
 import { ManagerDetails } from '@/domain/boletim/enterprise/entities/value-objects/manager-details.ts';
 import { Name } from '@/domain/boletim/enterprise/entities/value-objects/name.ts';
+import { defineRoleAccessToPrisma } from '@/infra/utils/define-role.ts';
 import {
   User as PrismaManagerDetails,
   Pole as PrismaPole,
@@ -26,6 +27,7 @@ export class PrismaManagerDetailsMapper {
       email: managerDetails.email,
       assignedAt: managerDetails.createdAt,
       avatarUrl: managerDetails.avatarUrl ?? undefined,
+      role: defineRoleAccessToPrisma(managerDetails.role),
       courses: managerDetails.courses.map(course => {
         const nameOrError = Name.create(course.name)
         const endsAtOrError = EndsAt.create(course.endsAt)
