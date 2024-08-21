@@ -5,8 +5,8 @@ POST {{baseUrl}}/credentials/auth
 Content-Type: application/json
 
 {
-  "cpf": "05399970210",
-  "password": "node-20"
+  "cpf": "053.999.702-10",
+  "password": "igor29"
 }
 
 ###
@@ -43,3 +43,7 @@ Content-Type: application/json
   "studentId": "clzy2scec0002rn3lc2qiz7yy",
   "vf": 6
 }
+
+### 
+POST {{baseUrl}}/verify-jwt
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InN1YiI6ImNtMDJkbmV3cjAwMDBkcXJ4Y3Jtd2NqMDciLCJyb2xlIjoiYWRtaW4ifSwiaWF0IjoxNzI0MjQ2MDU5LCJleHAiOjE3MjQyNDk2NTl9.XmaJlqqyOvl_tQyXejZZsDgZKOSpzJwaWTNtZCYHqvQ
