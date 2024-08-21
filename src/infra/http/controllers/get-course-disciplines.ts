@@ -6,7 +6,6 @@ import { ClientError } from "../errors/client-error.ts";
 import { NotFound } from "../errors/not-found.ts";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { makeFetchCourseDisciplinesUseCase } from "@/infra/factories/make-fetch-course-disciplines.ts";
-import { CourseWithDiscipline } from "@/domain/boletim/enterprise/entities/value-objects/course-with-discipline.ts";
 import { CourseWithDisciplinePresenter } from "../presenters/course-with-discipline-presenter.ts";
 
 export async function getCourseDisciplines(
