@@ -31,10 +31,14 @@ export abstract class StudentsCoursesRepository {
   abstract findManyDetailsByCourseId({
     courseId,
     page,
+    cpf,
+    username,
     perPage
   }: {
     courseId: string
     page: number
+    cpf?: string
+    username?: string
     perPage: number
   }): Promise<{
     studentsCourse: StudentCourseDetails[],

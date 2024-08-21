@@ -66,10 +66,14 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
   async findManyByPoleId({
     poleId, 
     page, 
+    cpf,
+    username,
     perPage 
   }: { 
     poleId: string; 
     page?: number; 
+    cpf?: string
+    username?: string
     perPage?: number; 
   }): Promise<{
     studentsPole: StudentWithPole[],
@@ -100,6 +104,10 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
           poleId: pole.id,
           pole: pole.name.value
         })
+      })
+      .filter(item => {
+        return item.username.toLowerCase().includes(username ? username.toLowerCase() : '') &&
+          item.cpf.includes(cpf ?? '')
       })
 
       const studentsPole = page && perPage ? allStudentsPole.slice((page - 1) * perPage, page * perPage) : allStudentsPole

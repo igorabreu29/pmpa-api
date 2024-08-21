@@ -20,6 +20,8 @@ export async function getCourseStudentsByPole(
       schema: {
         querystring: z.object({
           page: z.coerce.number().default(1),
+          cpf: z.string().optional(),
+          username: z.string().optional(),
         }),
         params: z.object({
           id: z.string().cuid(),
@@ -28,13 +30,15 @@ export async function getCourseStudentsByPole(
       }
     }, 
       async (req, res) => {
-        const { page } = req.query
+        const { page, cpf, username } = req.query
         const { id, poleId } = req.params
 
         const useCase = makeFetchCourseStudentsByPoleUseCase()
         const result = await useCase.execute({
           courseId: id,
           page,
+          cpf, 
+          username,
           perPage: 10,
           poleId
         })

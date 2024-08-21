@@ -11,6 +11,8 @@ interface FetchCourseStudentsByPoleRequest {
   courseId: string
   poleId: string
   page: number
+  cpf?: string
+  username?: string
   perPage: number
 }
 

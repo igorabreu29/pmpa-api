@@ -110,10 +110,14 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
   async findManyDetailsByCourseId({ 
     courseId, 
     page, 
+    cpf,
+    username,
     perPage 
   }: { 
     courseId: string; 
     page: number; 
+    cpf?: string
+    username?: string
     perPage: number; 
   }): Promise<{ 
     studentsCourse: StudentCourseDetails[]; 
@@ -156,6 +160,10 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
           poleId: pole.id,
           pole: pole.name.value,
         })
+      })
+      .filter(item => {
+        return item.username.toLowerCase().includes(username ? username.toLowerCase() : '') && 
+          item.cpf.toLowerCase().includes(cpf || '')
       })
 
       const studentsCourse = allStudentsCourses.slice((page - 1) * perPage, page * perPage)

@@ -11,6 +11,7 @@ import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
+import { Name } from "../../enterprise/entities/value-objects/name.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -32,6 +33,7 @@ describe(('Fetch Course Students Use Case'), () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     polesRepository = new InMemoryPolesRepository()
@@ -61,9 +63,17 @@ describe(('Fetch Course Students Use Case'), () => {
     const pole3 = makePole()
     polesRepository.createMany([pole1, pole2, pole3])
 
-    const student1 = makeStudent()
-    const student2 = makeStudent()
-    const student3 = makeStudent()
+    const nameOrError = Name.create('John')
+    const nameOrError2 = Name.create('Jonas')
+    const nameOrError3 = Name.create('Levy')
+
+    if (nameOrError.isLeft()) return
+    if (nameOrError2.isLeft()) return
+    if (nameOrError3.isLeft()) return
+
+    const student1 = makeStudent({ username: nameOrError.value })
+    const student2 = makeStudent({ username: nameOrError2.value })
+    const student3 = makeStudent({ username: nameOrError3.value })
     studentsRepository.create(student1)
     studentsRepository.create(student2)
     studentsRepository.create(student3)
@@ -84,7 +94,7 @@ describe(('Fetch Course Students Use Case'), () => {
     studentsPolesRepository.create(studentPole2)
     studentsPolesRepository.create(studentPole3)
 
-    const result = await sut.execute({ courseId: course.id.toValue(), page: 1, perPage: 6 })
+    const result = await sut.execute({ courseId: course.id.toValue(), page: 1, perPage: 6, username: 'Jo' })
 
     expect(result.isRight()).toBe(true)
     expect(studentsRepository.items).toHaveLength(3)
@@ -103,13 +113,6 @@ describe(('Fetch Course Students Use Case'), () => {
           course: course.name.value,
           poleId: pole2.id,
           pole: pole2.name.value
-        },
-        {
-          username: student3.username.value,
-          courseId: course.id,
-          course: course.name.value,
-          poleId: pole3.id,
-          pole: pole3.name.value
         },
       ]
     })
