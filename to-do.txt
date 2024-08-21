@@ -1,5 +1,11 @@
-- Implementar o disparo de eventos
-- Remover um nota passada
 - Caixa de texto para desativar aluno
 - Criar certificados
+
 - Relatório por curso
+- Upload de imagem do curso
+- Busca de alunos para ativar em um curso
+- Busca de alunos para desativar em um curso
+- Busca das disciplinas de um curso
+- Listar alunos desativados de um curso
+- Listar alunos ativos de um curso
+- Listar alunos de um curso por gerente
