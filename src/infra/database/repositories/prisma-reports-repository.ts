@@ -23,6 +23,7 @@ export class PrismaReportsRepository implements ReportsRepository {
 
     if (!action.length) {
       reports = await prisma.report.findMany()
+      return reports.map(report => PrismaReportsMapper.toDomain(report))
     }
 
     reports = await prisma.report.findMany({
