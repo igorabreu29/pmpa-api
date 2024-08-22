@@ -68,12 +68,14 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
     page, 
     cpf,
     username,
+    isEnabled,
     perPage 
   }: { 
     poleId: string; 
     page?: number; 
     cpf?: string
     username?: string
+    isEnabled?: boolean
     perPage?: number; 
   }): Promise<{
     studentsPole: StudentWithPole[],

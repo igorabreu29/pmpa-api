@@ -13,6 +13,7 @@ interface FetchCourseStudentsByPoleRequest {
   page: number
   cpf?: string
   username?: string
+  isEnabled?: boolean
   perPage: number
 }
 
@@ -33,14 +34,14 @@ export class FetchCourseStudentsByPole {
     private studentsPolesRepository: StudentsPolesRepository,
   ) {}
 
-  async execute({ courseId, poleId, page, perPage }: FetchCourseStudentsByPoleRequest): Promise<FetchCourseStudentsByPoleResponse> {
+  async execute({ courseId, poleId, cpf, username, isEnabled = false, page, perPage }: FetchCourseStudentsByPoleRequest): Promise<FetchCourseStudentsByPoleResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
     const pole = await this.polesRepository.findById(poleId)
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
-    const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyByPoleId({ page, perPage, poleId })
+    const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyByPoleId({ page, perPage, poleId, cpf, username, isEnabled })
 
     return right({
       students: {

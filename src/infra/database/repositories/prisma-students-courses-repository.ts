@@ -104,10 +104,16 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
   async findManyDetailsByCourseId({ 
     courseId, 
     page, 
+    cpf,
+    isEnabled,
+    username,
     perPage 
   }: { 
     courseId: string; 
     page: number; 
+    cpf?: string
+    isEnabled?: boolean
+    username?: string
     perPage: number; 
   }): Promise<{ 
     studentsCourse: StudentCourseDetails[]; 
@@ -117,10 +123,16 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const studentsCourse = await prisma.userOnCourse.findMany({
       where: {
         courseId,
-        isActive: true,
+        isActive: isEnabled ? false : true,
         user: {
-          role: 'STUDENT'
-        }
+          role: 'STUDENT',
+          username: {
+            contains: username
+          },
+          cpf: {
+            contains: cpf
+          },
+        },
       },
 
       include: {

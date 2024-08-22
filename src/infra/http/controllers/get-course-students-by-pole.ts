@@ -22,6 +22,7 @@ export async function getCourseStudentsByPole(
           page: z.coerce.number().default(1),
           cpf: z.string().optional(),
           username: z.string().optional(),
+          isEnabled: z.coerce.boolean().optional()
         }),
         params: z.object({
           id: z.string().cuid(),
@@ -30,7 +31,7 @@ export async function getCourseStudentsByPole(
       }
     }, 
       async (req, res) => {
-        const { page, cpf, username } = req.query
+        const { page, cpf, username, isEnabled } = req.query
         const { id, poleId } = req.params
 
         const useCase = makeFetchCourseStudentsByPoleUseCase()
@@ -39,6 +40,7 @@ export async function getCourseStudentsByPole(
           page,
           cpf, 
           username,
+          isEnabled,
           perPage: 10,
           poleId
         })

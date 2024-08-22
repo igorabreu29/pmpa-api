@@ -47,11 +47,17 @@ export class PrismaCourseDisciplinesRepository implements CoursesDisciplinesRepo
   }
 
   async findManyByCourseIdWithDiscipliine({
-    courseId
+    courseId,
+    search
   }: FindManyByCourseIdWithDiscipline): Promise<CourseWithDiscipline[]> {
     const courseDisciplines = await prisma.courseOnDiscipline.findMany({
       where: {
-        courseId
+        courseId,
+        discipline: {
+          name: {
+            contains: search
+          }
+        }
       },
 
       include: {

@@ -69,10 +69,16 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
   async findManyByPoleId({ 
     poleId, 
     page, 
+    cpf,
+    username,
+    isEnabled,
     perPage 
   }: { 
     poleId: string; 
     page: number; 
+    cpf?: string,
+    username?: string,
+    isEnabled?: boolean,
     perPage: number; 
   }): Promise<{ 
     studentsPole: StudentWithPole[]; 
@@ -83,9 +89,16 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       where: {
         poleId,
         usersOnCourse: {
+          isActive: isEnabled ? false : true,
           user: {
-            role: 'STUDENT'
-          }
+            role: 'STUDENT',
+            cpf: {
+              contains: cpf
+            },
+            username: {
+              contains: username
+            },
+          },
         }
       },
       
