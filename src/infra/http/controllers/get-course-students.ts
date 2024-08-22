@@ -21,7 +21,7 @@ export async function getCourseStudents(
           page: z.coerce.number().default(1),
           cpf: z.string().optional(),
           username: z.string().optional(),
-          isEnabled: z.coerce.boolean().optional()
+          isEnabled: z.coerce.boolean().optional().default(false)
         }),
         params: z.object({
           id: z.string().cuid()
