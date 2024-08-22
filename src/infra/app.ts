@@ -69,6 +69,7 @@ import { getBehaviorClassification } from "./http/controllers/get-behavior-class
 import { removeAssessmentGrade } from "./http/controllers/remove-assessment-grade.ts";
 import { removeAssessmentsGradeBatch } from "./http/controllers/remove-assessments-grade-batch.ts";
 import { getReports } from "./http/controllers/get-reports.ts";
+import { uploadAttachment } from "./http/controllers/upload-attachment.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -156,5 +157,6 @@ app.register(getClassificationByPole)
 app.register(getClassificationByManager)
 app.register(getBehaviorClassification)
 app.register(getReports)
+app.register(uploadAttachment)
 
 app.setErrorHandler(errorHandler)
