@@ -16,7 +16,21 @@ export abstract class StudentsPolesRepository {
     totalNotConfirmedSize: number
   }>
 
-  abstract findManyByPoleId({ poleId, page, cpf, username, perPage }: { poleId: string, page?: number, cpf?: string, username?: string, perPage?: number }): Promise<{
+  abstract findManyByPoleId({ 
+    poleId,
+    page, 
+    cpf, 
+    username, 
+    isEnabled,
+    perPage 
+  }: { 
+    poleId: string 
+    page?: number 
+    cpf?: string 
+    username?: string
+    isEnabled?: boolean
+    perPage?: number 
+  }): Promise<{
     studentsPole: StudentWithPole[],
     pages: number
     totalItems: number
