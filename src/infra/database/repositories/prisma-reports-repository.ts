@@ -22,13 +22,20 @@ export class PrismaReportsRepository implements ReportsRepository {
     let reports: PrismaReport[] = []
 
     if (!action.length) {
-      reports = await prisma.report.findMany()
+      reports = await prisma.report.findMany({
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
       return reports.map(report => PrismaReportsMapper.toDomain(report))
     }
 
     reports = await prisma.report.findMany({
       where: {
         action: convertActionToPrisma(action)
+      },
+      orderBy: {
+        createdAt: 'desc'
       }
     })
 
