@@ -7,6 +7,7 @@ export class PrismaReportsMapper {
   static toDomain(report: PrismaReport): Report {
     return Report.create({
       reporterId: report.reporterId,
+      courseId: report.courseId ?? undefined,
       title: report.title,
       content: report.content,
       fileLink: report.filelink ?? undefined,
@@ -21,6 +22,7 @@ export class PrismaReportsMapper {
     return {
       id: report.id.toValue(),
       reporterId: report.reporterId,
+      courseId: report.courseId,
       title: report.title,
       content: report.content,
       filelink: report.fileLink,

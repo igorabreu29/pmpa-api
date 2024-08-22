@@ -171,6 +171,7 @@ export class CreateStudentUseCase {
       new StudentEvent({
         reporterId: userId,
         reporterIp: userIp,
+        courseId: studentCourse.courseId.toValue(),
         student
       })
     )

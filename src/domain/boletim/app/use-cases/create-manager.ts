@@ -172,6 +172,7 @@ export class CreateManagerUseCase {
       new ManagerEvent({
         manager,
         reporterId: userId,
+        courseId,
         reporterIp: userIp
       })
     )

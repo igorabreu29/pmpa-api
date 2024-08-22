@@ -167,6 +167,7 @@ export class UpdateManagerUseCase {
       new ManagerEvent({
         manager,
         reporterId: userId,
+        courseId: managerCourse.courseId.toValue(),
         reporterIp: userIp
       })
     )

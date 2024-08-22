@@ -167,6 +167,7 @@ export class UpdateStudentUseCase {
       new StudentEvent({
         reporterId: userId,
         reporterIp: userIp,
+        courseId: studentCourse.courseId.toValue(),
         student
       })
     )
