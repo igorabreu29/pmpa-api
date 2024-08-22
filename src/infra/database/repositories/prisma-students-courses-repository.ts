@@ -163,6 +163,9 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const studentsCourseCount = await prisma.userOnCourse.count({
       where: {
         courseId,
+        user: {
+          role: 'STUDENT'
+        }
       },
     })
     const pages = Math.ceil(studentsCourseCount / perPage)
