@@ -8,6 +8,7 @@ interface FetchCourseStudentsUseCaseRequest {
   courseId: string
   username?: string
   cpf?: string
+  isEnabled?: boolean
   page: number
   perPage: number
 }
@@ -24,7 +25,7 @@ export class FetchCourseStudentsUseCase {
     private studentsCoursesRepository: StudentsCoursesRepository,
   ) {}
 
-  async execute({ courseId, page, cpf, username, perPage }: FetchCourseStudentsUseCaseRequest): Promise<FetchCourseStudentsUseCaseResponse> {
+  async execute({ courseId, page, cpf, isEnabled = false, username, perPage }: FetchCourseStudentsUseCaseRequest): Promise<FetchCourseStudentsUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
@@ -32,6 +33,7 @@ export class FetchCourseStudentsUseCase {
       courseId,
       page,
       username,
+      isEnabled,
       cpf,
       perPage,
     })

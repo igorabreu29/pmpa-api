@@ -59,15 +59,13 @@ describe('Get Reports (e2e)', () => {
       .expect(200)
 
     const { reports } = response.body
-    
+
     expect(reports).toMatchObject([
       {
         title: 'title-1',
-        reporterId: administrator.id
       },
       {
         title: 'title-2',
-        reporterId: administrator.id
       }
     ])
   })

@@ -32,6 +32,7 @@ export abstract class StudentsCoursesRepository {
     courseId,
     page,
     cpf,
+    isEnabled,
     username,
     perPage
   }: {
@@ -39,6 +40,7 @@ export abstract class StudentsCoursesRepository {
     page: number
     cpf?: string
     username?: string
+    isEnabled?: boolean
     perPage: number
   }): Promise<{
     studentsCourse: StudentCourseDetails[],

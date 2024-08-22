@@ -42,7 +42,7 @@ export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesR
     })
   }
 
-  async findManyByCourseIdWithDiscipliine({ courseId }: FindManyByCourseIdWithDiscipline): Promise<CourseWithDiscipline[]> {
+  async findManyByCourseIdWithDiscipliine({ courseId, search }: FindManyByCourseIdWithDiscipline): Promise<CourseWithDiscipline[]> {
     const courseDisciplines = this.items
       .filter(item => item.courseId.toValue() === courseId)  
       .map(courseDiscipline => {
@@ -55,6 +55,9 @@ export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesR
           disciplineName: discipline.name.value,
           module: courseDiscipline.module
         })
+      })
+      .filter(courseWithDiscipline => {
+        return courseWithDiscipline.disciplineName.toLowerCase().includes(search ? search.toLowerCase() : '')
       })
 
     return courseDisciplines

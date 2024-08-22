@@ -5,7 +5,8 @@ import type { CoursesDisciplinesRepository } from "../repositories/courses-disci
 import type { CourseWithDiscipline } from "../../enterprise/entities/value-objects/course-with-discipline.ts";
 
 interface FetchCourseDisciplinesUseCaseRequest {
-  courseId: string,
+  courseId: string
+  search?: string
 }
 
 type FetchCourseDisciplinesUseCaseResponse = Either<ResourceNotFoundError, {
@@ -18,11 +19,11 @@ export class FetchCourseDisciplinesUseCase {
     private courseDisciplinesRepository: CoursesDisciplinesRepository
   ) {}
 
-  async execute({ courseId }: FetchCourseDisciplinesUseCaseRequest): Promise<FetchCourseDisciplinesUseCaseResponse> {
+  async execute({ courseId, search }: FetchCourseDisciplinesUseCaseRequest): Promise<FetchCourseDisciplinesUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
     
-    const disciplines = await this.courseDisciplinesRepository.findManyByCourseIdWithDiscipliine({ courseId: course.id.toValue() })
+    const disciplines = await this.courseDisciplinesRepository.findManyByCourseIdWithDiscipliine({ courseId: course.id.toValue(), search })
     return right({
       disciplines
     })

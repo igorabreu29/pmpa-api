@@ -21,6 +21,7 @@ export async function getCourseStudents(
           page: z.coerce.number().default(1),
           cpf: z.string().optional(),
           username: z.string().optional(),
+          isEnabled: z.coerce.boolean().optional()
         }),
         params: z.object({
           id: z.string().cuid()
@@ -28,7 +29,7 @@ export async function getCourseStudents(
       }
     }, 
       async (req, res) => {
-        const { page, cpf, username } = req.query
+        const { page, cpf, username, isEnabled } = req.query
         const { id } = req.params
 
         const useCase = makeFetchCourseStudentsUseCase()
@@ -37,6 +38,7 @@ export async function getCourseStudents(
           page,
           cpf,
           username,
+          isEnabled,
           perPage: 10,
         })
 

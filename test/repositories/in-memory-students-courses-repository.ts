@@ -111,6 +111,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     courseId, 
     page, 
     cpf,
+    isEnabled,
     username,
     perPage 
   }: { 
@@ -118,6 +119,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     page: number; 
     cpf?: string
     username?: string
+    isEnabled?: boolean
     perPage: number; 
   }): Promise<{ 
     studentsCourse: StudentCourseDetails[]; 
@@ -125,7 +127,10 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     totalItems: number; 
   }> {
     const allStudentsCourses = this.items
-      .filter(item => item.courseId.toValue() === courseId && item.isActive)
+      .filter(item => {
+        return item.courseId.toValue() === courseId 
+          && isEnabled ? !item.isActive : item.isActive
+      })
       .map(studentCourse => {
         const student = this.studentsRepository.items.find(item => {
           return item.id.equals(studentCourse.studentId)

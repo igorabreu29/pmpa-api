@@ -7,6 +7,7 @@ import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found
 import { makeCourse } from 'test/factories/make-course.ts'
 import { makeDiscipline } from 'test/factories/make-discipline.ts'
 import { makeCourseDiscipline } from 'test/factories/make-course-discipline.ts'
+import { Name } from '../../enterprise/entities/value-objects/name.ts'
 
 let disciplinesRepository: InMemoryDisciplinesRepository
 
@@ -49,7 +50,7 @@ describe('Fetch Course Disciplines Use Case', () => {
     courseDisciplinesRepository.createMany([courseDiscipline, courseDiscipline2])
 
     const result = await sut.execute({
-      courseId: course.id.toValue()
+      courseId: course.id.toValue(),
     })
 
     expect(result.isRight()).toBe(true)
@@ -62,6 +63,37 @@ describe('Fetch Course Disciplines Use Case', () => {
         {
           courseId: course.id,
           disciplineId: discipline2.id,
+        },
+      ]
+    })
+  })
+  
+  it ('should not be able to fetch course disciplines with search filtering', async () => {
+    const course = makeCourse()
+    coursesRepository.create(course)
+
+    const nameOrError = Name.create('discipline-1')
+    if (nameOrError.isLeft()) return
+
+    const discipline = makeDiscipline({ name: nameOrError.value })
+    const discipline2 = makeDiscipline()
+    disciplinesRepository.createMany([discipline, discipline2])
+
+    const courseDiscipline = makeCourseDiscipline({ courseId: course.id, disciplineId: discipline.id })
+    const courseDiscipline2 = makeCourseDiscipline({ courseId: course.id, disciplineId: discipline2.id })
+    courseDisciplinesRepository.createMany([courseDiscipline, courseDiscipline2])
+
+    const result = await sut.execute({
+      courseId: course.id.toValue(),
+      search: 'discipline'
+    })
+
+    expect(result.isRight()).toBe(true)
+    expect(result.value).toMatchObject({
+      disciplines: [
+        {
+          courseId: course.id,
+          disciplineId: discipline.id,
         },
       ]
     })

@@ -3,6 +3,7 @@ import type { CourseWithDiscipline } from "../../enterprise/entities/value-objec
 
 export interface FindManyByCourseIdWithDiscipline {
   courseId: string
+  search?: string
 }
 
 export abstract class CoursesDisciplinesRepository {
@@ -21,7 +22,7 @@ export abstract class CoursesDisciplinesRepository {
     disciplineId: string 
   }): Promise<CourseWithDiscipline | null>
 
-  abstract findManyByCourseIdWithDiscipliine({}: FindManyByCourseIdWithDiscipline): Promise<CourseWithDiscipline[]>
+  abstract findManyByCourseIdWithDiscipliine({ courseId, search }: FindManyByCourseIdWithDiscipline): Promise<CourseWithDiscipline[]>
 
   abstract create(courseDiscipline: CourseDiscipline): Promise<void>
   abstract createMany(coursesDisciplines: CourseDiscipline[]): Promise<void>
