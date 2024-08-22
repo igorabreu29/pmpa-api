@@ -311,8 +311,6 @@ describe('remove assessments grade Batch Use Case', () => {
       role: 'dev' 
     })  
 
-    console.log(assessmentsRepository.items)
-
     expect(result.isRight()).toBe(true)
     expect(assessmentsRepository.items).toMatchObject([
       {
