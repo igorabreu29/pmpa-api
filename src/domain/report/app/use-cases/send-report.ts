@@ -4,6 +4,7 @@ import { Report, TypeAction } from "../../enterprise/entities/report.ts";
 
 export interface SendReportUseCaseRequest {
   reporterId: string
+  courseId?: string
   ip: string
   title: string
   content: string
@@ -19,12 +20,13 @@ export class SendReportUseCase {
     private reportsRepository: ReportsRepository
   ) {}
 
-  async execute({ title, content, ip, reporterId, action }: SendReportUseCaseRequest): Promise<SendReportUseCaseResponse> {
+  async execute({ title, content, ip, reporterId, courseId, action }: SendReportUseCaseRequest): Promise<SendReportUseCaseResponse> {
     const report = Report.create({
       title,
       content,
       ip, 
       reporterId,
+      courseId,
       action
     })
     await this.reportsRepository.create(report)

@@ -19,7 +19,7 @@ export class OnManagerUpdated implements EventHandler {
     )
   }
 
-  private async sendUpdateManagerReport({ manager, reporterId, reporterIp, ocurredAt }: ManagerEvent) {
+  private async sendUpdateManagerReport({ manager, reporterId, courseId, reporterIp, ocurredAt }: ManagerEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
 
     if (reporter) {
@@ -33,6 +33,7 @@ export class OnManagerUpdated implements EventHandler {
           ${reporter.username.value} atualizou o gerente: ${manager.username.value}
         `,
         ip: reporterIp,
+        courseId,
         reporterId: reporter.id.toValue(),
         action: 'add'
       })

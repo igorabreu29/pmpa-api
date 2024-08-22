@@ -4,6 +4,7 @@ import { ReportsRepository } from "../repositories/reports-repository.ts";
 
 export interface SendReportBatchUseCaseRequest {
   reporterId: string
+  courseId?: string
   reporterIp: string
   title: string
   content: string
@@ -21,12 +22,13 @@ export class SendReportBatchUseCase {
     private reportsRepository: ReportsRepository
   ) {}
 
-  async execute({ title, content, reporterIp, reporterId, fileLink, fileName, action }: SendReportBatchUseCaseRequest): Promise<SendReportBatchUseCaseResponse> {
+  async execute({ title, content, reporterIp, reporterId, courseId, fileLink, fileName, action }: SendReportBatchUseCaseRequest): Promise<SendReportBatchUseCaseResponse> {
     const report = Report.create({
       title,
       content,
       ip: reporterIp, 
       reporterId,
+      courseId,
       fileLink,
       fileName,
       action

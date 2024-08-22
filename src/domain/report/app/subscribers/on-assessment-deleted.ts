@@ -46,6 +46,7 @@ export class OnAssessmentDeleted implements EventHandler {
           ${reporter.username.value} removeu notas do aluno: ${student.username.value}
         `,
         ip: reporterIp,
+        courseId: assessment.courseId.toValue(),
         reporterId: reporter.id.toValue(),
         action: 'remove'
       })

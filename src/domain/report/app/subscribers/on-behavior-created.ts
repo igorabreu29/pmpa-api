@@ -19,7 +19,7 @@ export class OnBehaviorCreated implements EventHandler {
     )
   }
 
-  private async sendNewBehaviorReport({ courseName, studentName, reporterId, reporterIp, ocurredAt }: BehaviorEvent) {
+  private async sendNewBehaviorReport({ behavior, courseName, studentName, reporterId, reporterIp, ocurredAt }: BehaviorEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
 
     if (reporter) {
@@ -34,6 +34,7 @@ export class OnBehaviorCreated implements EventHandler {
           ${reporter.username.value} adicionou notas de comportamento para o aluno: ${studentName}
         `,
         ip: reporterIp,
+        courseId: behavior.courseId.toValue(),
         reporterId: reporter.id.toValue(),
         action: 'add'
       })

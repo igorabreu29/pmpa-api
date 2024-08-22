@@ -46,6 +46,7 @@ export class OnAssessmentUpdated implements EventHandler {
           ${reporter.username.value} atualizou notas do aluno: ${student.username.value}
         `,
         ip: reporterIp,
+        courseId: assessment.courseId.toValue(),
         reporterId: reporter.id.toValue(),
         action: 'update'
       })

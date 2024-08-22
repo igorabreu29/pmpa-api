@@ -40,6 +40,7 @@ export class OnManagerCreated implements EventHandler {
           ${reporter.username.value} adicionou o gerente: ${manager.username.value}
         `,
         ip: reporterIp,
+        courseId,
         reporterId: reporter.id.toValue(),
         action: 'add'
       })

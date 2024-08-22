@@ -19,7 +19,7 @@ export class OnAssessmentCreated implements EventHandler {
     )
   }
 
-  private async sendNewAssessmentReport({ courseName, disciplineName, studentName, reporterId, reporterIp, ocurredAt }: AssessmentEvent) {
+  private async sendNewAssessmentReport({ assessment, courseName, disciplineName, studentName, reporterId, reporterIp, ocurredAt }: AssessmentEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
 
     if (reporter) {
@@ -35,6 +35,7 @@ export class OnAssessmentCreated implements EventHandler {
           ${reporter.username.value} adicionou notas para o aluno: ${studentName}
         `,
         ip: reporterIp,
+        courseId: assessment.courseId.toValue(),
         reporterId: reporter.id.toValue(),
         action: 'add'
       })

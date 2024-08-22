@@ -38,6 +38,7 @@ export class OnBehaviorBatchUpdated implements EventHandler {
           Data: ${ocurredAt} \n
           ${reporter.username.value} adicionou notas de comportamento em lote
         `,
+        courseId: behaviorBatch.courseId.toValue(),
         reporterId: reporter.id.toValue(),
         reporterIp,
         fileLink: behaviorBatch.fileLink,

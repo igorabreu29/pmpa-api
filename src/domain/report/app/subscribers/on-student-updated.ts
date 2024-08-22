@@ -19,7 +19,7 @@ export class OnStudentUpdated implements EventHandler {
     )
   }
 
-  private async sendUpdateStudentReport({ student, reporterId, reporterIp, ocurredAt }: StudentEvent) {
+  private async sendUpdateStudentReport({ student, reporterId, courseId, reporterIp, ocurredAt }: StudentEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
 
     if (reporter) {
@@ -33,6 +33,7 @@ export class OnStudentUpdated implements EventHandler {
           ${reporter.username.value} atualizou o aluno: ${student.username.value}
         `,
         ip: reporterIp,
+        courseId,
         reporterId: reporter.id.toValue(),
         action: 'update'
       })

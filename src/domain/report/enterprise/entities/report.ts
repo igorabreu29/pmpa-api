@@ -6,6 +6,7 @@ export type TypeAction  = 'add' | 'remove' | 'update' | 'login confirmed'
 
 interface ReportProps {
   reporterId: string
+  courseId?: string
   title: string
   content: string
   ip: string
@@ -18,6 +19,10 @@ interface ReportProps {
 export class Report extends Entity<ReportProps> {
   get reporterId() {
     return this.props.reporterId
+  }
+
+  get courseId() {
+    return this.props.courseId
   }
 
   get title() {

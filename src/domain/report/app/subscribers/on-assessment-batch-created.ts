@@ -40,6 +40,7 @@ export class OnAssessmentBatchCreated implements EventHandler {
         `,
         reporterId: reporter.id.toValue(),
         reporterIp,
+        courseId: course.id.toValue(),
         fileLink: assessmentBatch.fileLink,
         fileName: assessmentBatch.fileName,
         action: 'add'

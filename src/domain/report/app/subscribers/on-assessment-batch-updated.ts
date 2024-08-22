@@ -38,6 +38,7 @@ export class OnAssessmentBatchUpdated implements EventHandler {
           Data: ${ocurredAt} \n
           ${reporter.username.value} adicionou/atualizou notas em lote
         `,
+        courseId: assessmentBatch.courseId.toValue(),
         reporterId: reporter.id.toValue(),
         reporterIp,
         fileLink: assessmentBatch.fileLink,

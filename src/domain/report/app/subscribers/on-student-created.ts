@@ -39,6 +39,7 @@ export class OnStudentCreated implements EventHandler {
           ${reporter.username.value} adicionou o aluno: ${student.username.value}
         `,
         ip: reporterIp,
+        courseId,
         reporterId: reporter.id.toValue(),
         action: 'add'
       })

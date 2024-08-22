@@ -43,6 +43,7 @@ export class OnBehaviorUpdated implements EventHandler {
           ${reporter.username.value} atualizou notas de comportamento do aluno: ${student.username.value}
         `,
         ip: reporterIp,
+        courseId: behavior.courseId.toValue(),
         reporterId,
         action: 'update'
       })

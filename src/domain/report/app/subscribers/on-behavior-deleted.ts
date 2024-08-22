@@ -42,6 +42,7 @@ export class OnBehaviorDeleted implements EventHandler {
           Data: ${ocurredAt} \n
           ${reporter.username.value} deletou notas de comportamento do aluno: ${student.username.value}
         `,
+        courseId: behavior.courseId.toValue(),
         ip: reporterIp,
         reporterId,
         action: 'remove'
