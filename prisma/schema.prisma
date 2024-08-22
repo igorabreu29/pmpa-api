@@ -104,6 +104,7 @@ model Course {
   userOnCourses        UserOnCourse[]
   coursesOnDisciplines CourseOnDiscipline[]
   coursesHistorics     CourseHistoric[]
+  Report               Report[]
 
   @@map("courses")
 }
@@ -224,6 +225,7 @@ enum Action {
 model Report {
   id         String   @id @default(cuid())
   reporterId String
+  courseId   String?
   title      String
   content    String
   filename   String?
@@ -232,5 +234,6 @@ model Report {
   createdAt  DateTime @default(now()) @map("created_at")
   action     Action   @default(ADD)
 
-  reporter User @relation(fields: [reporterId], references: [id])
+  reporter User    @relation(fields: [reporterId], references: [id])
+  course   Course? @relation(fields: [courseId], references: [id])
 }
