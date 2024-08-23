@@ -82,8 +82,11 @@ export class PrismaSearchsRepository implements SearchsRepository {
     if (role === 'admin') {
       const searchs = await prisma.user.findMany({
         where: {
-          role: {
-            not: 'DEV'
+          NOT: {
+            role: 'DEV',
+            AND: {
+              role: 'ADMIN'
+            }
           },
           username: {
             contains: query
