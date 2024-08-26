@@ -22,6 +22,7 @@ import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts";
 import { StudentEvent } from "../../enterprise/events/student-event.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 interface CreateStudentUseCaseRequest {
   userId: string
@@ -127,6 +128,17 @@ export class CreateStudentUseCase {
       })
       await this.studentsPolesRepository.create(studentPole)
 
+      studentWithCPF.addDomainStudentEvent(
+        new StudentEvent({
+          reporterId: userId,
+          reporterIp: userIp,
+          courseId: studentCourse.courseId.toValue(),
+          student
+        })
+      )
+
+      DomainEvents.dispatchEventsForAggregate(studentWithCPF.id)
+
       return right(null)
     }
 
@@ -150,9 +162,28 @@ export class CreateStudentUseCase {
       })
       await this.studentsPolesRepository.create(studentPole)
 
+      studentWithEmail.addDomainStudentEvent(
+        new StudentEvent({
+          reporterId: userId,
+          reporterIp: userIp,
+          courseId: studentCourse.courseId.toValue(),
+          student
+        })
+      )
+      
+      DomainEvents.dispatchEventsForAggregate(studentWithEmail.id)
+
       return right(null)
     }
 
+    student.addDomainStudentEvent(
+      new StudentEvent({
+        reporterId: userId,
+        reporterIp: userIp,
+        courseId: course.id.toValue(),
+        student
+      })
+    )
     await this.studentsRepository.create(student)
     
     const studentCourse = StudentCourse.create({
@@ -166,15 +197,6 @@ export class CreateStudentUseCase {
       poleId: pole.id
     })
     await this.studentsPolesRepository.create(studentPole)
-
-    student.addDomainStudentEvent(
-      new StudentEvent({
-        reporterId: userId,
-        reporterIp: userIp,
-        courseId: studentCourse.courseId.toValue(),
-        student
-      })
-    )
 
     return right(null)
   }
