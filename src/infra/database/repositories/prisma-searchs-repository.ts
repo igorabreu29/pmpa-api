@@ -13,9 +13,18 @@ export class PrismaSearchsRepository implements SearchsRepository {
       const searchs = await prisma.user.findMany({
         where: {
           role: 'STUDENT',
-          username: {
-            contains: query
-          },
+          OR: [
+            {
+              username: {
+                contains: query
+              }
+            },
+            {
+              cpf: {
+                contains: query
+              }
+            }
+          ]
         },
 
         orderBy: {
@@ -67,8 +76,20 @@ export class PrismaSearchsRepository implements SearchsRepository {
 
         const searchsCount = await prisma.user.count({
           where: {
-            role: 'STUDENT'
-          }
+            role: 'STUDENT',
+            OR: [
+              {
+                username: {
+                  contains: query
+                }
+              },
+              {
+                cpf: {
+                  contains: query
+                }
+              }
+            ]
+          },
         })
         const pages = Math.ceil(searchsCount / PER_PAGE)
   
@@ -83,14 +104,27 @@ export class PrismaSearchsRepository implements SearchsRepository {
       const searchs = await prisma.user.findMany({
         where: {
           NOT: {
-            role: 'DEV',
-            AND: {
-              role: 'ADMIN'
-            }
+            OR: [
+              {
+                role: 'DEV',
+              },
+              {
+                role: 'ADMIN'
+              }
+            ]
           },
-          username: {
-            contains: query
-          }
+          OR: [
+            {
+              username: {
+                contains: query
+              }
+            },
+            {
+              cpf: {
+                contains: query
+              }
+            }
+          ]
         },
 
         orderBy: {
@@ -100,7 +134,11 @@ export class PrismaSearchsRepository implements SearchsRepository {
         skip: (page - 1) * PER_PAGE,
         take: page * PER_PAGE,
 
-        include: {
+        select: {
+          username: true,
+          cpf: true,
+          email: true,
+          civilId: true,
           usersOnCourses: {
             select: {
               course: true,
@@ -125,10 +163,29 @@ export class PrismaSearchsRepository implements SearchsRepository {
 
       const searchsCount = await prisma.user.count({
         where: {
-          role: {
-            not: 'DEV'
+          NOT: {
+            OR: [
+              {
+                role: 'DEV',
+              },
+              {
+                role: 'ADMIN'
+              }
+            ]
           },
-        }
+          OR: [
+            {
+              username: {
+                contains: query
+              }
+            },
+            {
+              cpf: {
+                contains: query
+              }
+            }
+          ]
+        },
       })
       const pages = Math.ceil(searchsCount / PER_PAGE)
 
@@ -141,9 +198,18 @@ export class PrismaSearchsRepository implements SearchsRepository {
 
     const searchs = await prisma.user.findMany({
       where: {
-        username: {
-          contains: query
-        }
+        OR: [
+          {
+            username: {
+              contains: query
+            }
+          },
+          {
+            cpf: {
+              contains: query
+            }
+          }
+        ]
       },
 
       orderBy: {
@@ -153,7 +219,11 @@ export class PrismaSearchsRepository implements SearchsRepository {
       skip: (page - 1) * PER_PAGE,
       take: page * PER_PAGE,
 
-      include: {
+      select: {
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
         usersOnCourses: {
           select: {
             course: true,
@@ -178,10 +248,19 @@ export class PrismaSearchsRepository implements SearchsRepository {
 
     const searchsCount = await prisma.user.count({
       where: {
-        role: {
-          not: 'DEV'
-        },
-      }
+        OR: [
+          {
+            username: {
+              contains: query
+            }
+          },
+          {
+            cpf: {
+              contains: query
+            }
+          }
+        ]
+      },
     })
     const pages = Math.ceil(searchsCount / PER_PAGE)
 
