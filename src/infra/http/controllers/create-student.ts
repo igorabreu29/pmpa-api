@@ -76,7 +76,7 @@ export async function createStudent(
         case InvalidBirthdayError:
           throw new Conflict('This date is not valid.') 
         case ResourceAlreadyExistError: 
-          throw new Conflict('Student already be present in the platform')
+          throw new Conflict(error.message)
         default: 
           throw new ClientError('Ocurred something problem')
       }
