@@ -143,7 +143,7 @@ describe('Update Students Batch (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .put(`/students/batch?courseId=${course.id}`)
+      .put(`/courses/${course.id}/students/batch`)
       .set('Authorization', `Bearer ${token}`)
       .type('multipart/form-data')
       .attach('excel', 'test/upload/students.xlsx')

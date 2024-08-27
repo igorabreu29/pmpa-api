@@ -25,18 +25,18 @@ export async function updateStudentBatch(
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .put('/students/batch', {
+    .put('/courses/:id/students/batch', {
       preHandler: upload.single('excel'),
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
-        querystring: z.object({
-          courseId: z.string().cuid()
+        params: z.object({
+          id: z.string().cuid()
         })
       }
     }, 
   async (req, res) => {
     const { payload: { sub, role } } = req.user
-    const { courseId } = req.query
+    const { id } = req.params
 
     const assessmentFileSchema = z.object({
       originalname: z.string(),
@@ -55,7 +55,7 @@ export async function updateStudentBatch(
     makeOnStudentBatchUpdated()
     const useCase = makeUpdateStudentsBatchUseCase()
     const result = await useCase.execute({
-      courseId,
+      courseId: id,
       fileLink: fileUrl.href,
       fileName: originalname,
       students,
