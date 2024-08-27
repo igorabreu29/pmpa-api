@@ -161,8 +161,6 @@ export class UpdateStudentUseCase {
     student.state = state ?? student.state
     student.county = county ?? student.county
 
-    await this.studentsRepository.save(student)
-
     student.addDomainStudentEvent(
       new StudentEvent({
         reporterId: userId,
@@ -171,6 +169,8 @@ export class UpdateStudentUseCase {
         student
       })
     )
+
+    await this.studentsRepository.save(student)
 
     return right(null)
   }
