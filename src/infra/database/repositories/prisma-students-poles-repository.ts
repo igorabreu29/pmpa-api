@@ -71,7 +71,7 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
     page, 
     cpf,
     username,
-    isEnabled,
+    isEnabled = true,
     perPage 
   }: { 
     poleId: string; 
@@ -173,6 +173,14 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
           }
         },
         pole: true
+      },
+
+      orderBy: {
+        usersOnCourse: {
+          user: {
+            username: 'asc'
+          }
+        }
       },
 
       skip: (page - 1) * PER_PAGE,
