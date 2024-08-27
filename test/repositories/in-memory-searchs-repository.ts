@@ -14,7 +14,8 @@ export class InMemorySearchsRepository implements SearchsRepository {
     if (role === 'manager') {
       const allSearchs = this.items
         .filter(item => {
-          return item.username.value.toLowerCase().includes(query.toLowerCase()) &&
+          return item.username.value.toLowerCase().includes(query.toLowerCase()) ||
+            item.cpf.value.toLowerCase().includes(query) &&
             item.role === 'student' &&
             item.courses?.some(course => courses?.includes(course)) && 
             item.poles?.some(pole => poles?.includes(pole))
@@ -35,7 +36,8 @@ export class InMemorySearchsRepository implements SearchsRepository {
     if (role === 'admin') {
       const allSearchs = this.items
         .filter(item => {
-          return item.username.value.toLowerCase().includes(query.toLowerCase()) &&
+          return item.username.value.toLowerCase().includes(query.toLowerCase()) ||
+            item.cpf.value.toLowerCase().includes(query) &&
             item.role !== 'dev'
         })
         .sort((a, b) => a.username.value.localeCompare(b.username.value))
@@ -52,7 +54,7 @@ export class InMemorySearchsRepository implements SearchsRepository {
     }
 
     const allSearchs = this.items
-      .filter(item => item.username.value.toLowerCase().includes(query.toLowerCase()))
+      .filter(item => item.username.value.toLowerCase().includes(query.toLowerCase()) || item.cpf.value.toLowerCase().includes(query))
       .sort((a, b) => a.username.value.localeCompare(b.username.value))
   
     const totalItems = allSearchs.length
