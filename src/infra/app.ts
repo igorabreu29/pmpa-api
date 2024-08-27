@@ -70,6 +70,7 @@ import { removeAssessmentGrade } from "./http/controllers/remove-assessment-grad
 import { removeAssessmentsGradeBatch } from "./http/controllers/remove-assessments-grade-batch.ts";
 import { getReports } from "./http/controllers/get-reports.ts";
 import { uploadAttachment } from "./http/controllers/upload-attachment.ts";
+import { getAdministrators } from "./http/controllers/get-administrators.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -106,6 +107,7 @@ app.register(updateManager)
 app.register(changeManagerProfile)
 app.register(changeManagerStatus)
 app.register(changeManagerAvatar)
+app.register(getAdministrators)
 app.register(createAdministrator)
 app.register(updateAdministrator)
 app.register(changeAdministratorProfile)

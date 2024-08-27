@@ -7,10 +7,10 @@ import { Email } from '@/domain/boletim/enterprise/entities/value-objects/email.
 import { Name } from '@/domain/boletim/enterprise/entities/value-objects/name.ts';
 import { Password } from '@/domain/boletim/enterprise/entities/value-objects/password.ts';
 import { defineRoleAccessToDomain } from '@/infra/utils/define-role.ts';
-import { Prisma, User as PrismaAdministrator } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 export class PrismaAdministratorsMapper {
-  static toDomain(administrator: PrismaAdministrator): Administrator {
+  static toDomain(administrator: Prisma.UserUncheckedCreateInput): Administrator {
     const formattedCPF = formatCPF(administrator.cpf)
 
     const cpfOrError = CPF.create(formattedCPF)

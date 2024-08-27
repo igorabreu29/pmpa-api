@@ -1,4 +1,4 @@
-import { AdministratorsRepository, SearchAdministratorsDetails } from "@/domain/boletim/app/repositories/administrators-repository.ts";
+import { AdministratorsRepository, SearchAdministratorsDetails, type FindManyProps } from "@/domain/boletim/app/repositories/administrators-repository.ts";
 import { Administrator } from "@/domain/boletim/enterprise/entities/administrator.ts";
 import { prisma } from "../lib/prisma.ts";
 import { PrismaAdministratorsMapper } from "../mappers/prisma-administrators-mapper.ts";
@@ -37,6 +37,67 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     if (!administrator) return null
 
     return PrismaAdministratorsMapper.toDomain(administrator)
+  }
+
+  async findMany({ 
+    page, 
+    cpf, 
+    username 
+  }: FindManyProps): Promise<{
+     administrators: Administrator[]; 
+     pages: number; 
+     totalItems: number; 
+    }> {
+    const PER_PAGE = 10
+
+    const administrators = await prisma.user.findMany({
+      where: {
+        role: 'ADMIN',
+        cpf: {
+          contains: cpf
+        },
+        username: {
+          contains: username
+        },
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        birthday: true,
+        civilId: true,
+        password: true
+      },
+
+      skip: (page - 1) * PER_PAGE,
+      take: page * PER_PAGE
+    })
+
+    const administratorsCount = await prisma.user.count({
+      where: {
+        role: 'ADMIN',
+        cpf: {
+          contains: cpf
+        },
+        username: {
+          contains: username
+        },
+      },
+
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+    
+    const pages = Math.ceil(administratorsCount / PER_PAGE)
+
+    return {
+      administrators: administrators.map(PrismaAdministratorsMapper.toDomain),
+      pages,
+      totalItems: administratorsCount
+    }
   }
 
   async searchManyDetails({ query, page }: SearchAdministratorsDetails): Promise<Administrator[]> {

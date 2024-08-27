@@ -1,5 +1,5 @@
 import { DomainEvents } from "@/core/events/domain-events.ts";
-import { AdministratorsRepository, SearchAdministratorsDetails } from "@/domain/boletim/app/repositories/administrators-repository.ts";
+import { AdministratorsRepository, SearchAdministratorsDetails, type FindManyProps } from "@/domain/boletim/app/repositories/administrators-repository.ts";
 import { Administrator } from "@/domain/boletim/enterprise/entities/administrator.ts";
 
 export class InMemoryAdministratorsRepository implements AdministratorsRepository {
@@ -18,6 +18,33 @@ export class InMemoryAdministratorsRepository implements AdministratorsRepositor
   async findByEmail(email: string): Promise<Administrator | null> {
     const admin = this.items.find(item => item.email.value === email)
     return admin ?? null
+  }
+
+  async findMany({ page, cpf, username }: FindManyProps): Promise<
+    { 
+      administrators: Administrator[]; 
+      pages: number; 
+      totalItems: number; 
+    }
+  > {
+    const PER_PAGE = 10
+
+    const allAdministrators = this.items
+      .filter(item => {
+        return item.cpf.value.includes(cpf ?? '')
+          && item.username.value.toLowerCase().includes(username ? username.toLowerCase() : '')
+      })
+      .sort((adminA, adminB) => adminA.createdAt.getTime() - adminB.createdAt.getTime())
+
+    const totalItems = allAdministrators.length
+    const pages = Math.ceil(totalItems / PER_PAGE)
+    const administrators = allAdministrators.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+
+    return {
+      administrators,
+      pages,
+      totalItems
+    }
   }
 
   async searchManyDetails({ query, page }: SearchAdministratorsDetails): Promise<Administrator[]> {
