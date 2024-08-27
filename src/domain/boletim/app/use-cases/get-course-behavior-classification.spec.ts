@@ -160,8 +160,6 @@ describe('Get Course Behavior Classification', () => {
       page: 1
     })
 
-    console.log(result.value)
-
     expect(result.value).toMatchObject({
       behaviorAverageGroupedByPole: [
         {
