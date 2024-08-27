@@ -76,7 +76,7 @@ describe('Create Students Batch Use Case', () => {
       studentsCoursesRepository.create(studentCourse)
   
       const data = {
-        courseName: course.name.value,
+        courseId: course.id.toValue(),
         userId: '',
         userIp: '',
         fileName: '',
@@ -118,7 +118,7 @@ describe('Create Students Batch Use Case', () => {
       studentsRepository.create(student)
   
       const data = {
-        courseName: course.name.value,
+        courseId: course.id.toValue(),
         userId: 'user-1',
         userIp: '0.0.0.0',
         fileName: 'add-student-batch.xlsx',
@@ -175,7 +175,7 @@ describe('Create Students Batch Use Case', () => {
       studentsCoursesRepository.create(studentCourse)
 
       const data = {
-        courseName: course.name.value,
+        courseId: course.id.toValue(),
         userId: '',
         userIp: '',
         fileName: '',
@@ -217,7 +217,7 @@ describe('Create Students Batch Use Case', () => {
       studentsRepository.create(student)
   
       const data = {
-        courseName: course.name.value,
+        courseId: course.id.toValue(),
         userId: 'user-1',
         userIp: '0.0.0.0',
         fileName: 'add-student-batch.xlsx',
@@ -262,7 +262,7 @@ describe('Create Students Batch Use Case', () => {
   describe('Student', () => {
     it ('should not be able create students batch if course does not exist', async () => {
       const result = await sut.execute({ 
-        courseName: 'invalid', 
+        courseId: 'invalid', 
         students: [], 
         userId: '', 
         userIp: '',
@@ -288,7 +288,7 @@ describe('Create Students Batch Use Case', () => {
       polesRepository.create(pole)
 
       const data = {
-        courseName: course.name.value,
+        courseId: course.id.toValue(),
         userId: '',
         userIp: '',
         fileName: '',
@@ -330,7 +330,7 @@ describe('Create Students Batch Use Case', () => {
       polesRepository.create(pole2)
 
       const data = {
-        courseName: course.name.value,
+        courseId: course.id.toValue(),
         userId: '',
         userIp: '',
         fileName: '',

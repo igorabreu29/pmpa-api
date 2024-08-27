@@ -26,11 +26,17 @@ export async function createStudentBatch(
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/students/batch', {
+    .post('/courses/:id/students/batch', {
       preHandler: upload.single('excel'),
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
+      schema: {
+        params: z.object({
+          id: z.string().cuid()
+        })
+      }
     }, 
   async (req, res) => {
+    const { id } = req.params
     const { payload: { sub, role } } = req.user
 
     const assessmentFileSchema = z.object({
@@ -50,7 +56,7 @@ export async function createStudentBatch(
     makeOnStudentBatchCreated()
     const useCase = makeCreateStudentsBatchUseCase()
     const result = await useCase.execute({
-      courseName: students[0].courseName,
+      courseId: id,
       fileLink: fileUrl.href,
       fileName: originalname,
       students,

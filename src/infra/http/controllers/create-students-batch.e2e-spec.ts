@@ -28,7 +28,7 @@ describe('Create Students Batch (e2e)', () => {
       }
     })
 
-    await prisma.course.create({
+    const course = await prisma.course.create({
       data: {
         endsAt,
         formula: 'CAS',
@@ -52,7 +52,7 @@ describe('Create Students Batch (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .post('/students/batch')
+      .post(`/courses/${course.id}/students/batch`)
       .set('Authorization', `Bearer ${token}`)
       .type('multipart/form-data')
       .attach('excel', 'test/upload/students.xlsx')

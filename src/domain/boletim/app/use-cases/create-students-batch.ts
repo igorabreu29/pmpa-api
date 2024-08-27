@@ -37,7 +37,7 @@ interface StudentType {
 
 interface CreateStudentsBatchUseCaseRequest {
   students: StudentType[],
-  courseName: string
+  courseId: string
   userId: string
   userIp: string
   fileName: string
@@ -58,10 +58,10 @@ export class CreateStudentsBatchUseCase {
     private studentsBatchRepository: StudentsBatchRepository,
   ) {}
 
-  async execute({ students, courseName, userId, userIp, fileName, fileLink, role }: CreateStudentsBatchUseCaseRequest): Promise<CreateStudentsBatchUseCaseResponse> {
+  async execute({ students, courseId, userId, userIp, fileName, fileLink, role }: CreateStudentsBatchUseCaseRequest): Promise<CreateStudentsBatchUseCaseResponse> {
     if (role === 'student') return left(new NotAllowedError())
 
-    const course = await this.coursesRepository.findByName(courseName)
+    const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
     const studentsOrError = await Promise.all(students.map(async (student) => {
