@@ -65,6 +65,7 @@ export class UpdateAdministratorUseCase {
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
     if (cpfOrError.isLeft()) return left(cpfOrError.value)
 
+    await passwordOrError.value.hash()
     administrator.username = nameOrError.value
     administrator.email = emailOrError.value
     administrator.passwordHash = passwordOrError.value
