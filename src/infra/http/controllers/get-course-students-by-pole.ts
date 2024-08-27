@@ -22,7 +22,7 @@ export async function getCourseStudentsByPole(
           page: z.coerce.number().default(1),
           cpf: z.string().optional(),
           username: z.string().optional(),
-          isEnabled: z.coerce.boolean().optional()
+          isEnabled: z.string().default('true')
         }),
         params: z.object({
           id: z.string().cuid(),
@@ -40,7 +40,7 @@ export async function getCourseStudentsByPole(
           page,
           cpf, 
           username,
-          isEnabled,
+          isEnabled: isEnabled === 'true',
           perPage: 10,
           poleId
         })
