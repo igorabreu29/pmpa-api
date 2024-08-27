@@ -148,6 +148,10 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
       skip: (page - 1) * perPage,
       take: page * perPage,
 
+      orderBy: {
+        createdAt: 'desc',
+      },
+
       include: {
         course: true,
         user: true,

@@ -31,7 +31,11 @@ export class PrismaCoursesRepository implements CoursesRepository {
 
     const courses = await prisma.course.findMany({
       skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE
+      take: page * PER_PAGE,
+
+      orderBy: {
+        startAt: 'asc'
+      }
     })
 
     const coursesCount = await prisma.course.count()

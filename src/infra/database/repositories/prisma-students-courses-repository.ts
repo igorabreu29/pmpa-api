@@ -45,6 +45,10 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       skip: (page - 1) * perPage,
       take: page * perPage,
 
+      orderBy: {
+        createdAt: 'desc',
+      },
+
       include: {
         course: true,
         user: true,
@@ -216,7 +220,13 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       },
 
       skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE
+      take: page * PER_PAGE,
+
+      orderBy: {
+        user: {
+          username: 'asc'
+        }
+      }
     })
 
     const studentsCourseMapper = studentCourses.map(studentCourse => {
