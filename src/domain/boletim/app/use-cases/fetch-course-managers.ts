@@ -6,6 +6,9 @@ import { ManagerCourseDetails } from "../../enterprise/entities/value-objects/ma
 
 interface FetchCourseManagersUseCaseRequest {
   courseId: string
+  username?: string
+  cpf?: string
+  isEnabled?: boolean
   page: number
   perPage: number
 }
@@ -22,13 +25,16 @@ export class FetchCourseManagersUseCase {
     private coursesRepository: CoursesRepository
   ) {}
 
-  async execute({ courseId, page, perPage }: FetchCourseManagersUseCaseRequest): Promise<FetchCourseManagersUseCaseResponse> {
+  async execute({ courseId, page, cpf, isEnabled = true, username, perPage }: FetchCourseManagersUseCaseRequest): Promise<FetchCourseManagersUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
     const { managersCourse, pages, totalItems} = await this.managersCoursesRepository.findManyDetailsByCourseId({
       courseId,
       page,
+      username,
+      isEnabled,
+      cpf,
       perPage,
     })
 

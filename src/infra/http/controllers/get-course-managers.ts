@@ -19,6 +19,9 @@ export async function getCourseManagers(
       schema: {
         querystring: z.object({
           page: z.coerce.number().default(1),
+          cpf: z.string().optional(),
+          username: z.string().optional(),
+          isEnabled: z.string().default('true')
         }),
         params: z.object({
           id: z.string().cuid()
@@ -26,13 +29,16 @@ export async function getCourseManagers(
       }
     }, 
       async (req, res) => {
-        const { page } = req.query
+        const { page, cpf, username, isEnabled } = req.query
         const { id } = req.params
 
         const useCase = makeFetchCourseManagersUseCase()
         const result = await useCase.execute({
           courseId: id,
           page,
+          cpf,
+          username,
+          isEnabled: isEnabled === 'true' ? true : false,
           perPage: 10,
         })
 

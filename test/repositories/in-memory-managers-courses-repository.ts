@@ -75,10 +75,16 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
   async findManyDetailsByCourseId({ 
     courseId, 
     page, 
+    cpf,
+    isEnabled = true,
+    username,
     perPage 
   }: { 
     courseId: string; 
     page: number; 
+    cpf?: string
+    username?: string
+    isEnabled?: boolean
     perPage: number; 
   }): Promise<{ 
     managersCourse: ManagerCourseDetails[]; 
@@ -86,7 +92,7 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
     totalItems: number; 
   }> {
     const allManagersCourses = this.items
-      .filter(item => item.courseId.toValue() === courseId && item.isActive)
+      .filter(item => item.courseId.toValue() === courseId && isEnabled ? item.isActive : !item.isActive)
       .map(managerCourse => {
         const manager = this.managersRepository.items.find(item => {
           return item.id.equals(managerCourse.managerId)
@@ -119,6 +125,9 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
           poleId: pole.id,
           pole: pole.name.value
         })
+      }).filter(item => {
+        return item.username.toLowerCase().includes(username ? username.toLowerCase() : '') && 
+          item.cpf.toLowerCase().includes(cpf || '')
       })
 
       const managersCourse = allManagersCourses.slice((page - 1) * perPage, page * perPage)

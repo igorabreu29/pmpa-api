@@ -9,10 +9,16 @@ export abstract class ManagersCoursesRepository {
   abstract findManyDetailsByCourseId({
     courseId,
     page,
+    cpf,
+    isEnabled,
+    username,
     perPage
   }: {
     courseId: string
     page: number
+    cpf?: string
+    username?: string
+    isEnabled?: boolean
     perPage: number
   }): Promise<{
     managersCourse: ManagerCourseDetails[]

@@ -59,11 +59,38 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
     return PrismaManagerCourseDetailsMapper.toDomain(prismaManagerCourseMapper)
   }
 
-  async findManyDetailsByCourseId({ courseId, page, perPage }: { courseId: string; page: number; perPage: number; }): Promise<{ managersCourse: ManagerCourseDetails[]; pages: number; totalItems: number; }> {
+  async findManyDetailsByCourseId({ 
+    courseId, 
+    page, 
+    cpf,
+    isEnabled,
+    username,
+    perPage 
+  }: { 
+    courseId: string; 
+    page: number; 
+    cpf?: string
+    isEnabled?: boolean
+    username?: string
+    perPage: number; 
+  }): Promise<{ 
+    managersCourse: ManagerCourseDetails[]; 
+    pages: number; 
+    totalItems: number; 
+  }> {
     const managerCourses = await prisma.userOnCourse.findMany({
       where: {
         courseId,
-        isActive: true
+        isActive: isEnabled ? true : false,
+        user: {
+          role: 'MANAGER',
+          username: {
+            contains: username
+          },
+          cpf: {
+            contains: cpf
+          },
+        },
       },
 
       skip: (page - 1) * perPage,
@@ -91,6 +118,16 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
     const managerCoursesCount = await prisma.userOnCourse.count({
       where: {
         courseId,
+        isActive: isEnabled ? true : false,
+        user: {
+          role: 'MANAGER',
+          username: {
+            contains: username
+          },
+          cpf: {
+            contains: cpf
+          },
+        },
       },
     })
     const pages = Math.ceil(managerCoursesCount / perPage)
