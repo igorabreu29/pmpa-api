@@ -2,7 +2,6 @@ import { Either, left, right } from "@/core/either.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { StudentsRepository } from "../repositories/students-repository.ts";
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts";
-import { StudentCourseWithCourse } from "../../enterprise/entities/value-objects/student-course-with-course.ts";
 import { StudentWithCourse } from "../../enterprise/entities/value-objects/student-with-course.ts";
 
 interface FetchStudentCoursesUseCaseRequest {
