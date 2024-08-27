@@ -89,7 +89,7 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       where: {
         poleId,
         usersOnCourse: {
-          isActive: isEnabled ? false : true,
+          isActive: isEnabled ? true : false,
           user: {
             role: 'STUDENT',
             cpf: {

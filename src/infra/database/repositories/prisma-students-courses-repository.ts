@@ -123,7 +123,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const studentsCourse = await prisma.userOnCourse.findMany({
       where: {
         courseId,
-        isActive: isEnabled ? false : true,
+        isActive: isEnabled ? true : false,
         user: {
           role: 'STUDENT',
           username: {
@@ -163,9 +163,16 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const studentsCourseCount = await prisma.userOnCourse.count({
       where: {
         courseId,
+        isActive: isEnabled ? true : false,
         user: {
-          role: 'STUDENT'
-        }
+          role: 'STUDENT',
+          username: {
+            contains: username
+          },
+          cpf: {
+            contains: cpf
+          },
+        },
       },
     })
     const pages = Math.ceil(studentsCourseCount / perPage)
