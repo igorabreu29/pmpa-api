@@ -66,6 +66,7 @@ export class InMemoryStudentsRepository implements StudentsRepository {
       civilId: student.civilId ?? 0e2,
       birthday: student.birthday.value,
       assignedAt: student.createdAt,
+      role: student.role,
       courses,
       poles,
     })
@@ -113,6 +114,7 @@ export class InMemoryStudentsRepository implements StudentsRepository {
           email: student.email.value,
           birthday: student.birthday.value,
           assignedAt: student.createdAt,
+          role: student.role,
           courses,
           poles
         })
