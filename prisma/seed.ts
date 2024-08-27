@@ -7,21 +7,37 @@ async function seed() {
   await prisma.pole.deleteMany()
   await prisma.userOnCourse.deleteMany()
 
-  const [course, pole] = await Promise.all([
-    prisma.course.create({
-      data: {
-        name: 'CAS',
-        endsAt: new Date('2050-01-02'),
-        formula: 'CAS',
-        imageUrl: '',
+  await prisma.user.create({
+    data: {
+      cpf: '05399970210',
+      email: 'abreusense@gmail.com',
+      username: 'Igor Abreu',
+      civilId: '00000',
+      password: '$2a$08$IIGNU2kgBV5B9EEQmmm.g.cZy8n1WpEl9xJ.39Qd9f4lNiFXt1Xji',
+      birthday: new Date('2002-01-02'),
+    }
+  })
+
+  const pole = await prisma.pole.create({
+    data: {
+      name: 'CFAP',
+    }
+  })
+
+  const course = await prisma.course.create({
+    data: {
+      name: 'CAS',
+      endsAt: new Date('2050-01-02'),
+      formula: 'CAS',
+      imageUrl: '',
+
+      courseOnPoles: {
+        create: {
+          poleId: pole.id
+        }
       }
-    }),
-    prisma.pole.create({
-      data: {
-        name: 'CFAP',
-      }
-    })
-  ])
+    },
+  })
 
   const studentsToInsert: Prisma.UserUncheckedCreateInput[] = []
 

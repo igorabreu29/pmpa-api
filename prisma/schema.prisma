@@ -15,7 +15,7 @@ enum Role {
 }
 
 model User {
-  id       String @id @default(cuid())
+  id       String @id @default(uuid())
   email    String @unique
   cpf      String @unique
   password String
@@ -56,7 +56,7 @@ model Profile {
 }
 
 model UserOnCourse {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   userId    String
   courseId  String
   isActive  Boolean  @default(true)
@@ -66,11 +66,11 @@ model UserOnCourse {
   user         User               @relation(fields: [userId], references: [id])
   usersOnPoles UserCourseOnPole[]
 
-  @@index([userId, courseId])
+  @@unique([userId, courseId])
 }
 
 model UserCourseOnPole {
-  id             String   @id @default(cuid())
+  id             String   @id @default(uuid())
   userOnCourseId String
   poleId         String
   createdAt      DateTime @default(now()) @map("created_at")
@@ -88,7 +88,7 @@ enum Formula {
 }
 
 model Course {
-  id       String  @id @default(cuid())
+  id       String  @id @default(uuid())
   name     String
   isActive Boolean @default(true)
   isPeriod Boolean @default(false)
@@ -110,7 +110,7 @@ model Course {
 }
 
 model CourseHistoric {
-  id       String @id @default(cuid())
+  id       String @id @default(uuid())
   courseId String
 
   classname  String
@@ -127,19 +127,19 @@ model CourseHistoric {
 }
 
 model CourseOnPole {
-  id       String @id @default(cuid())
+  id       String @id @default(uuid())
   courseId String
   poleId   String
 
   course Course @relation(fields: [courseId], references: [id])
   pole   Pole   @relation(fields: [poleId], references: [id])
 
-  @@index([courseId, poleId])
+  @@unique([courseId, poleId])
   @@map("courses_on_poles")
 }
 
 model CourseOnDiscipline {
-  id           String @id @default(cuid())
+  id           String @id @default(uuid())
   courseId     String
   disciplineId String
 
@@ -150,11 +150,12 @@ model CourseOnDiscipline {
   course     Course     @relation(fields: [courseId], references: [id])
   discipline Discipline @relation(fields: [disciplineId], references: [id])
 
+  @@unique([courseId, disciplineId])
   @@map("courses_on_disciplines")
 }
 
 model Pole {
-  id   String @id @default(cuid())
+  id   String @id @default(uuid())
   name String
 
   courseOnPoles      CourseOnPole[]
@@ -164,7 +165,7 @@ model Pole {
 }
 
 model Discipline {
-  id   String @id @default(cuid())
+  id   String @id @default(uuid())
   name String
 
   assessments         Assessment[]
@@ -174,7 +175,7 @@ model Discipline {
 }
 
 model Assessment {
-  id           String @id @default(cuid())
+  id           String @id @default(uuid())
   studentId    String
   courseId     String
   disciplineId String
@@ -192,7 +193,7 @@ model Assessment {
 }
 
 model Behavior {
-  id        String @id @default(cuid())
+  id        String @id @default(uuid())
   studentId String
   courseId  String
 
@@ -223,7 +224,7 @@ enum Action {
 }
 
 model Report {
-  id         String   @id @default(cuid())
+  id         String   @id @default(uuid())
   reporterId String
   courseId   String?
   title      String
