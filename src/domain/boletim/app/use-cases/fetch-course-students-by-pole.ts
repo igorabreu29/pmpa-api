@@ -34,7 +34,7 @@ export class FetchCourseStudentsByPole {
     private studentsPolesRepository: StudentsPolesRepository,
   ) {}
 
-  async execute({ courseId, poleId, cpf, username, isEnabled = false, page, perPage }: FetchCourseStudentsByPoleRequest): Promise<FetchCourseStudentsByPoleResponse> {
+  async execute({ courseId, poleId, cpf, username, isEnabled = true, page, perPage }: FetchCourseStudentsByPoleRequest): Promise<FetchCourseStudentsByPoleResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 

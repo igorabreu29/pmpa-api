@@ -111,7 +111,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     courseId, 
     page, 
     cpf,
-    isEnabled,
+    isEnabled = true,
     username,
     perPage 
   }: { 
@@ -129,7 +129,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     const allStudentsCourses = this.items
       .filter(item => {
         return item.courseId.toValue() === courseId 
-          && isEnabled ? !item.isActive : item.isActive
+          && isEnabled ? item.isActive : !item.isActive
       })
       .map(studentCourse => {
         const student = this.studentsRepository.items.find(item => {
