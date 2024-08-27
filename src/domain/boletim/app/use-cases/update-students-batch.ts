@@ -18,6 +18,8 @@ import { StudentsBatchRepository } from "../repositories/students-batch-reposito
 import { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts"
 import { StudentsPolesRepository } from "../repositories/students-poles-repository.ts"
 import { StudentsRepository } from "../repositories/students-repository.ts"
+import { formatCPF } from "@/core/utils/formatCPF.ts"
+import { CPF } from "../../enterprise/entities/value-objects/cpf.ts"
 
 interface StudentCreated {
   student: Student
@@ -73,7 +75,9 @@ export class UpdateStudentsBatchUseCase {
       const pole = await this.polesRepository.findByName(student.poleName)
       if (!pole) return new ResourceNotFoundError('Pole not found.')
 
-      const studentExist = await this.studentsRepository.findByCPF(student.cpf)
+      const formattedCPF = CPF.format(student.cpf)
+
+      const studentExist = await this.studentsRepository.findByCPF(formattedCPF)
       if (!studentExist) return new ResourceNotFoundError('Student not found.')
 
       let studentCourse = await this.studentCoursesRepository.findByStudentIdAndCourseId({
