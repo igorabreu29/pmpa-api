@@ -154,8 +154,16 @@ export class CreateManagerUseCase {
       return right(null)
     }
 
-    await this.managersRepository.create(manager)
+    manager.addDomainManagerEvent(
+      new ManagerEvent({
+        manager,
+        reporterId: userId,
+        courseId,
+        reporterIp: userIp
+      })
+    )
     
+    await this.managersRepository.create(manager)
     const managerCourse = ManagerCourse.create({
       managerId: manager.id,
       courseId: course.id,
@@ -167,15 +175,6 @@ export class CreateManagerUseCase {
       poleId: pole.id
     })
     await this.managersPolesRepository.create(managerPole)
-
-    manager.addDomainManagerEvent(
-      new ManagerEvent({
-        manager,
-        reporterId: userId,
-        courseId,
-        reporterIp: userIp
-      })
-    )
 
     return right(null)
   }

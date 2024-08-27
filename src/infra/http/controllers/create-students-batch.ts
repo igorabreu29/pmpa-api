@@ -31,7 +31,7 @@ export async function createStudentBatch(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         params: z.object({
-          id: z.string().cuid()
+          id: z.string().uuid()
         })
       }
     }, 

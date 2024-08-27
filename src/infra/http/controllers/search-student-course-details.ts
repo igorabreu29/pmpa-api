@@ -18,7 +18,7 @@ export async function searchStudentCourseDetails(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({
-          id: z.string().cuid()
+          id: z.string().uuid()
         }),
         
         querystring: z.object({

@@ -26,7 +26,7 @@ export async function createCourse(
           poleIds: z.array(z.string()),
           disciplines: z.array(
             z.object({
-              id: z.string().cuid(),
+              id: z.string().uuid(),
               expected: z.string(),
               hours: z.number(),
               module: z.number(),

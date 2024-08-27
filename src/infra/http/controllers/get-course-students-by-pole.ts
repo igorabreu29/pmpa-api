@@ -25,8 +25,8 @@ export async function getCourseStudentsByPole(
           isEnabled: z.string().default('true')
         }),
         params: z.object({
-          id: z.string().cuid(),
-          poleId: z.string().cuid()
+          id: z.string().uuid(),
+          poleId: z.string().uuid()
         })
       }
     }, 

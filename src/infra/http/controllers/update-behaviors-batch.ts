@@ -26,7 +26,7 @@ export async function updateBehaviorBatch(
       preHandler: upload.single('excel'),
       schema: {
         querystring: z.object({
-          courseId: z.string().cuid()
+          courseId: z.string().uuid()
         })
       }
     }, async (req, res) => {

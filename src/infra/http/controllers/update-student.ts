@@ -26,12 +26,12 @@ export async function updateStudent(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         params: z.object({
-          id: z.string().cuid()
+          id: z.string().uuid()
         }),
         body: z.object({
-          courseId: z.string().cuid(),
-          newCourseId: z.string().cuid(),
-          poleId: z.string().cuid(),
+          courseId: z.string().uuid(),
+          newCourseId: z.string().uuid(),
+          poleId: z.string().uuid(),
           username: z.string().min(3).max(50).optional(),
           email: z.string().email().optional(),
           cpf: z.string().min(14).max(14).optional(),

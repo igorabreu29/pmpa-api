@@ -19,10 +19,10 @@ export async function createCourseDiscipline(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({
-          courseId: z.string().cuid()
+          courseId: z.string().uuid()
         }),
         body: z.object({
-          disciplineId: z.string().cuid(),
+          disciplineId: z.string().uuid(),
           expected: z.string(),
           hours: z.number(),
           module: z.number()

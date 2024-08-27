@@ -20,7 +20,7 @@ export async function removeAssessmentGrade(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         params: z.object({
-          id: z.string().cuid()
+          id: z.string().uuid()
         }),
         body: z.object({
           vf: z.number().optional(),

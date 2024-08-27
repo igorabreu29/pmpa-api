@@ -21,7 +21,7 @@ export async function getClassification(
       onRequest: [verifyJWT, verifyUserRole(['manager', 'admin', "dev"])],
       schema: {
         params: z.object({
-          id: z.string().cuid()
+          id: z.string().uuid()
         }),
 
         querystring: z.object({

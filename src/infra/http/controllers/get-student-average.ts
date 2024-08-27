@@ -16,8 +16,8 @@ export async function getStudentAverage(
       onRequest: [verifyJWT],
       schema: {
         params: z.object({
-          id: z.string().cuid(),
-          studentId: z.string().cuid()
+          id: z.string().uuid(),
+          studentId: z.string().uuid()
         }),
         querystring: z.object({
           type: z.enum(['module', 'period'])

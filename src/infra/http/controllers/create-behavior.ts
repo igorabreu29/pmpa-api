@@ -23,10 +23,10 @@ export async function createBehavior(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         params: z.object({
-          courseId: z.string().cuid()
+          courseId: z.string().uuid()
         }),
         body: z.object({
-          studentId: z.string().cuid(),
+          studentId: z.string().uuid(),
           january: z.number().nullable().default(null),
           february: z.number().nullable().default(null),
           march: z.number().nullable().default(null),

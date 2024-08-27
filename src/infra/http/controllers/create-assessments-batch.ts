@@ -26,7 +26,7 @@ export async function createAssessmentBatch(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         querystring: z.object({
-          courseId: z.string().cuid()
+          courseId: z.string().uuid()
         })
       }
     }, async (req, res) => {

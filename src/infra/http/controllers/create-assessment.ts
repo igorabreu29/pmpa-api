@@ -23,11 +23,11 @@ export async function createAssessment(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         params: z.object({
-          disciplineId: z.string().cuid()
+          disciplineId: z.string().uuid()
         }),
         body: z.object({
-          courseId: z.string().cuid(),
-          studentId: z.string().cuid(),
+          courseId: z.string().uuid(),
+          studentId: z.string().uuid(),
           vf: z.number().min(0),
           avi: z.number().optional(),
           avii: z.number().optional(),

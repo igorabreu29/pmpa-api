@@ -105,7 +105,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     courseId, 
     page, 
     cpf,
-    isEnabled,
+    isEnabled = true,
     username,
     perPage 
   }: { 

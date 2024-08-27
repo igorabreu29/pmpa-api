@@ -22,8 +22,8 @@ export async function getClassificationByPole(
       onRequest: [verifyJWT, verifyUserRole(['manager', 'admin', "dev"])],
       schema: {
         params: z.object({
-          id: z.string().cuid(),
-          poleId: z.string().cuid(),
+          id: z.string().uuid(),
+          poleId: z.string().uuid(),
         }),
 
         querystring: z.object({

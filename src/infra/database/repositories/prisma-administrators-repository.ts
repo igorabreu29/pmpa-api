@@ -21,7 +21,6 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     const administrator = await prisma.user.findUnique({
       where: {
         cpf, 
-        role: 'ADMIN'
       }
     })
     if (!administrator) return null
@@ -33,7 +32,6 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     const administrator = await prisma.user.findUnique({
       where: {
         email, 
-        role: 'ADMIN'
       }
     })
     if (!administrator) return null

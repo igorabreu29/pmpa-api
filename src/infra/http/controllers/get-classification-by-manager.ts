@@ -22,7 +22,7 @@ export async function getClassificationByManager(
       onRequest: [verifyJWT, verifyUserRole(['manager'])],
       schema: {
         params: z.object({
-          id: z.string().cuid(),
+          id: z.string().uuid(),
         }),
 
         querystring: z.object({

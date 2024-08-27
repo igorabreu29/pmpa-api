@@ -31,8 +31,8 @@ export async function createStudent(
           cpf: z.string().min(14).max(14),
           birthday: z.string().transform(transformDate),
           civilId: z.number(),
-          courseId: z.string().cuid(),
-          poleId: z.string().cuid()
+          courseId: z.string().uuid(),
+          poleId: z.string().uuid()
         })
       },
     }, 

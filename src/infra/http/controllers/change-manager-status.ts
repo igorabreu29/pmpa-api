@@ -25,8 +25,8 @@ export async function changeManagerStatus(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({
-          courseId: z.string().cuid(),
-          id: z.string().cuid()
+          courseId: z.string().uuid(),
+          id: z.string().uuid()
         }),
         body: z.object({
           status: z.boolean()

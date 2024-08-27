@@ -23,7 +23,6 @@ export class PrismaStudentsRepository implements StudentsRepository {
     const student = await prisma.user.findUnique({
       where: {
         cpf,
-        role: 'STUDENT'
       }
     }) 
     if (!student) return null
@@ -35,7 +34,6 @@ export class PrismaStudentsRepository implements StudentsRepository {
     const student = await prisma.user.findUnique({
       where: {
         email,
-        role: 'STUDENT'
       }
     }) 
     if (!student) return null

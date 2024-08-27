@@ -24,7 +24,7 @@ export async function getCourseStudents(
           isEnabled: z.string().default('true')
         }),
         params: z.object({
-          id: z.string().cuid()
+          id: z.string().uuid()
         })
       }
     }, 

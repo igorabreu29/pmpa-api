@@ -21,7 +21,7 @@ export async function createCourseHistoric(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({
-          courseId: z.string().cuid()
+          courseId: z.string().uuid()
         }),
         body: z.object({
           className: z.string(), 

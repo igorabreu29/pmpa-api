@@ -17,7 +17,7 @@ export async function getLoginConfirmationMetricsByManager(
       onRequest: [verifyJWT, verifyUserRole(['manager'])],
       schema: {
         params: z.object({
-          id: z.string().cuid(),
+          id: z.string().uuid(),
         })
       }
     }, 

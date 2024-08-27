@@ -17,7 +17,7 @@ export async function getCoursePoles(
       onRequest: [verifyJWT],
       schema: {
         params: z.object({
-          id: z.string().cuid()
+          id: z.string().uuid()
         })
       }
     }, 

@@ -18,8 +18,8 @@ export async function searchStudentCourseByPoleDetails(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({
-          id: z.string().cuid(),
-          poleId: z.string().cuid(),
+          id: z.string().uuid(),
+          poleId: z.string().uuid(),
         }),
         
         querystring: z.object({

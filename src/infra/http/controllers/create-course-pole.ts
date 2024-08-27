@@ -19,10 +19,10 @@ export async function createCoursePole(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({
-          courseId: z.string().cuid()
+          courseId: z.string().uuid()
         }),
         body: z.object({
-          poleId: z.string().cuid()
+          poleId: z.string().uuid()
         })
       }
     },

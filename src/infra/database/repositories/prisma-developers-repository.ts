@@ -19,7 +19,6 @@ export class PrismaDevelopersRepository implements DevelopersRepository {
   async findByCPF(cpf: string): Promise<Developer | null> {
     const developer = await prisma.user.findUnique({
       where: {
-        role: 'DEV',
         cpf,
       }
     })
@@ -31,7 +30,6 @@ export class PrismaDevelopersRepository implements DevelopersRepository {
   async findByEmail(email: string): Promise<Developer | null> {
     const developer = await prisma.user.findUnique({
       where: {
-        role: 'DEV',
         email,
       }
     })

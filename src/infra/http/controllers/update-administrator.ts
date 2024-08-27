@@ -25,7 +25,7 @@ export async function updateAdministrator(
       onRequest: [verifyJWT, verifyUserRole(['dev'])],
       schema: {
         params: z.object({
-          id: z.string().cuid()
+          id: z.string().uuid()
         }),
         body: z.object({
           username: z.string().min(3).max(50).optional(),
