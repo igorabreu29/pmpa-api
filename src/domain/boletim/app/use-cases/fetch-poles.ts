@@ -2,14 +2,8 @@ import { right, type Either } from "@/core/either.ts";
 import type { Pole } from "../../enterprise/entities/pole.ts";
 import type { PolesRepository } from "../repositories/poles-repository.ts";
 
-interface FetchPolesUseCaseRequest {
-  page: number
-}
-
 type FetchPolesUseCaseResponse = Either<null, {
-  poles: Pole[],
-  pages: number
-  totalItems: number
+  poles: Pole[]
 }>
  
 export class FetchPolesUseCase {
@@ -17,13 +11,11 @@ export class FetchPolesUseCase {
     private polesRepository: PolesRepository
   ) {}
 
-  async execute({ page }: FetchPolesUseCaseRequest): Promise<FetchPolesUseCaseResponse> {
-    const { poles, pages, totalItems } = await this.polesRepository.findMany(page)
+  async execute(): Promise<FetchPolesUseCaseResponse> {
+    const poles = await this.polesRepository.findMany()
 
     return right({
       poles,
-      pages,
-      totalItems
     })
   }
 }

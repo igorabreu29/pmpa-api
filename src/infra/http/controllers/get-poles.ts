@@ -14,27 +14,18 @@ export async function getPoles(
     .withTypeProvider<ZodTypeProvider>()
     .get('/poles', {
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
-      schema: {
-        querystring: z.object({
-          page: z.coerce.number().default(1)
-        })
-      }
     }, async (req, res) => {
-      const { page } = req.query
-
       const useCase = makeFetchPolesUseCase()
-      const result = await useCase.execute({ page })
+      const result = await useCase.execute()
 
       if (result.isLeft()) {
         throw new ClientError('Ocurred something error')
       }
 
-      const { poles, pages, totalItems } = result.value
+      const { poles } = result.value
 
       return res.status(200).send({
         poles: poles.map(pole => PolePresenter.toHTTP(pole)),
-        pages,
-        totalItems
       })
     })
 } 

@@ -26,25 +26,13 @@ export class PrismaPolesRepository implements PolesRepository {
     return PrismaPolesMapper.toDomain(pole)
   }
 
-  async findMany(page: number): Promise<{ poles: Pole[]; pages: number; totalItems: number; }> {
-    const PER_PAGE = 10
-
+  async findMany(): Promise<Pole[]> {
     const poles = await prisma.pole.findMany({
-      skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE,
       orderBy: {
         name: 'asc'
       }
     })
-
-    const polesCount = await prisma.pole.count()
-    const pages = Math.ceil(polesCount / PER_PAGE)
-
-    return {
-      poles: poles.map(pole => PrismaPolesMapper.toDomain(pole)),
-      pages,
-      totalItems: polesCount
-    }
+    return poles.map(PrismaPolesMapper.toDomain)
   }
 
   async create(pole: Pole): Promise<void> {
