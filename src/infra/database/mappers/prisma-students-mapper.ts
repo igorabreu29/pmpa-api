@@ -6,7 +6,7 @@ import { CPF } from '@/domain/boletim/enterprise/entities/value-objects/cpf.ts';
 import { Email } from '@/domain/boletim/enterprise/entities/value-objects/email.ts';
 import { Name } from '@/domain/boletim/enterprise/entities/value-objects/name.ts';
 import { Password } from '@/domain/boletim/enterprise/entities/value-objects/password.ts';
-import { defineRoleAccessToDomain } from '@/infra/utils/define-role.ts';
+import { defineRoleAccessToDomain, defineRoleAccessToPrisma } from '@/infra/utils/define-role.ts';
 import { Prisma, User as PrismaStudent } from '@prisma/client'
 
 export class PrismaStudentsMapper {
@@ -24,6 +24,7 @@ export class PrismaStudentsMapper {
     if (usernameOrError.isLeft()) throw new Error(usernameOrError.value.message)
     if (passwordOrError.isLeft()) throw new Error(passwordOrError.value.message)
     if (birthdayOrError.isLeft()) throw new Error(birthdayOrError.value.message)
+    
 
     const studentOrError = Student.create({
       username: usernameOrError.value,
@@ -31,7 +32,10 @@ export class PrismaStudentsMapper {
       cpf: cpfOrError.value,
       passwordHash: passwordOrError.value,
       birthday: birthdayOrError.value,
-      civilId: Number(student.civilId)
+      civilId: Number(student.civilId),
+      avatarUrl: student.avatarUrl,
+      createdAt: student.createdAt,
+      isLoginConfirmed: student.isLoginConfirmed ? true : undefined,
     }, new UniqueEntityId(student.id))
     if (studentOrError.isLeft()) throw new Error(studentOrError.value.message)
 
