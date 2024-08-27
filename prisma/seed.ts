@@ -15,6 +15,7 @@ async function seed() {
       civilId: '00000',
       password: '$2a$08$IIGNU2kgBV5B9EEQmmm.g.cZy8n1WpEl9xJ.39Qd9f4lNiFXt1Xji',
       birthday: new Date('2002-01-02'),
+      role: 'DEV'
     }
   })
 
