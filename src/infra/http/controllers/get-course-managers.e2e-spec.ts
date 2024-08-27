@@ -38,6 +38,7 @@ describe('Get Course Managers (e2e)', () => {
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
         birthday: transformDate('01/02/2001'),
+        role: 'MANAGER',
         
         usersOnCourses: {
           create: {
@@ -61,6 +62,7 @@ describe('Get Course Managers (e2e)', () => {
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
         birthday: transformDate('01/02/2001'),
+        role: 'MANAGER',
         
         usersOnCourses: {
           create: {
@@ -83,7 +85,7 @@ describe('Get Course Managers (e2e)', () => {
   }) 
 
   it ('GET /courses/:id/managers', async () => {
-    const administrator = await prisma.user.create({
+    await prisma.user.create({
       data: {
         username: 'Jey Doe',
         civilId: '02345',
