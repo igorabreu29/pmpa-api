@@ -80,8 +80,6 @@ export class CreateAdminUseCase {
     const userAlreadyExistWithEmail = await this.administratorsRepository.findByEmail(administrator.email.value)
     if (userAlreadyExistWithEmail) return left(new ResourceAlreadyExistError('Administrator already exist.'))
 
-    await this.administratorsRepository.create(administrator)
-
     administrator.addDomainAdministratorEvent(
       new AdministratorEvent({
         administrator,
@@ -90,6 +88,7 @@ export class CreateAdminUseCase {
       })
     )
 
+    await this.administratorsRepository.create(administrator)
     return right(null)
   }
 }
