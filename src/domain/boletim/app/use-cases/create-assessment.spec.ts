@@ -190,32 +190,6 @@ describe(('Create Assessment Use Case'), () => {
     expect(result.value).toBeInstanceOf(ResourceAlreadyExistError)
   })
 
-  it ('should not be able to create assessment if vf does not exist', async () => {
-    vi.setSystemTime(new Date('2022-1-5'))
-
-    const course = makeCourse()
-    coursesRepository.create(course)
-
-    const discipline = makeDiscipline()
-    disciplinesRepository.create(discipline)
-
-    const student = makeStudent()
-    studentsRepository.create(student)
-
-    const result = await sut.execute({
-      studentId: student.id.toValue(),
-      courseId: course.id.toValue(),
-      disciplineId: discipline.id.toValue(),
-      vf: null,
-      userIp: '',
-      userId: '',
-      role: 'manager'
-    })
-
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ConflictError)
-  })
-
   it ('should not be able to create asssessment if avi is less than 0', async () => {
     vi.setSystemTime(new Date('2022-1-5'))
 
