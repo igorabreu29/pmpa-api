@@ -6,16 +6,18 @@ import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
 
 import bcrypt from 'bcryptjs'
-import { Assessment } from '@prisma/client'
+import { Course, Discipline, User } from '@prisma/client'
 
-let assessment: Assessment
+let course: Course
+let discipline: Discipline
+let student: User
 
 describe('Remove Assessment Grade (e2e)', () => {
   beforeAll(async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
 
-    const course = await prisma.course.create({
+    course = await prisma.course.create({
       data: {
         endsAt,
         formula: 'CAS',
@@ -24,7 +26,7 @@ describe('Remove Assessment Grade (e2e)', () => {
       }
     })
 
-    const discipline = await prisma.discipline.create({
+    discipline = await prisma.discipline.create({
       data: {
         name: 'discipline-1'
       }
@@ -39,11 +41,11 @@ describe('Remove Assessment Grade (e2e)', () => {
       civilId: '00000',
     }
 
-    const student = await prisma.user.create({
+    student = await prisma.user.create({
       data
     })
 
-    assessment = await prisma.assessment.create({
+    const assessment = await prisma.assessment.create({
       data: {
         studentId: student.id,
         disciplineId: discipline.id,
@@ -59,8 +61,8 @@ describe('Remove Assessment Grade (e2e)', () => {
     await app.close()
   })
 
-  it ('PATCH /assessments/:id/remove', async () => {
-    const administrator = await prisma.user.create({
+  it ('PATCH /disciplines/:disciplineId/assessment/remove', async () => {
+    await prisma.user.create({
       data: {
         username: 'John Doe',
         civilId: '02345',
@@ -79,9 +81,11 @@ describe('Remove Assessment Grade (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .patch(`/assessments/${assessment.id}/remove`)
+      .patch(`/disciplines/${discipline.id}/assessment/remove`)
       .set('Authorization', `Bearer ${token}`)
       .send({
+        courseId: course.id,
+        studentId: student.id,
         vf: -1
       })
 

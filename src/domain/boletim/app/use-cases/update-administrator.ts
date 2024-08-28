@@ -65,16 +65,18 @@ export class UpdateAdministratorUseCase {
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
     if (cpfOrError.isLeft()) return left(cpfOrError.value)
 
-    await passwordOrError.value.hash()
+    if (password) {
+      const isEqualsPassword = await administrator.passwordHash.compare(password)
+      if (!isEqualsPassword) await passwordOrError.value.hash()
+    }
+
     administrator.username = nameOrError.value
     administrator.email = emailOrError.value
     administrator.passwordHash = passwordOrError.value
     administrator.birthday = birthdayOrError.value
     administrator.cpf = cpfOrError.value
     administrator.civilId = civilId ?? administrator.civilId
-
-    await this.administratorsRepository.save(administrator)
-
+    
     administrator.addDomainAdministratorEvent(
       new AdministratorEvent({
         administrator,
@@ -82,6 +84,8 @@ export class UpdateAdministratorUseCase {
         reporterIp: userIp
       })
     )
+
+    await this.administratorsRepository.save(administrator)
 
     return right(null)
   }

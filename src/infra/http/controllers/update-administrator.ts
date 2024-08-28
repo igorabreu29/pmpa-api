@@ -28,10 +28,10 @@ export async function updateAdministrator(
           id: z.string().uuid()
         }),
         body: z.object({
-          username: z.string().min(3).max(50).optional(),
-          email: z.string().email().optional(),
-          cpf: z.string().min(14).max(14).optional(),
-          password: z.string().min(6).max(20).optional(),
+          username: z.string().optional(),
+          email: z.string().optional(),
+          cpf: z.string().optional(),
+          password: z.string().optional(),
           birthday: z.string().transform(birthday => {
             const [day, month, year] = birthday.split('/')
 

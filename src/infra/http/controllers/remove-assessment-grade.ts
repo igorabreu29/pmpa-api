@@ -16,13 +16,15 @@ export async function removeAssessmentGrade(
 ) {
   app 
     .withTypeProvider<ZodTypeProvider>()
-    .patch('/assessments/:id/remove', {
+    .patch('/disciplines/:disciplineId/assessment/remove', {
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         params: z.object({
-          id: z.string().uuid()
+          disciplineId: z.string().uuid()
         }),
         body: z.object({
+          courseId: z.string().uuid(),
+          studentId: z.string().uuid(),
           vf: z.number().optional(),
           avi: z.number().optional(),
           avii: z.number().optional(),
@@ -30,8 +32,8 @@ export async function removeAssessmentGrade(
         })
       }
     }, async (req, res) => {
-      const { id } = req.params
-      const { vf, avi, avii, vfe } = req.body
+      const { disciplineId } = req.params
+      const { vf, avi, avii, vfe, courseId, studentId } = req.body
 
       const { payload: { role, sub } } = req.user
 
@@ -40,7 +42,9 @@ export async function removeAssessmentGrade(
       makeOnAssessmentUpdated()
       const useCase = makeRemoveAssessmentGradeUseCase()
       const result = await useCase.execute({
-        id,
+        courseId,
+        studentId,
+        disciplineId,
         vf,
         avi,
         avii,

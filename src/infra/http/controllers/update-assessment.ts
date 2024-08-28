@@ -18,13 +18,15 @@ export async function updateAssessment(
 ) {
   app 
     .withTypeProvider<ZodTypeProvider>()
-    .patch('/assessments/:id', {
+    .put('/disciplines/:disciplineId/assessment', {
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         params: z.object({
-          id: z.string().uuid()
+          disciplineId: z.string().uuid()
         }),
         body: z.object({
+          courseId: z.string().uuid(),
+          studentId: z.string().uuid(),
           vf: z.number().optional(),
           avi: z.number().optional(),
           avii: z.number().optional(),
@@ -32,8 +34,8 @@ export async function updateAssessment(
         })
       }
     }, async (req, res) => {
-      const { id } = req.params
-      const { vf, avi, avii, vfe } = req.body
+      const { disciplineId } = req.params
+      const { vf, avi, avii, vfe, courseId, studentId } = req.body
 
       const { payload: { role, sub } } = req.user
 
@@ -42,7 +44,9 @@ export async function updateAssessment(
       makeOnAssessmentUpdated()
       const useCase = makeUpdateAssessmentUseCase()
       const result = await useCase.execute({
-        id,
+        studentId,
+        courseId,
+        disciplineId,
         vf,
         avi,
         avii,
