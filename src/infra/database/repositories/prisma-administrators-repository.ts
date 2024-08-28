@@ -71,6 +71,10 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
         password: true
       },
 
+      orderBy: {
+        username: 'desc',
+      },
+
       skip: (page - 1) * PER_PAGE,
       take: page * PER_PAGE
     })
@@ -85,10 +89,6 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
           contains: username
         },
       },
-
-      orderBy: {
-        createdAt: 'desc'
-      }
     })
     
     const pages = Math.ceil(administratorsCount / PER_PAGE)
