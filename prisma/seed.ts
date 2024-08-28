@@ -2,10 +2,12 @@ import { prisma } from "@/infra/database/lib/prisma.ts"
 import type { Prisma } from "@prisma/client"
 
 async function seed() {
+  await prisma.userOnCourse.deleteMany()
+  await prisma.report.deleteMany()
   await prisma.user.deleteMany()
+  await prisma.courseOnPole.deleteMany()
   await prisma.course.deleteMany()
   await prisma.pole.deleteMany()
-  await prisma.userOnCourse.deleteMany()
 
   await prisma.user.create({
     data: {
