@@ -6,7 +6,9 @@ import { Role } from "../../enterprise/entities/authenticate.ts";
 import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
 
 interface RemoveAssessmentGradeUseCaseRequest {
-  id: string
+  studentId: string
+  disciplineId: string
+  courseId: string
   vf?: number
   avi?: number
   avii?: number
@@ -28,7 +30,9 @@ export class RemoveAssessmentGradeUseCase {
   ) {}
 
   async execute({
-    id,
+    studentId,
+    disciplineId,
+    courseId,
     vf,
     avi,
     avii,
@@ -39,7 +43,7 @@ export class RemoveAssessmentGradeUseCase {
   }: RemoveAssessmentGradeUseCaseRequest): Promise<RemoveAssessmentGradeUseCaseResponse> {
     if (role === 'student') return left(new NotAllowedError())
 
-    const assessment = await this.assessmentsRepository.findById({ id })
+    const assessment = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({ courseId, disciplineId, studentId })
     if (!assessment) return left(new ResourceNotFoundError('Assessment not found.'))
 
     assessment.vf = vf ? null : assessment.vf
@@ -47,13 +51,14 @@ export class RemoveAssessmentGradeUseCase {
     assessment.avii = avii ? null : assessment.avii
     assessment.vfe = vfe ? null : assessment.vfe
     
+    await this.assessmentsRepository.update(assessment)
+    
     assessment.addDomainAssessmentEvent(new AssessmentEvent({
       assessment,
       reporterId: userId,
       reporterIp: userIp
     }))
 
-    await this.assessmentsRepository.update(assessment)
 
     return right(null)
   }

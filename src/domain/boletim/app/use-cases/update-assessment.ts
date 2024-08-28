@@ -8,7 +8,9 @@ import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { AssessmentUpdatedEvent } from "../../enterprise/events/assessment-updated-event.ts";
 
 interface UpdateAssessmentUseCaseUseCaseRequest {
-  id: string
+  studentId: string
+  disciplineId: string
+  courseId: string
   userId: string
   userIp: string
   vf?: number
@@ -27,7 +29,9 @@ export class UpdateAssessmentUseCaseUseCase {
   ) {}
 
   async execute({
-    id,
+    studentId,
+    disciplineId,
+    courseId,
     userId,
     userIp,
     vf,
@@ -38,7 +42,7 @@ export class UpdateAssessmentUseCaseUseCase {
   }: UpdateAssessmentUseCaseUseCaseRequest): Promise<UpdateAssessmentUseCaseUseCaseResponse> {
     if (role === 'student') return left(new NotAllowedError())
 
-    const assessment = await this.assessmentsRepository.findById({ id }) 
+    const assessment = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({ studentId, disciplineId, courseId }) 
     if (!assessment) return left(new ResourceNotFoundError('Assessment not found.'))
 
     const assessmentOrError = Assessment.create({
