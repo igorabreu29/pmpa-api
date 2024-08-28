@@ -81,7 +81,7 @@ describe('Update Assessment (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .put(`/disciplines/${discipline}/assessment`)
+      .put(`/disciplines/${discipline.id}/assessment`)
       .send({
       })
       .set('Authorization', `Bearer ${token}`)
