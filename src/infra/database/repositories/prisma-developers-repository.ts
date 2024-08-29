@@ -9,17 +9,59 @@ export class PrismaDevelopersRepository implements DevelopersRepository {
       where: {
         role: 'DEV',
         id,
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
+        profile: {
+          select: {
+            userId: true,
+            fatherName: true,
+            motherName: true,
+            county: true,
+            militaryId: true,
+            state: true
+          }
+        },
       }
     })
     if (!developer) return null
     
-    return PrismaDevelopersMapper.toDomain(developer)
+    return PrismaDevelopersMapper.toDomain({
+      ...developer,
+      profile: developer.profile ?? undefined
+    })
   }
 
   async findByCPF(cpf: string): Promise<Developer | null> {
     const developer = await prisma.user.findUnique({
       where: {
         cpf,
+        role: 'DEV'
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
       }
     })
     if (!developer) return null
@@ -31,6 +73,21 @@ export class PrismaDevelopersRepository implements DevelopersRepository {
     const developer = await prisma.user.findUnique({
       where: {
         email,
+        role: 'DEV'
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
       }
     })
     if (!developer) return null
@@ -52,7 +109,32 @@ export class PrismaDevelopersRepository implements DevelopersRepository {
         id: prismaMapper.id,
         role: 'DEV'
       },
-      data: prismaMapper
+      data: {
+        ...prismaMapper,
+        profile: {
+          upsert: {
+            where: {
+              userId: developer.id.toValue()
+            },
+
+            create: {
+              fatherName: developer.parent?.fatherName,
+              motherName: developer.parent?.motherName,
+              county: developer.county,
+              militaryId: developer.militaryId,
+              state: developer.state
+            },
+            
+            update: {
+              fatherName: developer.parent?.fatherName,
+              motherName: developer.parent?.motherName,
+              county: developer.county,
+              militaryId: developer.militaryId,
+              state: developer.state
+            }
+          }
+        }
+      }
     })
   }
 }

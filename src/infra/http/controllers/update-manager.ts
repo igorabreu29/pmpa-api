@@ -44,8 +44,8 @@ export async function updateManager(
 
             return date
           }).optional(),
-          civilId: z.number().optional(),
-          militaryId: z.number().optional(),
+          civilId: z.string().optional(),
+          militaryId: z.string().optional(),
           motherName: z.string().min(3).max(50).optional(),
           fatherName: z.string().min(3).max(50).optional(),
           state: z.string().optional(),

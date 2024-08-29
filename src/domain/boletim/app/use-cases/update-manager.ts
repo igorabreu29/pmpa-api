@@ -31,8 +31,8 @@ interface UpdateManagerUseCaseRequest {
   email?: string
   cpf?: string
   password?: string
-  civilId?: number
-  militaryId?: number
+  civilId?: string
+  militaryId?: string
   motherName?: string
   fatherName?: string
   birthday?: Date
@@ -146,6 +146,11 @@ export class UpdateManagerUseCase {
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
     if (cpfOrError.isLeft()) return left(cpfOrError.value)
+
+    if (password) {
+      const isEqualsPassword = await manager.passwordHash.compare(password)
+      if (!isEqualsPassword) await passwordOrError.value.hash()
+    }
   
     manager.username = nameOrError.value
     manager.email = emailOrError.value
@@ -161,8 +166,6 @@ export class UpdateManagerUseCase {
     manager.state = state ?? manager.state
     manager.county = county ?? manager.county
 
-    await this.managersRepository.save(manager)
-    
     manager.addDomainManagerEvent(
       new ManagerEvent({
         manager,
@@ -171,6 +174,9 @@ export class UpdateManagerUseCase {
         reporterIp: userIp
       })
     )
+
+    await this.managersRepository.save(manager)
+
     return right(null)
   }
 }

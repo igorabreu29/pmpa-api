@@ -11,43 +11,128 @@ export class PrismaManagersRepository implements ManagersRepository {
   async findById(id: string): Promise<Manager | null> {
     const manager = await prisma.user.findUnique({
       where: {
-        id
+        id,
+        role: 'MANAGER'
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
+        profile: {
+          select: {
+            userId: true,
+            fatherName: true,
+            motherName: true,
+            county: true,
+            militaryId: true,
+            state: true
+          }
+        },
       }
     }) 
     if (!manager) return null
 
-    return PrismaManagersMapper.toDomain(manager)
+    return PrismaManagersMapper.toDomain({
+      ...manager,
+      profile: manager.profile ?? undefined
+    })
   }
 
   async findByCPF(cpf: string): Promise<Manager | null> {
     const manager = await prisma.user.findUnique({
       where: {
-        cpf
+        cpf,
+        role: 'MANAGER'
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
       }
     }) 
     if (!manager) return null
 
-    return PrismaManagersMapper.toDomain(manager)
+    return PrismaManagersMapper.toDomain({
+      ...manager,
+      profile: undefined
+    })
   }
 
   async findByEmail(email: string): Promise<Manager | null> {
     const manager = await prisma.user.findUnique({
       where: {
-        email
+        email,
+        role: 'MANAGER'
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
       }
     }) 
     if (!manager) return null
 
-    return PrismaManagersMapper.toDomain(manager)
+    return PrismaManagersMapper.toDomain({
+      ...manager,
+      profile: undefined
+    })
   }
 
   async findDetailsById(id: string): Promise<ManagerDetails | null> {
     const managerDetails = await prisma.user.findUnique({
       where: {
-        id
+        id,
+        role: 'MANAGER'
       },
 
-      include: {
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        role: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        profile: {
+          select: {
+            fatherName: true,
+            motherName: true,
+            county: true,
+            militaryId: true,
+            state: true
+          }
+        },
         usersOnCourses: {
           select: {
             course: true,
@@ -74,6 +159,11 @@ export class PrismaManagersRepository implements ManagersRepository {
       birthday: managerDetails.birthday,
       assignedAt: managerDetails.createdAt,
       role: managerDetails.role,
+      militaryId: managerDetails.profile?.militaryId,
+      state: managerDetails.profile?.state,
+      county: managerDetails.profile?.county,
+      motherName: managerDetails.profile?.motherName,
+      fatherName: managerDetails.profile?.fatherName,
       isLoginConfirmed: managerDetails.isLoginConfirmed,
       createdAt: managerDetails.createdAt,
       courses: managerDetails.usersOnCourses.map(item => {
@@ -159,7 +249,32 @@ export class PrismaManagersRepository implements ManagersRepository {
         id: prismaMapper.id,
         role: 'MANAGER'
       },
-      data: prismaMapper
+      data: {
+        ...prismaMapper,
+        profile: {
+          upsert: {
+            where: {
+              userId: manager.id.toValue()
+            },
+
+            create: {
+              fatherName: manager.parent?.fatherName,
+              motherName: manager.parent?.motherName,
+              county: manager.county,
+              militaryId: manager.militaryId,
+              state: manager.state
+            },
+            
+            update: {
+              fatherName: manager.parent?.fatherName,
+              motherName: manager.parent?.motherName,
+              county: manager.county,
+              militaryId: manager.militaryId,
+              state: manager.state
+            }
+          }
+        }
+      },
     })
 
     DomainEvents.dispatchEventsForAggregate(manager.id)

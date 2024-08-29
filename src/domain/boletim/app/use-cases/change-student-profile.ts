@@ -15,9 +15,13 @@ interface ChangeStudentProfileUseCaseRequest {
   username?: string
   email?: string
   password?: string
+  civilId?: string
+  militaryId?: string
   fatherName?: string
   motherName?: string
   birthday?: Date
+  county?: string
+  state?: string
 }
 
 type ChangeStudentProfileUseCaseResponse = Either<
@@ -32,7 +36,19 @@ export class ChangeStudentProfileUseCase {
     private studentsRepository: StudentsRepository
   ) {}
 
-  async execute({ id, username, email, password, fatherName, motherName, birthday }: ChangeStudentProfileUseCaseRequest): Promise<ChangeStudentProfileUseCaseResponse> {
+  async execute({ 
+    id, 
+    username, 
+    email, 
+    password, 
+    civilId,
+    militaryId,
+    fatherName, 
+    motherName, 
+    birthday,
+    state,
+    county
+  }: ChangeStudentProfileUseCaseRequest): Promise<ChangeStudentProfileUseCaseResponse> {
     const student = await this.studentsRepository.findById(id)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
 
@@ -46,14 +62,23 @@ export class ChangeStudentProfileUseCase {
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
 
+    if (password) {
+      const isEqualsPassword = await student.passwordHash.compare(password)
+      if (!isEqualsPassword) await passwordOrError.value.hash()
+    }
+
     student.username = nameOrError.value
     student.email = emailOrError.value
     student.passwordHash = passwordOrError.value
+    student.civilId = civilId ?? student.civilId
+    student.militaryId = militaryId ?? student.militaryId
     student.parent = {
       fatherName: fatherName ?? student.parent?.fatherName,
       motherName: motherName ?? student.parent?.motherName
     }
     student.birthday = birthdayOrError.value
+    student.state = state ?? student.state
+    student.county = county ?? student.county
 
     await this.studentsRepository.updateProfile(student)
 

@@ -34,7 +34,7 @@ describe('Create Administrator (e2e)', () => {
       password: 'node-20',
       email: 'igor29nahan@gmail.com',
       birthday: '29/01/2006',
-      civilId: 0e5,
+      civilId: '0e5',
     }
 
     const authenticateResponse = await request(app.server)

@@ -10,8 +10,9 @@ import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts"
 import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts"
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts"
-import { Birthday } from "./value-objects/birthday.ts"
 import { InvalidDateError } from "@/core/errors/domain/invalid-date.ts"
+import { Parent } from "@/core/types/student.ts"
+import { Birthday } from "./value-objects/birthday.ts"
 
 export type DeveloperRole = 'dev'
 
@@ -22,8 +23,15 @@ interface DeveloperProps {
   cpf: CPF
   role: DeveloperRole
   avatarUrl?: string | null
-  civilId: string
   birthday: Birthday
+
+  parent?: Parent
+
+  civilId: string
+  militaryId?: string
+
+  state?: string
+  county?: string
   createdAt: Date
 }
 
@@ -64,6 +72,20 @@ export class Developer extends Entity<DeveloperProps> {
     return this.props.role
   }
 
+  get parent() {
+    return this.props.parent
+  }
+  set parent(value) {
+    this.props.parent = value
+  }
+
+  get militaryId() {
+    return this.props.militaryId
+  }
+  set militaryId(value) {
+    this.props.militaryId = value
+  }
+
   get civilId() {
     return this.props.civilId
   }
@@ -76,6 +98,20 @@ export class Developer extends Entity<DeveloperProps> {
   }
   set birthday(value) {
    this.props.birthday = value
+  }
+
+  get state() {
+    return this.props.state
+  }
+  set state(value) {
+    this.props.state = value
+  }
+
+  get county() {
+    return this.props.county
+  }
+  set county(value) {
+    this.props.county = value
   }
 
   get createdAt() {

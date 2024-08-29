@@ -3,6 +3,7 @@ import { ValueObject } from "@/core/entities/value-object.ts";
 import { Course } from "../course.ts";
 import { Pole } from "../pole.ts";
 import { Role } from "../authenticate.ts";
+import { Parent } from "@/core/types/student.ts";
 
 interface ManagerDetailsProps {
   managerId: UniqueEntityId
@@ -14,6 +15,11 @@ interface ManagerDetailsProps {
   civilId: string
   avatarUrl?: string
   role: Role
+
+  militaryId?: string
+  state?: string
+  county?: string
+  parent?: Parent
 
   courses: Course[]
   poles: Pole[]

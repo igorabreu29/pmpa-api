@@ -9,8 +9,16 @@ import { Password } from '@/domain/boletim/enterprise/entities/value-objects/pas
 import { defineRoleAccessToDomain } from '@/infra/utils/define-role.ts';
 import { Prisma, User as PrismaDeveloper } from '@prisma/client'
 
+type PrismaDevelopers = PrismaDeveloper & {
+  profile?: Prisma.ProfileUncheckedCreateInput
+}
+
+type PrismaDevelopersPrismaResponse = Prisma.UserUncheckedCreateInput & {
+  profile?: Prisma.ProfileUncheckedCreateInput
+}
+
 export class PrismaDevelopersMapper {
-  static toDomain(developer: PrismaDeveloper): Developer {
+  static toDomain(developer: PrismaDevelopers): Developer {
     const formattedCPF = formatCPF(developer.cpf)
 
     const cpfOrError = CPF.create(formattedCPF)
@@ -33,14 +41,21 @@ export class PrismaDevelopersMapper {
       civilId: developer.civilId,
       birthday: birthdayOrError.value,
       createdAt: developer.createdAt,
-      avatarUrl: developer.avatarUrl
+      avatarUrl: developer.avatarUrl,
+      county: developer?.profile?.county ?? undefined,
+      state: developer?.profile?.state ?? undefined,
+      militaryId: developer?.profile?.militaryId ?? undefined,
+      parent: {
+        fatherName: developer?.profile?.fatherName ?? undefined,
+        motherName: developer?.profile?.motherName ?? undefined,
+      }
     }, new UniqueEntityId(developer.id))
     if (developerOrError.isLeft()) throw new Error(developerOrError.value.message)
 
     return developerOrError.value
   }
 
-  static toPrisma(developer: Developer): Prisma.UserUncheckedCreateInput {
+  static toPrisma(developer: Developer): PrismaDevelopersPrismaResponse {
     return {
       id: developer.id.toValue(),
       username: developer.username.value,
@@ -48,11 +63,18 @@ export class PrismaDevelopersMapper {
       email: developer.email.value,
       password: developer.passwordHash.value,
       civilId: String(developer),
-      isActive: developer.active,
       birthday: developer.birthday?.value,
       avatarUrl: developer.avatarUrl,
       createdAt: developer.createdAt,
-      role: defineRoleAccessToDomain(developer.role)
+      role: defineRoleAccessToDomain(developer.role),
+      profile: {
+        userId: developer.id.toValue(),
+        county: developer.county,
+        state: developer.state,
+        militaryId: developer.militaryId,
+        fatherName: developer.parent?.fatherName,
+        motherName: developer.parent?.motherName,
+      }
     }
   }
 }

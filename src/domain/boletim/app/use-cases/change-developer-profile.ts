@@ -16,6 +16,12 @@ interface ChangeDeveloperProfileUseCaseRequest {
   email?: string
   password?: string
   birthday?: Date
+  civilId?: string
+  militaryId?: string
+  motherName?: string
+  fatherName?: string
+  county?: string
+  state?: string
 }
 
 type ChangeDeveloperProfileUseCaseResponse = Either<
@@ -30,7 +36,19 @@ export class ChangeDeveloperProfileUseCase {
     private developersRepository: DevelopersRepository
   ) {}
 
-  async execute({ id, username, email, password, birthday }: ChangeDeveloperProfileUseCaseRequest): Promise<ChangeDeveloperProfileUseCaseResponse> {
+  async execute({ 
+    id, 
+    username, 
+    email, 
+    password, 
+    birthday,
+    civilId,
+    militaryId,
+    fatherName,
+    motherName,
+    county,
+    state
+  }: ChangeDeveloperProfileUseCaseRequest): Promise<ChangeDeveloperProfileUseCaseResponse> {
     const developer = await this.developersRepository.findById(id)
     if (!developer) return left(new ResourceNotFoundError('Developer not found.'))
 
@@ -44,10 +62,24 @@ export class ChangeDeveloperProfileUseCase {
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
 
+    if (password) {
+      const isEqualsPassword = await developer.passwordHash.compare(password)
+      if (!isEqualsPassword) await passwordOrError.value.hash()
+    }
+
     developer.username = nameOrError.value
     developer.email = emailOrError.value
     developer.passwordHash = passwordOrError.value
     developer.birthday = birthdayOrError.value
+    developer.civilId = civilId ?? developer.civilId
+    developer.militaryId = militaryId ?? developer.militaryId
+    developer.parent = {
+      motherName: motherName ?? developer.parent?.motherName,
+      fatherName: fatherName ?? developer.parent?.fatherName
+    }
+    developer.state = state ?? developer.state
+    developer.county = county ?? developer.county
+      
 
     await this.developersRepository.save(developer)
 

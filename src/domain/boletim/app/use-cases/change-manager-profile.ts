@@ -15,7 +15,13 @@ interface ChangeManagerProfileUseCaseRequest {
   username?: string
   email?: string
   password?: string
+  civilId?: string
+  militaryId?: string
+  fatherName?: string
+  motherName?: string
   birthday?: Date
+  county?: string
+  state?: string
 }
 
 type ChangeManagerProfileUseCaseResponse = Either<
@@ -30,7 +36,19 @@ export class ChangeManagerProfileUseCase {
     private managersRepository: ManagersRepository
   ) {}
 
-  async execute({ id, username, email, password, birthday }: ChangeManagerProfileUseCaseRequest): Promise<ChangeManagerProfileUseCaseResponse> {
+  async execute({     
+    id, 
+    username, 
+    email, 
+    password, 
+    birthday,
+    civilId,
+    militaryId,
+    fatherName,
+    motherName,
+    county,
+    state  
+  }: ChangeManagerProfileUseCaseRequest): Promise<ChangeManagerProfileUseCaseResponse> {
     const manager = await this.managersRepository.findById(id)
     if (!manager) return left(new ResourceNotFoundError('Manager not found.'))
 
@@ -44,10 +62,23 @@ export class ChangeManagerProfileUseCase {
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
 
+    if (password) {
+      const isEqualsPassword = await manager.passwordHash.compare(password)
+      if (!isEqualsPassword) await passwordOrError.value.hash()
+    }
+
     manager.username = nameOrError.value
     manager.email = emailOrError.value
     manager.passwordHash = passwordOrError.value
+    manager.civilId = civilId ?? manager.civilId
+    manager.militaryId = militaryId ?? manager.militaryId
+    manager.parent = {
+      fatherName: fatherName ?? manager.parent?.fatherName,
+      motherName: motherName ?? manager.parent?.motherName
+    }
     manager.birthday = birthdayOrError.value
+    manager.state = state ?? manager.state
+    manager.county = county ?? manager.county
 
     await this.managersRepository.save(manager)
 

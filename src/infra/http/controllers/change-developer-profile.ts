@@ -34,11 +34,28 @@ export async function changeDeveloperProfile(
 
             return date
           }).optional(),
+          motherName: z.string().optional(),
+          fatherName: z.string().optional(),
+          civilId: z.string().optional(),
+          militaryId: z.string().optional(),
+          state: z.string().optional(),
+          county: z.string().optional()
         })
       },
     }, 
   async (req, res) => {
-    const { username, email, password, birthday } = req.body
+    const { 
+      username, 
+      email, 
+      password, 
+      birthday, 
+      motherName, 
+      fatherName,
+      civilId,
+      militaryId,
+      county,
+      state 
+    } = req.body
     const { payload } = req.user
 
     const useCase = makeChangeDeveloperProfileUseCase()
@@ -47,7 +64,13 @@ export async function changeDeveloperProfile(
       username,
       email,
       password,
-      birthday
+      birthday,
+      motherName, 
+      fatherName,
+      civilId,
+      militaryId,
+      county,
+      state 
     })
 
     if (result.isLeft()) {

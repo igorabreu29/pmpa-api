@@ -32,8 +32,8 @@ interface UpdateStudentUseCaseRequest {
   email?: string
   cpf?: string
   password?: string
-  civilId?: number
-  militaryId?: number
+  civilId?: string
+  militaryId?: string
   motherName?: string
   fatherName?: string
   birthday?: Date
@@ -146,6 +146,11 @@ export class UpdateStudentUseCase {
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
     if (cpfOrError.isLeft()) return left(cpfOrError.value)
+      
+    if (password) {
+      const isEqualsPassword = await student.passwordHash.compare(password)
+      if (!isEqualsPassword) await passwordOrError.value.hash()
+    }
   
     student.username = nameOrError.value
     student.email = emailOrError.value

@@ -13,6 +13,7 @@ import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts"
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts"
 import { AggregateRoot } from "@/core/entities/aggregate-root.ts"
 import { DomainEvent } from "@/core/events/domain-event.ts"
+import { Parent } from "@/core/types/student.ts"
 
 export type AdministratorRole = 'admin'
 
@@ -24,9 +25,15 @@ interface AdministratorProps {
   role: AdministratorRole
   avatarUrl?: string | null
   createdAt: Date
+  birthday: Birthday
+
+  parent?: Parent
 
   civilId: string
-  birthday: Birthday
+  militaryId?: string
+
+  state?: string
+  county?: string
 }
 
 
@@ -70,6 +77,20 @@ export class Administrator extends AggregateRoot<AdministratorProps> {
     return this.props.role
   }
 
+  get parent() {
+    return this.props.parent
+  }
+  set parent(value) {
+    this.props.parent = value
+  }
+
+  get militaryId() {
+    return this.props.militaryId
+  }
+  set militaryId(value) {
+    this.props.militaryId = value
+  }
+
   get civilId() {
     return this.props.civilId
   }
@@ -82,6 +103,20 @@ export class Administrator extends AggregateRoot<AdministratorProps> {
   }
   set birthday(value) {
     this.props.birthday = value
+  }
+
+  get state() {
+    return this.props.state
+  }
+  set state(value) {
+    this.props.state = value
+  }
+
+  get county() {
+    return this.props.county
+  }
+  set county(value) {
+    this.props.county = value
   }
 
   get createdAt() {

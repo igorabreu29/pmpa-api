@@ -40,13 +40,30 @@ export async function updateAdministrator(
 
             return date
           }).optional(),
-          civilId: z.number().optional(),
+          civilId: z.string().optional(),
+          militaryId: z.string().optional(),
+          motherName: z.string().min(3).max(50).optional(),
+          fatherName: z.string().min(3).max(50).optional(),
+          state: z.string().optional(),
+          county: z.string().optional()
         })
       },
     }, 
   async (req, res) => {
     const { id } = req.params
-    const { username, email, cpf, password, birthday, civilId } = req.body
+    const { 
+      username, 
+      email, 
+      cpf, 
+      password, 
+      birthday, 
+      civilId,
+      militaryId,
+      motherName,
+      fatherName,
+      county,
+      state
+    } = req.body
     const { payload: { sub, role } } = req.user
 
     const ip = req.ip
@@ -61,6 +78,11 @@ export async function updateAdministrator(
       birthday,
       civilId,
       role,
+      militaryId,
+      motherName,
+      fatherName,
+      county,
+      state,
       userId: sub, 
       userIp: ip,
     })

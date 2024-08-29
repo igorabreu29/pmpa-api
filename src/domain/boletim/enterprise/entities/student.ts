@@ -33,7 +33,7 @@ interface StudentProps {
   parent?: Parent
   
   civilId: string
-  militaryId?: number
+  militaryId?: string
 
   state?: string
   county?: string

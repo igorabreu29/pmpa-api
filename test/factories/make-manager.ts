@@ -33,7 +33,7 @@ export function makeManager(
     passwordHash: passwordOrError.value,
     username: nameOrError.value,
     birthday: birthdayOrError.value,
-    civilId: 0e5,
+    civilId: '0e5',
     ...override
   }, id)
   if (managerOrError.isLeft()) throw new Error('Invalid manager')

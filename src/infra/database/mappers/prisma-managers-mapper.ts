@@ -9,8 +9,16 @@ import { Password } from '@/domain/boletim/enterprise/entities/value-objects/pas
 import { defineRoleAccessToDomain } from '@/infra/utils/define-role.ts';
 import { Prisma, User as PrismaManager } from '@prisma/client'
 
+type PrismaManagers = PrismaManager & {
+  profile?: Prisma.ProfileUncheckedCreateInput
+}
+
+type PrismaManagersPrismaResponse = Prisma.UserUncheckedCreateInput & {
+  profile?: Prisma.ProfileUncheckedCreateInput
+}
+
 export class PrismaManagersMapper {
-  static toDomain(manager: PrismaManager): Manager {
+  static toDomain(manager: PrismaManagers): Manager {
     const formattedCPF = formatCPF(manager.cpf)
 
     const cpfOrError = CPF.create(formattedCPF)
@@ -33,14 +41,21 @@ export class PrismaManagersMapper {
       birthday: birthdayOrError.value,
       civilId: manager.civilId,
       createdAt: manager.createdAt,
-      avatarUrl: manager.avatarUrl
+      avatarUrl: manager.avatarUrl,
+      county: manager?.profile?.county ?? undefined,
+      state: manager?.profile?.state ?? undefined,
+      militaryId: manager?.profile?.militaryId ?? undefined,
+      parent: {
+        fatherName: manager?.profile?.fatherName ?? undefined,
+        motherName: manager?.profile?.motherName ?? undefined,
+      }
     }, new UniqueEntityId(manager.id))
     if (managerOrError.isLeft()) throw new Error(managerOrError.value.message)
 
     return managerOrError.value
   }
 
-  static toPrisma(manager: Manager): Prisma.UserUncheckedCreateInput {
+  static toPrisma(manager: Manager): PrismaManagersPrismaResponse {
     return {
       id: manager.id.toValue(),
       username: manager.username.value,
@@ -51,7 +66,15 @@ export class PrismaManagersMapper {
       birthday: manager.birthday.value,
       avatarUrl: manager.avatarUrl,
       createdAt: manager.createdAt,
-      role: defineRoleAccessToDomain(manager.role)
+      role: defineRoleAccessToDomain(manager.role),
+      profile: {
+        userId: manager.id.toValue(),
+        county: manager.county,
+        state: manager.state,
+        militaryId: manager.militaryId,
+        fatherName: manager.parent?.fatherName,
+        motherName: manager.parent?.motherName,
+      }
     }
   }
 }

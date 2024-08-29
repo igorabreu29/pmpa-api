@@ -9,8 +9,16 @@ import { Password } from '@/domain/boletim/enterprise/entities/value-objects/pas
 import { defineRoleAccessToDomain } from '@/infra/utils/define-role.ts';
 import { Prisma, User as PrismaAdmin } from '@prisma/client'
 
+type PrismaAdmins = PrismaAdmin & {
+  profile?: Prisma.ProfileUncheckedCreateInput
+}
+
+type PrismaAdminsPrismaResponse = Prisma.UserUncheckedCreateInput & {
+  profile?: Prisma.ProfileUncheckedCreateInput
+}
+
 export class PrismaAdministratorsMapper {
-  static toDomain(administrator: PrismaAdmin): Administrator {
+  static toDomain(administrator: PrismaAdmins): Administrator {
     const formattedCPF = formatCPF(administrator.cpf)
 
     const cpfOrError = CPF.create(formattedCPF)
@@ -33,14 +41,21 @@ export class PrismaAdministratorsMapper {
       birthday: birthdayOrError.value,
       civilId: administrator.civilId,
       createdAt: administrator.createdAt,
-      avatarUrl: administrator.avatarUrl
+      avatarUrl: administrator.avatarUrl,
+      county: administrator?.profile?.county ?? undefined,
+      state: administrator?.profile?.state ?? undefined,
+      militaryId: administrator?.profile?.militaryId ?? undefined,
+      parent: {
+        fatherName: administrator?.profile?.fatherName ?? undefined,
+        motherName: administrator?.profile?.motherName ?? undefined,
+      }
     }, new UniqueEntityId(administrator.id))
     if (administratorOrError.isLeft()) throw new Error(administratorOrError.value.message)
 
     return administratorOrError.value
   }
 
-  static toPrisma(administrator: Administrator): Prisma.UserUncheckedCreateInput {
+  static toPrisma(administrator: Administrator): PrismaAdminsPrismaResponse {
     return {
       id: administrator.id.toValue(),
       username: administrator.username.value,
@@ -51,7 +66,15 @@ export class PrismaAdministratorsMapper {
       birthday: administrator.birthday.value,
       avatarUrl: administrator.avatarUrl,
       createdAt: administrator.createdAt,
-      role: defineRoleAccessToDomain(administrator.role)
+      role: defineRoleAccessToDomain(administrator.role),
+      profile: {
+        userId: administrator.id.toValue(),
+        county: administrator.county,
+        state: administrator.state,
+        militaryId: administrator.militaryId,
+        fatherName: administrator.parent?.fatherName,
+        motherName: administrator.parent?.motherName,
+      }
     }
   }
 }

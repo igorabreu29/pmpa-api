@@ -10,17 +10,59 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
       where: {
         id, 
         role: 'ADMIN'
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
+        profile: {
+          select: {
+            userId: true,
+            fatherName: true,
+            motherName: true,
+            county: true,
+            militaryId: true,
+            state: true
+          }
+        },
       }
     })
     if (!administrator) return null
 
-    return PrismaAdministratorsMapper.toDomain(administrator)
+    return PrismaAdministratorsMapper.toDomain({
+      ...administrator,
+      profile: administrator.profile ?? undefined
+    })
   }
 
   async findByCPF(cpf: string): Promise<Administrator | null> {
     const administrator = await prisma.user.findUnique({
       where: {
         cpf, 
+        role: 'ADMIN'
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
       }
     })
     if (!administrator) return null
@@ -32,6 +74,21 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     const administrator = await prisma.user.findUnique({
       where: {
         email, 
+        role: 'ADMIN'
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
       }
     })
     if (!administrator) return null
@@ -66,9 +123,13 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
         username: true,
         cpf: true,
         email: true,
-        birthday: true,
         civilId: true,
-        password: true
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
       },
 
       orderBy: {
@@ -129,7 +190,32 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
         id: prismaMapper.id,
         role: 'ADMIN'
       },
-      data: prismaMapper
+      data: {
+        ...prismaMapper,
+        profile: {
+          upsert: {
+            where: {
+              userId: admin.id.toValue()
+            },
+
+            create: {
+              fatherName: admin.parent?.fatherName,
+              motherName: admin.parent?.motherName,
+              county: admin.county,
+              militaryId: admin.militaryId,
+              state: admin.state
+            },
+            
+            update: {
+              fatherName: admin.parent?.fatherName,
+              motherName: admin.parent?.motherName,
+              county: admin.county,
+              militaryId: admin.militaryId,
+              state: admin.state
+            }
+          }
+        }
+      }
     })
 
     DomainEvents.dispatchEventsForAggregate(admin.id)

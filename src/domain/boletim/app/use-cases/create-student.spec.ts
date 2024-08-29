@@ -71,7 +71,7 @@ describe('Create Student Use Case', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilId: 0,
+        civilId: '',
         userId: '',
         userIp: '',
         role: 'student'
@@ -89,7 +89,7 @@ describe('Create Student Use Case', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilId: 0,
+        civilId: '',
         userId: '',
         userIp: '',
         role: 'manager'
@@ -110,7 +110,7 @@ describe('Create Student Use Case', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilId: 0,
+        civilId: '',
         userId: '',
         userIp: '',
         role: 'manager'
@@ -139,7 +139,7 @@ describe('Create Student Use Case', () => {
         email: 'john@example.com',
         username: 'John Doe',
         birthday: new Date('2004-10-2'),
-        civilId: 44444,
+        civilId: '44444',
         userId: '',
         userIp: '',
         role: 'manager'
@@ -176,7 +176,7 @@ describe('Create Student Use Case', () => {
         email: student.email.value,
         username: student.username.value,
         birthday: new Date('2004'),
-        civilId: 0,
+        civilId: '',
         userId: '',
         userIp: '',
         role: 'manager'
@@ -205,7 +205,7 @@ describe('Create Student Use Case', () => {
         email: student.email.value,
         username: student.username.value,
         birthday: student.birthday.value,
-        civilId: 0,
+        civilId: '',
         userId: '',
         userIp: '',
         role: 'manager'
@@ -240,7 +240,7 @@ describe('Create Student Use Case', () => {
         email: student.email.value,
         username: student.username.value,
         birthday: student.birthday.value,
-        civilId: 0,
+        civilId: '',
         userId: '',
         userIp: '',
         role: 'manager'
@@ -269,7 +269,7 @@ describe('Create Student Use Case', () => {
         email: student.email.value,
         username: student.username.value,
         birthday: student.birthday.value,
-        civilId: 0,
+        civilId: '',
         userId: '',
         userIp: '',
         role: 'manager'

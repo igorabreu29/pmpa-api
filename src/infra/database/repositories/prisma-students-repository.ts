@@ -12,17 +12,59 @@ export class PrismaStudentsRepository implements StudentsRepository {
       where: {
         id,
         role: 'STUDENT',
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
+        profile: {
+          select: {
+            userId: true,
+            fatherName: true,
+            motherName: true,
+            county: true,
+            militaryId: true,
+            state: true
+          }
+        },
       }
     }) 
     if (!student) return null
 
-    return PrismaStudentsMapper.toDomain(student)
+    return PrismaStudentsMapper.toDomain({
+      ...student,
+      profile: student.profile ?? undefined
+    })
   }
 
   async findByCPF(cpf: string): Promise<Student | null> {
     const student = await prisma.user.findUnique({
       where: {
         cpf,
+        role: 'STUDENT'
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
       }
     }) 
     if (!student) return null
@@ -34,6 +76,20 @@ export class PrismaStudentsRepository implements StudentsRepository {
     const student = await prisma.user.findUnique({
       where: {
         email,
+      },
+
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        role: true,
       }
     }) 
     if (!student) return null
@@ -48,7 +104,27 @@ export class PrismaStudentsRepository implements StudentsRepository {
         role: 'STUDENT'
       },
 
-      include: {
+      select: {
+        id: true,
+        username: true,
+        cpf: true,
+        email: true,
+        civilId: true,
+        birthday: true,
+        avatarUrl: true,
+        password: true,
+        role: true,
+        createdAt: true,
+        isLoginConfirmed: true,
+        profile: {
+          select: {
+            fatherName: true,
+            motherName: true,
+            county: true,
+            militaryId: true,
+            state: true
+          }
+        },
         usersOnCourses: {
           select: {
             course: true,
@@ -57,8 +133,8 @@ export class PrismaStudentsRepository implements StudentsRepository {
                 pole: true
               }
             }
-          },
-        }
+          }
+        },
       }
     })
 
@@ -73,6 +149,11 @@ export class PrismaStudentsRepository implements StudentsRepository {
       civilId: studentDetails.civilId,
       avatarUrl: studentDetails.avatarUrl,
       birthday: studentDetails.birthday,
+      militaryId: studentDetails.profile?.militaryId,
+      state: studentDetails.profile?.state,
+      county: studentDetails.profile?.county,
+      motherName: studentDetails.profile?.motherName,
+      fatherName: studentDetails.profile?.fatherName,
       assignedAt: studentDetails.createdAt,
       role: studentDetails.role,
       isLoginConfirmed: studentDetails.isLoginConfirmed,
@@ -179,12 +260,25 @@ export class PrismaStudentsRepository implements StudentsRepository {
         isLoginConfirmed: new Date(),
 
         profile: {
-          create: {
-            fatherName: student.parent?.fatherName,
-            motherName: student.parent?.motherName,
-            county: student.county,
-            militaryId: student.militaryId,
-            state: student.state
+          upsert: {
+            where: {
+              userId: student.id.toValue()
+            },
+
+            create: {
+              fatherName: student.parent?.fatherName,
+              motherName: student.parent?.motherName,
+              county: student.county,
+              militaryId: student.militaryId,
+              state: student.state
+            },
+            update: {
+              fatherName: student.parent?.fatherName,
+              motherName: student.parent?.motherName,
+              county: student.county,
+              militaryId: student.militaryId,
+              state: student.state
+            }
           }
         }
       }
@@ -202,9 +296,26 @@ export class PrismaStudentsRepository implements StudentsRepository {
       data: {
         ...prismaMapper,
         profile: {
-          update: {
-            fatherName: student.parent?.fatherName,
-            motherName: student.parent?.motherName
+          upsert: {
+            where: {
+              userId: student.id.toValue()
+            },
+
+            create: {
+              fatherName: student.parent?.fatherName,
+              motherName: student.parent?.motherName,
+              county: student.county,
+              militaryId: student.militaryId,
+              state: student.state
+            },
+            
+            update: {
+              fatherName: student.parent?.fatherName,
+              motherName: student.parent?.motherName,
+              county: student.county,
+              militaryId: student.militaryId,
+              state: student.state
+            }
           }
         }
       }

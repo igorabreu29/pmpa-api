@@ -49,7 +49,7 @@ describe('Create Manager (e2e)', () => {
       password: 'node-20',
       email: 'igor29nahan@gmail.com',
       birthday: '29/01/2006',
-      civilId: 0e5,
+      civilId: '0e5',
       courseId: course.id,
       poleId: pole.id
     }

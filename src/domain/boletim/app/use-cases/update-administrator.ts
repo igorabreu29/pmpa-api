@@ -24,7 +24,12 @@ interface UpdateAdministratorUseCaseRequest {
   email?: string
   password?: string
   cpf?: string
-  civilId?: number
+  civilId?: string
+  militaryId?: string
+  motherName?: string
+  fatherName?: string
+  state?: string
+  county?: string
   birthday?: Date
 
   role: string
@@ -45,7 +50,7 @@ export class UpdateAdministratorUseCase {
     private administratorsRepository: AdministratorsRepository
   ) {}
 
-  async execute({ id, username, email, password, cpf, civilId, birthday, role, userId, userIp }: UpdateAdministratorUseCaseRequest): Promise<UpdateAdministratorUseCaseResponse> {
+  async execute({ id, username, email, password, cpf, civilId, militaryId, motherName, fatherName, state, county, birthday, role, userId, userIp }: UpdateAdministratorUseCaseRequest): Promise<UpdateAdministratorUseCaseResponse> {
     if (role !== 'dev') return left(new NotAllowedError())
       
     const administrator = await this.administratorsRepository.findById(id)
@@ -76,6 +81,13 @@ export class UpdateAdministratorUseCase {
     administrator.birthday = birthdayOrError.value
     administrator.cpf = cpfOrError.value
     administrator.civilId = civilId ?? administrator.civilId
+    administrator.militaryId = militaryId ?? administrator.militaryId
+    administrator.parent = {
+      motherName: motherName ?? administrator.parent?.motherName,
+      fatherName: fatherName ?? administrator.parent?.fatherName
+    }
+    administrator.state = state ?? administrator.state
+    administrator.county = county ?? administrator.county
     
     administrator.addDomainAdministratorEvent(
       new AdministratorEvent({

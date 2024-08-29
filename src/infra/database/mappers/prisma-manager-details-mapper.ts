@@ -6,12 +6,13 @@ import { ManagerDetails } from '@/domain/boletim/enterprise/entities/value-objec
 import { Name } from '@/domain/boletim/enterprise/entities/value-objects/name.ts';
 import { defineRoleAccessToPrisma } from '@/infra/utils/define-role.ts';
 import {
-  User as PrismaManagerDetails,
+  User as PrismaManager,
   Pole as PrismaPole,
-  Course as PrismaCourse
+  Course as PrismaCourse,
+  Prisma
 } from '@prisma/client';
 
-type PrismaManagersDetails = PrismaManagerDetails & {
+type PrismaManagersDetails = PrismaManager & Prisma.ProfileUpdateInput & {
   poles: PrismaPole[]
   courses: PrismaCourse[]
 }
@@ -22,7 +23,7 @@ export class PrismaManagerDetailsMapper {
       managerId: new UniqueEntityId(managerDetails.id),
       username: managerDetails.username,
       birthday: managerDetails.birthday as Date,
-      civilId: Number(managerDetails.civilId),
+      civilId: managerDetails.civilId,
       cpf: managerDetails.cpf,
       email: managerDetails.email,
       assignedAt: managerDetails.createdAt,

@@ -6,11 +6,19 @@ import { CPF } from '@/domain/boletim/enterprise/entities/value-objects/cpf.ts';
 import { Email } from '@/domain/boletim/enterprise/entities/value-objects/email.ts';
 import { Name } from '@/domain/boletim/enterprise/entities/value-objects/name.ts';
 import { Password } from '@/domain/boletim/enterprise/entities/value-objects/password.ts';
-import { defineRoleAccessToDomain, defineRoleAccessToPrisma } from '@/infra/utils/define-role.ts';
+import { defineRoleAccessToDomain } from '@/infra/utils/define-role.ts';
 import { Prisma, User as PrismaStudent } from '@prisma/client'
 
+type PrismaStudents = PrismaStudent & {
+  profile?: Prisma.ProfileUncheckedCreateInput
+}
+
+type PrismaStudentsPrismaResponse = Prisma.UserUncheckedCreateInput & {
+  profile?: Prisma.ProfileUncheckedCreateInput
+}
+
 export class PrismaStudentsMapper {
-  static toDomain(student: PrismaStudent): Student {
+  static toDomain(student: PrismaStudents): Student {
     const formattedCPF = formatCPF(student.cpf)
 
     const cpfOrError = CPF.create(formattedCPF)
@@ -36,13 +44,20 @@ export class PrismaStudentsMapper {
       avatarUrl: student.avatarUrl,
       createdAt: student.createdAt,
       isLoginConfirmed: student.isLoginConfirmed ? true : undefined,
+      county: student?.profile?.county ?? undefined,
+      state: student?.profile?.state ?? undefined,
+      militaryId: student?.profile?.militaryId ?? undefined,
+      parent: {
+        fatherName: student?.profile?.fatherName ?? undefined,
+        motherName: student?.profile?.motherName ?? undefined,
+      }
     }, new UniqueEntityId(student.id))
     if (studentOrError.isLeft()) throw new Error(studentOrError.value.message)
 
     return studentOrError.value
   }
 
-  static toPrisma(student: Student): Prisma.UserUncheckedCreateInput {
+  static toPrisma(student: Student): PrismaStudentsPrismaResponse {
     return {
       id: student.id.toValue(),
       username: student.username.value,
@@ -53,7 +68,15 @@ export class PrismaStudentsMapper {
       birthday: student.birthday.value,
       avatarUrl: student.avatarUrl,
       createdAt: student.createdAt,
-      role: defineRoleAccessToDomain(student.role)
+      role: defineRoleAccessToDomain(student.role),
+      profile: {
+        userId: student.id.toValue(),
+        county: student.county,
+        state: student.state,
+        militaryId: student.militaryId,
+        fatherName: student.parent?.fatherName,
+        motherName: student.parent?.motherName,
+      }
     }
   }
 }

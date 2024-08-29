@@ -35,13 +35,28 @@ export async function changeStudentProfile(
 
             return date
           }).optional(),
-          motherName: z.string().min(3).max(50).optional(),
-          fatherName: z.string().min(3).max(50).optional(),
+          motherName: z.string().optional(),
+          fatherName: z.string().optional(),
+          civilId: z.string().optional(),
+          militaryId: z.string().optional(),
+          state: z.string().optional(),
+          county: z.string().optional()
         })
       },
     }, 
   async (req, res) => {
-    const { username, email, password, birthday, motherName, fatherName } = req.body
+    const { 
+      username, 
+      email, 
+      password, 
+      birthday, 
+      motherName, 
+      fatherName,
+      civilId,
+      militaryId,
+      county,
+      state 
+    } = req.body
     const { payload } = req.user
 
     const useCase = makeChangeStudentProfileUseCase()
@@ -53,6 +68,10 @@ export async function changeStudentProfile(
       birthday,
       motherName,
       fatherName,
+      civilId,
+      militaryId,
+      county,
+      state 
     })
 
     if (result.isLeft()) {

@@ -16,6 +16,12 @@ interface ChangeAdministratorProfileUseCaseRequest {
   email?: string
   password?: string
   birthday?: Date
+  civilId?: string
+  militaryId?: string
+  fatherName?: string
+  motherName?: string
+  county?: string
+  state?: string
 }
 
 type ChangeAdministratorProfileUseCaseResponse = Either<
@@ -30,7 +36,19 @@ export class ChangeAdministratorProfileUseCase {
     private administratorsRepository: AdministratorsRepository
   ) {}
 
-  async execute({ id, username, email, password, birthday }: ChangeAdministratorProfileUseCaseRequest): Promise<ChangeAdministratorProfileUseCaseResponse> {
+  async execute({ 
+    id, 
+    username, 
+    email, 
+    password, 
+    birthday,
+    civilId,
+    militaryId,
+    fatherName,
+    motherName,
+    county,
+    state 
+  }: ChangeAdministratorProfileUseCaseRequest): Promise<ChangeAdministratorProfileUseCaseResponse> {
     const administrator = await this.administratorsRepository.findById(id)
     if (!administrator) return left(new ResourceNotFoundError('Administrator not found.'))
 
@@ -44,10 +62,23 @@ export class ChangeAdministratorProfileUseCase {
     if (passwordOrError.isLeft()) return left(passwordOrError.value)
     if (birthdayOrError.isLeft()) return left(birthdayOrError.value)
 
+    if (password) {
+      const isEqualsPassword = await administrator.passwordHash.compare(password)
+      if (!isEqualsPassword) await passwordOrError.value.hash()
+    }
+
     administrator.username = nameOrError.value
     administrator.email = emailOrError.value
     administrator.passwordHash = passwordOrError.value
+    administrator.civilId = civilId ?? administrator.civilId
+    administrator.militaryId = militaryId ?? administrator.militaryId
+    administrator.parent = {
+      fatherName: fatherName ?? administrator.parent?.fatherName,
+      motherName: motherName ?? administrator.parent?.motherName
+    }
     administrator.birthday = birthdayOrError.value
+    administrator.state = state ?? administrator.state
+    administrator.county = county ?? administrator.county
 
     await this.administratorsRepository.save(administrator)
 
