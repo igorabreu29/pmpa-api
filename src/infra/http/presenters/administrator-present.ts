@@ -13,6 +13,7 @@ export class AdministratorPresenter {
       username: administrator.username.value,
       password: '',
       role: defineRoleAccessToDomain(administrator.role),
+      createdAt: administrator.createdAt,
       avatarUrl: administrator.avatarUrl ? administrator.avatarUrl : null,
       birthday: dayjs(administrator.birthday.value).format('DD/MM/YYYY'),
     }

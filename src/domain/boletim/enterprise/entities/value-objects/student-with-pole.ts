@@ -13,7 +13,7 @@ interface StudentWithPoleProps {
   pole: string
 
   birthday: Date
-  civilId: number
+  civilId: string
 }
 
 export class StudentWithPole extends ValueObject<StudentWithPoleProps> {

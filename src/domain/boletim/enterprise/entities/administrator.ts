@@ -25,7 +25,7 @@ interface AdministratorProps {
   avatarUrl?: string | null
   createdAt: Date
 
-  civilId: number
+  civilId: string
   birthday: Birthday
 }
 

@@ -31,7 +31,7 @@ interface CreateManagerUseCaseRequest {
   email: string
   cpf: string
   birthday: Date
-  civilId: number
+  civilId: string
   courseId: string
   poleId: string
 

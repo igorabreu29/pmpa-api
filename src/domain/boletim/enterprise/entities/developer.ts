@@ -22,7 +22,7 @@ interface DeveloperProps {
   cpf: CPF
   role: DeveloperRole
   avatarUrl?: string | null
-  civilId: number
+  civilId: string
   birthday: Birthday
   createdAt: Date
 }

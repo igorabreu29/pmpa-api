@@ -18,7 +18,7 @@ interface SearchProps {
   email: Email
   cpf: CPF
   role: Role
-  civilId: number
+  civilId: string
 
   courses?: Course[]
   poles?: Pole[]

@@ -32,7 +32,7 @@ export class PrismaStudentsMapper {
       cpf: cpfOrError.value,
       passwordHash: passwordOrError.value,
       birthday: birthdayOrError.value,
-      civilId: Number(student.civilId),
+      civilId: student.civilId,
       avatarUrl: student.avatarUrl,
       createdAt: student.createdAt,
       isLoginConfirmed: student.isLoginConfirmed ? true : undefined,

@@ -11,7 +11,7 @@ interface StudentDetailsProps {
   cpf: string
   assignedAt: Date
   birthday: Date
-  civilId: number
+  civilId: string
   avatarUrl?: string
   role: Role
 

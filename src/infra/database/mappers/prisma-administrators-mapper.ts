@@ -7,10 +7,10 @@ import { Email } from '@/domain/boletim/enterprise/entities/value-objects/email.
 import { Name } from '@/domain/boletim/enterprise/entities/value-objects/name.ts';
 import { Password } from '@/domain/boletim/enterprise/entities/value-objects/password.ts';
 import { defineRoleAccessToDomain } from '@/infra/utils/define-role.ts';
-import { Prisma } from '@prisma/client'
+import { Prisma, User as PrismaAdmin } from '@prisma/client'
 
 export class PrismaAdministratorsMapper {
-  static toDomain(administrator: Prisma.UserUncheckedCreateInput): Administrator {
+  static toDomain(administrator: PrismaAdmin): Administrator {
     const formattedCPF = formatCPF(administrator.cpf)
 
     const cpfOrError = CPF.create(formattedCPF)
@@ -31,7 +31,9 @@ export class PrismaAdministratorsMapper {
       cpf: cpfOrError.value,
       passwordHash: passwordOrError.value,
       birthday: birthdayOrError.value,
-      civilId: Number(administrator.civilId)
+      civilId: administrator.civilId,
+      createdAt: administrator.createdAt,
+      avatarUrl: administrator.avatarUrl
     }, new UniqueEntityId(administrator.id))
     if (administratorOrError.isLeft()) throw new Error(administratorOrError.value.message)
 

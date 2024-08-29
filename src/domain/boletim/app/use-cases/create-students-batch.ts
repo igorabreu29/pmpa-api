@@ -30,7 +30,7 @@ interface StudentType {
   username: string
   cpf: string
   email: string
-  civilId: number
+  civilId: string
   poleName: string
   birthday: Date
 }

@@ -24,7 +24,7 @@ interface CreateAdminUseCaseRequest {
   email: string
   cpf: string
   password: string
-  civilId: number
+  civilId: string
   birthday: Date
 
   role: Role

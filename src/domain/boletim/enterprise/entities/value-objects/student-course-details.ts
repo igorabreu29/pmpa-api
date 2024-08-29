@@ -16,7 +16,7 @@ interface StudentCourseDetailsProps {
 
   loginConfirmed?: boolean
   birthday: Date
-  civilId: number
+  civilId: string
 }
 
 export class StudentCourseDetails extends ValueObject<StudentCourseDetailsProps> {

@@ -30,8 +30,10 @@ export class PrismaDevelopersMapper {
       email: emailOrError.value,
       cpf: cpfOrError.value,
       passwordHash: passwordOrError.value,
-      civilId: Number(developer.civilId),
-      birthday: birthdayOrError.value
+      civilId: developer.civilId,
+      birthday: birthdayOrError.value,
+      createdAt: developer.createdAt,
+      avatarUrl: developer.avatarUrl
     }, new UniqueEntityId(developer.id))
     if (developerOrError.isLeft()) throw new Error(developerOrError.value.message)
 

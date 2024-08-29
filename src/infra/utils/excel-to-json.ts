@@ -7,7 +7,7 @@ export interface ExcelCreateStudentsBatch {
     username: string
     cpf: number
     email: string
-    civilId: number
+    civilId: string
     courseName: string
     poleName: string
     birthday: Date

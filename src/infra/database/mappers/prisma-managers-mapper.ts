@@ -31,7 +31,9 @@ export class PrismaManagersMapper {
       cpf: cpfOrError.value,
       passwordHash: passwordOrError.value,
       birthday: birthdayOrError.value,
-      civilId: Number(manager.civilId)
+      civilId: manager.civilId,
+      createdAt: manager.createdAt,
+      avatarUrl: manager.avatarUrl
     }, new UniqueEntityId(manager.id))
     if (managerOrError.isLeft()) throw new Error(managerOrError.value.message)
 
