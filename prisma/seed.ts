@@ -1,11 +1,19 @@
 import { prisma } from "@/infra/database/lib/prisma.ts"
+import { faker } from "@faker-js/faker"
 import type { Prisma } from "@prisma/client"
 
 async function seed() {
-  await prisma.userOnCourse.deleteMany()
-  await prisma.report.deleteMany()
+  await Promise.all([
+    prisma.assessment.deleteMany(),
+    prisma.behavior.deleteMany(),
+    prisma.userOnCourse.deleteMany(),
+    prisma.report.deleteMany(),
+    prisma.courseOnPole.deleteMany(),
+    prisma.courseOnDiscipline.deleteMany(),
+    prisma.courseHistoric.deleteMany()
+  ])
+
   await prisma.user.deleteMany()
-  await prisma.courseOnPole.deleteMany()
   await prisma.course.deleteMany()
   await prisma.pole.deleteMany()
 
@@ -44,14 +52,14 @@ async function seed() {
 
   const studentsToInsert: Prisma.UserUncheckedCreateInput[] = []
 
-  for (let i = 11; i < 26; i++) {
+  for (let i = 11; i <= 25; i++) {
     studentsToInsert.push({
       cpf: `123456789${i}`,
-      email: `john${i}@acne.com`,
-      username: `john-${i}`,
+      email: faker.internet.email(),
+      username: faker.person.fullName(),
       civilId: '00000',
       password: '$2a$08$IIGNU2kgBV5B9EEQmmm.g.cZy8n1WpEl9xJ.39Qd9f4lNiFXt1Xji',
-      birthday: new Date('2002-01-02'),
+      birthday: faker.date.birthdate(),
 
       usersOnCourses: {
         create: {
