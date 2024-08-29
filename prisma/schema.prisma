@@ -43,7 +43,7 @@ model Profile {
   motherName String?
   fatherName String?
 
-  militaryId Int?
+  militaryId String?
 
   state  String?
   county String?
