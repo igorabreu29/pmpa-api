@@ -32,10 +32,10 @@ export async function updateManager(
           courseId: z.string().uuid(),
           newCourseId: z.string().uuid(),
           poleId: z.string().uuid(),
-          username: z.string().min(3).max(50).optional(),
-          email: z.string().email().optional(),
-          cpf: z.string().min(14).max(14).optional(),
-          password: z.string().min(6).max(20).optional(),
+          username: z.string().optional(),
+          email: z.string().optional(),
+          cpf: z.string().optional(),
+          password: z.string().optional(),
           birthday: z.string().transform(birthday => {
             const [day, month, year] = birthday.split('/')
 
@@ -46,10 +46,10 @@ export async function updateManager(
           }).optional(),
           civilId: z.string().optional(),
           militaryId: z.string().optional(),
-          motherName: z.string().min(3).max(50).optional(),
-          fatherName: z.string().min(3).max(50).optional(),
+          motherName: z.string().optional(),
+          fatherName: z.string().optional(),
           state: z.string().optional(),
-          county: z.string().optional()
+          county: z.string().optional(),
         })
       },
     }, 
