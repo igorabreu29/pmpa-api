@@ -246,7 +246,31 @@ export class PrismaStudentsRepository implements StudentsRepository {
         id: prismaMapper.id,
         role: 'STUDENT'
       },
-      data: prismaMapper
+      data: {
+        ...prismaMapper,
+        profile: {
+          upsert: {
+            where: {
+              userId: student.id.toValue()
+            },
+
+            create: {
+              fatherName: student.parent?.fatherName,
+              motherName: student.parent?.motherName,
+              county: student.county,
+              militaryId: student.militaryId,
+              state: student.state
+            },
+            update: {
+              fatherName: student.parent?.fatherName,
+              motherName: student.parent?.motherName,
+              county: student.county,
+              militaryId: student.militaryId,
+              state: student.state
+            }
+          }
+        }
+      }
     })
   }
 
