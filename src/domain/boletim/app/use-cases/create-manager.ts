@@ -79,7 +79,6 @@ export class CreateManagerUseCase {
     const pole = await this.polesRepository.findById(poleId)
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
-
     const defaultPassword = `Pmp@${cpf}`
 
     const nameOrError = Name.create(username)
