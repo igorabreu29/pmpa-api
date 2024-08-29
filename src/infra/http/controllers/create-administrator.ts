@@ -29,7 +29,7 @@ export async function createAdministrator(
           cpf: z.string().min(14).max(14),
           password: z.string().min(6).max(20),
           birthday: z.string().transform(transformDate),
-          civilId: z.number(),
+          civilId: z.string(),
         })
       },
     }, 

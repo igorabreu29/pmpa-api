@@ -30,7 +30,7 @@ export async function createStudent(
           email: z.string().email(),
           cpf: z.string().min(14).max(14),
           birthday: z.string().transform(transformDate),
-          civilId: z.number(),
+          civilId: z.string(),
           courseId: z.string().uuid(),
           poleId: z.string().uuid()
         })
