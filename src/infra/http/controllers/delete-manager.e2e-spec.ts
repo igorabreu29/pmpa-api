@@ -18,7 +18,7 @@ describe('Delete Manager (e2e)', () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
 
-    const administrator = await prisma.user.create({
+    await prisma.user.create({
       data: {
         username: 'John Doe',
         civilId: '02345',
@@ -42,6 +42,7 @@ describe('Delete Manager (e2e)', () => {
       data: {
         ...data,
         birthday: transformDate(data.birthday),
+        role: 'MANAGER'
       }
     })
 

@@ -41,6 +41,7 @@ describe('Get Manager Courses (e2e)', () => {
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
         birthday: transformDate('01/02/2001'),
+        role: 'MANAGER',
         
         usersOnCourses: {
           createMany: {
