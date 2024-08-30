@@ -12,6 +12,13 @@ export interface SearchManyDetails {
 
 export abstract class StudentsCoursesRepository {
   abstract findByStudentIdAndCourseId({ studentId, courseId }: { studentId: string, courseId: string }): Promise<StudentCourse | null>
+  abstract findDetailsByCourseAndStudentId({
+    courseId,
+    studentId
+  }: {
+    courseId: string
+    studentId: string
+  }): Promise<StudentCourseDetails | null>
 
   abstract findManyByCourseIdWithPole({ courseId }: { courseId: string }): Promise<StudentWithPole[]>
   abstract findManyByStudentIdWithCourse({

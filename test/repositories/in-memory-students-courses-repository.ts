@@ -24,6 +24,40 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     return studentCourse ?? null
   }
 
+  async findDetailsByCourseAndStudentId({ courseId, studentId }: { courseId: string; studentId: string; }): Promise<StudentCourseDetails | null> {
+    const studentCourse = this.items.find(item => {
+      return item.courseId.toValue() === courseId &&
+        item.studentId.toValue() === studentId
+    })
+    if (!studentCourse) return null
+
+    const student = this.studentsRepository.items.find(item => item.id.equals(studentCourse.studentId))
+    if (!student) throw new Error(`Student with ID ${studentCourse.studentId.toValue()} does not exist`)
+
+    const course = this.coursesRepository.items.find(item => item.id.equals(studentCourse.courseId))
+    if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist`)
+
+    const studentPole = this.studentsPolesRepository.items.find(item => item.studentId.equals(studentCourse.id))
+    if (!studentPole) throw new Error(`Student with ID ${studentCourse.studentId.toValue()} does not exist`)
+
+    const pole = this.polesRepository.items.find(item => item.id.equals(studentPole.poleId))
+    if (!pole) throw new Error(`Pole with ID ${studentPole.poleId.toValue()} does not exist`) 
+
+    return StudentCourseDetails.create({
+      studentId: student.id,
+      username: student.username.value,
+      civilId: student.civilId,
+      birthday: student.birthday.value,
+      assignedAt: student.createdAt,
+      email: student.email.value,
+      cpf: student.cpf.value,
+      course: course.name.value,
+      courseId: course.id,
+      pole: pole.name.value,
+      poleId: pole.id 
+    })
+  }
+
   async findManyByCourseIdWithPole({ courseId }: { courseId: string; }): Promise<StudentWithPole[]> {
     const studentsCourses = this.items
       .filter(item => item.courseId.toValue() === courseId && item.isActive)
@@ -158,7 +192,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
-          civilId: student.civilId ? student.civilId: 0,
+          civilId: student.civilId,
           assignedAt: student.createdAt,
           courseId: course.id,
           course: course.name.value,
@@ -230,7 +264,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
-          civilId: student.civilId ? student.civilId : 0,
+          civilId: student.civilId,
           assignedAt: student.createdAt,
           courseId: course.id,
           course: course.name.value,
@@ -279,7 +313,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
-          civilId: student.civilId ? student.civilId : 0,
+          civilId: student.civilId,
           assignedAt: student.createdAt,
           courseId: course.id,
           course: course.name.value,

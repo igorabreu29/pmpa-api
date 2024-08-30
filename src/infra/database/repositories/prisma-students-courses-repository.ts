@@ -24,6 +24,45 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     return PrismaStudentCourseMapper.toDomain(studentCourse)
   }
 
+  async findDetailsByCourseAndStudentId({ 
+    courseId, 
+    studentId 
+  }: { 
+    courseId: string; 
+    studentId: string; 
+  }): Promise<StudentCourseDetails | null> {
+    const studentCourse = await prisma.userOnCourse.findUnique({
+      where: {
+        userId_courseId: {
+          courseId,
+          userId: studentId,
+        },
+      },
+
+      include: {
+        user: true,
+        course: true,
+        usersOnPoles: {
+          include: {
+            pole: true
+          }
+        }
+      },
+    })
+    if (!studentCourse) return null
+
+    const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
+    if (!poleExist) throw new Error('Pole not found.')
+
+    const studentCourseMapper = {
+      ...studentCourse.user,
+      course: studentCourse.course,
+      pole: poleExist.pole
+    }
+
+    return PrismaStudentCourseDetailsMapper.toDomain(studentCourseMapper)
+  }
+
   async findManyByStudentIdWithCourse({ 
     studentId, 
     page, 

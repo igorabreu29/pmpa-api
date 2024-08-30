@@ -71,6 +71,7 @@ import { removeAssessmentsGradeBatch } from "./http/controllers/remove-assessmen
 import { getReports } from "./http/controllers/get-reports.ts";
 import { uploadAttachment } from "./http/controllers/upload-attachment.ts";
 import { getAdministrators } from "./http/controllers/get-administrators.ts";
+import { getCourseStudent } from "./http/controllers/get-course-student.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -138,6 +139,7 @@ app.register(getAdministratorProfile)
 app.register(getDeveloperProfile)
 app.register(getStudentCourses)
 app.register(getCourseStudents)
+app.register(getCourseStudent)
 app.register(getCourseStudentsByPole)
 app.register(getManagerCourses)
 app.register(getCourseManagers)
