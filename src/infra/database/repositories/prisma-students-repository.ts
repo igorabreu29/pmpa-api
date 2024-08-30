@@ -250,10 +250,6 @@ export class PrismaStudentsRepository implements StudentsRepository {
         ...prismaMapper,
         profile: {
           upsert: {
-            where: {
-              userId: student.id.toValue()
-            },
-
             create: {
               fatherName: student.parent?.fatherName,
               motherName: student.parent?.motherName,
@@ -285,10 +281,6 @@ export class PrismaStudentsRepository implements StudentsRepository {
 
         profile: {
           upsert: {
-            where: {
-              userId: student.id.toValue()
-            },
-
             create: {
               fatherName: student.parent?.fatherName,
               motherName: student.parent?.motherName,
@@ -321,10 +313,6 @@ export class PrismaStudentsRepository implements StudentsRepository {
         ...prismaMapper,
         profile: {
           upsert: {
-            where: {
-              userId: student.id.toValue()
-            },
-
             create: {
               fatherName: student.parent?.fatherName,
               motherName: student.parent?.motherName,
