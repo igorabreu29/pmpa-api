@@ -14,7 +14,7 @@ type PrismaStudents = PrismaStudent & {
 }
 
 type PrismaStudentsPrismaResponse = Prisma.UserUncheckedCreateInput & {
-  profile?: Prisma.ProfileUncheckedCreateInput
+  profile?: Prisma.ProfileUncheckedUpdateInput
 }
 
 export class PrismaStudentsMapper {
@@ -70,7 +70,6 @@ export class PrismaStudentsMapper {
       createdAt: student.createdAt,
       role: defineRoleAccessToDomain(student.role),
       profile: {
-        userId: student.id.toValue(),
         county: student.county,
         state: student.state,
         militaryId: student.militaryId,

@@ -14,7 +14,7 @@ type PrismaAdmins = PrismaAdmin & {
 }
 
 type PrismaAdminsPrismaResponse = Prisma.UserUncheckedCreateInput & {
-  profile?: Prisma.ProfileUncheckedCreateInput
+  profile?: Prisma.ProfileUncheckedUpdateInput
 }
 
 export class PrismaAdministratorsMapper {
@@ -68,7 +68,6 @@ export class PrismaAdministratorsMapper {
       createdAt: administrator.createdAt,
       role: defineRoleAccessToDomain(administrator.role),
       profile: {
-        userId: administrator.id.toValue(),
         county: administrator.county,
         state: administrator.state,
         militaryId: administrator.militaryId,
