@@ -21,7 +21,7 @@ export async function studentConfirmLoginAndUpdate(
         body: z.object({
           fatherName: z.string().min(3).max(50).optional(),
           motherName: z.string().min(3).max(50),
-          militaryId: z.number(),
+          militaryId: z.string(),
           state: z.string().optional(),
           county: z.string().optional()
         })

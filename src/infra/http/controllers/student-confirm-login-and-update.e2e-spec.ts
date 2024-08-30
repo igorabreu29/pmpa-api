@@ -35,7 +35,7 @@ describe('Student Confirm Login And Update (e2e)', async () => {
       .patch(`/students/${student.cpf}/confirm`)
       .send({
         motherName: 'mother-1',
-        militaryId: 123456789
+        militaryId: '123456789'
       })
 
     expect(response.statusCode).toEqual(204)
@@ -48,7 +48,7 @@ describe('Student Confirm Login And Update (e2e)', async () => {
 
     const expected = {
       motherName: 'mother-1',
-      militaryId: 123456789
+      militaryId: '123456789'
     }
 
     expect(profile).toMatchObject(expected)

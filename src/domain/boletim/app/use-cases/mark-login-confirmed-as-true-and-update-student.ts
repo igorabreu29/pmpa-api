@@ -6,7 +6,7 @@ interface MarkLoginConfirmedAsTrueAndUpdateStudentRequest {
   studentCPF: string
   fatherName?: string
   motherName: string
-  militaryId: number
+  militaryId: string
   state?: string
   county?: string
   studentIp: string
