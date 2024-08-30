@@ -4,6 +4,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { AssessmentsRepository } from "../repositories/assessments-repository.ts";
 import { Role } from "../../enterprise/entities/authenticate.ts";
 import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
+import { AssessmentRemovedGradeEvent } from "../../enterprise/events/assessment-removed-grade-event.ts";
 
 interface RemoveAssessmentGradeUseCaseRequest {
   studentId: string
@@ -53,7 +54,7 @@ export class RemoveAssessmentGradeUseCase {
     
     await this.assessmentsRepository.update(assessment)
     
-    assessment.addDomainAssessmentEvent(new AssessmentEvent({
+    assessment.addDomainAssessmentEvent(new AssessmentRemovedGradeEvent({
       assessment,
       reporterId: userId,
       reporterIp: userIp

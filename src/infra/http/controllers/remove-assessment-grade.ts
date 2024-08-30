@@ -10,6 +10,7 @@ import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { makeOnAssessmentUpdated } from "@/infra/factories/make-on-assessment-updated.ts";
 import { makeRemoveAssessmentGradeUseCase } from "@/infra/factories/make-remove-assessment-grade-use-case.ts";
+import { makeOnAssessmentRemovedGrade } from "@/infra/factories/make-on-assessment-removed-grade.ts";
 
 export async function removeAssessmentGrade(
   app: FastifyInstance
@@ -39,7 +40,7 @@ export async function removeAssessmentGrade(
 
       const ip = req.ip
 
-      makeOnAssessmentUpdated()
+      makeOnAssessmentRemovedGrade()
       const useCase = makeRemoveAssessmentGradeUseCase()
       const result = await useCase.execute({
         courseId,
