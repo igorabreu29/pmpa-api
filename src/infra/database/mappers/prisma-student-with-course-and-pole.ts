@@ -13,7 +13,7 @@ export class PrismaStudentCourseDetailsMapper {
       studentId: new UniqueEntityId(student.id),
       email: student.email,
       cpf: student.cpf,
-      civilId: Number(student.civilId),
+      civilId: student.civilId,
       assignedAt: student.createdAt,
       username: student.username,
       birthday: student.birthday as Date,
