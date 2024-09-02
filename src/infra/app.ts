@@ -72,6 +72,7 @@ import { getReports } from "./http/controllers/get-reports.ts";
 import { uploadAttachment } from "./http/controllers/upload-attachment.ts";
 import { getAdministrators } from "./http/controllers/get-administrators.ts";
 import { getCourseStudent } from "./http/controllers/get-course-student.ts";
+import { getManagerReports } from "./http/controllers/get-manager-reports.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -161,6 +162,7 @@ app.register(getClassificationByPole)
 app.register(getClassificationByManager)
 app.register(getBehaviorClassification)
 app.register(getReports)
+app.register(getManagerReports)
 app.register(uploadAttachment)
 
 app.setErrorHandler(errorHandler)
