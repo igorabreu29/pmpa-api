@@ -34,7 +34,7 @@ export const defineBehaviorByFormulaType = {
 
   module: ({ behaviorMonthsNotes }: FormulaTypeProps) => {
     const behaviorsAverage = Number(behaviorMonthsNotes.reduce((previousNote, currentNote) => Number(previousNote) + Number(currentNote), 0)) / behaviorMonthsNotes.length
-    const behaviorAverageStatus = getBehaviorAverageStatus(Number(behaviorsAverage.toFixed(3)))
+    const behaviorAverageStatus = getBehaviorAverageStatus(Number(behaviorsAverage.toFixed(3)) || 0)
 
     const behaviorsCount = behaviorMonthsNotes.length
 
