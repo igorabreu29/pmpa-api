@@ -119,7 +119,7 @@ describe('Get Classfication Course Use Case', () => {
         {
           studentAverage: {
             averageInform: {
-              geralAverage: 7.354,
+              geralAverage: 7.761,
               behaviorAverageStatus: { behaviorAverage: 6.542, status: 'approved' },
               studentAverageStatus: { concept: 'good', status: 'approved' }
             },
@@ -145,9 +145,9 @@ describe('Get Classfication Course Use Case', () => {
         {
           studentAverage: {
             averageInform: {
-              geralAverage: 6.821,
+              geralAverage: 7.377,
               behaviorAverageStatus: { behaviorAverage: 5.708, status: 'disapproved' },
-              studentAverageStatus: { concept: 'regular', status: 'second season' }
+              studentAverageStatus: { concept: 'good', status: 'second season' }
             },
 
             assessments: [

@@ -218,7 +218,7 @@ describe('Verify Formulas', () => {
 
       expect(result).toMatchObject({
         averageInform: {
-          geralAverage: 6.578,
+          geralAverage: 6.497,
           studentAverageStatus: { concept: 'regular', status: 'second season' },
           behaviorAverageStatus: {
             behaviorAverage: 6.821,

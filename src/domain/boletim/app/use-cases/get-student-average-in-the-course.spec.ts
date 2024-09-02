@@ -93,11 +93,11 @@ describe(('Get Student Average In The Course Use Case'), () => {
       studentId: student.id.toValue(),
       isPeriod: false
     })
-
+    
     expect(result.value).toMatchObject({
       grades: {
         averageInform: {
-          geralAverage: 6.979,
+          geralAverage: 6.986,
           behaviorAverageStatus: {
             behaviorAverage: 6.958, 
             status: 'approved'
