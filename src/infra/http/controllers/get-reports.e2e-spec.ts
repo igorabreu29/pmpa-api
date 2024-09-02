@@ -24,6 +24,19 @@ describe('Get Reports (e2e)', () => {
       }
     })
 
+    
+    const endsAt = new Date()
+    endsAt.setMinutes(new Date().getMinutes() + 10)
+
+    const course = await prisma.course.create({
+      data: {
+        endsAt,
+        formula: 'CAS',
+        imageUrl: '',
+        name: 'CAS',
+      }
+    })
+
     await prisma.report.createMany({
       data: [
         {
@@ -31,12 +44,14 @@ describe('Get Reports (e2e)', () => {
           content: 'content-1',
           ip: '',
           reporterId: administrator.id,
+          courseId: course.id
         },
         {
           title: 'title-2',
           content: 'content-2',
           ip: '',
           reporterId: administrator.id,
+          courseId: course.id
         },
       ]
     })

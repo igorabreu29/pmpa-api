@@ -21,7 +21,7 @@ describe('Fetch Reports Use Case', () => {
     const report2 = makeReport({ title: 'Delete' })
     reportsRepository.create(report2)
 
-    const result = await sut.execute({ action: '' })
+    const result = await sut.execute({ action: '', page: 1 })
     
     expect(result.value?.reports).toMatchObject([
       {
@@ -42,13 +42,31 @@ describe('Fetch Reports Use Case', () => {
     const report2 = makeReport({ title: 'Delete', action: 'remove' })
     reportsRepository.create(report2)
 
-    const result = await sut.execute({ action: 'add' })
+    const result = await sut.execute({ action: 'add', page: 1 })
     
     expect(result.value?.reports).toMatchObject([
       {
         id: report.id,
         title: report.title
       }
+    ])
+  })
+
+  it ('should be able to paginated reports', async () => {
+    for (let i = 1; i <= 12; i++) {
+      const report = makeReport({ title: `title-${i}` })
+      reportsRepository.create(report)
+    }
+
+    const result = await sut.execute({ action: 'add', page: 2 })
+    
+    expect(result.value?.reports).toMatchObject([
+      {
+        title: 'title-11'
+      },
+      {
+        title: 'title-12'
+      },
     ])
   })
 })

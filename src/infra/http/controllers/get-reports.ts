@@ -16,23 +16,26 @@ export async function getReports(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         querystring: z.object({
-          action: z.enum(['add', 'remove', 'update', 'login confirmed']).default('add')
+          action: z.enum(['add', 'remove', 'update', 'login confirmed']).default('add'),
+          page: z.coerce.number().default(1)
         })
       }
     }, async (req, res) => {
-      const { action } = req.query
+      const { action, page } = req.query
 
       const useCase = makeFetchReportsUseCase()
-      const result = await useCase.execute({ action })
+      const result = await useCase.execute({ action, page })
 
       if (result.isLeft()) {
         throw new ClientError('Ocurred something error')
       }
 
-      const { reports } = result.value
+      const { reports, pages, totalItems } = result.value
 
       return res.status(200).send({
         reports: reports.map(report => ReportPresenter.toHTTP(report)),
+        pages,
+        totalItems
       })
     })
 } 
