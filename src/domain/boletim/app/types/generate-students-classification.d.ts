@@ -17,7 +17,7 @@ export interface StudentClassficationByPeriod {
     assessmentsCount: number
   }
   studentBirthday?: Date
-  studentCivilID?: number
+  studentCivilID?: string
   studentPole?: string
 }
 
@@ -34,6 +34,6 @@ export interface StudentClassficationByModule {
     assessmentsCount: number
   }
   studentBirthday?: Date
-  studentCivilID?: number
+  studentCivilID?: string
   studentPole?: string
 }
