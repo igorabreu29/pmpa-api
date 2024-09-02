@@ -1,4 +1,4 @@
-import type { FindManyProps, ReportsRepository } from "@/domain/report/app/repositories/reports-repository.ts";
+import type { FindManyByCourseAndReporterProps, FindManyProps, ReportsRepository } from "@/domain/report/app/repositories/reports-repository.ts";
 import type { Report } from "@/domain/report/enterprise/entities/report.ts";
 import { Report as PrismaReport } from '@prisma/client'
 import { prisma } from "../lib/prisma.ts";
@@ -18,16 +18,33 @@ export class PrismaReportsRepository implements ReportsRepository {
     return PrismaReportsMapper.toDomain(report)
   }
 
-  async findMany({ action }: FindManyProps): Promise<Report[]> {
+  async findMany({ action, page }: FindManyProps): Promise<{
+    reports: Report[]
+    pages: number
+    totalItems: number
+  }> {
+    const PER_PAGE = 10
+
     let reports: PrismaReport[] = []
 
     if (!action.length) {
       reports = await prisma.report.findMany({
         orderBy: {
           createdAt: 'desc'
-        }
+        },
+        
+        skip: (page - 1) * PER_PAGE,
+        take: page * PER_PAGE
       })
-      return reports.map(report => PrismaReportsMapper.toDomain(report))
+      
+      const reportsCount = await prisma.report.count()
+      const pages = Math.ceil(reportsCount / PER_PAGE)
+
+      return {
+        reports: reports.map(report => PrismaReportsMapper.toDomain(report)),
+        pages,
+        totalItems: reportsCount
+      }
     }
 
     reports = await prisma.report.findMany({
@@ -36,10 +53,96 @@ export class PrismaReportsRepository implements ReportsRepository {
       },
       orderBy: {
         createdAt: 'desc'
-      }
+      },
+      skip: (page - 1) * PER_PAGE,
+      take: page * PER_PAGE
     })
 
-    return reports.map(report => PrismaReportsMapper.toDomain(report))
+    const reportsCount = await prisma.report.count({
+      where: {
+        action: convertActionToPrisma(action)
+      },
+    })
+    const pages = Math.ceil(reportsCount / PER_PAGE)
+
+    return {
+      reports: reports.map(report => PrismaReportsMapper.toDomain(report)),
+      pages,
+      totalItems: reportsCount
+    }
+  }
+
+  async findManyByCourseAndReporterId({ 
+    courseId, 
+    reporterId, 
+    action, 
+    page 
+  }: FindManyByCourseAndReporterProps): Promise<{ 
+    reports: Report[]
+    pages: number
+    totalItems: number 
+  }> {
+    const PER_PAGE = 10
+
+    let reports: PrismaReport[] = []
+
+    if (!action.length) {
+      reports = await prisma.report.findMany({
+        where: {
+          courseId,
+          reporterId
+        },
+
+        orderBy: {
+          createdAt: 'desc'
+        },
+        
+        skip: (page - 1) * PER_PAGE,
+        take: page * PER_PAGE
+      })
+      
+      const reportsCount = await prisma.report.count({
+        where: {
+          courseId,
+          reporterId
+        },
+      })
+      const pages = Math.ceil(reportsCount / PER_PAGE)
+
+      return {
+        reports: reports.map(report => PrismaReportsMapper.toDomain(report)),
+        pages,
+        totalItems: reportsCount
+      }
+    }
+
+    reports = await prisma.report.findMany({
+      where: {
+        action: convertActionToPrisma(action),
+        courseId,
+        reporterId
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      skip: (page - 1) * PER_PAGE,
+      take: page * PER_PAGE
+    })
+
+    const reportsCount = await prisma.report.count({
+      where: {
+        action: convertActionToPrisma(action),
+        courseId,
+        reporterId
+      },
+    })
+    const pages = Math.ceil(reportsCount / PER_PAGE)
+
+    return {
+      reports: reports.map(report => PrismaReportsMapper.toDomain(report)),
+      pages,
+      totalItems: reportsCount
+    }
   }
   
   async create(report: Report): Promise<void> {
