@@ -226,7 +226,7 @@ enum Action {
 model Report {
   id         String   @id @default(uuid())
   reporterId String
-  courseId   String
+  courseId   String?
   title      String
   content    String
   filename   String?
@@ -235,8 +235,6 @@ model Report {
   createdAt  DateTime @default(now()) @map("created_at")
   action     Action   @default(ADD)
 
-  reporter User   @relation(fields: [reporterId], references: [id])
-  course   Course @relation(fields: [courseId], references: [id])
-
-  @@unique([reporterId, courseId])
+  reporter User    @relation(fields: [reporterId], references: [id])
+  course   Course? @relation(fields: [courseId], references: [id])
 }
