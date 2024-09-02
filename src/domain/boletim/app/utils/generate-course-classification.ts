@@ -7,7 +7,7 @@ export const classificationByCourseFormula = {
   },
 
   CAS: (studentsWithAverage: StudentClassficationByModule[]) => {
-    return classifyStudentsByCFPFormula(studentsWithAverage)
+    return classifyStudentsByCGSAndCASFormula(studentsWithAverage)
   },
 
   CFP: (studentsWithAverage: StudentClassficationByModule[]) => {
