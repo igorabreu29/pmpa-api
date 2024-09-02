@@ -128,8 +128,7 @@ export class GetStudentAverageInTheCourseUseCase {
       
       behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod })
     }
-    
-  
+
     const assessmentWithDisciplineModule = await Promise.all(assessments.map(async assessment => {
       const studentCondition = generateAssessmentAverage({ 
         vf: !assessment.vf ? -1 : assessment.vf, 
