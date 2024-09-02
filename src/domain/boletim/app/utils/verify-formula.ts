@@ -133,19 +133,18 @@ export const formulas = {
 
   module({ assessments, behaviorAverage }: FormulaProps) {
     const studentIsRecovering = assessments.some((item) => item?.isRecovering)
-    
-    const assessmentsAverage = assessments.reduce((previousAverageAssessment, currentAverageAssessment) => {
-      return previousAverageAssessment + Number(currentAverageAssessment?.average)
-    }, 0) / assessments.length
 
-    
-    let assessmentsAverageWithBehaviorAverage: number = 0
+    const averages = assessments.map(item => item?.average)
     if (behaviorAverage) {
       const { behaviorAverageStatus } = behaviorAverage as BehaviorAveragePerModule
-      assessmentsAverageWithBehaviorAverage = (assessmentsAverage + behaviorAverageStatus.behaviorAverage) / 2
+      behaviorAverageStatus.behaviorAverage ? averages.push(behaviorAverageStatus.behaviorAverage) : averages
     }
 
-    const studentAverageStatus = getGeralStudentAverageStatus({ average: assessmentsAverageWithBehaviorAverage || assessmentsAverage, isRecovering: studentIsRecovering })
+    const assessmentsAverage = Number(averages.reduce((previousAverageAssessment, currentAverageAssessment) => {
+      return Number(previousAverageAssessment) + Number(currentAverageAssessment)
+    }, 0)) / averages.length
+
+    const studentAverageStatus = getGeralStudentAverageStatus({ average: assessmentsAverage || assessmentsAverage, isRecovering: studentIsRecovering })
     const isStudentSecondSeason = assessments.some(assessment => assessment?.status === 'second season')
 
     studentAverageStatus.status = isStudentSecondSeason ? 'second season' : studentAverageStatus.status
@@ -159,7 +158,7 @@ export const formulas = {
 
     return {
       averageInform: {
-        geralAverage: behaviorAverage ? Number(assessmentsAverageWithBehaviorAverage.toFixed(3)) : Number(assessmentsAverage.toFixed(3)),
+        geralAverage: behaviorAverage ? Number(assessmentsAverage.toFixed(3)) : Number(assessmentsAverage.toFixed(3)),
         behaviorAverageStatus: behaviorAverage ? behaviorAverage.behaviorAverageStatus : [],
         behaviorsCount: behaviorAverage ? behaviorAverage.behaviorsCount : 0,
         studentAverageStatus
