@@ -72,9 +72,6 @@ export class CreateBehaviorsBatchUseCase {
       const student = await this.studentsRepository.findByCPF(studentBehavior.cpf)
       if (!student) return new ResourceNotFoundError('Student not found.')
         
-      const behaviorAlreadyAdded = await this.behaviorsRepository.findByStudentIdAndCourseId({ studentId: student.id.toValue(), courseId: course.id.toValue() }) 
-      if (behaviorAlreadyAdded) return new ResourceAlreadyExistError('Behaviors already exist.')
-
       const behavior = Behavior.create({
         courseId: course.id,
         studentId: student.id,

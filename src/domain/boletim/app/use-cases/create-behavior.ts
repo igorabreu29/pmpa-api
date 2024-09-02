@@ -71,9 +71,6 @@ export class CreateBehaviorUseCase {
     const student = await this.studentsRepository.findById(studentId)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
 
-    const behaviorAlreadyAdded = await this.behaviorsRepository.findByStudentIdAndCourseId({ studentId, courseId }) 
-    if (behaviorAlreadyAdded) return left(new ResourceAlreadyExistError('Behaviors already exist.'))
-
     const behavior = Behavior.create({
       studentId: new UniqueEntityId(studentId),
       courseId: new UniqueEntityId(courseId),
