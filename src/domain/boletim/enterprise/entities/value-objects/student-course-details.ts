@@ -1,5 +1,6 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { ValueObject } from "@/core/entities/value-object.ts";
+import { Formula } from "../course.ts";
 
 interface StudentCourseDetailsProps {
   studentId: UniqueEntityId
@@ -10,6 +11,7 @@ interface StudentCourseDetailsProps {
 
   courseId: UniqueEntityId
   course: string
+  formula: Formula
 
   poleId: UniqueEntityId
   pole: string
@@ -42,6 +44,10 @@ export class StudentCourseDetails extends ValueObject<StudentCourseDetailsProps>
 
   get course() {
     return this.props.course
+  }
+
+  get formula() {
+    return this.props.formula
   }
 
   get poleId() {

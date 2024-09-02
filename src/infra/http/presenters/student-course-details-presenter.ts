@@ -23,7 +23,8 @@ export class StudentCourseDetailsPresenter {
       createdAt: dayjs(studentCourseDetails.assignedAt).format('DD/MM/YYYY'),
       course: {
         name: studentCourseDetails.course,
-        id: studentCourseDetails.courseId.toValue()
+        id: studentCourseDetails.courseId.toValue(),
+        formula: studentCourseDetails.formula
       },
       pole: {
         id: studentCourseDetails.poleId.toValue(),

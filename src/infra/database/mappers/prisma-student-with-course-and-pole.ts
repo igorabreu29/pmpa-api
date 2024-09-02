@@ -19,6 +19,7 @@ export class PrismaStudentCourseDetailsMapper {
       birthday: student.birthday as Date,
       course: student.course.name,
       courseId: new UniqueEntityId(student.course.id),
+      formula: student.course.formula,
       pole: student.pole.name,
       poleId: new UniqueEntityId(student.pole.id)
     })

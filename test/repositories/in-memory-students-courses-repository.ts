@@ -53,6 +53,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
       cpf: student.cpf.value,
       course: course.name.value,
       courseId: course.id,
+      formula: course.formula,
       pole: pole.name.value,
       poleId: pole.id 
     })
@@ -196,6 +197,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
           assignedAt: student.createdAt,
           courseId: course.id,
           course: course.name.value,
+          formula: course.formula,
           poleId: pole.id,
           pole: pole.name.value,
         })
@@ -268,6 +270,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
           assignedAt: student.createdAt,
           courseId: course.id,
           course: course.name.value,
+          formula: course.formula,
           poleId: pole.id,
           pole: pole.name.value
         })
@@ -317,6 +320,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
           assignedAt: student.createdAt,
           courseId: course.id,
           course: course.name.value,
+          formula: course.formula,
           poleId: pole.id,
           pole: pole.name.value
         })
