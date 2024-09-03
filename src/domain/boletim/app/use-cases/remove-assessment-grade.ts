@@ -51,15 +51,14 @@ export class RemoveAssessmentGradeUseCase {
     assessment.avi = avi ? null : assessment.avi
     assessment.avii = avii ? null : assessment.avii
     assessment.vfe = vfe ? null : assessment.vfe
-    
-    await this.assessmentsRepository.update(assessment)
-    
+        
     assessment.addDomainAssessmentEvent(new AssessmentRemovedGradeEvent({
       assessment,
       reporterId: userId,
       reporterIp: userIp
     }))
-
+    
+    await this.assessmentsRepository.update(assessment)
 
     return right(null)
   }
