@@ -39,16 +39,16 @@ export class OnAssessmentRemovedGrade implements EventHandler {
         content: `
           IP: ${reporterIp} \n
           Course: ${course.name.value} \n
-          Disciplina: ${discipline.name} \n
+          Disciplina: ${discipline.name.value} \n
           Remetente: ${reporter.username.value} \n
           Estudante: ${student.username.value} \n
           Data: ${ocurredAt}
-          ${reporter.username.value} atualizou notas do aluno: ${student.username.value}
+          ${reporter.username.value} removeu notas do aluno: ${student.username.value}
         `,
         ip: reporterIp,
         courseId: assessment.courseId.toValue(),
         reporterId: reporter.id.toValue(),
-        action: 'update'
+        action: 'remove'
       })
     }
   }

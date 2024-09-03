@@ -39,7 +39,7 @@ export class OnAssessmentUpdated implements EventHandler {
         content: `
           IP: ${reporterIp} \n
           Course: ${course.name.value} \n
-          Disciplina: ${discipline.name} \n
+          Disciplina: ${discipline.name.value} \n
           Remetente: ${reporter.username.value} \n
           Estudante: ${student.username.value} \n
           Data: ${ocurredAt}
