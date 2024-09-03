@@ -1,7 +1,7 @@
 [] Caixa de texto para desativar aluno
 [] Criar certificados
 
-[] Relatório por curso
+[x] Relatório por curso
 [x] Upload de imagem do curso
 [x] Busca das disciplinas de um curso
 
