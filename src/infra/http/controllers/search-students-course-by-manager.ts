@@ -47,7 +47,7 @@ export async function searchStudentsCourseByManagerDetails(
       const { students, pages, totalItems } = result.value
 
       return res.status(200).send({
-        students: students.map(student => SearchPresenter.toHTTP(student)),
+        searchs: students.map(student => SearchPresenter.toHTTP(student)),
         pages,
         totalItems
       })
