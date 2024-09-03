@@ -10,6 +10,13 @@
 [x] Listar alunos desativados de um curso
 [x] Listar alunos ativos de um curso
 
+[] atualizar curso
+[] remover curso
+[] atualizar disciplina
+[] apagar disciplina
+[] classificação por notas
+[x] listar um curso
+[] desativar histórico
 [] Listar alunos de um curso por gerente
 [] Listar comportamentos com alunos
 [] Remover comportamento
