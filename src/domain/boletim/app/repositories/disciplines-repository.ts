@@ -10,4 +10,6 @@ export abstract class DisciplinesRepository {
   }>
   abstract create(discipline: Discipline): Promise<void>
   abstract createMany(disciplines: Discipline[]): Promise<void>
+  abstract save(discipline: Discipline): Promise<void>
+  abstract delete(discipline: Discipline): Promise<void>
 } 

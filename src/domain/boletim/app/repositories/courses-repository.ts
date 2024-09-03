@@ -15,4 +15,6 @@ export abstract class CoursesRepository {
     totalItems: number
   }>
   abstract create(course: Course): Promise<void> 
+  abstract save(course: Course): Promise<void> 
+  abstract delete(course: Course): Promise<void> 
 }
