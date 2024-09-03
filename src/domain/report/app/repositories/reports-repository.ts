@@ -1,14 +1,14 @@
 import { Report, type TypeAction } from "../../enterprise/entities/report.ts";
 
 export interface FindManyProps {
-  action: string
+  action?: string
   page: number
 }
 
 export interface FindManyByCourseAndReporterProps {
   courseId: string
   reporterId: string
-  action: string
+  action?: string
   page: number
 }
 

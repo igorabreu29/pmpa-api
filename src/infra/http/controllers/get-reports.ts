@@ -16,7 +16,7 @@ export async function getReports(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         querystring: z.object({
-          action: z.enum(['add', 'remove', 'update', 'login confirmed']).default('add'),
+          action: z.enum(['add', 'remove', 'update', 'login confirmed']).optional(),
           page: z.coerce.number().default(1)
         })
       }

@@ -3,7 +3,7 @@ import type { ReportsRepository } from "@/domain/report/app/repositories/reports
 import type { Report } from "@/domain/report/enterprise/entities/report.ts";
 
 interface FetchReportsUseCaseRequest {
-  action: string
+  action?: string
   page: number
 }
 

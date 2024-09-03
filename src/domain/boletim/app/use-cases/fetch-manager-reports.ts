@@ -5,7 +5,7 @@ import type { Report } from "@/domain/report/enterprise/entities/report.ts";
 interface FetchManagerReportsUseCaseRequest {
   courseId: string
   managerId: string
-  action: string
+  action?: string
   page: number
 }
 

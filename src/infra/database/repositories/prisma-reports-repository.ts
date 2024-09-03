@@ -27,7 +27,7 @@ export class PrismaReportsRepository implements ReportsRepository {
 
     let reports: PrismaReport[] = []
 
-    if (!action.length) {
+    if (!action) {
       reports = await prisma.report.findMany({
         orderBy: {
           createdAt: 'desc'
@@ -86,7 +86,7 @@ export class PrismaReportsRepository implements ReportsRepository {
 
     let reports: PrismaReport[] = []
 
-    if (!action.length) {
+    if (!action) {
       reports = await prisma.report.findMany({
         where: {
           courseId,

@@ -19,7 +19,7 @@ export async function getManagerReports(
           courseId: z.string().uuid()
         }),
         querystring: z.object({
-          action: z.enum(['add', 'remove', 'update', 'login confirmed']).default('add'),
+          action: z.enum(['add', 'remove', 'update', 'login confirmed']).optional(),
           page: z.coerce.number().default(1)
         })
       }
