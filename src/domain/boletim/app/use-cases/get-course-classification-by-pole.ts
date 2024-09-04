@@ -65,6 +65,7 @@ export class GetCourseClassificationByPoleUseCase {
       return {
         studentAverage: studentAverage.value.grades,
         studentBirthday: student.birthday,
+        studentName: student.username,
         studentCivilID: student.civilId,
         studentPole: student.pole
       }

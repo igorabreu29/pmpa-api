@@ -4,7 +4,7 @@ import type { StudentsCoursesRepository } from "../repositories/students-courses
 import { left, right, type Either } from "@/core/either.ts"
 import type { BehaviorsRepository } from "../repositories/behaviors-repository.ts"
 import { generateBehaviorAverage } from "../utils/generate-behavior-average.ts"
-import { classifyStudentsByGradeBehaviorFormula, type BehaviorClassification, type BehaviorByModule } from "../utils/classification/classify-students-by-grade-behavior.ts"
+import { ranksStudentsByBehaviorAverage, type BehaviorClassification, type StudentWithBehaviorAverage } from "../utils/classification/ranks-students-by-average-behavior.ts"
 import type { CoursesPoleRepository } from "../repositories/courses-poles-repository.ts"
 
 interface GetCourseBehaviorClassificationUseCaseRequest {
@@ -67,6 +67,7 @@ export class GetCourseBehaviorClassificationUseCase {
       return {
         behaviorAverage,
         studentBirthday: student.birthday,
+        studentName: student.username,
         studentCivilID: student.civilId,
         studentPole: {
           id: student.poleId,
@@ -76,7 +77,7 @@ export class GetCourseBehaviorClassificationUseCase {
     }))
 
     const behaviorAverageGroupedByPole = coursePoles.map(coursePole => {
-      const studentsGroup = studentsWithBehaviorAverage.filter(item => item.studentPole.id.equals(coursePole.id)) as BehaviorByModule[]
+      const studentsGroup = studentsWithBehaviorAverage.filter(item => item.studentPole.id.equals(coursePole.id)) as StudentWithBehaviorAverage[]
       const behaviorAverageByPole = studentsGroup
         .reduce((acc, item) => acc + item.behaviorAverage.behaviorAverageStatus.behaviorAverage, 0) / studentsGroup.length
 
@@ -89,7 +90,7 @@ export class GetCourseBehaviorClassificationUseCase {
       }
     })
 
-    const behaviorsClassification = classifyStudentsByGradeBehaviorFormula(behaviorAverageGroupedByPole)
+    const behaviorsClassification = ranksStudentsByBehaviorAverage(behaviorAverageGroupedByPole)
 
     return right({
       behaviorAverageGroupedByPole: behaviorsClassification
