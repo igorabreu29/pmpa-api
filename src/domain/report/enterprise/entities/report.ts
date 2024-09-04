@@ -2,7 +2,7 @@ import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Optional } from "@/core/types/optional.ts";
 
-export type TypeAction  = 'add' | 'remove' | 'update' | 'login confirmed'
+export type TypeAction  = 'add' | 'remove' | 'update' | 'login confirmed' | 'status'
 
 interface ReportProps {
   reporterId: string
