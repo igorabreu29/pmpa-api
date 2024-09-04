@@ -40,4 +40,14 @@ export class InMemoryDisciplinesRepository implements DisciplinesRepository {
       this.items.push(discipline)
     }
   }
+
+  async save(discipline: Discipline): Promise<void> {
+    const disciplineIndex = this.items.findIndex(item => item.equals(discipline))
+    this.items[disciplineIndex] = discipline
+  }
+
+  async delete(discipline: Discipline): Promise<void> {
+    const disciplineIndex = this.items.findIndex(item => item.equals(discipline))
+    this.items.splice(disciplineIndex, 1)
+  }
 }

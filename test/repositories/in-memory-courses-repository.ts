@@ -30,4 +30,14 @@ export class InMemoryCoursesRepository implements CoursesRepository {
   async create(course: Course): Promise<void> {
     this.items.push(course)
   }
+
+  async save(course: Course): Promise<void> {
+    const courseIndex = this.items.findIndex(item => item.equals(course))
+    this.items[courseIndex] = course
+  }
+
+  async delete(course: Course): Promise<void> {
+    const courseIndex = this.items.findIndex(item => item.equals(course))
+    this.items.splice(courseIndex, 1)
+  }
 }

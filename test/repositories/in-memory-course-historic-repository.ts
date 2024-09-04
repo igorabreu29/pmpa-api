@@ -12,4 +12,9 @@ export class InMemoryCourseHistoricRepository implements CourseHistoricRepositor
   async create(courseHistoric: CourseHistoric): Promise<void> {
     this.items.push(courseHistoric)
   }
+
+  async delete(courseHistoric: CourseHistoric): Promise<void> {
+    const courseHistoricIndex = this.items.findIndex(item => item.equals(courseHistoric))
+    this.items.splice(courseHistoricIndex, 1)
+  }
 }
