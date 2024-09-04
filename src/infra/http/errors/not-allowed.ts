@@ -1,1 +1,5 @@
-export class NotAllowed extends Error {}
+export class NotAllowed extends Error {
+  constructor(message?: string) {
+    super(message ?? 'Invalid access level')
+  }
+}
