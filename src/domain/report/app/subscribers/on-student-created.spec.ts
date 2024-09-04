@@ -1,7 +1,4 @@
-import { AssessmentEvent } from '@/domain/boletim/enterprise/events/assessment-event.ts'
-import { makeAssessment } from 'test/factories/make-assessment.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
-import { makeDiscipline } from 'test/factories/make-discipline.ts'
 import { makeReporter } from 'test/factories/make-reporter.ts'
 import { makeStudent } from 'test/factories/make-student.ts'
 import { InMemoryReportersRepository } from 'test/repositories/in-memory-reporters-repository.ts'
@@ -44,6 +41,7 @@ describe('On Student Created', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     coursesRepository = new InMemoryCoursesRepository()
