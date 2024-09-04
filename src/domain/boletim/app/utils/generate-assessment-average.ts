@@ -1,4 +1,4 @@
-import { getStudentAssessmentAverageStatus } from "./get-assessment-average-status.ts"
+import { getStudentAssessmentAverageStatus, type Status } from "./get-assessment-average-status.ts"
 
 interface GenerateAssessmentAverageProps {
   vf: number
@@ -7,7 +7,17 @@ interface GenerateAssessmentAverageProps {
   vfe: number | null
 }
 
-export function generateAssessmentAverage({ vf, avi, avii, vfe }: GenerateAssessmentAverageProps) {
+export interface GenerateAssessmentAverageResponse {
+  vf: number
+  avi: number | null
+  avii: number | null
+  vfe: number | null
+  average: number
+  status: Status
+  isRecovering: boolean
+}
+
+export function generateAssessmentAverage({ vf, avi, avii, vfe }: GenerateAssessmentAverageProps): GenerateAssessmentAverageResponse {
   const assessments = [vf, avi, avii].filter(note => note >= 0)
   const assessmentAverage = assessments.reduce((previousNote, currentNote) => previousNote + currentNote, 0) / assessments.length
 
