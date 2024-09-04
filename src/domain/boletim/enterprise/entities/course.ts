@@ -26,21 +26,36 @@ export class Course extends Entity<CourseProps> {
   get formula() {
     return this.props.formula
   }
+  set formula(value) {
+    this.props.formula = value
+  }
 
   get isPeriod() {
     return this.props.isPeriod
+  }
+  set isPeriod(value) {
+    this.props.isPeriod = value
   }
 
   get name() {
     return this.props.name
   }
+  set name(value) {
+    this.props.name = value
+  }
 
   get isActive() {
     return this.props.isActive
   }
+  set isActive(value) {
+    this.props.isActive = value
+  }
 
   get imageUrl() {
     return this.props.imageUrl
+  }
+  set imageUrl(value) {
+    this.props.imageUrl = value
   }
 
   get startAt() {

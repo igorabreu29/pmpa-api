@@ -12,10 +12,14 @@ export class Discipline extends Entity<DisciplineProps> {
   get name() {
     return this.props.name
   }
+  set name(value) {
+    this.props.name = value
+  }
 
   static create(
     props: DisciplineProps, 
-    id?: UniqueEntityId): Either<InvalidNameError, Discipline> {
+    id?: UniqueEntityId
+  ): Either<InvalidNameError, Discipline> {
     const discipline = new Discipline(props, id)
     return right(discipline)
   }
