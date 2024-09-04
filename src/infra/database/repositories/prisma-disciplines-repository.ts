@@ -49,16 +49,36 @@ export class PrismaDisciplinesRepository implements DisciplinesRepository {
   }
 
   async create(discipline: Discipline): Promise<void> {
-    const prismaMapper = PrismaDisciplinesMapper.toPrisma(discipline)
+    const raw = PrismaDisciplinesMapper.toPrisma(discipline)
     await prisma.discipline.create({
-      data: prismaMapper
+      data: raw
     })
   } 
 
   async createMany(disciplines: Discipline[]): Promise<void> {
-    const prismaMapper = disciplines.map(discipline => PrismaDisciplinesMapper.toPrisma(discipline))
+    const raw = disciplines.map(discipline => PrismaDisciplinesMapper.toPrisma(discipline))
     await prisma.discipline.createMany({
-      data: prismaMapper
+      data: raw
+    })
+  }
+
+  async save(discipline: Discipline): Promise<void> {
+    const raw = PrismaDisciplinesMapper.toPrisma(discipline)
+    await prisma.discipline.update({
+      where: {
+        id: raw.id
+      },
+
+      data: raw
+    })
+  }
+
+  async delete(discipline: Discipline): Promise<void> {
+    const raw = PrismaDisciplinesMapper.toPrisma(discipline)
+    await prisma.discipline.delete({
+      where: {
+        id: raw.id
+      },
     })
   }
 }

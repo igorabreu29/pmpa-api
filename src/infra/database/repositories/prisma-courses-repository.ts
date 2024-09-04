@@ -49,9 +49,29 @@ export class PrismaCoursesRepository implements CoursesRepository {
   }
 
   async create(course: Course): Promise<void> {
-    const prismaMapper = PrismaCoursesMapper.toPrisma(course)
+    const raw = PrismaCoursesMapper.toPrisma(course)
     await prisma.course.create({
-      data: prismaMapper
+      data: raw
+    })
+  }
+
+  async save(course: Course): Promise<void> {
+    const raw = PrismaCoursesMapper.toPrisma(course)
+    await prisma.course.update({
+      where: {
+        id: raw.id
+      },
+      
+      data: raw
+    })
+  }
+
+  async delete(course: Course): Promise<void> {
+    const raw = PrismaCoursesMapper.toPrisma(course)
+    await prisma.course.delete({
+      where: {
+        id: raw.id
+      },
     })
   }
 }

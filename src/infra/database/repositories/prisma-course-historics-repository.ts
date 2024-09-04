@@ -16,9 +16,18 @@ export class PrismaCourseHistoricsRepository implements CourseHistoricRepository
   }
 
   async create(courseHistoric: CourseHistoric): Promise<void> {
-    const prismaMapper = PrismaCourseHistoricsMapper.toPrisma(courseHistoric)
+    const raw = PrismaCourseHistoricsMapper.toPrisma(courseHistoric)
     await prisma.courseHistoric.create({
-      data: prismaMapper
+      data: raw
+    })
+  }
+
+  async delete(courseHistoric: CourseHistoric): Promise<void> {
+    const raw = PrismaCourseHistoricsMapper.toPrisma(courseHistoric)
+    await prisma.courseHistoric.delete({
+      where: {
+        id: raw.id
+      }
     })
   }
 }
