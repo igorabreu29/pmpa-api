@@ -1,13 +1,13 @@
 import { StudentsCoursesRepository, type SearchManyDetails } from "@/domain/boletim/app/repositories/students-courses-repository.ts";
 import { StudentCourse } from "@/domain/boletim/enterprise/entities/student-course.ts";
 import { InMemoryCoursesRepository } from "./in-memory-courses-repository.ts";
-import { StudentCourseWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/student-course-with-course.ts";
 import { InMemoryStudentsRepository } from "./in-memory-students-repository.ts";
 import { InMemoryPolesRepository } from "./in-memory-poles-repository.ts";
 import { InMemoryStudentsPolesRepository } from "./in-memory-students-poles-repository.ts";
 import { StudentWithPole } from "@/domain/boletim/enterprise/entities/value-objects/student-with-pole.ts";
 import { StudentCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-course-details.ts";
 import { StudentWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/student-with-course.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class InMemoryStudentsCoursesRepository implements StudentsCoursesRepository {
   public items: StudentCourse[] = []
@@ -361,6 +361,8 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
   async updateStatus(studentCourse: StudentCourse): Promise<void> {
     const studentCourseIndex = this.items.findIndex(item => item.id.equals(studentCourse.id))
     this.items[studentCourseIndex] = studentCourse
+
+    DomainEvents.dispatchEventsForAggregate(studentCourse.id)
   }
 
   async delete(studentCourse: StudentCourse): Promise<void> {

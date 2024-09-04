@@ -6,6 +6,7 @@ import { InMemoryManagersRepository } from "./in-memory-managers-repository.ts";
 import { InMemoryCoursesRepository } from "./in-memory-courses-repository.ts";
 import { ManagerWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/manager-with-course.ts";
 import { ManagerCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/manager-course-details.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class InMemoryManagersCoursesRepository implements ManagersCoursesRepository {
   public items: ManagerCourse[] = []
@@ -195,6 +196,8 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
   async updateStatus(managerCourse: ManagerCourse): Promise<void> {
     const managerCourseIndex = this.items.findIndex(item => item.id.equals(managerCourse.id))
     this.items[managerCourseIndex] = managerCourse
+
+    DomainEvents.dispatchEventsForAggregate(managerCourse.id)
   }
 
   async delete(managerCourse: ManagerCourse): Promise<void> {
