@@ -4,19 +4,24 @@ import { DisciplinesRepository } from "../repositories/disciplines-repository.ts
 import { Discipline } from "@/domain/boletim/enterprise/entities/discipline.ts"
 import { Name } from "../../enterprise/entities/value-objects/name.ts"
 import type { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
+import { Role } from "../../enterprise/entities/authenticate.ts"
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
 
 interface CreateDisciplineUseCaseRequest {
   name: string
+  role: Role
 }
 
-type CreateDisciplineUseCaseResponse = Either<ResourceAlreadyExistError | InvalidNameError, null>
+type CreateDisciplineUseCaseResponse = Either<ResourceAlreadyExistError | InvalidNameError | NotAllowedError, null>
 
 export class CreateDisciplineUseCase {
   constructor(
     private disciplinesRepository: DisciplinesRepository
   ) {}
 
-  async execute({ name }: CreateDisciplineUseCaseRequest): Promise<CreateDisciplineUseCaseResponse> {
+  async execute({ name, role }: CreateDisciplineUseCaseRequest): Promise<CreateDisciplineUseCaseResponse> {
+    if (!['admin', 'dev'].includes(role)) return left(new NotAllowedError())
+
     const disciplineAlreadyExist = await this.disciplinesRepository.findByName(name)
     if (disciplineAlreadyExist) return left(new ResourceAlreadyExistError('Discipline already exist.'))
 

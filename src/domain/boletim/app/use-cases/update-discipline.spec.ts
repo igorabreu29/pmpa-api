@@ -4,6 +4,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { UpdateDisciplineUseCase } from "./update-discipline.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 let disciplinesRepository: InMemoryDisciplinesRepository
 let sut: UpdateDisciplineUseCase
@@ -16,9 +17,20 @@ describe('Update Discipline Use Case', () => {
     )
   })
 
+  it ('should not be able to update discipline if user does not have access', async () => {
+    const result = await sut.execute({
+      id: '',
+      role: 'manager'
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
+  })
+
   it ('should not be able to update discipline if it does not exist', async () => {
     const result = await sut.execute({
-      id: 'not-found'
+      id: 'not-found',
+      role: 'dev'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -31,7 +43,8 @@ describe('Update Discipline Use Case', () => {
 
     const result = await sut.execute({
       id: discipline.id.toValue(),
-      name: ''
+      name: '',
+      role: 'dev'
     })
 
     expect(result.isLeft()).toBe(true)
@@ -44,7 +57,8 @@ describe('Update Discipline Use Case', () => {
 
     const result = await sut.execute({
       id: discipline.id.toValue(),
-      name: 'discipline-1'
+      name: 'discipline-1',
+      role: 'dev'
     })
 
     expect(result.isRight()).toBe(true)

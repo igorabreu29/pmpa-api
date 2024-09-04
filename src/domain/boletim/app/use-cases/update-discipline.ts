@@ -3,15 +3,20 @@ import type { DisciplinesRepository } from "../repositories/disciplines-reposito
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { Name } from "../../enterprise/entities/value-objects/name.ts";
 import type { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
+import { Role } from "../../enterprise/entities/authenticate.ts";
+import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 
 interface UpdateDisciplineUseCaseRequest {
   id: string
   name?: string
+
+  role: Role
 }
 
 type UpdateDisciplineUseCaseResponse = Either<
   | ResourceNotFoundError
-  | InvalidNameError, null>
+  | InvalidNameError
+  | NotAllowedError, null>
 
 export class UpdateDisciplineUseCase {
   constructor(
@@ -20,8 +25,11 @@ export class UpdateDisciplineUseCase {
 
   async execute({
     id,
-    name
+    name,
+    role
   }: UpdateDisciplineUseCaseRequest): Promise<UpdateDisciplineUseCaseResponse> {
+    if (!['admin', 'dev'].includes(role)) return left(new NotAllowedError())
+
     const discipline = await this.disciplinesRepository.findById(id)
     if (!discipline) return left(new ResourceNotFoundError('Discipline not found.'))
 
