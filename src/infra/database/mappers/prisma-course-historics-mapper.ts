@@ -5,12 +5,12 @@ import { Prisma, CourseHistoric as PrismaCourseHistoric } from '@prisma/client'
 export class PrismaCourseHistoricsMapper {
   static toDomain(courseHistoric: PrismaCourseHistoric): CourseHistoric {
     return CourseHistoric.create({
-      courseId: new UniqueEntityId(courseHistoric.id),
+      courseId: new UniqueEntityId(courseHistoric.courseId),
       className: courseHistoric.classname,
       finishDate: courseHistoric.finishDate,
       startDate: courseHistoric.startDate,
       commander: courseHistoric.commander ?? undefined,
-      divisionBoss: courseHistoric.commander ?? undefined,
+      divisionBoss: courseHistoric.divisionBoss ?? undefined,
       internships: courseHistoric.internships ?? undefined,
       speechs: courseHistoric.speechs ?? undefined,
       totalHours: courseHistoric.totalHours ?? undefined
