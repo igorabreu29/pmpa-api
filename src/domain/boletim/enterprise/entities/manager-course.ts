@@ -1,5 +1,7 @@
+import { AggregateRoot } from "@/core/entities/aggregate-root.ts";
 import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import type { DomainEvent } from "@/core/events/domain-event.ts";
 import { Optional } from "@/core/types/optional.ts";
 
 interface ManagerCourseProps {
@@ -9,7 +11,7 @@ interface ManagerCourseProps {
   createdAt: Date
 }
 
-export class ManagerCourse extends Entity<ManagerCourseProps> {
+export class ManagerCourse extends AggregateRoot<ManagerCourseProps> {
   get managerId() {
     return this.props.managerId
   }
@@ -27,6 +29,10 @@ export class ManagerCourse extends Entity<ManagerCourseProps> {
 
   get createdAt() {
     return this.props.createdAt
+  }
+
+  public addDomainManagerCourseEvent(domainEvent: DomainEvent): void {
+    this.addDomainEvent(domainEvent)
   }
 
   static create(props: Optional<ManagerCourseProps, 'createdAt' | 'isActive'>, id?: UniqueEntityId) {
