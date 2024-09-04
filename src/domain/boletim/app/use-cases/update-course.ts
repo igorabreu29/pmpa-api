@@ -33,6 +33,7 @@ export class UpdateCourseUseCase {
 
     course.name = nameOrError.value
     course.formula = formula ?? course.formula
+    course.isPeriod = !['CAS', 'CHO', 'CFP', 'CGS'].includes(course.formula)
 
     await this.coursesRepository.save(course)
 
