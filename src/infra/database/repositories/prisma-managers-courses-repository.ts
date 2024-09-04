@@ -6,6 +6,7 @@ import { prisma } from "../lib/prisma.ts";
 import { PrismaManagersCoursesMapper } from "../mappers/prisma-managers-courses-mapper.ts";
 import { PrismaManagerCourseDetailsMapper } from "../mappers/prisma-manager-course-details.ts";
 import { PrismaManagerWithCourseMapper } from "../mappers/prisma-manager-with-course-mapper.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class PrismaManagersCoursesRepository implements ManagersCoursesRepository {
   async findByCourseId({ courseId }: { courseId: string; }): Promise<ManagerCourse | null> {
@@ -196,6 +197,8 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
         isActive: prismaMapper.isActive
       }
     })
+
+    DomainEvents.dispatchEventsForAggregate(managerCourse.id)
   }
 
   async delete(managerCourse: ManagerCourse): Promise<void> {

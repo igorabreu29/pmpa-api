@@ -10,6 +10,7 @@ import { StudentWithPole } from "@/domain/boletim/enterprise/entities/value-obje
 import { PrismaStudentWithPoleMapper } from "../mappers/student-with-pole-mapper.ts";
 import { StudentWithCourse } from "@/domain/boletim/enterprise/entities/value-objects/student-with-course.ts";
 import { PrismaStudentWithCourseMapper } from "../mappers/prisma-student-with-course-mapper.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 
 export class PrismaStudentsCoursesRepository implements StudentsCoursesRepository {
   async findByStudentIdAndCourseId({ studentId, courseId }: { studentId: string; courseId: string; }): Promise<StudentCourse | null> {
@@ -336,6 +337,8 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
         isActive: prismaMapper.isActive
       }
     })
+
+    DomainEvents.dispatchEventsForAggregate(studentCourse.id)
   }
 
   async delete(studentCourse: StudentCourse): Promise<void> {
