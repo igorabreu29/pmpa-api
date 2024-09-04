@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
+import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import { env } from "./env/index.ts";
 import { authenticate } from "./http/controllers/authenticate.ts";
 import { createStudent } from "./http/controllers/create-student.ts";
@@ -15,8 +15,6 @@ import { createAdministrator } from "./http/controllers/create-administrator.ts"
 import { updateAdministrator } from "./http/controllers/update-administrator.ts";
 import { deleteAdministrator } from "./http/controllers/delete-administrator.ts";
 import { createDeveloper } from "./http/controllers/create-developer.ts";
-import { changeStudentStatus } from "./http/controllers/change-student-status.ts";
-import { changeManagerStatus } from "./http/controllers/change-manager-status.ts";
 import { createAssessment } from "./http/controllers/create-assessment.ts";
 import { createAssessmentBatch } from "./http/controllers/create-assessments-batch.ts";
 import { createBehavior } from "./http/controllers/create-behavior.ts";
@@ -73,6 +71,18 @@ import { uploadAttachment } from "./http/controllers/upload-attachment.ts";
 import { getAdministrators } from "./http/controllers/get-administrators.ts";
 import { getCourseStudent } from "./http/controllers/get-course-student.ts";
 import { getManagerReports } from "./http/controllers/get-manager-reports.ts";
+import { activeStudent } from "./http/controllers/active-student.ts";
+import { disableStudent } from "./http/controllers/disable-student.ts";
+import { activeManager } from "./http/controllers/active-manager.ts";
+import { disableManager } from "./http/controllers/disable-manager.ts";
+import { createDiscipline } from "./http/controllers/create-discipline.ts";
+import { updateDiscipline } from "./http/controllers/update-discipline.ts";
+import { deleteDiscipline } from "./http/controllers/delete-discipline.ts";
+import { getCourse } from "./http/controllers/get-course.ts";
+import { updateCourse } from "./http/controllers/update-course.ts";
+import { deleteCourse } from "./http/controllers/delete-course.ts";
+import { deleteCourseHistoric } from "./http/controllers/delete-course-historic.ts";
+import { getAssessmentClassification } from "./http/controllers/get-assessment-classification.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -97,17 +107,19 @@ app.setSerializerCompiler(serializerCompiler)
 app.register(authenticate)
 app.register(createStudent)
 app.register(createStudentBatch)
+app.register(activeStudent)
+app.register(disableStudent)
 app.register(updateStudent)
 app.register(updateStudentBatch)
 app.register(changeStudentProfile)
-app.register(changeStudentStatus)
 app.register(changeStudentAvatar)
 app.register(deleteStudent)
 app.register(createManager)
+app.register(activeManager)
+app.register(disableManager)
 app.register(deleteManager)
 app.register(updateManager)
 app.register(changeManagerProfile)
-app.register(changeManagerStatus)
 app.register(changeManagerAvatar)
 app.register(getAdministrators)
 app.register(createAdministrator)
@@ -130,10 +142,15 @@ app.register(createBehaviorBatch)
 app.register(updateBehavior)
 app.register(updateBehaviorBatch)
 app.register(deleteBehavior)
+app.register(getCourses)
+app.register(getCourse)
 app.register(createCourse)
+app.register(updateCourse)
+app.register(deleteCourse)
 app.register(createCoursePole)
 app.register(createCourseDiscipline)
 app.register(createCourseHistoric)
+app.register(deleteCourseHistoric)
 app.register(getStudentProfile)
 app.register(getManagerProfile)
 app.register(getAdministratorProfile)
@@ -150,7 +167,6 @@ app.register(getLoginConfirmationMetrics)
 app.register(getLoginConfirmationMetricsByManager)
 app.register(getPoles)
 app.register(getDisciplines)
-app.register(getCourses)
 app.register(studentConfirmLoginAndUpdate)
 app.register(getStudentAverage)
 app.register(searchStudentCourseDetails)
@@ -160,9 +176,13 @@ app.register(search)
 app.register(getClassification)
 app.register(getClassificationByPole)
 app.register(getClassificationByManager)
+app.register(getAssessmentClassification)
 app.register(getBehaviorClassification)
 app.register(getReports)
 app.register(getManagerReports)
 app.register(uploadAttachment)
+app.register(createDiscipline)
+app.register(updateDiscipline)
+app.register(deleteDiscipline)
 
 app.setErrorHandler(errorHandler)
