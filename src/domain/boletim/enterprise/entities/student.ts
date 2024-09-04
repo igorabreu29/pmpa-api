@@ -18,7 +18,7 @@ import { DomainEvent } from "@/core/events/domain-event.ts";
 
 export type StudentRole = 'student'
 
-interface StudentProps {
+export interface StudentProps {
   username: Name
   email: Email
   passwordHash: Password

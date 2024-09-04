@@ -2,7 +2,7 @@ import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Optional } from "@/core/types/optional.ts";
 
-interface StudentPoleProps {
+export interface StudentPoleProps {
   studentId: UniqueEntityId
   poleId: UniqueEntityId
   createdAt: Date

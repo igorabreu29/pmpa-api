@@ -4,7 +4,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import type { DomainEvent } from "@/core/events/domain-event.ts";
 import { Optional } from "@/core/types/optional.ts";
 
-interface StudentCourseProps {
+export interface StudentCourseProps {
   studentId: UniqueEntityId
   courseId: UniqueEntityId
   isActive: boolean

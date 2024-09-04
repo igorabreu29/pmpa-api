@@ -17,7 +17,7 @@ import { Parent } from "@/core/types/student.ts"
 
 export type AdministratorRole = 'admin'
 
-interface AdministratorProps {
+export interface AdministratorProps {
   username: Name
   email: Email
   passwordHash: Password

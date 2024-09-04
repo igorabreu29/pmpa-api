@@ -12,7 +12,7 @@ import { InvalidDateError } from "@/core/errors/domain/invalid-date.ts";
 export type Formula = 'CGS' | 'CFP' | 'CAS' | 'CHO' | 'CFO'
 // export type CourseType = 'period' | 'module' | 'year'
 
-interface CourseProps { 
+export interface CourseProps { 
   formula: Formula
   isPeriod: boolean
   name: Name

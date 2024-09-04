@@ -1,7 +1,7 @@
 import { Entity } from "@/core/entities/entity.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 
-interface CourseHistoricProps {
+export interface CourseHistoricProps {
   courseId: UniqueEntityId
   className: string
   startDate: Date

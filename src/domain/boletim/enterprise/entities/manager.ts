@@ -18,7 +18,7 @@ import { DomainEvent } from "@/core/events/domain-event.ts";
 
 export type ManagerRole = 'manager'
 
-interface ManagerProps {
+export interface ManagerProps {
   username: Name
   email: Email
   passwordHash: Password
