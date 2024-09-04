@@ -1,4 +1,4 @@
-[] Caixa de texto para desativar aluno
+[x] Caixa de texto para desativar aluno e gerente
 [] Criar certificados
 
 [x] Relatório por curso
@@ -10,13 +10,13 @@
 [x] Listar alunos desativados de um curso
 [x] Listar alunos ativos de um curso
 
-[] atualizar curso
-[] remover curso
-[] atualizar disciplina
-[] apagar disciplina
-[] classificação por notas
+[x] atualizar curso
+[x] remover curso
+[x] atualizar disciplina
+[x] apagar disciplina
 [x] listar um curso
-[] desativar histórico
+[x] classificação por notas
+[x] desativar histórico
 [] Listar alunos de um curso por gerente
 [] Listar comportamentos com alunos
 [] Remover comportamento
