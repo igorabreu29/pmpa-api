@@ -163,10 +163,10 @@ describe('Search Students Course By Manager (e2e)', () => {
       .set('Authorization', `Bearer ${token}`)
       .send()
 
-    const { students } = response.body
+    const { searchs } = response.body
 
     expect(response.statusCode).toEqual(200)
-    expect(students).toMatchObject([
+    expect(searchs).toMatchObject([
       {
         username: 'John Doe'
       },
