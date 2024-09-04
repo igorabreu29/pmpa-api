@@ -28,7 +28,7 @@ export async function getClassificationByPole(
 
         querystring: z.object({
           page: z.coerce.number().default(1),
-          hasBehavior: z.boolean().default(true),
+          hasBehavior: z.string().transform((item) => item === 'true'),
         })
       }
     }, async (req, res) => {
