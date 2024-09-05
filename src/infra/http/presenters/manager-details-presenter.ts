@@ -3,13 +3,12 @@ import {
   Prisma,
   User as PrismaStudent,
   Pole as PrismaPole,
-  Course as PrismaCourse
  } from "@prisma/client";
 import { dayjs } from '@/infra/libs/dayjs.ts'
 
 type PrismaStudentsDetails = Prisma.UserUncheckedCreateInput & {
   poles: PrismaPole[]
-  courses: PrismaCourse[]
+  courses: Prisma.CourseUncheckedUpdateInput[]
 }
 
 export class ManagerDetailsPresenter {
@@ -25,11 +24,7 @@ export class ManagerDetailsPresenter {
       birthday: dayjs(managerDetails.birthday).format('DD/MM/YYYY'),
       courses: managerDetails.courses.map(course => ({
         id: course.id.toValue(),
-        endsAt: course.endsAt.value,
-        formula: course.formula,
         imageUrl: course.imageUrl,
-        isActive: course.isActive,
-        isPeriod: course.isPeriod,
         name: course.name.value,
         startAt: course.startAt
       })),
