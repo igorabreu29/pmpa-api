@@ -120,7 +120,10 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const studentCourses = await prisma.userOnCourse.findMany({
       where: {
         courseId,
-        isActive: true
+        isActive: true,
+        user: {
+          role: 'STUDENT'
+        }
       },
       
       include: {
