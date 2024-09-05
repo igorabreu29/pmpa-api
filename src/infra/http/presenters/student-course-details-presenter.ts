@@ -6,7 +6,7 @@ import {
 
 import { dayjs } from '@/infra/libs/dayjs.ts'
 
-type PrismaStudentsDetails = Prisma.UserUncheckedUpdateInput & {
+type PrismaStudentsDetails = Prisma.UserUncheckedUpdateInput & Prisma.ProfileUncheckedUpdateInput & {
   pole: PrismaPole
   course: Prisma.CourseUncheckedUpdateInput
 }
@@ -21,6 +21,11 @@ export class StudentCourseDetailsPresenter {
       username: studentCourseDetails.username,
       birthday: dayjs(studentCourseDetails.birthday).format('DD/MM/YYYY'),
       createdAt: dayjs(studentCourseDetails.assignedAt).format('DD/MM/YYYY'),
+      militaryId: studentCourseDetails.militaryId,
+      county: studentCourseDetails.county,
+      state: studentCourseDetails.state,
+      motherName: studentCourseDetails.parent?.motherName,
+      fatherName: studentCourseDetails.parent?.fatherName,
       course: {
         name: studentCourseDetails.course,
         id: studentCourseDetails.courseId.toValue(),

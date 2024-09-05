@@ -183,7 +183,31 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       },
 
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            cpf: true,
+            email: true,
+            civilId: true,
+            birthday: true,
+            avatarUrl: true,
+            password: true,
+            createdAt: true,
+            isLoginConfirmed: true,
+            role: true,
+            profile: {
+              select: {
+                userId: true,
+                fatherName: true,
+                motherName: true,
+                county: true,
+                militaryId: true,
+                state: true
+              }
+            },
+          }
+        },
         course: true,
         usersOnPoles: {
           include: {
@@ -202,6 +226,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
 
       return {
         ...studentCourse.user,
+        profile: studentCourse.user.profile ?? undefined,
         course: studentCourse.course,
         pole: poleExist.pole
       }
