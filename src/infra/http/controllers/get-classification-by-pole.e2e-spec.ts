@@ -193,7 +193,7 @@ describe('Get Classification By Pole (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .get(`/courses/${course.id}/poles/${pole.id}/classification?page=1`)
+      .get(`/courses/${course.id}/poles/${pole.id}/classification?page=1&hasBehavior=true`)
       .set('Authorization', `Bearer ${token}`)
 
     const { studentsWithAverage } = response.body
