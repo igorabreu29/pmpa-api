@@ -9,14 +9,14 @@ interface FetchCourseStudentsUseCaseRequest {
   username?: string
   cpf?: string
   isEnabled?: boolean
-  page: number
+  page?: number
   perPage: number
 }
 
 type FetchCourseStudentsUseCaseResponse = Either<ResourceNotFoundError, {
   students: StudentCourseDetails[]
-  pages: number
-  totalItems: number
+  pages?: number
+  totalItems?: number
 }>
 
 export class FetchCourseStudentsUseCase {
