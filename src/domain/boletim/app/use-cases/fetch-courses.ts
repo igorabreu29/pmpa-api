@@ -3,13 +3,13 @@ import type { Course } from "../../enterprise/entities/course.ts";
 import type { CoursesRepository } from "../repositories/courses-repository.ts";
 
 interface FetchCoursesUseCaseRequest {
-  page: number
+  page?: number
 }
 
 type FetchCoursesUseCaseResponse = Either<null, {
   courses: Course[],
-  pages: number
-  totalItems: number
+  pages?: number
+  totalItems?: number
 }>
  
 export class FetchCoursesUseCase {
