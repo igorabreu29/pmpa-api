@@ -100,7 +100,9 @@ app.register(import('@fastify/static'), {
   root: resolve(import.meta.dirname, '../uploads'),
   prefix: "/uploads"
 })
-app.register(import('@fastify/multipart'))
+app.register(import('@fastify/multipart'), {
+  attachFieldsToBody: true
+})
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
