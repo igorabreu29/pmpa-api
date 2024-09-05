@@ -44,15 +44,15 @@ export abstract class StudentsCoursesRepository {
     perPage
   }: {
     courseId: string
-    page: number
+    page?: number
     cpf?: string
     username?: string
     isEnabled?: boolean
     perPage: number
   }): Promise<{
     studentsCourse: StudentCourseDetails[],
-    pages: number
-    totalItems: number
+    pages?: number
+    totalItems?: number
   }>
 
   abstract searchManyDetailsByCourseId({
