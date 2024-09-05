@@ -58,6 +58,27 @@ export class ManagerDetails extends ValueObject<ManagerDetailsProps> {
     return this.props.avatarUrl
   }
 
+  get role() {
+    return this.props.role
+  }
+
+  get militaryId() {
+    return this.props.militaryId
+  }
+
+  get state() {
+    return this.props.state
+  }
+
+  get county() {
+    return this.props.county
+  }
+
+  get parent() {
+    return this.props.parent
+  }
+
+
   get courses() {
     return this.props.courses
   }

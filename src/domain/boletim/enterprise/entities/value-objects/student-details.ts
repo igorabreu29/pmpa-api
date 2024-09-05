@@ -59,6 +59,22 @@ export class StudentDetails extends ValueObject<StudentDetailsProps> {
     return this.props.avatarUrl
   }
 
+  get militaryId() {
+    return this.props.militaryId
+  }
+
+  get state() {
+    return this.props.state
+  }
+
+  get county() {
+    return this.props.county
+  }
+
+  get parent() {
+    return this.props.parent
+  }
+
   get courses() {
     return this.props.courses
   }

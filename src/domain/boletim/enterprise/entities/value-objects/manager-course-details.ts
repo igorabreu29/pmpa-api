@@ -1,5 +1,6 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { ValueObject } from "@/core/entities/value-object.ts";
+import type { Parent } from "@/core/types/student.ts";
 
 interface ManagerCourseDetailsProps {
   managerId: UniqueEntityId
@@ -7,6 +8,10 @@ interface ManagerCourseDetailsProps {
   email: string
   cpf: string
   assignedAt: Date
+  militaryId?: string
+  state?: string
+  county?: string
+  parent?: Parent
 
   courseId: UniqueEntityId
   course: string
@@ -38,6 +43,22 @@ export class ManagerCourseDetails extends ValueObject<ManagerCourseDetailsProps>
 
   get course() {
     return this.props.course
+  }
+  
+  get militaryId() {
+    return this.props.militaryId
+  }
+
+  get state() {
+    return this.props.state
+  }
+
+  get county() {
+    return this.props.county
+  }
+
+  get parent() {
+    return this.props.parent
   }
 
   get poleId() {

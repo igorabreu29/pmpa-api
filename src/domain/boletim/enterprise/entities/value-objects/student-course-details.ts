@@ -1,13 +1,21 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { ValueObject } from "@/core/entities/value-object.ts";
 import { Formula } from "../course.ts";
+import type { Parent } from "@/core/types/student.ts";
 
 interface StudentCourseDetailsProps {
   studentId: UniqueEntityId
   username: string
   email: string
   cpf: string
+  birthday: Date
+  civilId: string
   assignedAt: Date
+  loginConfirmed?: boolean
+  militaryId?: string
+  state?: string
+  county?: string
+  parent?: Parent
 
   courseId: UniqueEntityId
   course: string
@@ -15,10 +23,6 @@ interface StudentCourseDetailsProps {
 
   poleId: UniqueEntityId
   pole: string
-
-  loginConfirmed?: boolean
-  birthday: Date
-  civilId: string
 }
 
 export class StudentCourseDetails extends ValueObject<StudentCourseDetailsProps> {
@@ -68,6 +72,22 @@ export class StudentCourseDetails extends ValueObject<StudentCourseDetailsProps>
 
   get civilId() {
     return this.props.civilId
+  }
+
+  get militaryId() {
+    return this.props.militaryId
+  }
+
+  get state() {
+    return this.props.state
+  }
+
+  get county() {
+    return this.props.county
+  }
+
+  get parent() {
+    return this.props.parent
   }
 
   static create(props: StudentCourseDetailsProps) {
