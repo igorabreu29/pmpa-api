@@ -22,6 +22,7 @@ export class ManagerDetailsPresenter {
       password: '',
       avatarUrl: managerDetails.avatarUrl ? managerDetails.avatarUrl : null,
       birthday: dayjs(managerDetails.birthday).format('DD/MM/YYYY'),
+      role: 'MANAGER',
       courses: managerDetails.courses.map(course => ({
         id: course.id.toValue(),
         imageUrl: course.imageUrl,
