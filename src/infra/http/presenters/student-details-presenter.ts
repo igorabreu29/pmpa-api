@@ -8,6 +8,7 @@ import {
  } from "@prisma/client";
 
 type PrismaStudentsDetails = Prisma.UserUncheckedCreateInput & {
+  profile?: Prisma.ProfileUncheckedUpdateInput
   poles: PrismaPole[]
   courses: PrismaCourse[]
 }
@@ -23,6 +24,14 @@ export class StudentDetailsPresenter {
       password: '',
       avatarUrl: studentDetails.avatarUrl ? studentDetails.avatarUrl : null,
       birthday: dayjs(studentDetails.birthday).format('DD/MM/YYYY'),
+      role: 'STUDENT',
+      profile: {
+        county: studentDetails.county,
+        state: studentDetails.state,
+        militaryId: studentDetails.militaryId,
+        fatherName: studentDetails.parent?.fatherName,
+        motherName: studentDetails.parent?.motherName,
+      },
       courses: studentDetails.courses.map(course => ({
         id: course.id.toValue(),
         endsAt: course.endsAt.value,
