@@ -52,7 +52,6 @@
     "@fastify/static": "^7.0.4",
     "@prisma/client": "^5.19.1",
     "bcryptjs": "^2.4.3",
-    "convert-excel-to-json": "^1.7.0",
     "dayjs": "^1.11.11",
     "fastify": "^4.28.1",
     "fastify-multer": "^2.0.3",
