@@ -151,17 +151,74 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
     perPage 
   }: { 
     courseId: string; 
-    page: number; 
+    page?: number; 
     cpf?: string
     username?: string
     isEnabled?: boolean
-    perPage: number; 
+    perPage?: number; 
   }): Promise<{ 
     studentsCourse: StudentCourseDetails[]; 
-    pages: number; 
-    totalItems: number; 
+    pages?: number; 
+    totalItems?: number; 
   }> {
-    const allStudentsCourses = this.items
+    if (page && perPage) {
+      const allStudentsCourses = this.items
+        .filter(item => {
+          return item.courseId.toValue() === courseId 
+            && isEnabled ? item.isActive : !item.isActive
+        })
+        .map(studentCourse => {
+          const student = this.studentsRepository.items.find(item => {
+            return item.id.equals(studentCourse.studentId)
+          })
+          if (!student) throw new Error(`Student with ID ${studentCourse.studentId.toValue()} does not exist.`)
+  
+          const course = this.coursesRepository.items.find(item => {
+            return item.id.equals(studentCourse.courseId)
+          })
+          if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist.`)
+  
+          const studentPole = this.studentsPolesRepository.items.find(item => { 
+            return item.studentId.equals(studentCourse.id)
+          })
+          if (!studentPole) throw new Error(`Student with ID ${studentCourse.studentId.toValue()} does not exist.`)
+  
+          const pole = this.polesRepository.items.find(item => {
+            return item.id.equals(studentPole.poleId)
+          })
+          if (!pole) throw new Error(`Pole with ID ${studentPole.poleId.toValue()} does not exist.`)
+  
+          return StudentCourseDetails.create({
+            studentId: student.id,
+            username: student.username.value,
+            cpf: student.cpf.value,
+            email: student.email.value,
+            birthday: student.birthday.value,
+            civilId: student.civilId,
+            assignedAt: student.createdAt,
+            courseId: course.id,
+            course: course.name.value,
+            formula: course.formula,
+            poleId: pole.id,
+            pole: pole.name.value,
+          })
+        })
+        .filter(item => {
+          return item.username.toLowerCase().includes(username ? username.toLowerCase() : '') && 
+            item.cpf.toLowerCase().includes(cpf || '')
+        })
+
+      const studentsCourse = allStudentsCourses.slice((page - 1) * perPage, page * perPage)
+      const pages = Math.ceil(allStudentsCourses.length / perPage)
+        
+      return {
+        studentsCourse,
+        pages,
+        totalItems: allStudentsCourses.length
+      }
+    }
+
+    const studentsCourse = this.items
       .filter(item => {
         return item.courseId.toValue() === courseId 
           && isEnabled ? item.isActive : !item.isActive
@@ -207,13 +264,8 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
           item.cpf.toLowerCase().includes(cpf || '')
       })
 
-      const studentsCourse = allStudentsCourses.slice((page - 1) * perPage, page * perPage)
-      const pages = Math.ceil(allStudentsCourses.length / perPage)
-      
       return {
         studentsCourse,
-        pages,
-        totalItems: allStudentsCourses.length
       }
   }
 
