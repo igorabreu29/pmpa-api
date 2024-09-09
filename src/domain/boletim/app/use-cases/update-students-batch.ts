@@ -35,7 +35,7 @@ interface StudentType {
   username?: string
   email?: string
   password?: string
-  civilId?: number
+  civilId?: string
   birthday?: Date
 }
 
