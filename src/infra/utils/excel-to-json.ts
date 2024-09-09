@@ -1,162 +1,123 @@
 import { formatCPF } from '@/core/utils/formatCPF.ts';
-import excelToJSON from 'convert-excel-to-json';
-import { resolve } from 'node:path';
+import { join } from 'node:path';
+import { cwd } from 'node:process';
+import { readFile, utils } from '../libs/xlsx.ts'
 
 export interface ExcelCreateStudentsBatch {
-  [key: string]: {
-    username: string
-    cpf: number
-    email: string
-    civilId: string
-    courseName: string
-    poleName: string
-    birthday: Date
-  }[]
+  CPF: number
+  'NOME COMPLETO': string
+  'E-MAIL': string
+  'RG CIVIL': number
+  'DATA DE NASCIMENTO': Date
+  CURSO: string
+  POLO: string
 }
 
 export interface ExcelUpdateStudentsBatch {
-  [key: string]: {
-    cpf: number
-    username?: string
-    email?: string
-    civilId?: number
-    birthday?: Date
-    courseName: string
-    poleName: string
-  }[]
+  CPF: number
+  'NOME COMPLETO'?: string
+  'E-MAIL'?: string
+  'RG CIVIL'?: number
+  'DATA DE NASCIMENTO'?: Date
+  CURSO: string
+  POLO: string
 }
 
 export interface ExcelAssessmentsBatch {
-  [key: string]: {
-    cpf: string
-    disciplineName: string
-    vf: number
-    avi?: number
-    avii?: number
-    vfe?: number
-  }[]
+  CPF: string
+  DISCIPLINA: string
+  VF: number
+  AVI?: number
+  AVII?: number
+  VFE?: number
 }
 
 export interface ExcelBehaviorsBatch {
-  [key: string]: {
-    cpf: string
-    january?: number
-    february?: number
-    march?: number
-    april?: number
-    may?: number
-    jun?: number
-    july?: number
-    august?: number
-    september?: number
-    october?: number
-    november?: number
-    december?: number
-  }[]
+  CPF: string
+  JANEIRO?: number
+  FEVEREIRO?: number
+  MARÇO?: number
+  ABRIL?: number
+  MAIO?: number
+  JUNHO?: number
+  JULHO?: number
+  AGOSTO?: number
+  SETEMBRO?: number
+  OUTUBRO?: number
+  NOVEMBRO?: number
+  DEZEMBRO?: number
 }
 
 export function createStudentsBatchExcelToJSON(fileUrl: string) {
-  const data: ExcelCreateStudentsBatch = excelToJSON({
-    sourceFile: resolve(import.meta.dirname, `../../../${fileUrl}`),
-    header: {
-      rows: 1
-    },
-    columnToKey: {
-      A: 'cpf',
-      B: 'username',
-      C: 'email',
-      D: 'civilId',
-      E: 'birthday',
-      F: 'courseName',
-      G: 'poleName',
-    },
-  })
+  const workbook = readFile(join(cwd(), fileUrl))
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]]
 
-  const students = data['Página1'] ?? data['sheet1']
+  const students: ExcelCreateStudentsBatch[] = utils.sheet_to_json(worksheet)
 
-  return students.map(item => ({
-    ...item,
-    cpf: formatCPF(String(item.cpf))
-  })) 
+  return students.map(student => ({
+    cpf: formatCPF(String(student['CPF'])),
+    username: student['NOME COMPLETO'],
+    email: student['E-MAIL'],
+    civilId: String(student['RG CIVIL']),
+    birthday: new Date(student['DATA DE NASCIMENTO']),
+    courseName: student['CURSO'],
+    poleName: student['POLO'],
+  }))
 }
 
 export function updateStudentsBatchExcelToJSON(fileUrl: string) {
-  const data: ExcelUpdateStudentsBatch = excelToJSON({
-    sourceFile: resolve(import.meta.dirname, `../../../${fileUrl}`),
-    header: {
-      rows: 1
-    },
-    columnToKey: {
-      A: 'cpf',
-      B: 'username',
-      C: 'email',
-      D: 'civilId',
-      E: 'birthday',
-      F: 'courseName',
-      G: 'poleName',
-    },
-  })
+  const workbook = readFile(join(cwd(), fileUrl))
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]]
 
-  const students = data['Página1'] ?? data['sheet1']
+  const students: ExcelUpdateStudentsBatch[] = utils.sheet_to_json(worksheet)
 
-  return students.map(item => ({
-    ...item,
-    cpf: String(item.cpf)
-  })) 
+  return students.map(student => ({
+    cpf: String(student['CPF']),
+    username: student['NOME COMPLETO'],
+    email: student['E-MAIL'],
+    civilId: String(student['RG CIVIL']),
+    birthday: student['DATA DE NASCIMENTO'] ? new Date(student['DATA DE NASCIMENTO']) :  undefined,
+    courseName: student['CURSO'],
+    poleName: student['POLO'],
+  }))
 }
 
 export function assessmentsBatchExcelToJSON(fileUrl: string) {
-  const data: ExcelAssessmentsBatch = excelToJSON({
-    sourceFile: resolve(import.meta.dirname, `../../../${fileUrl}`),
-    header: {
-      rows: 1
-    },
-    columnToKey: {
-      A: 'cpf',
-      B: 'disciplineName',
-      C: 'vf',
-      D: 'avi',
-      E: 'avii',
-      F: 'vfe',
-    },
-  })
+  const workbook = readFile(join(cwd(), fileUrl))
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]]
 
-  const assessments = data['Página1'] ?? data['sheet1']
+  const assessments: ExcelAssessmentsBatch[] = utils.sheet_to_json(worksheet)
 
-  return assessments.map(item => ({
-    ...item,
-    cpf: String(item.cpf)
-  })) 
+  return assessments.map(assessment => ({
+    cpf: String(assessment['CPF']),
+    discipline: assessment['DISCIPLINA'],
+    vf: assessment['VF'],
+    avi: assessment['AVI'],
+    avii: assessment['AVII'],
+    vfe: assessment['VFE'],
+  }))
 }
 
 export function behaviorsBatchExcelToJSON(fileUrl: string) {
-  const data: ExcelBehaviorsBatch = excelToJSON({
-    sourceFile: resolve(import.meta.dirname, `../../../${fileUrl}`),
-    header: {
-      rows: 1
-    },
-    columnToKey: {
-      A: 'cpf',
-      B: 'january',
-      C: 'february',
-      D: 'march',
-      E: 'april',
-      F: 'may',
-      G: 'jun',
-      H: 'july',
-      I: 'august',
-      J: 'september',
-      K: 'october',
-      L: 'november',
-      M: 'december'
-    },
-  })
+  const workbook = readFile(join(cwd(), fileUrl))
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]]
 
-  const behaviors = data['Página1'] ?? data['sheet1']
+  const behaviors: ExcelBehaviorsBatch[] = utils.sheet_to_json(worksheet)
 
-  return behaviors.map(item => ({
-    ...item,
-    cpf: String(item.cpf)
-  })) 
+  return behaviors.map(behavior => ({
+    cpf: String(behavior['CPF']),
+    january: behavior['JANEIRO'],
+    february: behavior['FEVEREIRO'],
+    march: behavior['MARÇO'],
+    april: behavior['ABRIL'],
+    may: behavior['MAIO'],
+    jun: behavior['JULHO'],
+    july: behavior['JULHO'],
+    august: behavior['AGOSTO'],
+    september: behavior['SETEMBRO'],
+    october: behavior['OUTUBRO'],
+    november: behavior['NOVEMBRO'],
+    december: behavior['DEZEMBRO'],
+  }))
 }
 
