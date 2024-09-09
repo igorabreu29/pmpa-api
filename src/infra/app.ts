@@ -4,7 +4,7 @@ import { env } from "./env/index.ts";
 import { authenticate } from "./http/controllers/authenticate.ts";
 import { createStudent } from "./http/controllers/create-student.ts";
 import { errorHandler } from "./error-handler.ts";
-import { resolve } from "node:path";
+import { join } from "node:path";
 import { createStudentBatch } from "./http/controllers/create-students-batch.ts";
 import { deleteStudent } from "./http/controllers/delete-student.ts";
 import { updateStudent } from "./http/controllers/update-student.ts";
@@ -84,6 +84,7 @@ import { deleteCourse } from "./http/controllers/delete-course.ts";
 import { deleteCourseHistoric } from "./http/controllers/delete-course-historic.ts";
 import { getAssessmentClassification } from "./http/controllers/get-assessment-classification.ts";
 import { getCourseManager } from "./http/controllers/get-course-manager.ts";
+import { cwd } from "node:process";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -92,17 +93,15 @@ app.register(import("@fastify/cors"), {
   ],
   credentials: true
 })
-
 app.register(import('@fastify/jwt'), {
   secret: env.JWT_SECRET
 })
+
 app.register(import('@fastify/static'), {
-  root: resolve(import.meta.dirname, '../uploads'),
+  root: join(cwd(), './uploads'),
   prefix: "/uploads"
 })
-app.register(import('@fastify/multipart'), {
-  attachFieldsToBody: true
-})
+app.register(import('@fastify/multipart'))
 
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
