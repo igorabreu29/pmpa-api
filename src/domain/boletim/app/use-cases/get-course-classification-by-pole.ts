@@ -11,7 +11,7 @@ import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-th
 
 interface GetCourseClassificationByPoleUseCaseRequest {
   courseId: string
-  page: number
+  page?: number
   managerId?: string
   poleId?: string
   hasBehavior?: boolean
