@@ -3,7 +3,6 @@ import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { AssessmentsRepository } from "../repositories/assessments-repository.ts";
 import { Role } from "../../enterprise/entities/authenticate.ts";
-import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
 import { AssessmentRemovedGradeEvent } from "../../enterprise/events/assessment-removed-grade-event.ts";
 
 interface RemoveAssessmentGradeUseCaseRequest {

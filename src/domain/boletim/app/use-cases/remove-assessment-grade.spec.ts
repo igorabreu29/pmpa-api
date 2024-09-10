@@ -2,8 +2,6 @@ import { InMemoryAssessmentsRepository } from "test/repositories/in-memory-asses
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { makeAssessment } from "test/factories/make-assessment.ts";
-import { UpdateAssessmentUseCaseUseCase } from "./update-assessment.ts";
-import { ConflictError } from "./errors/conflict-error.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { RemoveAssessmentGradeUseCase } from "./remove-assessment-grade.ts";
 import { makeCourse } from "test/factories/make-course.ts";
