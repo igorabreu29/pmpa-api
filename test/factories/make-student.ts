@@ -97,7 +97,7 @@ export async function makePrismaStudent({
     })
   }
 
-  if (courseId) {
+  if (courseId && !poleId) {
     await prisma.userOnCourse.create({
       data: {
         courseId,
