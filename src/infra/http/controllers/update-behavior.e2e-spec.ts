@@ -72,7 +72,7 @@ describe('Update Behavior (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .patch(`/behaviors/${behavior.id}`)
+      .put(`/behaviors/${behavior.id}`)
       .set('Authorization', `Bearer ${token}`)
       .send({
         january: 10

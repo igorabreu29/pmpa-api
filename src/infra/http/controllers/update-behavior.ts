@@ -19,7 +19,7 @@ export async function updateBehavior(
 ) {
   app 
     .withTypeProvider<ZodTypeProvider>()
-    .patch('/behaviors/:id', {
+    .put('/behaviors/:id', {
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
       schema: {
         params: z.object({
