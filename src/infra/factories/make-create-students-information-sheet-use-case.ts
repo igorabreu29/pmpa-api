@@ -1,4 +1,4 @@
-import { GetStudentsInformationSheetUseCase } from "@/domain/boletim/app/use-cases/get-students-information-sheet.ts";
+import { CreateStudentsInformationSheetUseCase } from "@/domain/boletim/app/use-cases/create-students-information-sheet.ts";
 import { PrismaAssessmentsRepository } from "../database/repositories/prisma-assessments-repository.ts";
 import { PrismaCourseDisciplinesRepository } from "../database/repositories/prisma-course-disciplines-repository.ts";
 import { PrismaCoursesRepository } from "../database/repositories/prisma-courses-repository.ts";
@@ -12,7 +12,7 @@ export function makeGetStudentsInformationSheetUseCase() {
   const assessmentsRepository = new PrismaAssessmentsRepository()
   const sheeter = new XLSXSheeter()
   
-  return new GetStudentsInformationSheetUseCase(
+  return new CreateStudentsInformationSheetUseCase(
     coursesRepository,
     studentCoursesRepository,
     courseDisciplinesRepository,
