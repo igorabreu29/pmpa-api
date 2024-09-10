@@ -85,6 +85,8 @@ import { deleteCourseHistoric } from "./http/controllers/delete-course-historic.
 import { getAssessmentClassification } from "./http/controllers/get-assessment-classification.ts";
 import { getCourseManager } from "./http/controllers/get-course-manager.ts";
 import { cwd } from "node:process";
+import { getStudentsInformationSheet } from "./http/controllers/get-students-information-sheet.ts";
+import { createCourseSummarySheet } from "./http/controllers/create-course-summary-sheet.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -107,6 +109,7 @@ app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
 
 app.register(authenticate)
+app.register(getStudentsInformationSheet)
 app.register(createStudent)
 app.register(createStudentBatch)
 app.register(activeStudent)
@@ -187,5 +190,6 @@ app.register(uploadAttachment)
 app.register(createDiscipline)
 app.register(updateDiscipline)
 app.register(deleteDiscipline)
+app.register(createCourseSummarySheet)
 
 app.setErrorHandler(errorHandler)
