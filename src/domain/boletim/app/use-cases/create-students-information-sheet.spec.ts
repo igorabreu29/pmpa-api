@@ -18,7 +18,7 @@ import { makeAssessment } from "test/factories/make-assessment.ts"
 import { makeCourseDiscipline } from "test/factories/make-course-discipline.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
 import { FakeSheeter } from "test/sheet/fake-sheeter.ts"
-import { GetStudentsInformationSheetUseCase } from "./get-students-information-sheet.ts"
+import { CreateStudentsInformationSheetUseCase } from "./create-students-information-sheet.ts"
 
 let studentsRepository: InMemoryStudentsRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -30,7 +30,7 @@ let disciplinesRepository: InMemoryDisciplinesRepository
 let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let sheeter: FakeSheeter
 
-let sut: GetStudentsInformationSheetUseCase
+let sut: CreateStudentsInformationSheetUseCase
 
 describe('Create Students Information Sheet Use Case', () => {
   beforeEach(() => {
@@ -62,7 +62,7 @@ describe('Create Students Information Sheet Use Case', () => {
     )
     sheeter = new FakeSheeter()
 
-    sut = new GetStudentsInformationSheetUseCase(
+    sut = new CreateStudentsInformationSheetUseCase(
       coursesRepository,
       studentsCoursesRepository,
       courseDisciplinesRepository,
@@ -71,14 +71,14 @@ describe('Create Students Information Sheet Use Case', () => {
     )
   })
 
-  it ('should not be able to get students information sheet if course does not exist', async () => {
+  it ('should not be able to create students information sheet if course does not exist', async () => {
     const result = await sut.execute({ courseId: '' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it ('should be able to get students information sheet', async () => {
+  it ('should be able to create students information sheet', async () => {
     const course = makeCourse({ formula: 'CAS' }, new UniqueEntityId('course-1'))
     coursesRepository.create(course)
 
@@ -127,7 +127,7 @@ describe('Create Students Information Sheet Use Case', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      filename: `${course.name.value}-students`
+      filename: `${course.name.value} - Informações dos estudantes.xlsx`
     })
   })
 })

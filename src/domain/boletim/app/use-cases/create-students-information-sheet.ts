@@ -7,15 +7,15 @@ import type { CoursesDisciplinesRepository } from "../repositories/courses-disci
 import { generateAssessmentAverage } from "../utils/generate-assessment-average.ts";
 import { Sheeter } from "../sheet/sheeter.ts";
 
-interface GetStudentsInformationSheetUseCaseRequest {
+interface CreateStudentsInformationSheetUseCaseRequest {
   courseId: string
 }
 
-type GetStudentsInformationSheetUseCaseResponse = Either<ResourceNotFoundError, {
+type CreateStudentsInformationSheetUseCaseResponse = Either<ResourceNotFoundError, {
   filename: string
 }>
 
-export class GetStudentsInformationSheetUseCase {
+export class CreateStudentsInformationSheetUseCase {
   constructor (
     private coursesRepository: CoursesRepository,
     private studentCoursesRepository: StudentsCoursesRepository,
@@ -24,7 +24,7 @@ export class GetStudentsInformationSheetUseCase {
     private sheeter: Sheeter
   ) {}
 
-  async execute({ courseId }: GetStudentsInformationSheetUseCaseRequest): Promise<GetStudentsInformationSheetUseCaseResponse> {
+  async execute({ courseId }: CreateStudentsInformationSheetUseCaseRequest): Promise<CreateStudentsInformationSheetUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
@@ -79,7 +79,7 @@ export class GetStudentsInformationSheetUseCase {
       }
     }))
 
-    const { filename } = this.sheeter.write({ courseName: course.name.value, rows: studentsInformation })
+    const { filename } = this.sheeter.write({ rows: studentsInformation, keys: [], sheetName: `${course.name.value} - Informações dos estudantes.xlsx` })
 
     return right({
       filename
