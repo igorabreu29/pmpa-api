@@ -48,7 +48,7 @@ export abstract class StudentsCoursesRepository {
     cpf?: string
     username?: string
     isEnabled?: boolean
-    perPage: number
+    perPage?: number
   }): Promise<{
     studentsCourse: StudentCourseDetails[],
     pages?: number

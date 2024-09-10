@@ -9,7 +9,7 @@ import { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error
 
 interface GetCourseClassificationUseCaseRequest {
   courseId: string
-  page: number
+  page?: number
   hasBehavior?: boolean
 }
 

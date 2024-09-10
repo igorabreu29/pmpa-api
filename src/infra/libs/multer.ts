@@ -1,12 +1,13 @@
 import multer from 'fastify-multer'
 import { randomUUID } from 'node:crypto'
 import { resolve } from 'node:path'
+import { cwd } from 'node:process'
 
 export const upload = multer({
-    dest: resolve(import.meta.dirname, '../../../uploads'),
+    dest: resolve(cwd(), './uploads'),
     storage: multer.diskStorage({
         destination: (req, file, callback) => {
-            callback(null, resolve(import.meta.dirname, '../../../uploads'))
+            callback(null, resolve(cwd(), './uploads'))
         },
         filename: (req, file, callback) => {
             const fileName = `${randomUUID()}-${file.originalname}`
