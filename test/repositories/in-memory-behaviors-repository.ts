@@ -15,6 +15,11 @@ export class InMemoryBehaviorsRepository implements BehaviorsRepository {
     return behavior ?? null
   }
 
+  async findManyByCourseId({ courseId }: { courseId: string; }): Promise<Behavior[]> {
+    const behaviors = this.items.filter(item => item.courseId.toValue() === courseId)
+    return behaviors
+  }
+
   async findManyByStudentIdAndCourseId({ studentId, courseId }: { studentId: string; courseId: string; }): Promise<Behavior[]> {
     const behaviors = this.items.filter(item => item.studentId.toValue() === studentId && item.courseId.toValue() === courseId)
     return behaviors
