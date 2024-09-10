@@ -28,6 +28,16 @@ export class PrismaBehaviorsRepository implements BehaviorsRepository {
     return PrismaBehaviorsMapper.toDomain(behavior)
   }
 
+  async findManyByCourseId({ courseId }: { courseId: string; }): Promise<Behavior[]> {
+    const behaviors = await prisma.behavior.findMany({
+      where: {
+        courseId
+      }
+    }) 
+
+    return behaviors.map(behavior => PrismaBehaviorsMapper.toDomain(behavior))
+  }
+
   async findManyByStudentIdAndCourseId({ studentId, courseId }: { studentId: string, courseId: string }): Promise<Behavior[]> {
     const behaviors = await prisma.behavior.findMany({
       where: {
