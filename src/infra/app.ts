@@ -87,6 +87,8 @@ import { getCourseManager } from "./http/controllers/get-course-manager.ts";
 import { cwd } from "node:process";
 import { getStudentsInformationSheet } from "./http/controllers/get-students-information-sheet.ts";
 import { createCourseSummarySheet } from "./http/controllers/create-course-summary-sheet.ts";
+import { removeBehaviorGrade } from "./http/controllers/remove-behavior-grade.ts";
+import { getCourseBehaviors } from "./http/controllers/get-course-behaviors.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -142,9 +144,11 @@ app.register(updateAssessmentBatch)
 app.register(removeAssessmentGrade)
 app.register(removeAssessmentsGradeBatch)
 app.register(deleteAssessment)
+app.register(getCourseBehaviors)
 app.register(createBehavior)
 app.register(createBehaviorBatch)
 app.register(updateBehavior)
+app.register(removeBehaviorGrade)
 app.register(updateBehaviorBatch)
 app.register(deleteBehavior)
 app.register(getCourses)
