@@ -1,10 +1,11 @@
-interface WriteProps {
-  rows: [],
-  courseName: string
+export interface WriteProps {
+  keys: string[]
+  rows: unknown[]
+  sheetName: string
 }
 
 export interface Sheeter {
-  write: ({ courseName, rows }: WriteProps) => {
-    url: string
+  write: ({ keys, rows, sheetName }: WriteProps) => {
+    filename: string
   }
 }
