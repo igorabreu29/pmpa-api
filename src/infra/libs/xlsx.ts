@@ -1,10 +1,11 @@
 import fs from 'node:fs'
-import xlsx, { set_fs, utils, readFile } from "xlsx";
+import xlsx, { set_fs, utils, readFile, writeFile } from "xlsx";
 
 set_fs(fs)
 
 export {
   xlsx,
   utils,
-  readFile
+  readFile,
+  writeFile
 }
