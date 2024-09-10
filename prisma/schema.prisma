@@ -63,7 +63,7 @@ model UserOnCourse {
   createdAt DateTime @default(now()) @map("created_at")
 
   course       Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  user         User               @relation(fields: [userId], references: [id])
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   usersOnPoles UserCourseOnPole[]
 
   @@unique([userId, courseId])
@@ -185,7 +185,7 @@ model Assessment {
   avii Decimal?
   vfe  Decimal?
 
-  user       User       @relation(fields: [studentId], references: [id])
+  user       User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
   course     Course     @relation(fields: [courseId], references: [id])
   discipline Discipline @relation(fields: [disciplineId], references: [id])
 
@@ -211,7 +211,7 @@ model Behavior {
   december    Decimal?
   currentYear Int?
 
-  user   User   @relation(fields: [studentId], references: [id])
+  user   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
   course Course @relation(fields: [courseId], references: [id])
 
   @@map("behaviors")
@@ -235,6 +235,6 @@ model Report {
   createdAt  DateTime @default(now()) @map("created_at")
   action     Action   @default(ADD)
 
-  reporter User    @relation(fields: [reporterId], references: [id])
+  reporter User    @relation(fields: [reporterId], references: [id], onDelete: Cascade)
   course   Course? @relation(fields: [courseId], references: [id])
 }
