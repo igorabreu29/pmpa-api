@@ -83,6 +83,6 @@ describe('GET Students Information (e2e)', () => {
       .get(`/courses/${course.id.toValue()}/students/sheet`)
       .set('Authorization', `Bearer ${token}`)
 
-    expect(response.status).toBe(307)
+    expect(response.status).toBe(200)
   })
 })
