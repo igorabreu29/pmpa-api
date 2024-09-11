@@ -20,6 +20,7 @@ export interface BehaviorClassification {
     poleId: string
     name: string
     average: number
+    behaviorAverageStatus: GenerateBehaviorStatus
   }
 }
 

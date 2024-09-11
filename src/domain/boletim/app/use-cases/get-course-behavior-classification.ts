@@ -6,6 +6,7 @@ import type { BehaviorsRepository } from "../repositories/behaviors-repository.t
 import { generateBehaviorAverage } from "../utils/generate-behavior-average.ts"
 import { ranksStudentsByBehaviorAverage, type BehaviorClassification, type StudentWithBehaviorAverage } from "../utils/classification/ranks-students-by-average-behavior.ts"
 import type { CoursesPoleRepository } from "../repositories/courses-poles-repository.ts"
+import { getBehaviorAverageStatus } from "../utils/get-behavior-average-status.ts"
 
 interface GetCourseBehaviorClassificationUseCaseRequest {
   courseId: string
@@ -81,11 +82,14 @@ export class GetCourseBehaviorClassificationUseCase {
       const behaviorAverageByPole = studentsGroup
         .reduce((acc, item) => acc + item.behaviorAverage.behaviorAverageStatus.behaviorAverage, 0) / studentsGroup.length
 
+      const behaviorAverageStatus = getBehaviorAverageStatus(behaviorAverageByPole)
+
       return {
         behaviorAverageByPole: {
           poleId: coursePole.id.toValue(),
           name: coursePole.name.value,
           average: Number(behaviorAverageByPole.toFixed(3)),
+          behaviorAverageStatus
         }
       }
     })

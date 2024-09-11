@@ -58,7 +58,8 @@ export class GetCourseAssessmentClassificationUseCase {
       return {
         assessmentsAverage: {
           studentAverage,
-          studentAverageWithStatus
+          studentAverageWithStatus,
+          isStudentRecovering
         },
         studentBirthday: student.birthday,
         studentName: student.username,
@@ -75,11 +76,15 @@ export class GetCourseAssessmentClassificationUseCase {
       const assessmentAverageByPole = studentsGroup
         .reduce((acc, item) => acc + item.assessmentsAverage.studentAverage, 0) / studentsGroup.length
 
+      const isStudentRecovering = studentsGroup.some((item) => item?.assessmentsAverage.isStudentRecovering)    
+      const studentAverageStatus = getGeralStudentAverageStatus({ average: assessmentAverageByPole, isRecovering: isStudentRecovering })
+
       return {
         assessmentAverageByPole: {
           poleId: coursePole.id.toValue(),
           name: coursePole.name.value,
           average: Number(assessmentAverageByPole.toFixed(3)),
+          studentAverageStatus
         }
       }
     })

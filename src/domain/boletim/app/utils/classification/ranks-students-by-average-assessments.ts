@@ -5,6 +5,7 @@ export interface StudentWithAssessmentAverage {
     assessmentsAverage: {
       studentAverage: number
       studentAverageWithStatus: GetGeralStudentAverageStatusResponse
+      isStudentRecovering: boolean
     };
     studentBirthday: Date;
     studentName: string;
@@ -20,6 +21,7 @@ export interface AssessmentClassification {
     poleId: string
     name: string
     average: number
+    studentAverageStatus: GetGeralStudentAverageStatusResponse
   }
 }
 
