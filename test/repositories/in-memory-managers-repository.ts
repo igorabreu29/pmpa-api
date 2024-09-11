@@ -37,7 +37,10 @@ export class InMemoryManagersRepository implements ManagersRepository {
       })
       if (!course) throw new Error(`Course with ID ${managerCourse.courseId.toValue()} does not exist.`)
 
-      return course
+      return {
+        managerCourseId: managerCourse.id,
+        course
+      }
     })
 
     const managersPoles = this.managersPolesRepository.items.filter((item, index) => {
@@ -50,7 +53,10 @@ export class InMemoryManagersRepository implements ManagersRepository {
       })
       if (!pole) throw new Error(`Pole with ID ${managerPole.poleId.toValue()} does not exist.`)
     
-      return pole
+      return {
+        managerPoleId: managerPole.id,
+        pole
+      }
     })
 
     return ManagerDetails.create({
@@ -62,7 +68,8 @@ export class InMemoryManagersRepository implements ManagersRepository {
       cpf: manager.cpf.value,
       email: manager.email.value,
       courses,
-      poles
+      poles,
+      role: 'manager'
     })
   }
 
@@ -93,21 +100,31 @@ export class InMemoryManagersRepository implements ManagersRepository {
         })
         
         const courses = managerCourses.map(managerCourse => {
-          const course = this.coursesRepository.items.find(item => item.id.equals(managerCourse.courseId))
+          const course = this.coursesRepository.items.find(item => {
+            return item.id.equals(managerCourse.courseId)
+          })
           if (!course) throw new Error(`Course with ID ${managerCourse.courseId.toValue()} does not exist.`)
     
-          return course
+          return {
+            managerCourseId: managerCourse.id,
+            course
+          }
         })
     
-        const managerPoles = this.managersPolesRepository.items.filter((item, index) => {
+        const managersPoles = this.managersPolesRepository.items.filter((item, index) => {
           return item.managerId.equals(managerCourses[index].id)
         })
     
-        const poles = managerPoles.map(managerPole => {
-          const pole = this.polesRepository.items.find(item => item.id.equals(managerPole.poleId))
+        const poles = managersPoles.map(managerPole => {
+          const pole = this.polesRepository.items.find(item => {
+            return item.id.equals(managerPole.poleId)
+          })
           if (!pole) throw new Error(`Pole with ID ${managerPole.poleId.toValue()} does not exist.`)
-    
-          return pole
+        
+          return {
+            managerPoleId: managerPole.id,
+            pole
+          }
         })
 
         return ManagerDetails.create({
@@ -119,7 +136,8 @@ export class InMemoryManagersRepository implements ManagersRepository {
           birthday: manager.birthday.value,
           assignedAt: manager.createdAt,
           courses,
-          poles
+          poles,
+          role: 'manager'
         })
       })
 

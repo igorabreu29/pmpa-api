@@ -19,6 +19,8 @@ import {
 type PrismaSearchsDetails = Prisma.UserUpdateInput & {
   poles: PrismaPole[]
   courses: PrismaCourse[]
+  searchCourses: Prisma.UserOnCourseUncheckedCreateInput[]
+  searchPoles: Prisma.UserCourseOnPoleUncheckedCreateInput[]
 }
 
 export class PrismaSearchsDetailsMapper {
@@ -35,7 +37,7 @@ export class PrismaSearchsDetailsMapper {
 
     const searchOrError = Search.create({
       username: nameOrError.value,
-      civilId: Number(search.civilId),
+      civilId: String(search.civilId),
       cpf: cpfOrError.value,
       email: emailOrError.value,
       role: defineRoleAccessToPrisma(search.role as Role),
@@ -56,7 +58,15 @@ export class PrismaSearchsDetailsMapper {
         }, new UniqueEntityId(course.id))
         if (courseOrError.isLeft()) throw new Error(courseOrError.value.message)
 
-        return courseOrError.value
+          const searchCourse = search.searchCourses.find(searchCourse => {
+            return searchCourse.courseId === course.id
+          })
+          if (!searchCourse) throw new Error('Course not found.')
+  
+          return {
+            searchCourseId: new UniqueEntityId(searchCourse.id),
+            course: courseOrError.value
+          }
       }),
       poles: search.poles.map(pole => {
         const nameOrError = Name.create(pole.name)
@@ -67,7 +77,15 @@ export class PrismaSearchsDetailsMapper {
         }, new UniqueEntityId(pole.id))
         if (poleOrError.isLeft()) throw new Error(poleOrError.value.message)
 
-        return poleOrError.value
+        const searchPole = search.searchPoles.find(searchPole => {
+          return searchPole.poleId === pole.id
+        })
+        if (!searchPole) throw new Error('Pole not found.')
+
+        return {
+          searchPoleId: new UniqueEntityId(searchPole.id),
+          pole: poleOrError.value
+        }
       })
     }, new UniqueEntityId(search.id as string))
 

@@ -4,8 +4,8 @@ import { Manager } from "@/domain/boletim/enterprise/entities/manager.ts";
 import { PrismaManagersMapper } from "../mappers/prisma-managers-mapper.ts";
 import { ManagerDetails } from "@/domain/boletim/enterprise/entities/value-objects/manager-details.ts";
 import { PrismaManagerDetailsMapper } from "../mappers/prisma-manager-details-mapper.ts";
-import { SearchManyDetails } from "@/domain/boletim/app/repositories/students-courses-repository.ts";
 import { DomainEvents } from "@/core/events/domain-events.ts";
+import type { SearchManyDetails } from "@/domain/boletim/app/repositories/searchs-repository.ts";
 
 export class PrismaManagersRepository implements ManagersRepository {
   async findById(id: string): Promise<Manager | null> {
@@ -134,10 +134,10 @@ export class PrismaManagersRepository implements ManagersRepository {
           }
         },
         usersOnCourses: {
-          select: {
+          include: {
             course: true,
             usersOnPoles: {
-              select: {
+              include: {
                 pole: true
               }
             }
@@ -166,6 +166,18 @@ export class PrismaManagersRepository implements ManagersRepository {
       fatherName: managerDetails.profile?.fatherName,
       isLoginConfirmed: managerDetails.isLoginConfirmed,
       createdAt: managerDetails.createdAt,
+      managerCourses: managerDetails.usersOnCourses.map(userOnCourse => ({
+        id: userOnCourse.id,
+        courseId: userOnCourse.courseId,
+        userId: userOnCourse.userId,
+      })),
+      managerPoles: managerDetails.usersOnCourses.map(userOnCourse => {
+        return {
+          id: userOnCourse.usersOnPoles[0].id,
+          poleId: userOnCourse.usersOnPoles[0].poleId,
+          userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+        }
+      }),
       courses: managerDetails.usersOnCourses.map(item => {
         return item.course
       }),
@@ -194,15 +206,15 @@ export class PrismaManagersRepository implements ManagersRepository {
       skip: (page - 1) * PER_PAGE,
       include: {
         usersOnCourses: {
-          select: {
+          include: {
             course: true,
             usersOnPoles: {
-              select: {
+              include: {
                 pole: true
               }
             }
-          },
-        }
+          }
+        },
       }
     })
 
@@ -220,6 +232,18 @@ export class PrismaManagersRepository implements ManagersRepository {
         role: manager.role,
         isLoginConfirmed: manager.isLoginConfirmed,
         createdAt: manager.createdAt,
+        managerCourses: manager.usersOnCourses.map(userOnCourse => ({
+          id: userOnCourse.id,
+          courseId: userOnCourse.courseId,
+          userId: userOnCourse.userId,
+        })),
+        managerPoles: manager.usersOnCourses.map(userOnCourse => {
+          return {
+            id: userOnCourse.usersOnPoles[0].id,
+            poleId: userOnCourse.usersOnPoles[0].poleId,
+            userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+          }
+        }),
         courses: manager.usersOnCourses.map(item => {
           return item.course
         }),

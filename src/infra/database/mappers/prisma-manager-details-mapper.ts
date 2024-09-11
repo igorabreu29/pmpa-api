@@ -15,6 +15,8 @@ import {
 type PrismaManagersDetails = PrismaManager & Prisma.ProfileUpdateInput & {
   poles: PrismaPole[]
   courses: PrismaCourse[]
+  managerCourses: Prisma.UserOnCourseUncheckedCreateInput[]
+  managerPoles: Prisma.UserCourseOnPoleUncheckedCreateInput[]
 }
 
 export class PrismaManagerDetailsMapper {
@@ -46,7 +48,15 @@ export class PrismaManagerDetailsMapper {
         }, new UniqueEntityId(course.id))
         if (courseOrError.isLeft()) throw new Error(courseOrError.value.message)
 
-        return courseOrError.value
+        const managerCourse = managerDetails.managerCourses.find(managerCourse => {
+          return managerCourse.courseId === course.id
+        })
+        if (!managerCourse) throw new Error('Course not found.')
+
+        return {
+          managerCourseId: new UniqueEntityId(managerCourse.id),
+          course: courseOrError.value
+        }
       }),
       poles: managerDetails.poles.map(pole => {
         const nameOrError = Name.create(pole.name)
@@ -57,7 +67,15 @@ export class PrismaManagerDetailsMapper {
         }, new UniqueEntityId(pole.id))
         if (poleOrError.isLeft()) throw new Error(poleOrError.value.message)
 
-        return poleOrError.value
+        const managerPole = managerDetails.managerPoles.find(managerPole => {
+          return managerPole.poleId === pole.id
+        })
+        if (!managerPole) throw new Error('Pole not found.')
+
+        return {
+          managerPoleId: new UniqueEntityId(managerPole.id),
+          pole: poleOrError.value
+        }
       })
     })
 

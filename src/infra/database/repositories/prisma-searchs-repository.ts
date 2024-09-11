@@ -44,7 +44,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
             include: {
               course: true,
               usersOnPoles: {
-                select: {
+                include: {
                   pole: true
                 }
               }
@@ -60,17 +60,29 @@ export class PrismaSearchsRepository implements SearchsRepository {
           cpf: search.cpf,
           email: search.email,
           role: search.role,
+          searchCourses: search.usersOnCourses.map(userOnCourse => ({
+            id: userOnCourse.id,
+            courseId: userOnCourse.courseId,
+            userId: userOnCourse.userId,
+          })),
+          searchPoles: search.usersOnCourses.map(userOnCourse => {
+            return {
+              id: userOnCourse.usersOnPoles[0].id,
+              poleId: userOnCourse.usersOnPoles[0].poleId,
+              userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+            }
+          }),
           courses: search.usersOnCourses.map(item => item.course),
           poles: search.usersOnCourses.map(item => item.usersOnPoles[0].pole)
         }))
         .filter(search => {
           return search.courses.some(item => {
             const courseMapper = PrismaCoursesMapper.toDomain(item)
-            return courses?.map(course => course.id.equals(courseMapper.id))
+            return courses?.map(({ course }) => course.id.equals(courseMapper.id))
           }) &&
             search.poles.some(pole => {
               const poleMapper = PrismaPolesMapper.toDomain(pole)
-              return poles?.some(pole => pole.id.equals(poleMapper.id))
+              return poles?.some(({ pole }) => pole.id.equals(poleMapper.id))
             })
         })
 
@@ -140,15 +152,15 @@ export class PrismaSearchsRepository implements SearchsRepository {
           email: true,
           civilId: true,
           usersOnCourses: {
-            select: {
+            include: {
               course: true,
               usersOnPoles: {
-                select: {
+                include: {
                   pole: true
                 }
               }
             }
-          }   
+          }, 
         }
       })
 
@@ -157,6 +169,18 @@ export class PrismaSearchsRepository implements SearchsRepository {
         civilId: search.civilId,
         cpf: search.cpf,
         email: search.email,
+        searchCourses: search.usersOnCourses.map(userOnCourse => ({
+          id: userOnCourse.id,
+          courseId: userOnCourse.courseId,
+          userId: userOnCourse.userId,
+        })),
+        searchPoles: search.usersOnCourses.map(userOnCourse => {
+          return {
+            id: userOnCourse.usersOnPoles[0].id,
+            poleId: userOnCourse.usersOnPoles[0].poleId,
+            userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+          }
+        }),
         courses: search.usersOnCourses.map(item => item.course),
         poles: search.usersOnCourses.map(item => item.usersOnPoles[0].pole)
       }))
@@ -225,15 +249,15 @@ export class PrismaSearchsRepository implements SearchsRepository {
         email: true,
         civilId: true,
         usersOnCourses: {
-          select: {
+          include: {
             course: true,
             usersOnPoles: {
-              select: {
+              include: {
                 pole: true
               }
             }
           }
-        }   
+        },  
       }
     })
 
@@ -242,6 +266,18 @@ export class PrismaSearchsRepository implements SearchsRepository {
       civilId: search.civilId,
       cpf: search.cpf,
       email: search.email,
+      searchCourses: search.usersOnCourses.map(userOnCourse => ({
+        id: userOnCourse.id,
+        courseId: userOnCourse.courseId,
+        userId: userOnCourse.userId,
+      })),
+      searchPoles: search.usersOnCourses.map(userOnCourse => {
+        return {
+          id: userOnCourse.usersOnPoles[0].id,
+          poleId: userOnCourse.usersOnPoles[0].poleId,
+          userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+        }
+      }),
       courses: search.usersOnCourses.map(item => item.course),
       poles: search.usersOnCourses.map(item => item.usersOnPoles[0].pole)
     }))

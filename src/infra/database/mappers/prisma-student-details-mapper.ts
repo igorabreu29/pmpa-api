@@ -8,12 +8,15 @@ import { defineRoleAccessToPrisma } from '@/infra/utils/define-role.ts';
 import {
   User as PrismaStudent,
   Pole as PrismaPole,
-  Course as PrismaCourse
+  Course as PrismaCourse,
+  type Prisma
 } from '@prisma/client';
 
 type PrismaStudentsDetails = PrismaStudent & {
   poles: PrismaPole[]
   courses: PrismaCourse[]
+  studentCourses: Prisma.UserOnCourseUncheckedCreateInput[]
+  studentPoles: Prisma.UserCourseOnPoleUncheckedCreateInput[]
 }
 
 export class PrismaStudentDetailsMapper {
@@ -22,7 +25,7 @@ export class PrismaStudentDetailsMapper {
       studentId: new UniqueEntityId(studentDetails.id),
       username: studentDetails.username,
       birthday: studentDetails.birthday as Date,
-      civilId: Number(studentDetails.civilId),
+      civilId: String(studentDetails.civilId),
       cpf: studentDetails.cpf,
       email: studentDetails.email,
       assignedAt: studentDetails.createdAt,
@@ -45,7 +48,15 @@ export class PrismaStudentDetailsMapper {
         }, new UniqueEntityId(course.id))
         if (courseOrError.isLeft()) throw new Error(courseOrError.value.message)
 
-        return courseOrError.value
+        const studentCourse = studentDetails.studentCourses.find(studentCourse => {
+          return studentCourse.courseId === course.id
+        })
+        if (!studentCourse) throw new Error('Course not found.')
+
+        return {
+          studentCourseId: new UniqueEntityId(studentCourse.id),
+          course: courseOrError.value
+        }
       }),
       poles: studentDetails.poles.map(pole => {
         const nameOrError = Name.create(pole.name)
@@ -56,7 +67,15 @@ export class PrismaStudentDetailsMapper {
         }, new UniqueEntityId(pole.id))
         if (poleOrError.isLeft()) throw new Error(poleOrError.value.message)
 
-        return poleOrError.value
+        const studentPole = studentDetails.studentPoles.find(studentPole => {
+          return studentPole.poleId === pole.id
+        })
+        if (!studentPole) throw new Error('Pole not found.')
+
+        return {
+          studentPoleId: new UniqueEntityId(studentPole.id),
+          pole: poleOrError.value
+        }
       })
     })
 

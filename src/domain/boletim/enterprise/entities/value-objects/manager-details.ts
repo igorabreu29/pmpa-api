@@ -5,6 +5,16 @@ import { Pole } from "../pole.ts";
 import { Role } from "../authenticate.ts";
 import { Parent } from "@/core/types/student.ts";
 
+export interface ManagerDetailsCourse {
+  managerCourseId: UniqueEntityId
+  course: Course
+}
+
+export interface ManagerDetailsPole {
+  managerPoleId: UniqueEntityId
+  pole: Pole
+}
+
 interface ManagerDetailsProps {
   managerId: UniqueEntityId
   username: string
@@ -21,8 +31,8 @@ interface ManagerDetailsProps {
   county?: string
   parent?: Parent
 
-  courses: Course[]
-  poles: Pole[]
+  courses: ManagerDetailsCourse[]
+  poles: ManagerDetailsPole[]
 }
 
 export class ManagerDetails extends ValueObject<ManagerDetailsProps> {

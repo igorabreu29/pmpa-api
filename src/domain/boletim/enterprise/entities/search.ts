@@ -13,6 +13,16 @@ import { Course } from "./course.ts";
 import { Pole } from "./pole.ts";
 import { Entity } from "@/core/entities/entity.ts";
 
+export interface SearchCourse {
+  searchCourseId: UniqueEntityId
+  course: Course
+}
+
+export interface SearchPole {
+  searchPoleId: UniqueEntityId
+  pole: Pole
+}
+
 interface SearchProps {
   username: Name
   email: Email
@@ -20,8 +30,8 @@ interface SearchProps {
   role: Role
   civilId: string
 
-  courses?: Course[]
-  poles?: Pole[]
+  courses?: SearchCourse[]
+  poles?: SearchPole[]
 }
 
 export class Search extends Entity<SearchProps> {

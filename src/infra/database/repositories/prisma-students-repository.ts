@@ -126,10 +126,10 @@ export class PrismaStudentsRepository implements StudentsRepository {
           }
         },
         usersOnCourses: {
-          select: {
+          include: {
             course: true,
             usersOnPoles: {
-              select: {
+              include: {
                 pole: true
               }
             }
@@ -158,6 +158,18 @@ export class PrismaStudentsRepository implements StudentsRepository {
       role: studentDetails.role,
       isLoginConfirmed: studentDetails.isLoginConfirmed,
       createdAt: studentDetails.createdAt,
+      studentCourses: studentDetails.usersOnCourses.map(userOnCourse => ({
+        id: userOnCourse.id,
+        courseId: userOnCourse.courseId,
+        userId: userOnCourse.userId,
+      })),
+      studentPoles: studentDetails.usersOnCourses.map(userOnCourse => {
+        return {
+          id: userOnCourse.usersOnPoles[0].id,
+          poleId: userOnCourse.usersOnPoles[0].poleId,
+          userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+        }
+      }),
       courses: studentDetails.usersOnCourses.map(item => {
         return item.course
       }),
@@ -184,16 +196,17 @@ export class PrismaStudentsRepository implements StudentsRepository {
       },
       take: page * PER_PAGE,
       skip: (page - 1) * PER_PAGE,
+      
       include: {
         usersOnCourses: {
-          select: {
+          include: {
             course: true,
             usersOnPoles: {
-              select: {
+              include: {
                 pole: true
               }
             }
-          },
+          }
         }
       }
     })
@@ -212,6 +225,18 @@ export class PrismaStudentsRepository implements StudentsRepository {
         role: student.role,
         isLoginConfirmed: student.isLoginConfirmed,
         createdAt: student.createdAt,
+        studentCourses: student.usersOnCourses.map(userOnCourse => ({
+          id: userOnCourse.id,
+          courseId: userOnCourse.courseId,
+          userId: userOnCourse.userId,
+        })),
+        studentPoles: student.usersOnCourses.map(userOnCourse => {
+          return {
+            id: userOnCourse.usersOnPoles[0].id,
+            poleId: userOnCourse.usersOnPoles[0].poleId,
+            userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+          }
+        }),
         courses: student.usersOnCourses.map(item => {
           return item.course
         }),
