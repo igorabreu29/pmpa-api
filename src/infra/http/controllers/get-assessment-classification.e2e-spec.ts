@@ -200,12 +200,12 @@ describe('Get Assessment Classification (e2e)', () => {
 
     expect(assessmentAverageGroupedByPole).toMatchObject([
       {
-        assessmentAverageByPole: {
+        poleAverage: {
           average: 9.25,
         }
       },
       {
-        assessmentAverageByPole: {
+        poleAverage: {
           average: 8,
         }
       },
