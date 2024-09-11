@@ -211,13 +211,13 @@ describe('Get Behavior Classification (e2e)', () => {
 
     expect(behaviorAverageGroupedByPole).toMatchObject([
       {
-        behaviorAverageByPole: {
+        poleAverage: {
           name: 'pole-2',
           average: 7.825
         },
       },
       {
-        behaviorAverageByPole: {
+        poleAverage: {
           name: 'pole-1',
           average: 7.684
         },
