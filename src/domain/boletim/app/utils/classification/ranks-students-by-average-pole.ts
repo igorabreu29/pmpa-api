@@ -6,6 +6,7 @@ export interface StudentWithAssessmentAverage {
     assessmentsAverage: {
       studentAverage: number
       studentAverageWithStatus: GetGeralStudentAverageStatusResponse
+      isStudentRecovering: boolean
     };
     studentBirthday: Date;
     studentName: string;
