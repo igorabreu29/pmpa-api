@@ -14,7 +14,6 @@ import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { UpdateBehaviorsBatchUseCase } from "./update-behaviors-batch.ts";
-import { Name } from "../../enterprise/entities/value-objects/name.ts";
 import { CPF } from "../../enterprise/entities/value-objects/cpf.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
@@ -27,7 +26,7 @@ let studentsRepository: InMemoryStudentsRepository
 let behaviorsBatchRepository: InMemoryBehaviorsBatchRepository
 let sut: UpdateBehaviorsBatchUseCase
 
-describe('Create Behaviors Batch Use Case', () => {
+describe('Update Behaviors Batch Use Case', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
@@ -134,12 +133,15 @@ describe('Create Behaviors Batch Use Case', () => {
     const studentBehaviors = [
       {
         cpf: student.cpf.value,
+        currentYear: 2022
       },
       {
         cpf: 'not-exist',
+        currentYear: 2022
       },
       {
         cpf: 'not-exist',
+        currentYear: 2022
       },
     ]
 
@@ -157,7 +159,7 @@ describe('Create Behaviors Batch Use Case', () => {
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })  
 
-  it ('should not be able to update behaviors batch if behavior not exist', async () => {
+  it ('should not be able to update behaviors batch if behavior does not exist', async () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
@@ -174,18 +176,21 @@ describe('Create Behaviors Batch Use Case', () => {
         january: 7,
         february: 8.2,
         march: 10,
+        currentYear: 2022
       },
       {
         cpf: student2.cpf.value,
         january: 2,
         february: 4,
         march: 5,
+        currentYear: 2022
       },
       {
         cpf: student3.cpf.value,
         january: 7,
         february: 4,
         march: 9,
+        currentYear: 2022
       },
     ]
     const result = await sut.execute({ 
@@ -202,7 +207,7 @@ describe('Create Behaviors Batch Use Case', () => {
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it ('should be able to create behaviors batch', async () => {
+  it ('should be able to update behaviors batch', async () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
@@ -225,21 +230,24 @@ describe('Create Behaviors Batch Use Case', () => {
       courseId: course.id,
       january: 7,
       february: 7.5,
-      march: 8.2
+      march: 8.2,
+      currentYear: 2022
     })
     const behavior2 = makeBehavior({ 
       studentId: student2.id, 
       courseId: course.id,
       january: 7.2,
       february: 6,
-      march: 1
+      march: 1,
+      currentYear: 2022
     })
     const behavior3 = makeBehavior({ 
       studentId: student3.id, 
       courseId: course.id,
       january: 7,
       february: 7.5,
-      march: 5
+      march: 5,
+      currentYear: 2022
     })
     behaviorsRepository.create(behavior1)
     behaviorsRepository.create(behavior2)
@@ -251,18 +259,21 @@ describe('Create Behaviors Batch Use Case', () => {
         january: 7,
         february: 8.2,
         march: 10,
+        currentYear: 2022
       },
       {
         cpf: student2.cpf.value,
         january: 2,
         february: 4,
         march: 5,
+        currentYear: 2022
       },
       {
         cpf: student3.cpf.value,
         january: 7,
         february: 4,
         march: 9,
+        currentYear: 2022
       },
     ]
     const result = await sut.execute({ 
