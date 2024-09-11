@@ -1,17 +1,26 @@
 import { DomainEvents } from "@/core/events/domain-events.ts";
-import { BehaviorsRepository } from "@/domain/boletim/app/repositories/behaviors-repository.ts";
+import { BehaviorsRepository, type FindByStudentAndCourseAndYear } from "@/domain/boletim/app/repositories/behaviors-repository.ts";
 import { Behavior } from "@/domain/boletim/enterprise/entities/behavior.ts";
 
 export class InMemoryBehaviorsRepository implements BehaviorsRepository {
   public items: Behavior[] = []
 
-  async findByStudentIdAndCourseId({ studentId, courseId }: { studentId: string; courseId: string; }): Promise<Behavior | null> {
-    const behavior = this.items.find(item => item.studentId.toValue() === studentId && item.courseId.toValue() === courseId)
+  async findById({ id }: { id: string; }): Promise<Behavior | null> {
+    const behavior = this.items.find(item => item.id.toValue() === id)
     return behavior ?? null
   }
 
-  async findById({ id }: { id: string; }): Promise<Behavior | null> {
-    const behavior = this.items.find(item => item.id.toValue() === id)
+  async findByStudentAndCourseIdAndYear({ studentId, courseId, year }: FindByStudentAndCourseAndYear): Promise<Behavior | null> {
+    const behavior = this.items.find(item => {
+      return item.studentId.toValue() === studentId
+        && item.courseId.toValue() === courseId 
+        && item.currentYear === year
+    })
+    return behavior ?? null
+  }
+
+  async findByStudentIdAndCourseId({ studentId, courseId }: { studentId: string; courseId: string; }): Promise<Behavior | null> {
+    const behavior = this.items.find(item => item.studentId.toValue() === studentId && item.courseId.toValue() === courseId)
     return behavior ?? null
   }
 

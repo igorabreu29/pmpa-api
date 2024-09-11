@@ -135,45 +135,21 @@ describe('Create Behaviors Batch Use Case', () => {
         january: null,
         february: null,
         march: null,
-        april: null,
-        may: null,
-        jun: null,
-        july: null,
-        august: null,
-        september: null,
-        october: null,
-        november: null,
-        december: null,
+        currentYear: 2022
       },
       {
         cpf: 'not-exist',
         january: null,
         february: null,
         march: null,
-        april: null,
-        may: null,
-        jun: null,
-        july: null,
-        august: null,
-        september: null,
-        october: null,
-        november: null,
-        december: null,
+        currentYear: 2022
       },
       {
         cpf: 'not-exist',
         january: null,
         february: null,
         march: null,
-        april: null,
-        may: null,
-        jun: null,
-        july: null,
-        august: null,
-        september: null,
-        october: null,
-        november: null,
-        december: null,
+        currentYear: 2022
       },
     ]
 
@@ -190,7 +166,7 @@ describe('Create Behaviors Batch Use Case', () => {
     expect(result.isLeft()).toBe(true)
   })  
 
-  it.skip ('should not be able to create behaviors batch if it is already been added', async () => {
+  it ('should not be able to create behaviors batch if it is already been added', async () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
@@ -201,7 +177,7 @@ describe('Create Behaviors Batch Use Case', () => {
     studentsRepository.create(student2)
     studentsRepository.create(student3)
 
-    const behavior1 = makeBehavior({ studentId: student1.id, courseId: course.id })
+    const behavior1 = makeBehavior({ studentId: student1.id, courseId: course.id, currentYear: 2022 })
     const behavior2 = makeBehavior({ studentId: student2.id, courseId: course.id })
     const behavior3 = makeBehavior({ studentId: student3.id, courseId: course.id })
     behaviorsRepository.create(behavior1)
@@ -214,47 +190,24 @@ describe('Create Behaviors Batch Use Case', () => {
         january: 7,
         february: 8.2,
         march: 10,
-        april: null,
-        may: null,
-        jun: null,
-        july: null,
-        august: null,
-        september: null,
-        october: null,
-        november: null,
-        december: null,
+        currentYear: 2022
       },
       {
         cpf: student2.cpf.value,
         january: 2,
         february: 4,
         march: 5,
-        april: null,
-        may: null,
-        jun: null,
-        july: null,
-        august: null,
-        september: null,
-        october: null,
-        november: null,
-        december: null,
+        currentYear: 2022
       },
       {
         cpf: student3.cpf.value,
         january: 7,
         february: 4,
         march: 9,
-        april: null,
-        may: null,
-        jun: null,
-        july: null,
-        august: null,
-        september: null,
-        october: null,
-        november: null,
-        december: null,
+        currentYear: 2022
       },
     ]
+    
     const result = await sut.execute({ 
       courseId: course.id.toValue(), 
       studentBehaviors, 
@@ -285,45 +238,21 @@ describe('Create Behaviors Batch Use Case', () => {
         january: 7,
         february: 8.2,
         march: 10,
-        april: null,
-        may: null,
-        jun: null,
-        july: null,
-        august: null,
-        september: null,
-        october: null,
-        november: null,
-        december: null,
+        currentYear: 2022
       },
       {
         cpf: student2.cpf.value,
         january: 2,
         february: 4,
         march: 5,
-        april: null,
-        may: null,
-        jun: null,
-        july: null,
-        august: null,
-        september: null,
-        october: null,
-        november: null,
-        december: null,
+        currentYear: 2022
       },
       {
         cpf: student3.cpf.value,
         january: 7,
         february: 4,
         march: 9,
-        april: null,
-        may: null,
-        jun: null,
-        july: null,
-        august: null,
-        september: null,
-        october: null,
-        november: null,
-        december: null,
+        currentYear: 2022
       },
     ]
     const result = await sut.execute({ 

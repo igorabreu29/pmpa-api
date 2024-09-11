@@ -27,6 +27,7 @@ interface StudentBehavior {
   october?: number
   november?: number
   december?: number
+  currentYear: number
 }
 
 interface UpdateBehaviorsBatchUseCaseRequest {
@@ -72,7 +73,11 @@ export class UpdateBehaviorsBatchUseCase {
       const student = await this.studentsRepository.findByCPF(studentBehavior.cpf)
       if (!student) return new ResourceNotFoundError('Student not found.')
         
-      const behavior = await this.behaviorsRepository.findByStudentIdAndCourseId({ studentId: student.id.toValue(), courseId: course.id.toValue() }) 
+      const behavior = await this.behaviorsRepository.findByStudentAndCourseIdAndYear({ 
+        studentId: student.id.toValue(), 
+        courseId: course.id.toValue(),
+        year: studentBehavior.currentYear 
+      }) 
       if (!behavior) return new ResourceNotFoundError('Behavior not found.')
 
       behavior.january =  studentBehavior.january ?? behavior.january
