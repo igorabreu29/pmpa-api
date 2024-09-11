@@ -46,6 +46,7 @@ export interface ExcelBehaviorsBatch {
   OUTUBRO?: number
   NOVEMBRO?: number
   DEZEMBRO?: number
+  ANO: number
 }
 
 export function createStudentsBatchExcelToJSON(fileUrl: string) {
@@ -118,6 +119,7 @@ export function behaviorsBatchExcelToJSON(fileUrl: string) {
     october: behavior['OUTUBRO'],
     november: behavior['NOVEMBRO'],
     december: behavior['DEZEMBRO'],
+    currentYear: behavior['ANO']
   }))
 }
 
