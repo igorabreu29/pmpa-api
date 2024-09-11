@@ -89,6 +89,7 @@ import { getStudentsInformationSheet } from "./http/controllers/get-students-inf
 import { createCourseSummarySheet } from "./http/controllers/create-course-summary-sheet.ts";
 import { removeBehaviorGrade } from "./http/controllers/remove-behavior-grade.ts";
 import { getCourseBehaviors } from "./http/controllers/get-course-behaviors.ts";
+import { getAverageClassificationCoursePoles } from "./http/controllers/get-average-classification-course-poles.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -185,6 +186,7 @@ app.register(searchStudentsCourseByManagerDetails)
 app.register(search)
 app.register(getClassification)
 app.register(getClassificationByPole)
+app.register(getAverageClassificationCoursePoles)
 app.register(getClassificationByManager)
 app.register(getAssessmentClassification)
 app.register(getBehaviorClassification)
