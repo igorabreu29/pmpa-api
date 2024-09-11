@@ -5,8 +5,8 @@ import { left, right, type Either } from "@/core/either.ts"
 import type { AssessmentsRepository } from "../repositories/assessments-repository.ts"
 import { generateAssessmentAverage } from "../utils/generate-assessment-average.ts"
 import type { CoursesPoleRepository } from "../repositories/courses-poles-repository.ts"
-import { ranksStudentsByAssessmentAverage, type AssessmentClassification, type StudentWithAssessmentAverage } from "../utils/classification/ranks-students-by-average-assessments.ts"
 import { getGeralStudentAverageStatus } from "../utils/get-geral-student-average-status.ts"
+import { ranksStudentsByAveragePole, type PoleAverageClassification, type StudentWithAssessmentAverage } from "../utils/classification/ranks-students-by-average-pole.ts"
 
 interface GetCourseAssessmentClassificationUseCaseRequest {
   courseId: string
@@ -14,7 +14,7 @@ interface GetCourseAssessmentClassificationUseCaseRequest {
 }
 
 type GetCourseAssessmentClassificationUseCaseResponse = Either<ResourceNotFoundError, {
-  assessmentAverageGroupedByPole: AssessmentClassification[]
+  assessmentAverageGroupedByPole: PoleAverageClassification[]
 }>
 
 export class GetCourseAssessmentClassificationUseCase {
@@ -76,7 +76,7 @@ export class GetCourseAssessmentClassificationUseCase {
         .reduce((acc, item) => acc + item.assessmentsAverage.studentAverage, 0) / studentsGroup.length
 
       return {
-        assessmentAverageByPole: {
+        poleAverage: {
           poleId: coursePole.id.toValue(),
           name: coursePole.name.value,
           average: Number(assessmentAverageByPole.toFixed(3)),
@@ -84,7 +84,7 @@ export class GetCourseAssessmentClassificationUseCase {
       }
     })
 
-    const assessmentsClassification = ranksStudentsByAssessmentAverage(assessmentAverageGroupedByPole)
+    const assessmentsClassification = ranksStudentsByAveragePole(assessmentAverageGroupedByPole)
 
     return right({
       assessmentAverageGroupedByPole: assessmentsClassification

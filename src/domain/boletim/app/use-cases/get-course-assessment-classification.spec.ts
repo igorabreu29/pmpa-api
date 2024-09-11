@@ -155,13 +155,13 @@ describe('Get Course Assessment Classification', () => {
     expect(result.value).toMatchObject({
       assessmentAverageGroupedByPole: [
         {
-          assessmentAverageByPole: {
+          poleAverage: {
             average: 9.25,
             name: pole2.name.value
           }
         },
         {
-          assessmentAverageByPole: {
+          poleAverage: {
             average: 8,
             name: pole1.name.value
           }

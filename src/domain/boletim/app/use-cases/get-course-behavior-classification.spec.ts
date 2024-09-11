@@ -163,13 +163,13 @@ describe('Get Course Behavior Classification', () => {
     expect(result.value).toMatchObject({
       behaviorAverageGroupedByPole: [
         {
-          behaviorAverageByPole: {
+          poleAverage: {
             average: 7.5,
             name: pole2.name.value
           }
         },
         {
-          behaviorAverageByPole: {
+          poleAverage: {
             average: 5.875,
             name: pole1.name.value
           }

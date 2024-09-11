@@ -4,8 +4,8 @@ import type { StudentsCoursesRepository } from "../repositories/students-courses
 import { left, right, type Either } from "@/core/either.ts"
 import type { BehaviorsRepository } from "../repositories/behaviors-repository.ts"
 import { generateBehaviorAverage } from "../utils/generate-behavior-average.ts"
-import { ranksStudentsByBehaviorAverage, type BehaviorClassification, type StudentWithBehaviorAverage } from "../utils/classification/ranks-students-by-average-behavior.ts"
 import type { CoursesPoleRepository } from "../repositories/courses-poles-repository.ts"
+import { ranksStudentsByAveragePole, type PoleAverageClassification, type StudentWithBehaviorAverage } from "../utils/classification/ranks-students-by-average-pole.ts"
 
 interface GetCourseBehaviorClassificationUseCaseRequest {
   courseId: string
@@ -13,7 +13,7 @@ interface GetCourseBehaviorClassificationUseCaseRequest {
 }
 
 type GetCourseBehaviorClassificationUseCaseResponse = Either<ResourceNotFoundError, {
-  behaviorAverageGroupedByPole: BehaviorClassification[]
+  behaviorAverageGroupedByPole: PoleAverageClassification[]
 }>
 
 export class GetCourseBehaviorClassificationUseCase {
@@ -82,7 +82,7 @@ export class GetCourseBehaviorClassificationUseCase {
         .reduce((acc, item) => acc + item.behaviorAverage.behaviorAverageStatus.behaviorAverage, 0) / studentsGroup.length
 
       return {
-        behaviorAverageByPole: {
+        poleAverage: {
           poleId: coursePole.id.toValue(),
           name: coursePole.name.value,
           average: Number(behaviorAverageByPole.toFixed(3)),
@@ -90,7 +90,7 @@ export class GetCourseBehaviorClassificationUseCase {
       }
     })
 
-    const behaviorsClassification = ranksStudentsByBehaviorAverage(behaviorAverageGroupedByPole)
+    const behaviorsClassification = ranksStudentsByAveragePole(behaviorAverageGroupedByPole)
 
     return right({
       behaviorAverageGroupedByPole: behaviorsClassification
