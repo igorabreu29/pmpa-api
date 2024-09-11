@@ -86,12 +86,18 @@ describe('Get Student Profile Use Case', () => {
         email: student.email.value,
         poles: [
           {
-            id: pole.id
+            studentPoleId: studentPole.id,
+            pole: {
+              id: pole.id
+            }
           }
         ],
         courses: [
           {
-            id: course.id
+            studentCourseId: studentCourse.id,
+            course: {
+              id: course.id
+            }
           }
         ]
       }

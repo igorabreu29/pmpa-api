@@ -44,7 +44,10 @@ export class InMemoryStudentsRepository implements StudentsRepository {
       const course = this.coursesRepository.items.find(item => item.id.equals(studentCourse.courseId))
       if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist.`)
 
-      return course
+      return {
+        studentCourseId: studentCourse.id,
+        course
+      }
     })
 
     const studentPoles = this.studentsPolesRepository.items.filter((item, index) => {
@@ -55,7 +58,10 @@ export class InMemoryStudentsRepository implements StudentsRepository {
       const pole = this.polesRepository.items.find(item => item.id.equals(studentPole.poleId))
       if (!pole) throw new Error(`Pole with ID ${studentPole.poleId.toValue()} does not exist.`)
 
-      return pole
+      return {
+        studentPoleId: studentPole.id,
+        pole
+      }
     })
 
     return StudentDetails.create({
@@ -92,7 +98,10 @@ export class InMemoryStudentsRepository implements StudentsRepository {
           const course = this.coursesRepository.items.find(item => item.id.equals(studentCourse.courseId))
           if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist.`)
     
-          return course
+          return {
+            studentCourseId: studentCourse.id,
+            course
+          }
         })
     
         const studentPoles = this.studentsPolesRepository.items.filter((item, index) => {
@@ -103,7 +112,10 @@ export class InMemoryStudentsRepository implements StudentsRepository {
           const pole = this.polesRepository.items.find(item => item.id.equals(studentPole.poleId))
           if (!pole) throw new Error(`Pole with ID ${studentPole.poleId.toValue()} does not exist.`)
     
-          return pole
+          return {
+            studentPoleId: studentPole.id,
+            pole
+          }
         })
 
         return StudentDetails.create({

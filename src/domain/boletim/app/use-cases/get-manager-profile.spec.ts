@@ -74,12 +74,18 @@ describe('Get Manager Profile Use Case', () => {
         managerId: manager.id,
         courses: [
           {
-            id: course.id
+            managerCourseId: managerCourse.id,
+            course: {
+              id: course.id
+            }
           }
         ],
         poles: [
           {
-            id: pole.id
+            managerPoleId: managerPole.id,
+            pole: {
+              id: pole.id
+            }
           }
         ]
       }
