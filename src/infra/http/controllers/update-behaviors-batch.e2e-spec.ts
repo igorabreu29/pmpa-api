@@ -81,14 +81,16 @@ describe('Update Behaviors Batch (e2e)', () => {
           studentId: student.id,
           january: 6,
           february: 8,
-          march: 5
+          march: 5,
+          currentYear: 2023
         },
         {
           courseId: course.id,
           studentId: student2.id,
           january: 8,
           february: 9,
-          march: 7
+          march: 7,
+          currentYear: 2023
         }
       ]
     })
