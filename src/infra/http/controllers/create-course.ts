@@ -9,6 +9,7 @@ import { Conflict } from "../errors/conflict-error.ts";
 import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts";
 import { InvalidDateError } from "@/core/errors/domain/invalid-date.ts";
 import { ClientError } from "../errors/client-error.ts";
+import { transformDate } from "@/infra/utils/transform-date.ts";
 
 export async function createCourse(
   app: FastifyInstance
@@ -23,6 +24,7 @@ export async function createCourse(
           name: z.string().min(3).max(30),
           imageUrl: z.string().url(),
           isPeriod: z.boolean().default(false),
+          endsAt: z.string().transform(transformDate),
           poleIds: z.array(z.string()),
           disciplines: z.array(
             z.object({
@@ -36,10 +38,7 @@ export async function createCourse(
       }
     },
       async (req, res) => {
-        const { formula, name, imageUrl, isPeriod, poleIds, disciplines } = req.body
-
-        const endsAt = new Date()
-        endsAt.setFullYear(new Date().getFullYear() + 2)
+        const { formula, name, imageUrl, isPeriod, poleIds, disciplines, endsAt } = req.body
 
         const useCase = makeCreateCourseUseCase()
         const result = await useCase.execute({
