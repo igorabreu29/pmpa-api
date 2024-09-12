@@ -30,9 +30,18 @@ describe('Student Confirm Login And Update (e2e)', async () => {
     await app.close()
   })
 
-  it ('PATCH /students/:cpf/confirm', async () => {
+  it ('PATCH /students/:id/confirm', async () => {
+    const authenticateResponse = await request(app.server)
+    .post('/credentials/auth')
+    .send({
+      cpf: '000.000.000-00',
+      password: 'node-20'
+    })
+    const { token } = authenticateResponse.body 
+
     const response = await request(app.server)
-      .patch(`/students/${student.cpf}/confirm`)
+      .patch(`/students/confirm`)
+      .set('Authorization', `Bearer ${token}`)
       .send({
         motherName: 'mother-1',
         militaryId: '123456789'

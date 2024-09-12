@@ -39,8 +39,7 @@ describe('Login Confirmation By Student Use Case', () => {
   it ('should not be able to confirm login student does not exist', async () => {
     const result = await sut.execute({ 
       ...data,
-      studentCPF: 'not-found',
-      
+      id: 'not-found',
     })
     
     expect(result.isLeft()).toBe(true)
@@ -53,7 +52,7 @@ describe('Login Confirmation By Student Use Case', () => {
 
     const result = await sut.execute({
       ...data,
-      studentCPF: student.cpf.value
+      id: student.id.toValue()
     })
 
     expect(result.isRight()).toBe(true)
