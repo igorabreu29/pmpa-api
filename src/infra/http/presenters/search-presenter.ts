@@ -18,7 +18,7 @@ export class SearchPresenter {
       email: search.email.value,
       username: search.username.value,
       courses: search.courses ? search.courses.map(({ course, searchCourseId }) => ({
-        ...course,
+        id: course.id.toValue(),
         name: course.name.value,
         endsAt: course.endsAt.value,
         userOnCourseId: searchCourseId.toValue()
