@@ -7,6 +7,7 @@ import bcrypt from 'bcryptjs'
 import request from 'supertest'
 import { makePrismaCourse } from "test/factories/make-course.ts";
 import type { Course } from "@/domain/boletim/enterprise/entities/course.ts";
+import { makeAuth } from "test/factories/make-auth.ts";
 
 let course: Course
 
@@ -16,12 +17,29 @@ describe('Get Average Classification Course Poles (e2e)', () => {
 
     const pole = await prisma.pole.create({
       data: {
-        name: 'pole-1'
+        name: 'pole-1',
+        courseOnPoles: {
+          create: {
+            courseId: course.id.toValue()
+          }
+        }
       }
     })
 
-    const student = await prisma.user.create({
+    const pole2 = await prisma.pole.create({
       data: {
+        name: 'pole-2',
+        
+        courseOnPoles: {
+          create: {
+            courseId: course.id.toValue()
+          }
+        }
+      }
+    })
+
+    const students = [
+      {
         username: 'John Doe',
         civilId: '02345',
         cpf: '00000000000',
@@ -41,10 +59,7 @@ describe('Get Average Classification Course Poles (e2e)', () => {
           }
         }
       },
-    })
-
-    const student2 = await prisma.user.create({
-      data: {
+      {
         username: 'Jey Doe',
         civilId: '12345',
         cpf: '00000000011',
@@ -64,10 +79,7 @@ describe('Get Average Classification Course Poles (e2e)', () => {
           }
         }
       },
-    })
-
-    const student3 = await prisma.user.create({
-      data: {
+      {
         username: 'Test',
         civilId: '12345',
         cpf: '00000000012',
@@ -81,13 +93,18 @@ describe('Get Average Classification Course Poles (e2e)', () => {
             courseId: course.id.toValue(),
              usersOnPoles: {
               create: {
-                poleId: pole.id
+                poleId: pole2.id
               }
              }
           }
         }
-      },
-    })
+      }
+    ]
+
+    const [student, student2, student3] = await Promise.all(students.map(async data => {
+      const student = await prisma.user.create({ data })
+      return student
+    }))
 
     await prisma.discipline.create({
       data: {
@@ -160,48 +177,28 @@ describe('Get Average Classification Course Poles (e2e)', () => {
     await app.close()
   })
 
-  it ('GET /courses/:id/classification', async () => {
-    const developer = await prisma.user.create(({
-      data: {
-        username: 'Jonas Doe',
-        civilId: '02345',
-        cpf: '00000000001',
-        email: 'jonas@acne.com', 
-        password: await bcrypt.hash('node-20', 8),
-        birthday: transformDate('02/01/2006'),
-        role: 'DEV'
-      }
-    }))
-
-    const authenticateResponse = await request(app.server)
-    .post('/credentials/auth')
-    .send({
-      cpf: '000.000.000-01',
-      password: 'node-20'
-    })
-    const { token } = authenticateResponse.body
+  it ('GET /courses/:id/classification/average', async () => {
+    const { token } = await makeAuth()
 
     const response = await request(app.server)
-      .get(`/courses/${course.id.toValue()}/classification?page=1`)
+      .get(`/courses/${course.id.toValue()}/classification/average?page=1`)
       .set('Authorization', `Bearer ${token}`)
 
     const { studentsAverageGroupedByPole } = response.body
 
-    console.log(studentsAverageGroupedByPole)
-
-    // expect(studentsAverageGroupedByPole).toMatchObject([
-    //   {
-    //     poleAverage: {
-    //       name: 'pole-2',
-    //       average: 7.825
-    //     },
-    //   },
-    //   {
-    //     poleAverage: {
-    //       name: 'pole-1',
-    //       average: 7.684
-    //     },
-    //   },
-    // ])
+    expect(studentsAverageGroupedByPole).toMatchObject([
+      {
+        poleAverage: {
+          name: 'pole-2',
+          average: 8.184
+        },
+      },
+      {
+        poleAverage: {
+          name: 'pole-1',
+          average: 7.592
+        },
+      },
+    ])
   })
 })
