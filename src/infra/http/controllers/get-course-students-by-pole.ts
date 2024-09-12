@@ -9,6 +9,8 @@ import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { makeFetchCourseStudentsByPoleUseCase } from "@/infra/factories/make-fetch-course-students-by-pole-use-case.ts";
 import { StudentWithPolePresenter } from "../presenters/student-with-pole-presenter.ts";
+import { StudentCourseDetails } from "@/domain/boletim/enterprise/entities/value-objects/student-course-details.ts";
+import { StudentCourseDetailsPresenter } from "../presenters/student-course-details-presenter.ts";
 
 export async function getCourseStudentsByPole(
   app: FastifyInstance
@@ -56,13 +58,11 @@ export async function getCourseStudentsByPole(
           }
         }
 
-        const { students, pages, totalItems } = result.value
+        const { studentPoles, pages, totalItems } = result.value
 
-        const studentsPresenter = students.studentsPole.map(student => StudentWithPolePresenter.toHTTP(student))
+        const studentsPresenter = studentPoles.map(student => StudentCourseDetailsPresenter.toHTTP(student))
 
         return res.status(200).send({
-          course: students.course.value,
-          courseId: students.courseId.toValue(),
           students: studentsPresenter,
           pages,
           totalItems

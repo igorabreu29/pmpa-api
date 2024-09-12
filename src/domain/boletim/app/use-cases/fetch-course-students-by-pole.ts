@@ -6,6 +6,7 @@ import type { StudentsPolesRepository } from "../repositories/students-poles-rep
 import type { StudentWithPole } from "../../enterprise/entities/value-objects/student-with-pole.ts"
 import type { UniqueEntityId } from "@/core/entities/unique-entity-id.ts"
 import type { Name } from "../../enterprise/entities/value-objects/name.ts"
+import { StudentCourseDetails } from "../../enterprise/entities/value-objects/student-course-details.ts"
 
 interface FetchCourseStudentsByPoleRequest {
   courseId: string
@@ -18,11 +19,7 @@ interface FetchCourseStudentsByPoleRequest {
 }
 
 type FetchCourseStudentsByPoleResponse = Either<ResourceNotFoundError, {
-  students: {
-    courseId: UniqueEntityId
-    course: Name
-    studentsPole: StudentWithPole[]
-  }
+  studentPoles: StudentCourseDetails[]
   pages: number
   totalItems: number
 }>
@@ -41,14 +38,11 @@ export class FetchCourseStudentsByPole {
     const pole = await this.polesRepository.findById(poleId)
     if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
 
-    const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyByPoleId({ page, perPage, poleId, cpf, username, isEnabled })
+    const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyDetailsByPoleId({ page, perPage, poleId, cpf, username, isEnabled }) 
+    const studentPolesByCourse = studentsPole.filter(studentPole => studentPole.courseId.equals(course.id))
 
     return right({
-      students: {
-        course: course.name,
-        courseId: course.id,
-        studentsPole
-      },
+      studentPoles: studentPolesByCourse,
       pages,
       totalItems
     })

@@ -63,7 +63,7 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
       }
   }
 
-  async findManyByPoleId({
+  async findManyDetailsByPoleId({
     poleId, 
     page, 
     cpf,
@@ -78,33 +78,40 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
     isEnabled?: boolean
     perPage?: number; 
   }): Promise<{
-    studentsPole: StudentWithPole[],
+    studentsPole: StudentCourseDetails[],
     pages: number
     totalItems: number
   }> {
     const allStudentsPole = this.items
       .filter(item => item.poleId.toValue() === poleId)
       .map(studentPole => {
-        const pole = this.polesRepository.items.find(pole => pole.id.equals(studentPole.poleId))
+        const studentCourse = this.studentsCoursesRepository.items.find(item => {
+          return item.id.equals(studentPole.studentId)
+        })
+        if (!studentCourse) throw new Error(`Student with ID ${studentPole.id.toValue()} does not exist`)
+
+        const student = this.studentsRepository.items.find(item => item.id.equals(studentCourse.studentId))
+        if (!student) throw new Error(`Student with ID ${studentCourse.studentId.toValue()} does not exist`)
+
+        const course = this.coursesRepository.items.find(item => item.id.equals(studentCourse.courseId))
+        if (!course) throw new Error(`Course with ID ${studentCourse.courseId.toValue()} does not exist`)
+
+        const pole = this.polesRepository.items.find(item => item.id.equals(studentPole.poleId))
         if (!pole) throw new Error(`Pole with ID ${studentPole.poleId.toValue()} does not exist`)
 
-        const studentCourse = this.studentsCoursesRepository.items.find(studentCourse => studentCourse.id.equals(studentPole.studentId))
-        if (!studentCourse) throw new Error(`Student with ID ${studentPole.studentId.toValue()} does not exist.`)
-        
-        const student = this.studentsRepository.items.find(student => student.id.equals(studentCourse.studentId))
-        if (!student) throw new Error(`Student with ID ${studentPole.studentId.toValue()} does not exist.`)
-
-        return StudentWithPole.create({
+        return StudentCourseDetails.create({
           studentId: student.id,
           username: student.username.value,
-          email: student.email.value,
-          civilId: student.civilId,
           cpf: student.cpf.value,
+          email: student.email.value,
           birthday: student.birthday.value,
+          civilId: student.civilId ? student.civilId : '0',
           assignedAt: student.createdAt,
-          isLoginConfirmed: student.isLoginConfirmed,
+          courseId: course.id,
+          course: course.name.value,
           poleId: pole.id,
-          pole: pole.name.value
+          pole: pole.name.value,
+          formula: course.formula
         })
       })
       .filter(item => {
@@ -154,12 +161,13 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,
-          civilId: student.civilId ? student.civilId : 0,
+          civilId: student.civilId ? student.civilId : '0',
           assignedAt: student.createdAt,
           courseId: course.id,
           course: course.name.value,
           poleId: pole.id,
-          pole: pole.name.value
+          pole: pole.name.value,
+          formula: course.formula
         })
       })
       .filter(studentDetails => {
