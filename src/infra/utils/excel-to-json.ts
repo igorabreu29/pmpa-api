@@ -91,7 +91,7 @@ export function assessmentsBatchExcelToJSON(fileUrl: string) {
 
   return assessments.map(assessment => ({
     cpf: String(assessment['CPF']),
-    discipline: assessment['DISCIPLINA'],
+    disciplineName: assessment['DISCIPLINA'],
     vf: assessment['VF'],
     avi: assessment['AVI'],
     avii: assessment['AVII'],
