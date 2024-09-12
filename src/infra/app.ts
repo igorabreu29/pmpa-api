@@ -90,6 +90,7 @@ import { createCourseSummarySheet } from "./http/controllers/create-course-summa
 import { removeBehaviorGrade } from "./http/controllers/remove-behavior-grade.ts";
 import { getCourseBehaviors } from "./http/controllers/get-course-behaviors.ts";
 import { getAverageClassificationCoursePoles } from "./http/controllers/get-average-classification-course-poles.ts";
+import { removeBehaviorsGradeBatch } from "./http/controllers/remove-behaviors-grade-batch.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -149,8 +150,9 @@ app.register(getCourseBehaviors)
 app.register(createBehavior)
 app.register(createBehaviorBatch)
 app.register(updateBehavior)
-app.register(removeBehaviorGrade)
 app.register(updateBehaviorBatch)
+app.register(removeBehaviorGrade)
+app.register(removeBehaviorsGradeBatch)
 app.register(deleteBehavior)
 app.register(getCourses)
 app.register(getCourse)
