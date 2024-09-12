@@ -41,14 +41,14 @@ export async function authenticate(
       }
     }
 
-    const fullUrl = req.protocol.concat('://').concat(`localhost:${env.WEB_PORT}`)
-    const redirectUrl = new URL('/students/login/confirmation', fullUrl)
+    const { token, redirect } = result.value
 
-    if (result.value.redirect) {
-      return res.status(301).redirect(`${redirectUrl.href}?cpf=${cpf}`)
+    if (redirect) {
+      return res.send({
+        token,
+        redirect,
+      })
     }
-
-    const { token } = result.value
 
     return res.status(201).send({
       token
