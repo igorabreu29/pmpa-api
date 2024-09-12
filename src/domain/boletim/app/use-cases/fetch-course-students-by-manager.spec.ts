@@ -10,17 +10,29 @@ import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { FetchCourseStudentsByPole } from "./fetch-course-students-by-pole.ts";
 import { Name } from "../../enterprise/entities/value-objects/name.ts";
+import { InMemoryManagersRepository } from "test/repositories/in-memory-managers-repository.ts";
+import { InMemoryManagersCoursesRepository } from "test/repositories/in-memory-managers-courses-repository.ts";
+import { InMemoryManagersPolesRepository } from "test/repositories/in-memory-managers-poles-repository.ts";
+import { FetchCourseStudentsByManagerUseCase } from "./fetch-course-students-by-manager.ts";
+import { makeManager } from "test/factories/make-manager.ts";
+import { makeManagerCourse } from "test/factories/make-manager-course.ts";
+import { makeManagerPole } from "test/factories/make-manager-pole.ts";
+
+let managersRepository: InMemoryManagersRepository
+let managersPolesRepository: InMemoryManagersPolesRepository
+let polesRepository: InMemoryPolesRepository
+
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
-let coursesRepository: InMemoryCoursesRepository
-let polesRepository: InMemoryPolesRepository
-let studentsRepository: InMemoryStudentsRepository
-let sut: FetchCourseStudentsByPole
 
-describe(('Fetch Course Students By Pole Use Case'), () => {
+let coursesRepository: InMemoryCoursesRepository
+let managersCoursesRepository: InMemoryManagersCoursesRepository
+let studentsRepository: InMemoryStudentsRepository
+let sut: FetchCourseStudentsByManagerUseCase
+
+describe(('Fetch Course Students By Manager Use Case'), () => {
   beforeEach(() => {
     studentsRepository = new InMemoryStudentsRepository (
       studentsCoursesRepository,
@@ -36,6 +48,22 @@ describe(('Fetch Course Students By Pole Use Case'), () => {
     )
     coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
+
+    managersRepository = new InMemoryManagersRepository(
+      managersCoursesRepository,
+      coursesRepository,
+      managersPolesRepository,
+      polesRepository
+    )
+
+    managersPolesRepository = new InMemoryManagersPolesRepository()
+    managersCoursesRepository = new InMemoryManagersCoursesRepository(
+      managersRepository,
+      coursesRepository,
+      managersPolesRepository,
+      polesRepository
+    )
+
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
@@ -43,21 +71,21 @@ describe(('Fetch Course Students By Pole Use Case'), () => {
       polesRepository
     )
     
-    sut = new FetchCourseStudentsByPole(coursesRepository, polesRepository, studentsPolesRepository)
+    sut = new FetchCourseStudentsByManagerUseCase(coursesRepository, managersCoursesRepository, studentsPolesRepository)
   })
 
   it ('should not be able to fetch course students if course does not exist', async () => {
-    const result = await sut.execute({ courseId: 'not-found', poleId: 'not-exist', page: 1, perPage: 0})
+    const result = await sut.execute({ courseId: 'not-found', managerId: 'not-exist', page: 1, perPage: 0})
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it ('should not be able to fetch course students if pole does not exist', async () => {
+  it ('should not be able to fetch course students if manager does not exist', async () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
-    const result = await sut.execute({ courseId: course.id.toValue(), poleId: 'not-exist', page: 1, perPage: 0})
+    const result = await sut.execute({ courseId: course.id.toValue(), managerId: 'not-exist', page: 1, perPage: 0})
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
@@ -70,9 +98,6 @@ describe(('Fetch Course Students By Pole Use Case'), () => {
     const pole = makePole()
     polesRepository.create(pole)
 
-    const pole2 = makePole()
-    polesRepository.create(pole2)
-
     const nameOrError = Name.create('John')
     const nameOrError2 = Name.create('Jonas')
     const nameOrError3 = Name.create('Levy')
@@ -83,29 +108,29 @@ describe(('Fetch Course Students By Pole Use Case'), () => {
 
     const student1 = makeStudent({ username: nameOrError.value })
     const student2 = makeStudent({ username: nameOrError2.value })
-    const student3 = makeStudent({ username: nameOrError3.value })
+    const manager = makeManager({ username: nameOrError3.value })
     studentsRepository.create(student1)
     studentsRepository.create(student2)
-    studentsRepository.create(student3)
+    managersRepository.create(manager)
 
     const studentCourse1 = makeStudentCourse({ courseId: course.id, studentId: student1.id })
     const studentCourse2 = makeStudentCourse({ courseId: course.id, studentId: student2.id })
-    const studentCourse3 = makeStudentCourse({ courseId: course.id, studentId: student3.id })
+    const managerCourse = makeManagerCourse({ courseId: course.id, managerId: manager.id })
     studentsCoursesRepository.create(studentCourse1)
     studentsCoursesRepository.create(studentCourse2)
-    studentsCoursesRepository.create(studentCourse3)
+    managersCoursesRepository.create(managerCourse)
 
     const studentPole1 = makeStudentPole({ studentId: studentCourse1.id, poleId: pole.id })
     const studentPole2 = makeStudentPole({ studentId: studentCourse2.id, poleId: pole.id })
-    const studentPole3 = makeStudentPole({ studentId: studentCourse3.id, poleId: pole2.id })
+    const managerPole = makeManagerPole({ managerId: managerCourse.id, poleId: pole.id })
     studentsPolesRepository.create(studentPole1)
     studentsPolesRepository.create(studentPole2)
-    studentsPolesRepository.create(studentPole3)
+    managersPolesRepository.create(managerPole)
 
-    const result = await sut.execute({ courseId: course.id.toValue(), poleId: pole.id.toValue(), page: 1, perPage: 6, username: 'Jo' })
+    const result = await sut.execute({ courseId: course.id.toValue(), managerId: manager.id.toValue(), page: 1, perPage: 6, username: 'Jo' })
 
     expect(result.isRight()).toBe(true)
-    expect(studentsRepository.items).toHaveLength(3)
+    expect(studentsRepository.items).toHaveLength(2)
     expect(result.value).toMatchObject({
       studentPoles: [
         {
@@ -129,6 +154,15 @@ describe(('Fetch Course Students By Pole Use Case'), () => {
     const pole = makePole()
     polesRepository.create(pole)
 
+    const manager = makeManager()
+    managersRepository.create(manager)
+
+    const managerCourse = makeManagerCourse({ courseId: course.id, managerId: manager.id })
+    managersCoursesRepository.create(managerCourse)
+
+    const managerPole = makeManagerPole({ managerId: managerCourse.id, poleId: pole.id })
+    managersPolesRepository.create(managerPole)
+
     for (let i = 1; i <= 8; i++) {
       const student = makeStudent()
       const studentCourse = makeStudentCourse({ courseId: course.id, studentId: student.id })
@@ -138,7 +172,7 @@ describe(('Fetch Course Students By Pole Use Case'), () => {
       studentsPolesRepository.create(studentPole)
     }
 
-    const result = await sut.execute({ courseId: course.id.toValue(), poleId: pole.id.toValue(), page: 2, perPage: 6 })
+    const result = await sut.execute({ courseId: course.id.toValue(), managerId: manager.id.toValue(), page: 2, perPage: 6 })
     
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
