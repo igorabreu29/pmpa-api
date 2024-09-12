@@ -16,7 +16,8 @@ export class PrismaSearchsRepository implements SearchsRepository {
           OR: [
             {
               username: {
-                contains: query
+                contains: query,
+                mode: 'insensitive'
               }
             },
             {
@@ -78,7 +79,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
         .filter(search => {
           return search.courses.some(item => {
             const courseMapper = PrismaCoursesMapper.toDomain(item)
-            return courses?.map(({ course }) => course.id.equals(courseMapper.id))
+            return courses?.some(({ course }) => course.id.equals(courseMapper.id))
           }) &&
             search.poles.some(pole => {
               const poleMapper = PrismaPolesMapper.toDomain(pole)
@@ -128,7 +129,8 @@ export class PrismaSearchsRepository implements SearchsRepository {
           OR: [
             {
               username: {
-                contains: query
+                contains: query,
+                mode: 'insensitive'
               }
             },
             {
@@ -225,7 +227,8 @@ export class PrismaSearchsRepository implements SearchsRepository {
         OR: [
           {
             username: {
-              contains: query
+              contains: query,
+              mode: 'insensitive'
             }
           },
           {
