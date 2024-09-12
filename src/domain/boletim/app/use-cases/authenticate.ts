@@ -9,7 +9,7 @@ interface AuthenticateUseCaseRequest {
 }
 
 type AuthenticateUseCaseResponse = Either<InvalidCredentialsError, {
-  token?: string
+  token: string
   redirect?: boolean
 }>
 
@@ -26,14 +26,14 @@ export class AuthenticateUseCase {
     const isPasswordValid = await authenticate.passwordHash.compare(password)
     if (!isPasswordValid) return left(new InvalidCredentialsError())
 
-    if (authenticate.role === 'student' && !authenticate.isLoginConfirmed) {
-      return right({ redirect: true })
-    }
-
     const token = this.encrypter.encrypt({
       sub: authenticate.id.toValue(),
       role: authenticate.role
     })
+
+    if (authenticate.role === 'student' && !authenticate.isLoginConfirmed) {
+      return right({ redirect: true, token })
+    }
 
     return right({
       token
