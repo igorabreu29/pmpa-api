@@ -3,10 +3,10 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { StudentsRepository } from "../repositories/students-repository.ts";
 
 interface MarkLoginConfirmedAsTrueAndUpdateStudentRequest {
-  studentCPF: string
+  id: string
   fatherName?: string
   motherName: string
-  militaryId: string
+  militaryId?: string
   state?: string
   county?: string
   studentIp: string
@@ -20,7 +20,7 @@ export class MarkLoginConfirmedAsTrueAndUpdateStudent {
   ) {}
 
   async execute({
-    studentCPF,
+    id,
     fatherName,
     motherName,
     militaryId,
@@ -28,7 +28,7 @@ export class MarkLoginConfirmedAsTrueAndUpdateStudent {
     county,
     studentIp
   }: MarkLoginConfirmedAsTrueAndUpdateStudentRequest): Promise<MarkLoginConfirmedAsTrueAndUpdateStudentResponse> {
-    const student = await this.studentsRepository.findByCPF(studentCPF)
+    const student = await this.studentsRepository.findById(id)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
 
     student.parent = {

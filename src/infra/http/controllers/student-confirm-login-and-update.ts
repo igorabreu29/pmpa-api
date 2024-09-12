@@ -6,36 +6,34 @@ import { z } from "zod";
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { makeOnStudentLoginConfirmed } from "@/infra/factories/make-on-student-login-confirmed.ts";
+import { verifyJWT } from "../middlewares/verify-jwt.ts";
 
 export async function studentConfirmLoginAndUpdate(
   app: FastifyInstance
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .patch('/students/:cpf/confirm', {
+    .patch('/students/confirm', {
+      onRequest: [verifyJWT],
       schema: {
-        params: z.object({
-          cpf: z.string().min(11)
-        }),
-
         body: z.object({
-          fatherName: z.string().min(3).max(50).optional(),
+          fatherName: z.string().optional(),
           motherName: z.string().min(3).max(50),
-          militaryId: z.string(),
+          militaryId: z.string().optional(),
           state: z.string().optional(),
           county: z.string().optional()
         })
       }
     }, async (req, res) => {
-      const { cpf } = req.params
       const { fatherName, motherName, militaryId, state, county} = req.body
+      const { payload } = req.user
 
       const ip = req.ip
 
       makeOnStudentLoginConfirmed()
       const useCase = makeMarkLoginConfirmedAsTrueAndUpdateStudentUseCase()
       const result = await useCase.execute({
-        studentCPF: cpf,
+        id: payload.sub,
         fatherName,
         motherName,
         militaryId,
