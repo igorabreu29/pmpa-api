@@ -58,7 +58,7 @@ describe('Create Course (e2e)', () => {
       }
     })
 
-    const result = await request(app.server)
+    const response = await request(app.server)
       .post('/courses')
       .set('Authorization', `Bearer ${token}`)
       .send({
@@ -66,6 +66,7 @@ describe('Create Course (e2e)', () => {
         name: 'CGS TURMA I - 2022',
         imageUrl: 'http://localhost:3333',
         isPeriod: false,
+        endsAt: '01/11/2050',
         poleIds: [pole.id, pole2.id],
         disciplines: [
           {
@@ -83,6 +84,6 @@ describe('Create Course (e2e)', () => {
         ]
       })
 
-      expect(result.statusCode).toEqual(201)
+      expect(response.statusCode).toEqual(201)
   })
 })
