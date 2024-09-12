@@ -1,18 +1,18 @@
 import type { ManagerDetails } from "@/domain/boletim/enterprise/entities/value-objects/manager-details.ts";
 import { 
   Prisma,
-  User as PrismaStudent,
+  User,
   Pole as PrismaPole,
  } from "@prisma/client";
 import { dayjs } from '@/infra/libs/dayjs.ts'
 
-type PrismaStudentsDetails = Prisma.UserUncheckedCreateInput & {
+type PrismaManagersDetails = Prisma.UserUncheckedCreateInput & {
   poles: PrismaPole[]
   courses: Prisma.CourseUncheckedUpdateInput[]
 }
 
 export class ManagerDetailsPresenter {
-  static toHTTP(managerDetails: ManagerDetails): PrismaStudentsDetails {
+  static toHTTP(managerDetails: ManagerDetails): PrismaManagersDetails {
     return {
       id: managerDetails.managerId.toValue(),
       cpf: managerDetails.cpf,
@@ -23,13 +23,16 @@ export class ManagerDetailsPresenter {
       avatarUrl: managerDetails.avatarUrl ? managerDetails.avatarUrl : null,
       birthday: dayjs(managerDetails.birthday).format('DD/MM/YYYY'),
       role: 'MANAGER',
-      courses: managerDetails.courses.map(course => ({
+      courses: managerDetails.courses.map(({ course, managerCourseId }) => ({
+        managerCourseId: managerCourseId.toValue(),
         id: course.id.toValue(),
-        imageUrl: course.imageUrl,
         name: course.name.value,
-        startAt: course.startAt
+        formula: course.formula,
+        endsAt: course.endsAt.value,
+        imageUrl: course.imageUrl,
       })),
-      poles: managerDetails.poles.map(pole => ({
+      poles: managerDetails.poles.map(({ pole, managerPoleId }) => ({
+        managerPoleId,
         id: pole.id.toValue(),
         name: pole.name.value
       }))

@@ -17,14 +17,16 @@ export class SearchPresenter {
       civilId: String(search.civilId),
       email: search.email.value,
       username: search.username.value,
-      courses: search.courses ? search.courses.map(course => ({
+      courses: search.courses ? search.courses.map(({ course, searchCourseId }) => ({
         ...course,
         name: course.name.value,
         endsAt: course.endsAt.value,
+        userOnCourseId: searchCourseId.toValue()
       })) : [],
-      poles: search.poles ? search.poles.map(pole => ({
+      poles: search.poles ? search.poles.map(({ pole, searchPoleId }) => ({
         id: pole.id.toValue(),
-        name: pole.name.value
+        name: pole.name.value,
+        userCourseOnPoleId: searchPoleId.toValue()
       })) : [],
       password: '',
     }

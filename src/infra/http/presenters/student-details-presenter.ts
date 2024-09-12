@@ -3,14 +3,13 @@ import { dayjs } from '@/infra/libs/dayjs.ts'
 
 import { 
   Prisma,
-  Pole as PrismaPole,
-  Course as PrismaCourse
+  Pole as PrismaPole
  } from "@prisma/client";
 
 type PrismaStudentsDetails = Prisma.UserUncheckedCreateInput & {
   profile?: Prisma.ProfileUncheckedUpdateInput
   poles: PrismaPole[]
-  courses: PrismaCourse[]
+  courses: Prisma.CourseUncheckedCreateInput[]
 }
 
 export class StudentDetailsPresenter {
@@ -32,17 +31,16 @@ export class StudentDetailsPresenter {
         fatherName: studentDetails.parent?.fatherName,
         motherName: studentDetails.parent?.motherName,
       },
-      courses: studentDetails.courses.map(course => ({
+      courses: studentDetails.courses.map(({ course, studentCourseId }) => ({
+        studentCourseId: studentCourseId.toValue(),
         id: course.id.toValue(),
-        endsAt: course.endsAt.value,
-        formula: course.formula,
-        imageUrl: course.imageUrl,
-        isActive: course.isActive,
-        isPeriod: course.isPeriod,
         name: course.name.value,
-        startAt: course.startAt
+        formula: course.formula,
+        endsAt: course.endsAt.value,
+        imageUrl: course.imageUrl,
       })),
-      poles: studentDetails.poles.map(pole => ({
+      poles: studentDetails.poles.map(({ pole, studentPoleId }) => ({
+        studentPoleId,
         id: pole.id.toValue(),
         name: pole.name.value
       }))
