@@ -17,7 +17,7 @@
 [x] listar um curso
 [x] classificação por notas
 [x] desativar histórico
-[] Listar alunos de um curso por gerente
-[] Listar comportamentos com alunos
-[] Remover comportamento
-[] Remover comportamento em lote
+[x] Listar alunos de um curso por gerente
+[x] Listar comportamentos com alunos
+[x] Remover comportamento
+[x] Remover comportamento em lote
