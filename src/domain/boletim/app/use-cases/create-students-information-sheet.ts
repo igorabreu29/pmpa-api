@@ -52,7 +52,7 @@ export class CreateStudentsInformationSheetUseCase {
           avii: !assessment.avii ? -1 : assessment.avii, 
           vfe: assessment.vfe
         })
-        
+
         return {
           disciplineId: courseDiscipline.disciplineId,
           module: courseDiscipline.module,
@@ -60,9 +60,8 @@ export class CreateStudentsInformationSheetUseCase {
           ...studentCondition,
         }
       }))
-      
+
       return {
-          studentId: studentCourseDetails.studentId,
           username: studentCourseDetails.username,
           email: studentCourseDetails.email,
           cpf: studentCourseDetails.cpf,
@@ -72,14 +71,29 @@ export class CreateStudentsInformationSheetUseCase {
           militaryId: studentCourseDetails.militaryId,
           state: studentCourseDetails.state,
           county: studentCourseDetails.county,
-          parent: studentCourseDetails.parent,
+          fatherName: studentCourseDetails.parent?.fatherName,
+          motherName: studentCourseDetails.parent?.motherName,
           course: studentCourseDetails.course,
           pole: studentCourseDetails.pole,
-          courseDisciplineWithAssessment
+          courseDisciplineWithAssessment: courseDisciplineWithAssessment.map(item => Number(item?.average))[0]
       }
     }))
 
-    const { filename } = this.sheeter.write({ rows: studentsInformation, keys: [], sheetName: `${course.name.value} - Informações dos estudantes.xlsx` })
+    const { filename } = this.sheeter.write({ rows: studentsInformation, keys: [
+      'NOME COMPLETO',
+      'E-MAIL',
+      'CPF',
+      'DATA DE NASCIMENTO',
+      'RG CIVIL',
+      'DATA DE ADIÇÃO',
+      'RG MILITAR',
+      'ESTADO',
+      'MUNICÍPIO',
+      'NOME DO PAI',
+      'NOME DA MÃE',
+      'CURSO',
+      'PÓLO',
+    ], sheetName: `${course.name.value} - Informações dos estudantes.xlsx` })
 
     return right({
       filename
