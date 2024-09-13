@@ -1,4 +1,5 @@
 import type { Search } from "@/domain/boletim/enterprise/entities/search.ts";
+import { defineRoleAccessToDomain } from "@/infra/utils/define-role.ts";
 import { 
   Prisma,
   Pole as PrismaPole,
@@ -17,10 +18,11 @@ export class SearchPresenter {
       civilId: String(search.civilId),
       email: search.email.value,
       username: search.username.value,
+      role: defineRoleAccessToDomain(search.role),
       courses: search.courses ? search.courses.map(({ course, searchCourseId }) => ({
         id: course.id.toValue(),
         name: course.name.value,
-        endsAt: course.endsAt.value,
+        imageUrl: course.imageUrl,
         userOnCourseId: searchCourseId.toValue()
       })) : [],
       poles: search.poles ? search.poles.map(({ pole, searchPoleId }) => ({
