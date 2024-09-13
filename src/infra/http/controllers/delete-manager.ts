@@ -17,7 +17,7 @@ export async function deleteManager(
   app
     .withTypeProvider<ZodTypeProvider>()
     .delete('/managers/:id', {
-      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
+      onRequest: [verifyJWT, verifyUserRole(['dev'])],
       schema: {
         params: z.object({
           id: z.string().uuid()

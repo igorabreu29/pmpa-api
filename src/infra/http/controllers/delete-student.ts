@@ -17,7 +17,7 @@ export async function deleteStudent(
   app
     .withTypeProvider<ZodTypeProvider>()
     .delete('/students/:id', {
-      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev', 'manager'])],
+      onRequest: [verifyJWT, verifyUserRole(['dev'])],
       schema: {
         params: z.object({
           id: z.string().uuid()
@@ -32,7 +32,7 @@ export async function deleteStudent(
 
     makeOnStudentDeleted()
     const useCase = makeDeleteStudentUseCase()
-    const result = await useCase.execute({
+  const result = await useCase.execute({
       id,
       role,
       userId: sub,
