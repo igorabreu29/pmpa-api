@@ -36,6 +36,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
         take: page * PER_PAGE,
 
         select: {
+          id: true,
           username: true,
           cpf: true,
           email: true,
@@ -56,6 +57,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
 
       const searchMapperToDomain = searchs
         .map(search => ({
+          id: search.id,
           username: search.username,
           civilId: search.civilId,
           cpf: search.cpf,
@@ -149,6 +151,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
         take: page * PER_PAGE,
 
         select: {
+          id: true,
           username: true,
           cpf: true,
           email: true,
@@ -167,6 +170,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
       })
 
       const searchMapperToDomain = searchs.map(search => ({
+        id: search.id,
         username: search.username,
         civilId: search.civilId,
         cpf: search.cpf,
@@ -247,6 +251,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
       take: page * PER_PAGE,
 
       select: {
+        id: true,
         username: true,
         cpf: true,
         email: true,
@@ -265,6 +270,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
     })
 
     const searchMapperToDomain = searchs.map(search => ({
+      id: search.id,
       username: search.username,
       civilId: search.civilId,
       cpf: search.cpf,
