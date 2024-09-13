@@ -156,6 +156,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
           cpf: true,
           email: true,
           civilId: true,
+          role: true,
           usersOnCourses: {
             include: {
               course: true,
@@ -175,6 +176,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
         civilId: search.civilId,
         cpf: search.cpf,
         email: search.email,
+        role: search.role,
         searchCourses: search.usersOnCourses.map(userOnCourse => ({
           id: userOnCourse.id,
           courseId: userOnCourse.courseId,
@@ -256,6 +258,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
         cpf: true,
         email: true,
         civilId: true,
+        role: true,
         usersOnCourses: {
           include: {
             course: true,
@@ -275,6 +278,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
       civilId: search.civilId,
       cpf: search.cpf,
       email: search.email,
+      role: search.role,
       searchCourses: search.usersOnCourses.map(userOnCourse => ({
         id: userOnCourse.id,
         courseId: userOnCourse.courseId,
