@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico Escolar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="flex flex-col gap-4">
+        <header class="flex items-center justify-between w-full">
+            <img class="w-20 h-20 object-cover" src="https://github.com/igorabreu29.png" alt="">
+            <div class="flex flex-col gap-4">
+              <ul class="text-center text-sm space-y-1">
+                <li class="text-medium">GOVERNO DO ESTADO DO PARÁ</li>
+                <li class="text-medium">SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA</li>
+                <li class="text-medium">POLÍCIA MILTAR DO PARÁ</li>
+                <li class="text-medium">DEPARTAMENTO GERAL DE EDUCAÇÃO E CULTURA</li>
+                <li class="text-medium">CENTRO DE FORMAÇÃO E APERFEIÇOAMENTO DE PRAÇAS "CEL MOREIRA"</li>
+                <li class="text-medium">HISTÓRICO ESCOLAR</li>
+              </ul>
+              <p class="font-bold text-lg text-center">
+                CURSO DE FORMAÇÃO DE PRAÇAS PM - {{ dynamic_course }}
+              </p>
+            </div>
+            <img class="w-20 h-20 object-cover" src="https://github.com/igorabreu29.png" alt="">
+        </header>
+
+        <div class="border-2 border-black w-full"></div>
+
+        <section class="space-y-4">
+          <h2 class="font-semibold text-sm">1 - CONCLUDENTE :</h2>
+
+          <ul class="grid grid-cols-2">
+            <li class="border-2 border-black font-bold text-sm">NOME: {{ dynamic_student_username }}</li>
+            <li class="border-2 border-black font-bold text-sm">RG: {{ dynamic_student_militaryId }}</li>
+            <li class="border-2 border-black font-bold text-sm">PAI: {{ dynamic_student_father }}</li>
+            <li class="border-2 border-black font-bold text-sm">MÃE: {{ dynamic_student_mother }}</li>
+            <li class="border-2 border-black font-bold text-sm">DATA DE NASCIMENTO: {{ dynamic_student_birthday }}</li>
+            <li class="border-2 border-black font-bold text-sm">MUNICÍPIO: {{ dynamic_student_county }}</li>
+            <li class="border-2 border-black font-bold text-sm">UF: {{ dynamic_student_state }}</li>
+            <li class="border-2 border-black font-bold text-sm">TURMA: </li>
+          </ul>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="font-semibold text-sm">2 - CURSO {{ dynamic_course }}:</h2>
+
+          <ul class="grid grid-cols-3">
+            <li class="border-2 border-black font-bold text-sm">CARGA HORÁRIA: 1578 H/A</li>
+            <li class="border-2 border-black font-bold text-sm">MÉDIA: 7,896</li>
+            <li class="border-2 border-black font-bold text-sm">CONCEITO: 2° ÉPOCA</li>
+            <li class="border-2 border-black font-bold text-sm">INÍCIO DO CURSO: {{ dynamic_course_startAt }}</li>
+            <li class="border-2 border-black font-bold text-sm">TÉRMINO DO CURSO: {{ dynamic_course_endsAt }}</li>
+            <li class="border-2 border-black font-bold text-sm">CLASSIFICAÇÃO: 1°</li>
+          </ul>
+        </section>
+
+        <section class="space-y-4">
+          <h2 class="font-semibold text-sm">3 - ESTRUTURA CURRÍCULAR:</h2>
+
+          <table class="w-full">
+            <thead class="w-full">
+              <tr class="w-full text-left">
+                <th class="border border-black rounded font-bold text-sm w-[400px]">DISCIPLINAS</th>
+                <th class="border border-black rounded font-bold text-sm w-[30px]">H/A</th>
+                <th class="border border-black rounded font-bold text-sm w-[40px]">1º VC</th>
+                <th class="border border-black rounded font-bold text-sm w-[40px]">2º VC</th>
+                <th class="border border-black rounded font-bold text-sm w-[20px]">VF</th>
+                <th class="border border-black rounded font-bold text-sm w-[25px]">VFE</th>
+                <th class="border border-black rounded font-bold text-sm w-[30px]">MÉDIA</th>
+                <th class="border border-black rounded font-bold text-sm w-[64px]">CONCEITO</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {{ dynamic_list }}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="space-y-4 w-full">
+          <h2 class="font-semibold text-sm">4 - VERIFICAÇÕES ESPECIAIS (2° ÉPOCA):</h2>
+
+          <ul class="flex items-center w-full gap-1">
+            <li class="border border-black rounded font-bold flex-1">2° ÉPOCA</li>
+            <li class="border border-black rounded font-bold w-36">0</li>
+          </ul>
+        </section>
+
+        <div class="text-xl font-bold">
+          Belém-PA, {{ dynamic_current_date }}
+        </div>
+
+        <div id="qr-code-render" width="600px">
+            <img id="qr-code" src=""/>
+        </div>
+        <button onclick="downloadHistoric()" class="print:hidden">Download</button>
+    </div>
+
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</body>
+</html>
