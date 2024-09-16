@@ -118,22 +118,22 @@ export async function downloadCourseHistoric(
               N/A
             </td>
             <td class="text-sm font-bold">
-              ${grades.assessments[key].avi ?? ''}
+              ${grades.assessments[key]?.avi ?? ''}
             </td>
             <td class="text-sm font-bold">
-              ${grades.assessments[key].avii ?? ''}
+              ${grades.assessments[key]?.avii ?? ''}
             </td>
             <td class="text-sm font-bold">
-              ${grades.assessments[key].vf}
+              ${grades.assessments[key]?.vf}
             </td>
             <td class="text-sm font-bold">
-              ${grades.assessments[key].vfe ?? ''}
+              ${grades.assessments[key]?.vfe ?? ''}
             </td>
             <td class="text-sm font-bold">
-              ${grades.assessments[key].average}
+              ${grades.assessments[key]?.average}
             </td>
             <td class="text-sm font-bold">
-              ${grades.assessments[key].status}
+              ${grades.assessments[key]?.status}
             </td>
           </tr>
         `
