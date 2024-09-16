@@ -40,9 +40,10 @@ type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError,
       studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
 
-    assessments: {
+    assessmentsPerPeriod: {
       [x: string]: AssessmentWithModule[]
     },
+    assessments: AssessmentWithModule[]
     assessmentsCount: number
   } | {
     averageInform: {

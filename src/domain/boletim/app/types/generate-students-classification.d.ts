@@ -11,9 +11,10 @@ export interface StudentClassficationByPeriod {
       studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
 
-    assessments: {
+    assessmentsPerPeriod: {
       [x: string]: AssessmentWithModule[]
     }
+    assessments: AssessmentWithModule[]
     assessmentsCount: number
   }
   studentBirthday?: Date

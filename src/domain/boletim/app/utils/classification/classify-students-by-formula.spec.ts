@@ -596,7 +596,7 @@ describe('Classify Students By Formula', () => {
     const studentsWithAverage: StudentClassficationByPeriod[] = [
       {
         studentAverage: {
-          assessments: {
+          assessmentsPerPeriod: {
             module1: [
               {
                 id: 'assessment-1',
@@ -639,6 +639,7 @@ describe('Classify Students By Formula', () => {
               }
             ],
           },
+          assessments: [],
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 7.25,
@@ -655,7 +656,7 @@ describe('Classify Students By Formula', () => {
 
       {
         studentAverage: {
-          assessments: {
+          assessmentsPerPeriod: {
             module1: [
               {
                 id: 'assessment-4',
@@ -697,6 +698,7 @@ describe('Classify Students By Formula', () => {
               }
             ],
           },
+          assessments: [],
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 7.25,

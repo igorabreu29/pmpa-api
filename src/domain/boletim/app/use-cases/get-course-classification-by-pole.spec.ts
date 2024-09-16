@@ -167,7 +167,7 @@ describe('Get Classfication Course By Pole Use Case', () => {
               studentAverageStatus: { concept: 'regular', status: 'approved' }
             },
 
-            assessments: {
+            assessmentsPerPeriod: {
               module1: [
                 {
                   module: 1,
@@ -248,7 +248,7 @@ describe('Get Classfication Course By Pole Use Case', () => {
               studentAverageStatus: { concept: 'regular', status: 'approved' }
             },
 
-            assessments: {
+            assessmentsPerPeriod: {
               module1: [
                 {
                   module: 1,

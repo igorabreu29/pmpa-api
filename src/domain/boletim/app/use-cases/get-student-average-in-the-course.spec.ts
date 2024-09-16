@@ -162,7 +162,7 @@ describe(('Get Student Average In The Course Use Case'), () => {
           }
         },
   
-        assessments: {
+        assessmentsPerPeriod: {
           module1: [
             expect.objectContaining({
               id: assessment1.id.toValue()

@@ -124,9 +124,12 @@ export const formulas = {
         behaviorsCount: behaviorAverage ? behaviorAverage.behaviorsCount : 0,
         studentAverageStatus
       },
-      assessments: {
+      
+      assessmentsPerPeriod: {
         ...assessmentsPerPeriod
       },
+
+      assessments,
       assessmentsCount,
     }
   },

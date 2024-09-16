@@ -5,16 +5,16 @@ export const classifyStudentsByCFOFormula = (studentsWithAverage: StudentClassfi
     const geralAverageStudentA = studentA.studentAverage.averageInform.geralAverage
     const geralAverageStudentB = studentB.studentAverage.averageInform.geralAverage
 
-    const isSecondSeasonInThirdModuleStudentA = studentA.studentAverage.assessments['module3']?.filter(assessment => assessment.status !== 'approved')?.length
-    const isSecondSeasonInThirdModuleStudentB = studentB.studentAverage.assessments['module3']?.filter(assessment => assessment.status !== 'approved')?.length
+    const isSecondSeasonInThirdModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module3']?.filter(assessment => assessment.status !== 'approved')?.length
+    const isSecondSeasonInThirdModuleStudentB = studentB.studentAverage.assessmentsPerPeriod['module3']?.filter(assessment => assessment.status !== 'approved')?.length
 
-    const totalAssessmentsApprovedInFirstModuleStudentA = studentA.studentAverage.assessments['module1']?.filter(student => student.status === 'approved') 
-    const totalAssessmentsApprovedInSecondModuleStudentA = studentA.studentAverage.assessments['module2']?.filter(student => student.status === 'approved') 
-    const totalAssessmentsApprovedInThirdModuleStudentA = studentA.studentAverage.assessments['module3']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInFirstModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module1']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInSecondModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module2']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInThirdModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module3']?.filter(student => student.status === 'approved') 
 
-    const totalAssessmentsApprovedInFirstModuleStudentB = studentB.studentAverage.assessments['module1']?.filter(student => student.status === 'approved') 
-    const totalAssessmentsApprovedInSecondModuleStudentB = studentB.studentAverage.assessments['module2']?.filter(student => student.status === 'approved') 
-    const totalAssessmentsApprovedInThirdModuleStudentB = studentB.studentAverage.assessments['module3']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInFirstModuleStudentB = studentB.studentAverage.assessmentsPerPeriod['module1']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInSecondModuleStudentB = studentB.studentAverage.assessmentsPerPeriod['module2']?.filter(student => student.status === 'approved') 
+    const totalAssessmentsApprovedInThirdModuleStudentB = studentB.studentAverage.assessmentsPerPeriod['module3']?.filter(student => student.status === 'approved') 
 
     const totalAssessmentsApprovedStudentA = 
     totalAssessmentsApprovedInFirstModuleStudentA?.length + totalAssessmentsApprovedInSecondModuleStudentA?.length + totalAssessmentsApprovedInThirdModuleStudentA?.length

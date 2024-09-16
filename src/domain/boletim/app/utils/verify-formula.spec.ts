@@ -100,7 +100,7 @@ describe('Verify Formulas', () => {
           studentAverageStatus: { concept: 'good', status: 'approved second season' }
         },
         
-        assessments: expect.objectContaining({
+        assessmentsPerPeriod: expect.objectContaining({
           module1: [
             expect.objectContaining({
               id: assessments[0].id,

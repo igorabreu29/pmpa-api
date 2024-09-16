@@ -27,7 +27,7 @@ describe('Generate Students Classification', () => {
     const studentsWithAverage: StudentClassficationByPeriod[] = [
       {
         studentAverage: {
-          assessments: {
+          assessmentsPerPeriod: {
             module1: [
               {
                 id: 'assessment-1',
@@ -70,6 +70,7 @@ describe('Generate Students Classification', () => {
               }
             ],
           },
+          assessments: [],
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
@@ -86,7 +87,7 @@ describe('Generate Students Classification', () => {
 
       {
         studentAverage: {
-          assessments: {
+          assessmentsPerPeriod: {
             module1: [
               {
                 id: 'assessment-1',
@@ -128,6 +129,7 @@ describe('Generate Students Classification', () => {
               }
             ],
           },
+          assessments: [],
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
@@ -178,7 +180,7 @@ describe('Generate Students Classification', () => {
     const studentsWithAverage: StudentClassficationByPeriod[] = [
       {
         studentAverage: {
-          assessments: {
+          assessmentsPerPeriod: {
             module1: [
               {
                 id: 'assessment-1',
@@ -221,6 +223,7 @@ describe('Generate Students Classification', () => {
               }
             ],
           },
+          assessments: [],
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
@@ -237,7 +240,7 @@ describe('Generate Students Classification', () => {
 
       {
         studentAverage: {
-          assessments: {
+          assessmentsPerPeriod: {
             module1: [
               {
                 id: 'assessment-1',
@@ -279,6 +282,7 @@ describe('Generate Students Classification', () => {
               }
             ],
           },
+          assessments: [],
           averageInform: {
             behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
             geralAverage: 6.500,
