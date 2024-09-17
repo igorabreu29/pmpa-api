@@ -15,15 +15,15 @@ export abstract class ManagersCoursesRepository {
     perPage
   }: {
     courseId: string
-    page: number
+    page?: number
     cpf?: string
     username?: string
     isEnabled?: boolean
-    perPage: number
+    perPage?: number
   }): Promise<{
     managersCourse: ManagerCourseDetails[]
-    pages: number
-    totalItems: number
+    pages?: number
+    totalItems?: number
   }>
   abstract findManyByManagerIdWithCourse({
     managerId,

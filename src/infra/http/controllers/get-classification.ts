@@ -25,7 +25,7 @@ export async function getClassification(
         }),
 
         querystring: z.object({
-          page: z.coerce.number().default(1),
+          page: z.string().optional(),
           hasBehavior: z.boolean().default(true)
         })
       }
@@ -36,7 +36,7 @@ export async function getClassification(
       const useCase = makeGetCourseClassificationUseCase()
       const result = await useCase.execute({
         courseId: id,
-        page,
+        page: page ? Number(page) : undefined,
         hasBehavior
       })
       
