@@ -32,8 +32,8 @@ export abstract class StudentsPolesRepository {
     perPage?: number 
   }): Promise<{
     studentsPole: StudentCourseDetails[],
-    pages: number
-    totalItems: number
+    pages?: number
+    totalItems?: number
   }>
 
   abstract searchManyDetailsByPoleId({
