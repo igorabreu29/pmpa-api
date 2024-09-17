@@ -75,16 +75,85 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
     perPage 
   }: { 
     poleId: string; 
-    page: number; 
+    page?: number; 
     cpf?: string,
     username?: string,
     isEnabled?: boolean,
-    perPage: number; 
+    perPage?: number; 
   }): Promise<{ 
     studentsPole: StudentCourseDetails[]; 
-    pages: number; 
-    totalItems: number; 
+    pages?: number; 
+    totalItems?: number; 
   }> {
+    if (page && perPage) {
+      const studentPoles = await prisma.userCourseOnPole.findMany({
+        where: {
+          poleId,
+          usersOnCourse: {
+            isActive: isEnabled ? true : false,
+            user: {
+              role: 'STUDENT',
+              cpf: {
+                contains: cpf
+              },
+              username: {
+                contains: username
+              },
+            },
+          }
+        },
+        
+        include: {
+          usersOnCourse: {
+            select: {
+              course: true,
+              user: true
+            }
+          },
+          pole: true
+        },
+  
+        skip: (page - 1) * perPage,
+        take: page * perPage
+      })
+  
+      const studentPolesMapper = studentPoles.map(studentPole => {
+        return {
+          ...studentPole.usersOnCourse.user,
+          course: studentPole.usersOnCourse.course,
+          pole: studentPole.pole
+        }
+      })
+  
+      const studentPolesCount = await prisma.userCourseOnPole.count({
+        where: {
+          poleId,
+          usersOnCourse: {
+            isActive: isEnabled ? true : false,
+            user: {
+              role: 'STUDENT',
+              cpf: {
+                contains: cpf
+              },
+              username: {
+                contains: username
+              },
+            }
+          },
+        },
+      })
+  
+      const pages = Math.ceil(studentPolesCount / perPage)
+      
+      return {
+        studentsPole: studentPolesMapper.map(studentPole => {
+          return PrismaStudentCourseDetailsMapper.toDomain(studentPole)
+        }),
+        pages,
+        totalItems: studentPolesCount
+      }
+    }
+
     const studentPoles = await prisma.userCourseOnPole.findMany({
       where: {
         poleId,
@@ -111,9 +180,6 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
         },
         pole: true
       },
-
-      skip: (page - 1) * perPage,
-      take: page * perPage
     })
 
     const studentPolesMapper = studentPoles.map(studentPole => {
@@ -124,32 +190,10 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       }
     })
 
-    const studentPolesCount = await prisma.userCourseOnPole.count({
-      where: {
-        poleId,
-        usersOnCourse: {
-          isActive: isEnabled ? true : false,
-          user: {
-            role: 'STUDENT',
-            cpf: {
-              contains: cpf
-            },
-            username: {
-              contains: username
-            },
-          }
-        },
-      },
-    })
-
-    const pages = Math.ceil(studentPolesCount / perPage)
-    
     return {
       studentsPole: studentPolesMapper.map(studentPole => {
         return PrismaStudentCourseDetailsMapper.toDomain(studentPole)
       }),
-      pages,
-      totalItems: studentPolesCount
     }
   }
 
