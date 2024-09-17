@@ -3,12 +3,13 @@ import { makePrismaAdministrator } from "./make-administrator.ts"
 
 import request from 'supertest'
 import { app } from "@/infra/app.ts"
+import { makePrismaDeveloper } from "./make-developer.ts"
 
 export async function makeAuth() {
   const passwordOrError = Password.create('node-20')
   if (passwordOrError.isLeft()) throw new Error(passwordOrError.value.message)
 
-  await makePrismaAdministrator({ passwordHash: passwordOrError.value })
+  await makePrismaDeveloper({ passwordHash: passwordOrError.value })
 
   const authenticateResponse = await request(app.server)
     .post('/credentials/auth')
