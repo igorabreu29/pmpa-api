@@ -4,18 +4,18 @@ import type { Sheeter } from "../sheet/sheeter.ts";
 import type { GetAverageClassificationCoursePolesUseCase } from "./get-average-classification-course-poles.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 
-interface CreateAverageClassificationCoursePolesUseCaseRequest {
+interface CreateAverageClassificationCoursePolesSheetUseCaseRequest {
   courseId: string
 }
 
-export class CreateAverageClassificationCoursePolesUseCase {
+export class CreateAverageClassificationCoursePolesSheetUseCase {
   constructor (
     private coursesRepository: CoursesRepository,
     private getAverageClassificationCoursePoles: GetAverageClassificationCoursePolesUseCase,
     private sheeter: Sheeter
   ) {}
   
-  async execute({ courseId }: CreateAverageClassificationCoursePolesUseCaseRequest) {
+  async execute({ courseId }: CreateAverageClassificationCoursePolesSheetUseCaseRequest) {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
