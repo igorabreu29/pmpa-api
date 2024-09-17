@@ -16,7 +16,7 @@ import { Birthday } from "./value-objects/birthday.ts"
 
 export type DeveloperRole = 'dev'
 
-interface DeveloperProps {
+export interface DeveloperProps {
   username: Name
   email: Email
   passwordHash: Password
