@@ -23,6 +23,7 @@
     "db:up": "docker compose up -d",
     "db:deploy": "prisma migrate deploy",
     "db:generate": "prisma generate",
+    "db:seed": "prisma db seed",
     "app:setup": "run-s db:up --delay=1000 db:deploy db:generate"
   },
   "keywords": [],
