@@ -18,7 +18,7 @@ export async function getCourseStudents(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         querystring: z.object({
-          page: z.coerce.number().default(1),
+          page: z.string().optional(),
           cpf: z.string().optional(),
           username: z.string().optional(),
           isEnabled: z.string().default('true')
@@ -35,7 +35,7 @@ export async function getCourseStudents(
         const useCase = makeFetchCourseStudentsUseCase()
         const result = await useCase.execute({
           courseId: id,
-          page,
+          page: page ? Number(page) : undefined,
           cpf,
           username,
           isEnabled: isEnabled === 'true' ? true : false,

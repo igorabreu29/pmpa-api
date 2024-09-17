@@ -9,8 +9,8 @@ interface FetchCourseManagersUseCaseRequest {
   username?: string
   cpf?: string
   isEnabled?: boolean
-  page: number
-  perPage: number
+  page?: number
+  perPage?: number
 }
 
 type FetchCourseManagersUseCaseResponse = Either<ResourceNotFoundError, {

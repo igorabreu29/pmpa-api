@@ -27,7 +27,7 @@ export async function getClassificationByPole(
         }),
 
         querystring: z.object({
-          page: z.coerce.number().default(1),
+          page: z.string().optional(),
           hasBehavior: z.string().transform((item) => item === 'true'),
         })
       }
@@ -38,7 +38,7 @@ export async function getClassificationByPole(
       const useCase = makeGetCourseClassificationByPoleUseCase()
       const result = await useCase.execute({
         courseId: id,
-        page,
+        page: page ? Number(page) : undefined,
         hasBehavior,
         poleId
       })

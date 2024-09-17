@@ -10,17 +10,17 @@ import { StudentCourseDetails } from "../../enterprise/entities/value-objects/st
 interface FetchCourseStudentsByManagerUseCaseRequest {
   courseId: string
   managerId: string
-  page: number
+  page?: number
   cpf?: string
   username?: string
   isEnabled?: boolean
-  perPage: number
+  perPage?: number
 }
 
 type FetchCourseStudentsByManagerUseCaseResponse = Either<ResourceNotFoundError, {
   studentPoles: StudentCourseDetails[]
-  pages: number
-  totalItems: number
+  pages?: number
+  totalItems?: number
 }>
 
 export class FetchCourseStudentsByManagerUseCase {

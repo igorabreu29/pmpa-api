@@ -21,7 +21,7 @@ export async function getCourseStudentsByPole(
       onRequest: [verifyJWT, verifyUserRole(['manager', 'admin', 'dev'])],
       schema: {
         querystring: z.object({
-          page: z.coerce.number().default(1),
+          page: z.string().optional(),
           cpf: z.string().optional(),
           username: z.string().optional(),
           isEnabled: z.string().default('true')
@@ -39,7 +39,7 @@ export async function getCourseStudentsByPole(
         const useCase = makeFetchCourseStudentsByPoleUseCase()
         const result = await useCase.execute({
           courseId: id,
-          page,
+          page: page ? Number(page) : undefined,
           cpf, 
           username,
           isEnabled: isEnabled === 'true',

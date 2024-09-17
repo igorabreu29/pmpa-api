@@ -11,7 +11,7 @@ import { StudentCourseDetails } from "../../enterprise/entities/value-objects/st
 interface FetchCourseStudentsByPoleRequest {
   courseId: string
   poleId: string
-  page: number
+  page?: number
   cpf?: string
   username?: string
   isEnabled?: boolean
@@ -20,8 +20,8 @@ interface FetchCourseStudentsByPoleRequest {
 
 type FetchCourseStudentsByPoleResponse = Either<ResourceNotFoundError, {
   studentPoles: StudentCourseDetails[]
-  pages: number
-  totalItems: number
+  pages?: number
+  totalItems?: number
 }>
 
 export class FetchCourseStudentsByPole {

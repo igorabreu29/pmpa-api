@@ -21,7 +21,7 @@ export async function getAssessmentClassification(
         }),
 
         querystring: z.object({
-          page: z.coerce.number().default(1)
+          page: z.string().optional(),
         })
       },
     }, async (req, res) => {
@@ -31,7 +31,7 @@ export async function getAssessmentClassification(
       const useCase = makeGetCourseAssessmentClassificationUseCase()
       const result = await useCase.execute({
         courseId: id,
-        page
+        page: page ? Number(page) : undefined,
       })
 
       if (result.isLeft()) {
