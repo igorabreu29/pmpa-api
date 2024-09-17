@@ -1,10 +1,12 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
-import { Developer } from "@/domain/boletim/enterprise/entities/developer.ts";
+import { Developer, DeveloperProps } from "@/domain/boletim/enterprise/entities/developer.ts";
 import { Birthday } from "@/domain/boletim/enterprise/entities/value-objects/birthday.ts";
 import { CPF } from "@/domain/boletim/enterprise/entities/value-objects/cpf.ts";
 import { Email } from "@/domain/boletim/enterprise/entities/value-objects/email.ts";
 import { Name } from "@/domain/boletim/enterprise/entities/value-objects/name.ts";
 import { Password } from "@/domain/boletim/enterprise/entities/value-objects/password.ts";
+import { prisma } from "@/infra/database/lib/prisma.ts";
+import { PrismaDevelopersMapper } from "@/infra/database/mappers/prisma-developers-mapper.ts";
 import { faker } from "@faker-js/faker";
 
 export function makeDeveloper(
@@ -32,10 +34,44 @@ export function makeDeveloper(
     passwordHash: passwordOrError.value,
     username: nameOrError.value,
     birthday: birthdayOrError.value,
-    civilId: 20225,
+    civilId: '20225',
     ...override
   }, id)
   if (developerOrError.isLeft()) throw new Error(developerOrError.value.message)
   
   return developerOrError.value
+}
+
+export async function makePrismaDeveloper(
+  data: Partial<DeveloperProps> = {}
+) {
+  const nameOrError = Name.create(data.username?.value ?? faker.person.firstName())
+  if (nameOrError.isLeft()) throw nameOrError.value
+
+  const cpfOrError = CPF.create(data.cpf?.value ?? '000.000.000-01')
+  if (cpfOrError.isLeft()) throw cpfOrError.value
+
+  const emailOrError = Email.create(data.email?.value ?? faker.internet.email())
+  if (emailOrError.isLeft()) throw new Error(emailOrError.value.message)
+
+  const passwordOrError = Password.create(data.passwordHash?.value ?? faker.internet.password())
+  if (passwordOrError.isLeft()) throw new Error(passwordOrError.value.message)
+
+  const birthdayOrError = Birthday.create(data.birthday?.value ?? faker.date.birthdate())
+  if (birthdayOrError.isLeft()) throw new Error(birthdayOrError.value.message)
+    
+  await passwordOrError.value.hash()
+  const developer = makeDeveloper({
+    ...data,
+    username: nameOrError.value,
+    civilId: data.civilId ?? '00000',
+    cpf: cpfOrError.value,
+    email: emailOrError.value,
+    passwordHash: passwordOrError.value,
+    birthday: birthdayOrError.value,
+  })
+
+   await prisma.user.create({
+    data: PrismaDevelopersMapper.toPrisma(developer)
+  })
 }
