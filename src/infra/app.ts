@@ -93,6 +93,12 @@ import { getAverageClassificationCoursePoles } from "./http/controllers/get-aver
 import { removeBehaviorsGradeBatch } from "./http/controllers/remove-behaviors-grade-batch.ts";
 import { getCourseStudentsByManager } from "./http/controllers/get-course-students-by-manager.ts";
 import { downloadCourseHistoric } from "./http/controllers/download-course-historic.ts";
+import { createClassificationSheet } from "./http/controllers/create-classification-sheet.ts";
+import { createClassificationByPoleSheet } from "./http/controllers/create-classification-by-pole-sheet.ts";
+import { createAssessmentClassificationSheet } from "./http/controllers/create-assessment-classification-sheet.ts";
+import { createBehaviorClassificationSheet } from "./http/controllers/create-behavior-classification-sheet.ts";
+import { createClassificationByManagerSheet } from "./http/controllers/create-classification-by-manager-sheet.ts";
+import { createAverageClassificationCoursePolesSheet } from "./http/controllers/create-average-classification-course-poles-sheet.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -203,5 +209,11 @@ app.register(createDiscipline)
 app.register(updateDiscipline)
 app.register(deleteDiscipline)
 app.register(createCourseSummarySheet)
+app.register(createClassificationSheet)
+app.register(createClassificationByPoleSheet)
+app.register(createClassificationByManagerSheet)
+app.register(createAssessmentClassificationSheet)
+app.register(createBehaviorClassificationSheet)
+app.register(createAverageClassificationCoursePolesSheet)
 
 app.setErrorHandler(errorHandler)
