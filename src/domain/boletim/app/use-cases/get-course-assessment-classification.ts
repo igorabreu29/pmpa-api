@@ -10,7 +10,7 @@ import { ranksStudentsByAveragePole, type PoleAverageClassification, type Studen
 
 interface GetCourseAssessmentClassificationUseCaseRequest {
   courseId: string
-  page: number
+  page?: number
 }
 
 type GetCourseAssessmentClassificationUseCaseResponse = Either<ResourceNotFoundError, {
