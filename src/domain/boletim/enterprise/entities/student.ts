@@ -32,7 +32,7 @@ export interface StudentProps {
 
   parent?: Parent
   
-  civilId: string
+  civilId?: string
   militaryId?: string
 
   state?: string
