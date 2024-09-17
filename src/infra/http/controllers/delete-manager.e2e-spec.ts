@@ -4,6 +4,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
+import { makeAuth } from 'test/factories/make-auth.ts'
 
 describe('Delete Manager (e2e)', () => {
   beforeAll(async () => {
@@ -15,20 +16,6 @@ describe('Delete Manager (e2e)', () => {
   }) 
 
   it ('DELETE /managers/:id', async () => {
-    const endsAt = new Date()
-    endsAt.setMinutes(new Date().getMinutes() + 10)
-
-    await prisma.user.create({
-      data: {
-        username: 'John Doe',
-        civilId: '02345',
-        cpf: '00000000000',
-        email: 'john@acne.com', 
-        password: '$2a$08$5gtlkFxleDEe1Xsft1HeVOwjXaq7428B46rjjIW7rLFqo1Xz2oWCW',
-        role: 'ADMIN'
-      }
-    })
-
     const data = {
       username: 'Jony',
       cpf: '00011100011',
@@ -46,13 +33,7 @@ describe('Delete Manager (e2e)', () => {
       }
     })
 
-    const authenticateResponse = await request(app.server)
-      .post('/credentials/auth')
-      .send({
-        cpf: '000.000.000-00',
-        password: 'node-20'
-      })
-    const { token } = authenticateResponse.body
+    const { token } = await makeAuth()
 
     const response = await request(app.server)
       .delete(`/managers/${manager.id}`)
