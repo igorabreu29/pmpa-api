@@ -7,8 +7,8 @@ export interface ExcelCreateStudentsBatch {
   CPF: number
   'NOME COMPLETO': string
   'E-MAIL': string
-  'RG CIVIL': string
-  'RG MILITAR': string
+  'RG CIVIL'?: string
+  'RG MILITAR'?: string
   'DATA DE NASCIMENTO': Date
   CURSO: string
   POLO: string
