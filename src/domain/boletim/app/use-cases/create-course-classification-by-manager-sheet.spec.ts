@@ -160,7 +160,7 @@ describe('Create Course Classification By Manager Sheet', () => {
     const managerCourse = makeManagerCourse({ courseId: course.id, managerId: manager.id })
     managerCoursesRepository.create(managerCourse)
     
-    const managerPole = makeManagerPole({ poleId: pole.id, managerId: manager.id })
+    const managerPole = makeManagerPole({ poleId: pole.id, managerId: managerCourse.id })
     managerPolesRepository.create(managerPole)
 
     const student = makeStudent({}, new UniqueEntityId('student-1'))

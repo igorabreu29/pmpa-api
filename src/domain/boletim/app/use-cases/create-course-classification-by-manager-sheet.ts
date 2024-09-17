@@ -26,7 +26,7 @@ export class CreateCourseClassificationByManagerSheetUseCase {
     private sheeter: Sheeter
   ) {}
 
-  async execute({ courseId, managerId, hasBehavior }: CreateCourseClassificationByManagerSheetUseCaseRequest): Promise<CreateCourseClassificationByManagerSheetUseCaseResponse> {
+  async execute({ courseId, managerId, hasBehavior = true }: CreateCourseClassificationByManagerSheetUseCaseRequest): Promise<CreateCourseClassificationByManagerSheetUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
