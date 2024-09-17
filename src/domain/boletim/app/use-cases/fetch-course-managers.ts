@@ -15,8 +15,8 @@ interface FetchCourseManagersUseCaseRequest {
 
 type FetchCourseManagersUseCaseResponse = Either<ResourceNotFoundError, {
   managers: ManagerCourseDetails[]
-  pages: number
-  totalItems: number
+  pages?: number
+  totalItems?: number
 }>
 
 export class FetchCourseManagersUseCase {
