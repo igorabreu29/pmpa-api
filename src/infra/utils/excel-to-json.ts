@@ -7,8 +7,8 @@ export interface ExcelCreateStudentsBatch {
   CPF: number
   'NOME COMPLETO': string
   'E-MAIL': string
-  'RG CIVIL': number
-  'RG MILITAR': number
+  'RG CIVIL': string
+  'RG MILITAR': string
   'DATA DE NASCIMENTO': Date
   CURSO: string
   POLO: string
@@ -18,8 +18,8 @@ export interface ExcelUpdateStudentsBatch {
   CPF: number
   'NOME COMPLETO'?: string
   'E-MAIL'?: string
-  'RG CIVIL'?: number
-  'RG MILITAR'?: number
+  'RG CIVIL'?: string
+  'RG MILITAR'?: string
   'DATA DE NASCIMENTO'?: Date
   CURSO: string
   POLO: string
