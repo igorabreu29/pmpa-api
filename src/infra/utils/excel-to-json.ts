@@ -8,6 +8,7 @@ export interface ExcelCreateStudentsBatch {
   'NOME COMPLETO': string
   'E-MAIL': string
   'RG CIVIL': number
+  'RG MILITAR': number
   'DATA DE NASCIMENTO': Date
   CURSO: string
   POLO: string
@@ -18,6 +19,7 @@ export interface ExcelUpdateStudentsBatch {
   'NOME COMPLETO'?: string
   'E-MAIL'?: string
   'RG CIVIL'?: number
+  'RG MILITAR'?: number
   'DATA DE NASCIMENTO'?: Date
   CURSO: string
   POLO: string
@@ -59,7 +61,8 @@ export function createStudentsBatchExcelToJSON(fileUrl: string) {
     cpf: formatCPF(String(student['CPF'])),
     username: student['NOME COMPLETO'],
     email: student['E-MAIL'],
-    civilId: String(student['RG CIVIL']),
+    civilId: student['RG CIVIL'],
+    militaryID: student['RG MILITAR'],
     birthday: new Date(student['DATA DE NASCIMENTO']),
     courseName: student['CURSO'],
     poleName: student['POLO'],
@@ -76,7 +79,8 @@ export function updateStudentsBatchExcelToJSON(fileUrl: string) {
     cpf: String(student['CPF']),
     username: student['NOME COMPLETO'],
     email: student['E-MAIL'],
-    civilId: String(student['RG CIVIL']),
+    civilId: student['RG CIVIL'],
+    militaryID: student['RG MILITAR'],
     birthday: student['DATA DE NASCIMENTO'] ? new Date(student['DATA DE NASCIMENTO']) :  undefined,
     courseName: student['CURSO'],
     poleName: student['POLO'],

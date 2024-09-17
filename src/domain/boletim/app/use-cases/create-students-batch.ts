@@ -30,7 +30,8 @@ interface StudentType {
   username: string
   cpf: string
   email: string
-  civilId: string
+  civilId?: string
+  militaryId?: string
   poleName: string
   birthday: Date
 }
@@ -142,6 +143,7 @@ export class CreateStudentsBatchUseCase {
         email: emailOrError.value,
         passwordHash: passwordOrError.value,
         civilId: student.civilId,
+        militaryId: student.militaryId,
         birthday: birthdayOrError.value, 
       })
       if (studentOrError.isLeft()) return studentOrError.value

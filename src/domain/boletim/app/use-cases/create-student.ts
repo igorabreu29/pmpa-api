@@ -32,7 +32,8 @@ interface CreateStudentUseCaseRequest {
   email: string
   cpf: string
   birthday: Date
-  civilId: string
+  civilId?: string
+  militaryId?: string
   courseId: string
   poleId: string
 
@@ -68,6 +69,7 @@ export class CreateStudentUseCase {
     username,
     birthday,
     civilId,
+    militaryId,
     userId,
     userIp,
     role
@@ -100,7 +102,8 @@ export class CreateStudentUseCase {
       cpf: cpfOrError.value,
       email: emailOrError.value,
       passwordHash: passwordOrError.value,
-      civilId: civilId,
+      civilId,
+      militaryId,
       birthday: birthdayOrError.value,
       role: 'student'
     })

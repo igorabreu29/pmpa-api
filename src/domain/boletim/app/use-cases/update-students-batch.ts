@@ -36,6 +36,7 @@ interface StudentType {
   email?: string
   password?: string
   civilId?: string
+  militaryId?: string
   birthday?: Date
 }
 
@@ -143,6 +144,8 @@ export class UpdateStudentsBatchUseCase {
       studentExist.email = emailOrError.value
       studentExist.passwordHash = passwordOrError.value
       studentExist.birthday = birthdayOrError.value
+      studentExist.civilId = student.civilId ?? studentExist.civilId
+      studentExist.militaryId = student.militaryId ?? studentExist.militaryId
       
       return {
         student: studentExist,

@@ -30,14 +30,15 @@ export async function createStudent(
           email: z.string().email(),
           cpf: z.string().min(14).max(14),
           birthday: z.string().transform(transformDate),
-          civilId: z.string(),
+          civilId: z.string().optional(),
+          militaryId: z.string().optional(),
           courseId: z.string().uuid(),
           poleId: z.string().uuid()
         })
       },
     }, 
   async (req, res) => {
-    const { username, email, cpf, birthday, civilId, courseId, poleId } = req.body
+    const { username, email, cpf, birthday, civilId, militaryId, courseId, poleId } = req.body
     const { payload: { sub, role } } = req.user
 
     const ip = req.ip
@@ -50,6 +51,7 @@ export async function createStudent(
       email,
       birthday,
       civilId,
+      militaryId,
       courseId,
       poleId,
       role,
