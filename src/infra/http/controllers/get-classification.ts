@@ -53,13 +53,15 @@ export async function getClassification(
         }
       }
 
-      const { studentsWithAverage } = result.value
+      const { studentsWithAverage, pages, totalItems } = result.value
 
       return res.status(200).send({
         studentsWithAverage: studentsWithAverage.map(student => ({
           ...student,
           studentBirthday: dayjs(student.studentBirthday).format('DD/MM/YYYY')
-        }))
+        })),
+        pages,
+        totalItems
       })
     })
 }
