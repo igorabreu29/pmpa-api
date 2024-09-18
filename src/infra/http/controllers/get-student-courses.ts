@@ -17,7 +17,7 @@ export async function getStudentCourses(
       onRequest: [verifyJWT],
       schema: {
         querystring: z.object({
-          page: z.coerce.number().default(1),
+          page: z.string().optional(),
         }),
       }
     }, 
@@ -27,7 +27,7 @@ export async function getStudentCourses(
 
         const useCase = makeFetchStudentCoursesUseCase()
         const result = await useCase.execute({
-          page,
+          page: page ? Number(page) : undefined,
           perPage: 10,
           studentId: payload.sub
         })
