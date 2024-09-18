@@ -23,9 +23,9 @@ export async function changeDeveloperProfile(
       onRequest: [verifyJWT, verifyUserRole(['dev'])],
       schema: {
         body: z.object({
-          username: z.string().min(3).max(50).optional(),
-          email: z.string().email().optional(),
-          password: z.string().min(6).max(20).optional(),
+          username: z.string().optional(),
+          email: z.string().optional(),
+          password: z.string().optional(),
           birthday: z.string().transform(birthday => {
             const [day, month, year] = birthday.split('/')
 
@@ -72,6 +72,8 @@ export async function changeDeveloperProfile(
       county,
       state 
     })
+
+    console.log(civilId)
 
     if (result.isLeft()) {
       const error = result.value

@@ -24,9 +24,9 @@ export async function changeManagerProfile(
       onRequest: [verifyJWT, verifyUserRole(['manager'])],
       schema: {
         body: z.object({
-          username: z.string().min(3).max(50).optional(),
-          email: z.string().email().optional(),
-          password: z.string().min(6).max(20).optional(),
+          username: z.string().optional(),
+          email: z.string().optional(),
+          password: z.string().optional(),
           birthday: z.string().transform(birthday => {
             const [day, month, year] = birthday.split('/')
 
