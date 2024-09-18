@@ -19,19 +19,13 @@ export async function getBehaviorClassification(
         params: z.object({
           id: z.string().uuid(),
         }),
-
-        querystring: z.object({
-          page: z.string().optional()
-        })
       },
     }, async (req, res) => {
       const { id } = req.params
-      const { page } = req.query
 
       const useCase = makeGetCourseBehaviorClassificationUseCase()
       const result = await useCase.execute({
         courseId: id,
-        page: page ? Number(page) : undefined,
       })
 
       if (result.isLeft()) {
