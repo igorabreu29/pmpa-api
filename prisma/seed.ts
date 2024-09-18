@@ -52,7 +52,7 @@ async function seed() {
 
   const studentsToInsert: Prisma.UserUncheckedCreateInput[] = []
 
-  for (let i = 11; i <= 25; i++) {
+  for (let i = 11; i <= 91; i++) {
     studentsToInsert.push({
       cpf: `123456789${i}`,
       email: faker.internet.email(),
