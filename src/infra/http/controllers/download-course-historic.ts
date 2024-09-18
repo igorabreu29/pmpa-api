@@ -101,7 +101,7 @@ export async function downloadCourseHistoric(
     
     const { student } = resultGetCourseStudent.value
     const { course } = resultGetCourse.value
-    const { grades, behaviorMonths } = resultGetStudentAverage.value
+    const { grades } = resultGetStudentAverage.value
     const { disciplines } = resultGetCourseDisciplines.value
 
     const htmlFilePath = join(import.meta.dirname, '../../html/template.html')
@@ -141,6 +141,8 @@ export async function downloadCourseHistoric(
     }
 
     const currentDate = dayjs(new Date()).format('DD/MM/YYYY')
+
+    const assessmentsSecondSeasonQuantity = grades.assessments.filter(assessment => assessment?.vf).length
     
     htmlContent = htmlContent
       .replaceAll('{{ dynamic_course }}', course.name.value)
@@ -154,15 +156,14 @@ export async function downloadCourseHistoric(
       .replace('{{ dynamic_student_county }}', student.county ?? '')
       .replace('{{ dynamic_student_state }}', student.state ?? '')
       .replace('{{ dynamic_list }}', dynamic.list)
+      .replace('{{ dynamic_second_season_quantity }}', String(assessmentsSecondSeasonQuantity))
       .replace('{{ dynamic_current_date }}', currentDate)
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
   
-    // Set the content of the page
     await page.setContent(htmlContent);
   
-    // Generate the PDF and save it
     await page.pdf({
       path: 'Histórico Escolar.pdf',
       format: 'A4',
@@ -175,7 +176,6 @@ export async function downloadCourseHistoric(
       }
     });
   
-    // Close the browser
     await browser.close();
   })
 }
