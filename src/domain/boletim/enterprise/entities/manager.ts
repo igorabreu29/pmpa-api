@@ -30,7 +30,7 @@ export interface ManagerProps {
 
   parent?: Parent
 
-  civilId: string
+  civilId?: string
   militaryId?: string
 
   state?: string

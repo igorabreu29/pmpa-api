@@ -28,7 +28,7 @@ export interface DeveloperProps {
   isActive: boolean
   parent?: Parent
 
-  civilId: string
+  civilId?: string
   militaryId?: string
 
   state?: string
