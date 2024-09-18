@@ -27,12 +27,12 @@ export abstract class StudentsCoursesRepository {
     perPage
   }: {
     studentId: string
-    page: number
-    perPage: number
+    page?: number
+    perPage?: number
   }): Promise<{
     studentCourses: StudentWithCourse[],
-    pages: number
-    totalItems: number
+    pages?: number
+    totalItems?: number
   }>
 
   abstract findManyDetailsByCourseId({

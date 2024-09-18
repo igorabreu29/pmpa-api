@@ -6,14 +6,14 @@ import { StudentWithCourse } from "../../enterprise/entities/value-objects/stude
 
 interface FetchStudentCoursesUseCaseRequest {
   studentId: string
-  page: number
-  perPage: number
+  page?: number
+  perPage?: number
 }
 
 type FetchStudentCoursesUseCaseResponse = Either<ResourceNotFoundError, {
   courses: StudentWithCourse[],
-  pages: number,
-  totalItems: number
+  pages?: number,
+  totalItems?: number
 }>
 
 export class FetchStudentCoursesUseCase {

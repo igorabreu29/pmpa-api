@@ -15,6 +15,8 @@ interface GetCourseAssessmentClassificationUseCaseRequest {
 
 type GetCourseAssessmentClassificationUseCaseResponse = Either<ResourceNotFoundError, {
   assessmentAverageGroupedByPole: PoleAverageClassification[]
+  pages?: number
+  totalItems?: number
 }>
 
 export class GetCourseAssessmentClassificationUseCase {
@@ -31,7 +33,7 @@ export class GetCourseAssessmentClassificationUseCase {
 
     const coursePoles = await this.coursesPolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
 
-    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
+    const { studentsCourse: students, pages, totalItems } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
 
     const studentsWithAssessmentAverage = await Promise.all(students.map(async student => {
       const assessments = await this.assessmentsRepository.findManyByStudentIdAndCourseId({
@@ -92,7 +94,9 @@ export class GetCourseAssessmentClassificationUseCase {
     const assessmentsClassification = ranksStudentsByAveragePole(assessmentAverageGroupedByPole)
 
     return right({
-      assessmentAverageGroupedByPole: assessmentsClassification
+      assessmentAverageGroupedByPole: assessmentsClassification,
+      pages,
+      totalItems
     })
   }
 }

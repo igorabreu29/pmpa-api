@@ -70,20 +70,57 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     perPage 
   }: { 
     studentId: string
-    page: number
-    perPage: number
+    page?: number
+    perPage?: number
   }): Promise<{ 
     studentCourses: StudentWithCourse[]
-    pages: number
-    totalItems: number
+    pages?: number
+    totalItems?: number
   }> {
+    if (page && perPage) {
+      const studentCourses = await prisma.userOnCourse.findMany({
+        where: {
+          userId: studentId
+        },
+  
+        skip: (page - 1) * perPage,
+        take: perPage, 
+  
+        orderBy: {
+          createdAt: 'desc',
+        },
+  
+        include: {
+          course: true,
+          user: true,
+        }
+      })
+  
+      const studentCoursesMapper = studentCourses.map(studentCourses => {
+        return {
+          ...studentCourses.user,
+          course: studentCourses.course
+        }
+      })
+  
+      const studentCoursesCount = await prisma.userOnCourse.count({
+        where: {
+          userId: studentId,
+        },
+      })
+      const pages = Math.ceil(studentCoursesCount / perPage)
+  
+      return {
+        studentCourses: studentCoursesMapper.map(studentCourse => PrismaStudentWithCourseMapper.toDomain(studentCourse)),
+        pages,
+        totalItems: studentCoursesCount
+      }
+    }
+
     const studentCourses = await prisma.userOnCourse.findMany({
       where: {
         userId: studentId
       },
-
-      skip: (page - 1) * perPage,
-      take: page * perPage,
 
       orderBy: {
         createdAt: 'desc',
@@ -102,17 +139,8 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       }
     })
 
-    const studentCoursesCount = await prisma.userOnCourse.count({
-      where: {
-        userId: studentId,
-      },
-    })
-    const pages = Math.ceil(studentCoursesCount / perPage)
-
     return {
       studentCourses: studentCoursesMapper.map(studentCourse => PrismaStudentWithCourseMapper.toDomain(studentCourse)),
-      pages,
-      totalItems: studentCoursesCount
     }
   }
 
@@ -218,7 +246,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
         },
   
         skip: (page - 1) * perPage,
-        take: page * perPage
+        take: perPage
       })
   
       const studentsCourseMapper = studentsCourse.map(studentCourse => {
@@ -356,7 +384,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       },
 
       skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE,
+      take: PER_PAGE,
 
       orderBy: {
         user: {
