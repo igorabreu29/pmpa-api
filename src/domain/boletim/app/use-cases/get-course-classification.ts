@@ -15,6 +15,8 @@ interface GetCourseClassificationUseCaseRequest {
 
 type GetCourseClassificationUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError, {
   studentsWithAverage: StudentClassficationByPeriod[] | StudentClassficationByModule[]
+  pages?: number
+  totalItems?: number
 }>
 
 export class GetCourseClassificationUseCase {
@@ -28,7 +30,7 @@ export class GetCourseClassificationUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
-    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
+    const { studentsCourse: students, pages, totalItems } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
 
     const studentsWithAverageOrError = await Promise.all(students.map(async (student) => {
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({
@@ -56,19 +58,19 @@ export class GetCourseClassificationUseCase {
     switch (course.formula) {
       case 'CGS': 
         const classifiedByCGSFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
-        return right({ studentsWithAverage: classifiedByCGSFormula })
+        return right({ studentsWithAverage: classifiedByCGSFormula, pages, totalItems })
       case 'CAS': 
         const classifiedByCASFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
-        return right({ studentsWithAverage: classifiedByCASFormula })
+        return right({ studentsWithAverage: classifiedByCASFormula, pages, totalItems })
       case 'CFP': 
         const classifiedByCFPFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
-        return right({ studentsWithAverage: classifiedByCFPFormula })
+        return right({ studentsWithAverage: classifiedByCFPFormula, pages, totalItems })
       case 'CHO': 
         const classifiedByCFOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
-        return right({ studentsWithAverage: classifiedByCFOFormula })
+        return right({ studentsWithAverage: classifiedByCFOFormula, pages, totalItems })
       case 'CFO': 
         const classifiedByCHOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByPeriod[])
-        return right({ studentsWithAverage: classifiedByCHOFormula })
+        return right({ studentsWithAverage: classifiedByCHOFormula, pages, totalItems })
       default: 
         return left(new InvalidCourseFormulaError(`This formula: ${course.formula} is invalid.`))
     }
