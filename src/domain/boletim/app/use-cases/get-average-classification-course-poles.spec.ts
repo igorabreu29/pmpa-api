@@ -5,7 +5,6 @@ import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-s
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
 import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository.ts'
 import { describe, it, expect, beforeEach } from 'vitest'
-import { GetCourseAssessmentClassificationUseCase } from './get-course-assessment-classification.ts'
 import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found-error.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts'
@@ -13,7 +12,6 @@ import { makePole } from 'test/factories/make-pole.ts'
 import { makeStudentCourse } from 'test/factories/make-student-course.ts'
 import { makeStudentPole } from 'test/factories/make-student-pole.ts'
 import { makeStudent } from 'test/factories/make-student.ts'
-import { makeAssessment } from 'test/factories/make-assessment.ts'
 import { InMemoryCoursesPolesRepository } from 'test/repositories/in-memory-courses-poles-repository.ts'
 import { makeCoursePole } from 'test/factories/make-course-pole.ts'
 import type { GetStudentAverageInTheCourseUseCase } from './get-student-average-in-the-course.ts'
@@ -90,7 +88,6 @@ describe('Get Course Assessment Classification', () => {
   it ('should not be able to get assessment classification if course does not exist', async () => {
     const result = await sut.execute({
       courseId: 'not-exist',
-      page: 1
     })
 
     expect(result.isLeft()).toBe(true)
@@ -132,7 +129,6 @@ describe('Get Course Assessment Classification', () => {
 
     const result = await sut.execute({
       courseId: course.id.toValue(),
-      page: 1
     })
     
     expect(result.isRight()).toBe(true)

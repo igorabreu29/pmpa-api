@@ -10,8 +10,6 @@ import { ranksStudentsByAveragePole, type PoleAverageClassification } from "../u
 
 interface GetAverageClassificationCoursePolesUseCaseRequest {
   courseId: string
-  page?: number
-  hasBehavior?: boolean
 }
 
 type GetAverageClassificationCoursePolesUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError, {
@@ -26,20 +24,20 @@ export class GetAverageClassificationCoursePolesUseCase {
     private getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
   ) {}
 
-  async execute({ courseId, page, hasBehavior = true }: GetAverageClassificationCoursePolesUseCaseRequest): Promise<GetAverageClassificationCoursePolesUseCaseResponse> {
+  async execute({ courseId }: GetAverageClassificationCoursePolesUseCaseRequest): Promise<GetAverageClassificationCoursePolesUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
     const coursePoles = await this.coursePolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
 
-    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
+    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId })
 
     const studentsWithAverageOrError = await Promise.all(students.map(async (student) => {
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({
         studentId: student.studentId.toValue(),
         courseId,
         isPeriod: false,
-        hasBehavior
+        hasBehavior: true
       })
 
       if (studentAverage.isLeft()) return studentAverage.value
@@ -76,7 +74,7 @@ export class GetAverageClassificationCoursePolesUseCase {
     const studentsAverageClassification = ranksStudentsByAveragePole(studentsAverageGroupedByPole)
 
     return right({
-      studentsAverageGroupedByPole: studentsAverageClassification
+      studentsAverageGroupedByPole: studentsAverageClassification,
     })
   }
 }

@@ -66,7 +66,6 @@ describe('Get Course Behavior Classification', () => {
   it ('should not be able to get behavior classification if course does not exist', async () => {
     const result = await sut.execute({
       courseId: 'not-exist',
-      page: 1
     })
 
     expect(result.isLeft()).toBe(true)
@@ -157,7 +156,6 @@ describe('Get Course Behavior Classification', () => {
 
     const result = await sut.execute({
       courseId: course.id.toValue(),
-      page: 1
     })
 
     expect(result.value).toMatchObject({

@@ -9,7 +9,6 @@ import { ranksStudentsByAveragePole, type PoleAverageClassification, type Studen
 
 interface GetCourseBehaviorClassificationUseCaseRequest {
   courseId: string
-  page?: number
 }
 
 type GetCourseBehaviorClassificationUseCaseResponse = Either<ResourceNotFoundError, {
@@ -24,13 +23,13 @@ export class GetCourseBehaviorClassificationUseCase {
     private behaviorsRepository: BehaviorsRepository
   ) {}
 
-  async execute({ courseId, page }: GetCourseBehaviorClassificationUseCaseRequest): Promise<GetCourseBehaviorClassificationUseCaseResponse> {
+  async execute({ courseId }: GetCourseBehaviorClassificationUseCaseRequest): Promise<GetCourseBehaviorClassificationUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
     const coursePoles = await this.coursesPolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
 
-    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
+    const { studentsCourse: students, pages, totalItems } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId })
 
     const studentsWithBehaviorAverage = await Promise.all(students.map(async student => {
       const behaviors = await this.behaviorsRepository.findManyByStudentIdAndCourseId({ studentId: student.studentId.toValue(), courseId })
@@ -93,7 +92,7 @@ export class GetCourseBehaviorClassificationUseCase {
     const behaviorsClassification = ranksStudentsByAveragePole(behaviorAverageGroupedByPole)
 
     return right({
-      behaviorAverageGroupedByPole: behaviorsClassification
+      behaviorAverageGroupedByPole: behaviorsClassification,
     })
   }
 }
