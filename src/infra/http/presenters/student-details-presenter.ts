@@ -17,7 +17,7 @@ export class StudentDetailsPresenter {
     return {
       id: studentDetails.studentId.toValue(),
       cpf: studentDetails.cpf,
-      civilId: String(studentDetails.civilId),
+      civilId: studentDetails.civilId,
       email: studentDetails.email,
       username: studentDetails.username,
       password: '',
