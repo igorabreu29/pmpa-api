@@ -10,6 +10,7 @@ import { BehaviorPresenter } from "../presenters/behavior-presenter.ts";
 import { makeGetAverageClassificationCoursePolesUseCase } from "@/infra/factories/make-get-average-classification-course-poles-use-case.ts";
 import { InvalidCourseFormulaError } from "@/domain/boletim/app/use-cases/errors/invalid-course-formula-error.ts";
 import { Conflict } from "../errors/conflict-error.ts";
+import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 
 export async function getAverageClassificationCoursePoles(
   app: FastifyInstance
@@ -17,7 +18,7 @@ export async function getAverageClassificationCoursePoles(
   app
     .withTypeProvider<ZodTypeProvider>()
     .get('/courses/:id/classification/average', {
-      onRequest: [verifyJWT],
+      onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({
           id: z.string().uuid()
