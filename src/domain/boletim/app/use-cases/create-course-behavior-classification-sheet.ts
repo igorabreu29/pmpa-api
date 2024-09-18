@@ -42,7 +42,7 @@ export class CreateCourseBehaviorClassificationSheetUseCase {
       ],
       rows: behaviorAverageGroupedByPole.map((behaviorAverage, index) => {
         return {
-          classification: index,
+          classification: index + 1,
           pole: behaviorAverage.poleAverage.name,
           average: behaviorAverage.poleAverage.average,
         }

@@ -75,7 +75,7 @@ export class CreateCourseClassificationByManagerSheetUseCase {
         const student = students.find(item => item.username === studentWithAverage.studentName)
 
         return {
-          classification: index,
+          classification: index + 1,
           email: student?.email,
           cpf: student?.cpf,
           username: student?.username,

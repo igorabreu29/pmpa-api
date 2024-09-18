@@ -43,7 +43,7 @@ export class CreateAverageClassificationCoursePolesSheetUseCase {
       ],
       rows: studentsAverageGroupedByPole.map((studentAverageGroupedByPole, index) => {
         return {
-          classification: index,
+          classification: index + 1,
           pole: studentAverageGroupedByPole.poleAverage.name,
           average: studentAverageGroupedByPole.poleAverage.average,
         }
