@@ -203,7 +203,7 @@ export class PrismaManagersRepository implements ManagersRepository {
         },
       },
       take: page * PER_PAGE,
-      skip: (page - 1) * PER_PAGE,
+      skip: PER_PAGE,
       include: {
         usersOnCourses: {
           include: {

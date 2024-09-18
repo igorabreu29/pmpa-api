@@ -194,7 +194,7 @@ export class PrismaStudentsRepository implements StudentsRepository {
           contains: query,
         },
       },
-      take: page * PER_PAGE,
+      take: PER_PAGE,
       skip: (page - 1) * PER_PAGE,
       
       include: {
@@ -254,7 +254,14 @@ export class PrismaStudentsRepository implements StudentsRepository {
 
   async create(student: Student): Promise<void> {
     const prismaMapper = PrismaStudentsMapper.toPrisma(student)
-    await prisma.user.create({ data: prismaMapper })
+    await prisma.user.create({ data: {
+      ...prismaMapper,
+      profile: {
+        create: {
+          militaryId: prismaMapper.profile?.militaryId ? String(prismaMapper.profile.militaryId) : undefined
+        }
+      }
+    } })
 
     DomainEvents.dispatchEventsForAggregate(student.id)
   }

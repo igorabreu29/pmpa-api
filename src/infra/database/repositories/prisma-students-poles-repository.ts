@@ -114,7 +114,7 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
         },
   
         skip: (page - 1) * perPage,
-        take: page * perPage
+        take: perPage
       })
   
       const studentPolesMapper = studentPoles.map(studentPole => {
@@ -240,7 +240,7 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       },
 
       skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE
+      take: PER_PAGE
     })
 
     const studentPolesMapper = studentPoles.map(studentPole => {

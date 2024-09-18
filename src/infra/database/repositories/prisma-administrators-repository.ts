@@ -137,7 +137,7 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
       },
 
       skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE
+      take: PER_PAGE
     })
 
     const administratorsCount = await prisma.user.count({

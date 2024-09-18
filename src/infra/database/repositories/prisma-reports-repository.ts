@@ -34,7 +34,7 @@ export class PrismaReportsRepository implements ReportsRepository {
         },
         
         skip: (page - 1) * PER_PAGE,
-        take: page * PER_PAGE
+        take: PER_PAGE
       })
       
       const reportsCount = await prisma.report.count()
@@ -55,7 +55,7 @@ export class PrismaReportsRepository implements ReportsRepository {
         createdAt: 'desc'
       },
       skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE
+      take: PER_PAGE
     })
 
     const reportsCount = await prisma.report.count({
@@ -98,7 +98,7 @@ export class PrismaReportsRepository implements ReportsRepository {
         },
         
         skip: (page - 1) * PER_PAGE,
-        take: page * PER_PAGE
+        take: PER_PAGE
       })
       
       const reportsCount = await prisma.report.count({
@@ -126,7 +126,7 @@ export class PrismaReportsRepository implements ReportsRepository {
         createdAt: 'desc'
       },
       skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE
+      take: PER_PAGE
     })
 
     const reportsCount = await prisma.report.count({

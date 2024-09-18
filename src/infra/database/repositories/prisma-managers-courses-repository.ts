@@ -96,7 +96,7 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
         },
   
         skip: (page - 1) * perPage,
-        take: page * perPage,
+        take: perPage,
   
         include: {
           course: true,
@@ -187,7 +187,7 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
       },
 
       skip: (page - 1) * perPage,
-      take: page * perPage,
+      take: perPage,
 
       orderBy: {
         createdAt: 'desc',

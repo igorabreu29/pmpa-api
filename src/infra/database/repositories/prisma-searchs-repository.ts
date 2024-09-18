@@ -33,7 +33,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
         },
 
         skip: (page - 1) * PER_PAGE,
-        take: page * PER_PAGE,
+        take: PER_PAGE,
 
         select: {
           id: true,

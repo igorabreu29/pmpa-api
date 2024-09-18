@@ -31,7 +31,7 @@ export class PrismaDisciplinesRepository implements DisciplinesRepository {
 
     const disciplines = await prisma.discipline.findMany({
       skip: (page - 1) * PER_PAGE,
-      take: page * PER_PAGE,
+      take: PER_PAGE,
 
       orderBy: {
         name: 'asc'
