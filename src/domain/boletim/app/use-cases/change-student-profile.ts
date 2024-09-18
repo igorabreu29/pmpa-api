@@ -80,7 +80,7 @@ export class ChangeStudentProfileUseCase {
     student.state = state ?? student.state
     student.county = county ?? student.county
 
-    await this.studentsRepository.updateProfile(student)
+    await this.studentsRepository.save(student)
 
     return right(null)
   }
