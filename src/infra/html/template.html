@@ -48,9 +48,9 @@
           <h2 class="font-semibold text-sm">2 - CURSO {{ dynamic_course }}:</h2>
 
           <ul class="grid grid-cols-3">
-            <li class="border-2 border-black font-bold text-sm">CARGA HORÁRIA: 1578 H/A</li>
-            <li class="border-2 border-black font-bold text-sm">MÉDIA: 7,896</li>
-            <li class="border-2 border-black font-bold text-sm">CONCEITO: 2° ÉPOCA</li>
+            <li class="border-2 border-black font-bold text-sm">CARGA HORÁRIA: {{ dynamic_total_hours }} H/A</li>
+            <li class="border-2 border-black font-bold text-sm">MÉDIA: {{ dynamic_average }}</li>
+            <li class="border-2 border-black font-bold text-sm">CONCEITO: {{ dynamic_concept }}</li>
             <li class="border-2 border-black font-bold text-sm">INÍCIO DO CURSO: {{ dynamic_course_startAt }}</li>
             <li class="border-2 border-black font-bold text-sm">TÉRMINO DO CURSO: {{ dynamic_course_endsAt }}</li>
             <li class="border-2 border-black font-bold text-sm">CLASSIFICAÇÃO: 1°</li>
