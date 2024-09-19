@@ -1,3 +1,4 @@
+import { CourseHistoric } from "../../enterprise/entities/course-historic.ts"
 import { Course } from "../../enterprise/entities/course.ts"
 import { Student } from "../../enterprise/entities/student.ts"
 import { CourseWithDiscipline } from "../../enterprise/entities/value-objects/course-with-discipline.ts"
@@ -11,7 +12,7 @@ interface Row {
   grades: {
     averageInform: {
       geralAverage: number | string;
-      behaviorAverageStatus: GenerateBehaviorStatus[] | GenerateBehaviorStatus
+      behaviorAverageStatus: GenerateBehaviorStatus[]
       behaviorsCount: number
       studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
@@ -24,7 +25,7 @@ interface Row {
   } | {
     averageInform: {
       geralAverage: number | string;
-      behaviorAverageStatus: GenerateBehaviorStatus[] | GenerateBehaviorStatus
+      behaviorAverageStatus: GenerateBehaviorStatus[]
       behaviorsCount: number
       studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
@@ -33,6 +34,7 @@ interface Row {
     assessmentsCount: number
   }
   courseWithDisciplines: CourseWithDiscipline[]
+  courseHistoric: CourseHistoric
 }
 
 export interface PDFCreateProps {

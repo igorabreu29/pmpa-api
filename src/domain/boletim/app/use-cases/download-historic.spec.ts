@@ -16,6 +16,8 @@ import { makeCourse } from "test/factories/make-course.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { makeStudent } from "test/factories/make-student.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import { InMemoryCourseHistoricRepository } from "test/repositories/in-memory-course-historic-repository.ts";
+import { makeCourseHistoric } from "test/factories/make-course-historic.ts";
 
 let studentCoursesResitory: InMemoryStudentsCoursesRepository
 let studentPolesRepository: InMemoryStudentsPolesRepository
@@ -25,6 +27,7 @@ let behaviorsRepository: InMemoryBehaviorsRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
 
 let coursesRepository: InMemoryCoursesRepository
+let courseHistoricRepository: InMemoryCourseHistoricRepository
 let studentsRepository: InMemoryStudentsRepository
 let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let getStudentAverage: GetStudentAverageInTheCourseUseCase
@@ -52,6 +55,7 @@ describe('Download Historic Use Case', () => {
     disciplinesRepository = new InMemoryDisciplinesRepository()
 
     coursesRepository = new InMemoryCoursesRepository()
+    courseHistoricRepository = new InMemoryCourseHistoricRepository()
     studentsRepository = new InMemoryStudentsRepository(
       studentCoursesResitory,
       coursesRepository,
@@ -71,6 +75,7 @@ describe('Download Historic Use Case', () => {
 
     sut = new DownloadHistoricUseCase(
       coursesRepository,
+      courseHistoricRepository,
       studentsRepository,
       courseDisciplinesRepository,
       getStudentAverage,
@@ -101,12 +106,31 @@ describe('Download Historic Use Case', () => {
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
+  it ('should not be able to download historic if course historic does not exist', async () => {
+    const course = makeCourse()
+    coursesRepository.create(course)
+
+    const student = makeStudent()
+    studentsRepository.create(student)
+
+    const result = await sut.execute({
+      courseId: course.id.toValue(),
+      studentId: student.id.toValue()
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+  })
+
   it ('should be able to download historic', async () => {
     const course = makeCourse({}, new UniqueEntityId('course-1'))
     coursesRepository.create(course)
 
     const student = makeStudent({}, new UniqueEntityId('student-1'))
     studentsRepository.create(student)
+
+    const courseHistoric = makeCourseHistoric({ courseId: course.id })
+    courseHistoricRepository.create(courseHistoric)
 
     const result = await sut.execute({
       courseId: course.id.toValue(),

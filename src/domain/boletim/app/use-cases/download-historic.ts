@@ -5,6 +5,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts"
 import { CoursesDisciplinesRepository } from "../repositories/courses-disciplines-repository.ts"
 import { PDF } from "../files/pdf.ts"
+import { CourseHistoricRepository } from "../repositories/course-historic-repository.ts"
 
 interface DownloadHistoricUseCaseRequest {
   courseId: string
@@ -18,6 +19,7 @@ type DownloadHistoricUseCaseResponse = Either<ResourceNotFoundError, {
 export class DownloadHistoricUseCase {
   constructor(
     private coursesRepository: CoursesRepository,
+    private courseHistoricRepository: CourseHistoricRepository,
     private studentsRepository: StudentsRepository,
     private courseDisciplinesRepository: CoursesDisciplinesRepository,
     private getStudentAverage: GetStudentAverageInTheCourseUseCase,
@@ -33,6 +35,9 @@ export class DownloadHistoricUseCase {
     
     const student = await this.studentsRepository.findById(studentId)
     if (!student) return left(new ResourceNotFoundError('Student not found.'))
+
+    const courseHistoric = await this.courseHistoricRepository.findByCourseId(course.id.toValue())
+    if (!courseHistoric) return left(new ResourceNotFoundError('Couse historic not found.'))
 
     const result = await this.getStudentAverage.execute({
       courseId: course.id.toValue(),
@@ -52,7 +57,8 @@ export class DownloadHistoricUseCase {
         course,
         student,
         grades,
-        courseWithDisciplines
+        courseWithDisciplines,
+        courseHistoric
       }
     })
 
