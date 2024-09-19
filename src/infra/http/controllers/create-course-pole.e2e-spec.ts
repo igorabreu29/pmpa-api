@@ -53,7 +53,7 @@ describe('Create Course Pole (e2e)', () => {
     })
 
     const result = await request(app.server)
-      .post(`/courses/${course.id}/pole`)
+      .post(`/courses/${course.id}/poles`)
       .set('Authorization', `Bearer ${token}`)
       .send({
         poleId: pole.id

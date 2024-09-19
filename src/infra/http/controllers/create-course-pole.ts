@@ -15,7 +15,7 @@ export async function createCoursePole(
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/courses/:courseId/pole', {
+    .post('/courses/:courseId/poles', {
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({

@@ -15,7 +15,7 @@ export async function createCourseDiscipline(
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/courses/:courseId/discipline', {
+    .post('/courses/:courseId/disciplines', {
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         params: z.object({

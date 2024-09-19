@@ -53,7 +53,7 @@ describe('Create Course Discipline (e2e)', () => {
     })
 
     const result = await request(app.server)
-      .post(`/courses/${course.id}/discipline`)
+      .post(`/courses/${course.id}/disciplines`)
       .set('Authorization', `Bearer ${token}`)
       .send({
         disciplineId: discipline.id,
