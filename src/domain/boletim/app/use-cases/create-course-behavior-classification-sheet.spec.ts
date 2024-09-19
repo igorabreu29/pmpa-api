@@ -1,6 +1,5 @@
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
-import { FakeSheeter } from "test/sheet/fake-sheeter.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
@@ -21,6 +20,7 @@ import { makeCoursePole } from "test/factories/make-course-pole.ts";
 import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { makeBehavior } from "test/factories/make-behavior.ts";
 import { makeGetCourseBehaviorClassification } from "test/factories/make-get-course-behavior-classification-use-case.ts";
+import { FakeSheeter } from "test/files/fake-sheeter.ts";
 
 
 let disciplinesRepository: InMemoryDisciplinesRepository

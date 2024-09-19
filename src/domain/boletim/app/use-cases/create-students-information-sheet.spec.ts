@@ -17,8 +17,8 @@ import { makeDiscipline } from "test/factories/make-discipline.ts"
 import { makeAssessment } from "test/factories/make-assessment.ts"
 import { makeCourseDiscipline } from "test/factories/make-course-discipline.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
-import { FakeSheeter } from "test/sheet/fake-sheeter.ts"
 import { CreateStudentsInformationSheetUseCase } from "./create-students-information-sheet.ts"
+import { FakeSheeter } from "test/files/fake-sheeter.ts"
 
 let studentsRepository: InMemoryStudentsRepository
 let coursesRepository: InMemoryCoursesRepository

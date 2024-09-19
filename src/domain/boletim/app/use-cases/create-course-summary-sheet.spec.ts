@@ -1,6 +1,5 @@
 import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
-import { FakeSheeter } from "test/sheet/fake-sheeter.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryDisciplinesRepository } from "test/repositories/in-memory-disciplines-repository.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
@@ -8,6 +7,7 @@ import { makeCourse } from "test/factories/make-course.ts";
 import { makeCourseDiscipline } from "test/factories/make-course-discipline.ts";
 import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { CreateCourseSummarySheetUseCase } from "./create-course-summary-sheet.ts";
+import { FakeSheeter } from "test/files/fake-sheeter.ts";
 
 let disciplinesRepository: InMemoryDisciplinesRepository
 

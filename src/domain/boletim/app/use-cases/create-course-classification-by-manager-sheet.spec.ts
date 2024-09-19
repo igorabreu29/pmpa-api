@@ -1,6 +1,5 @@
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
-import { FakeSheeter } from "test/sheet/fake-sheeter.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
@@ -11,7 +10,6 @@ import { InMemoryBehaviorsRepository } from "test/repositories/in-memory-behavio
 import { InMemoryAssessmentsRepository } from "test/repositories/in-memory-assessments-repository.ts";
 import { InMemoryDisciplinesRepository } from "test/repositories/in-memory-disciplines-repository.ts";
 import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
-import { CreateCourseClassificationByPoleSheetUseCase } from "./create-course-classification-by-pole-sheet.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
@@ -28,6 +26,7 @@ import { CreateCourseClassificationByManagerSheetUseCase } from "./create-course
 import { makeManager } from "test/factories/make-manager.ts";
 import { makeManagerCourse } from "test/factories/make-manager-course.ts";
 import { makeManagerPole } from "test/factories/make-manager-pole.ts";
+import { FakeSheeter } from "test/files/fake-sheeter.ts";
 
 let managersRepository: InMemoryManagersRepository
 let managerPolesRepository: InMemoryManagersPolesRepository

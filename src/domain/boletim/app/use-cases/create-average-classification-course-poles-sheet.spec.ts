@@ -1,6 +1,5 @@
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
-import { FakeSheeter } from "test/sheet/fake-sheeter.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
@@ -22,6 +21,7 @@ import type { GetAverageClassificationCoursePolesUseCase } from "./get-average-c
 import { makeGetAverageClassificationCoursePolesUseCase } from "test/factories/make-get-average-classification-course-poles-use-case.ts";
 import { InMemoryCoursesPolesRepository } from "test/repositories/in-memory-courses-poles-repository.ts";
 import { CreateAverageClassificationCoursePolesSheetUseCase } from "./create-average-classification-course-poles-sheet.ts";
+import { FakeSheeter } from "test/files/fake-sheeter.ts";
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository

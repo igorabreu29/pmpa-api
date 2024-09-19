@@ -1,7 +1,7 @@
 import { Either, left, right } from "@/core/either.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { Sheeter } from "../sheet/sheeter.ts";
+import { Sheeter } from "../files/sheeter.ts";
 import type { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error.ts";
 import type { GetCourseClassificationByPoleUseCase } from "./get-course-classification-by-pole.ts";
 import type { StudentsPolesRepository } from "../repositories/students-poles-repository.ts";

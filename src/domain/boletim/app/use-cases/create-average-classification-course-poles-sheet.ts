@@ -1,6 +1,6 @@
 import { Either, left, right } from "@/core/either.ts";
 import type { CoursesRepository } from "../repositories/courses-repository.ts";
-import type { Sheeter } from "../sheet/sheeter.ts";
+import type { Sheeter } from "../files/sheeter.ts";
 import type { GetAverageClassificationCoursePolesUseCase } from "./get-average-classification-course-poles.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error.ts";

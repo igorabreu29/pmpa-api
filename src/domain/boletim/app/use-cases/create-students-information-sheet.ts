@@ -5,7 +5,7 @@ import type { StudentsCoursesRepository } from "../repositories/students-courses
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import type { CoursesDisciplinesRepository } from "../repositories/courses-disciplines-repository.ts";
 import { generateAssessmentAverage } from "../utils/generate-assessment-average.ts";
-import { Sheeter } from "../sheet/sheeter.ts";
+import { Sheeter } from "../files/sheeter.ts";
 
 interface CreateStudentsInformationSheetUseCaseRequest {
   courseId: string

@@ -1,18 +1,11 @@
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
-import { FakeSheeter } from "test/sheet/fake-sheeter.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
 import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
-import { makeGetCourseClassificationUseCase } from "test/factories/make-get-course-classification-use-case.ts";
-import type { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
-import { makeGetStudentAverageInTheCourseUseCase } from "test/factories/make-get-student-average-in-the-course-use-case.ts";
-import { InMemoryBehaviorsRepository } from "test/repositories/in-memory-behaviors-repository.ts";
 import { InMemoryAssessmentsRepository } from "test/repositories/in-memory-assessments-repository.ts";
 import { InMemoryDisciplinesRepository } from "test/repositories/in-memory-disciplines-repository.ts";
-import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
-import { CreateCourseClassificationSheetUseCase } from "./create-course-classification-sheet.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
@@ -27,6 +20,7 @@ import { InMemoryCoursesPolesRepository } from "test/repositories/in-memory-cour
 import { makeCoursePole } from "test/factories/make-course-pole.ts";
 import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { makeAssessment } from "test/factories/make-assessment.ts";
+import { FakeSheeter } from "test/files/fake-sheeter.ts";
 
 
 let disciplinesRepository: InMemoryDisciplinesRepository

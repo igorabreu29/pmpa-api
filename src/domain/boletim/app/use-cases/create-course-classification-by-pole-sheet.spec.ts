@@ -1,6 +1,5 @@
 import { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
 import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
-import { FakeSheeter } from "test/sheet/fake-sheeter.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
 import { InMemoryPolesRepository } from "test/repositories/in-memory-poles-repository.ts";
@@ -22,6 +21,7 @@ import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import type { InMemoryManagersCoursesRepository } from "test/repositories/in-memory-managers-courses-repository.ts";
 import type { GetCourseClassificationByPoleUseCase } from "./get-course-classification-by-pole.ts";
 import { makeGetCourseClassificationByPoleUseCase } from "test/factories/make-get-course-classification-by-pole.ts";
+import { FakeSheeter } from "test/files/fake-sheeter.ts";
 
 let managerCoursesRepository: InMemoryManagersCoursesRepository
 

@@ -1,7 +1,7 @@
 import { Either, left, right } from "@/core/either.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { Sheeter } from "../sheet/sheeter.ts";
+import { Sheeter } from "../files/sheeter.ts";
 import type { GetCourseBehaviorClassificationUseCase } from "./get-course-behavior-classification.ts";
 
 interface CreateCourseBehaviorClassificationSheetUseCaseRequest {
