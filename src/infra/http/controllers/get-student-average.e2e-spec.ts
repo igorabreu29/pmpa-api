@@ -99,10 +99,10 @@ describe('Get Student Average (e2e)', () => {
     const expectedGrades = {
       averageInform: {
         geralAverage: 7,
-        behaviorAverageStatus: {
+        behaviorAverageStatus: [{
           behaviorAverage: 7.5,
           status: 'approved'
-        },
+        }],
         behaviorsCount: 2,
         studentAverageStatus: {
           concept: 'good',
