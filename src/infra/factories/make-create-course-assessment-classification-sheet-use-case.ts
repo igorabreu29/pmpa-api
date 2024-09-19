@@ -1,5 +1,5 @@
 import { PrismaCoursesRepository } from "../database/repositories/prisma-courses-repository.ts";
-import { XLSXSheeter } from "../sheet/xlsx-sheeter.ts";
+import { XLSXSheeter } from "../files/xlsx-sheeter.ts";
 import { CreateCourseAssessmentClassificationSheetUseCase } from "@/domain/boletim/app/use-cases/create-course-assessment-classification-sheet.ts";
 import { makeGetCourseAssessmentClassificationUseCase } from "./make-get-course-assessment-classification-use-case.ts";
 

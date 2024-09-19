@@ -3,7 +3,7 @@ import { PrismaAssessmentsRepository } from "../database/repositories/prisma-ass
 import { PrismaCourseDisciplinesRepository } from "../database/repositories/prisma-course-disciplines-repository.ts";
 import { PrismaCoursesRepository } from "../database/repositories/prisma-courses-repository.ts";
 import { PrismaStudentsCoursesRepository } from "../database/repositories/prisma-students-courses-repository.ts";
-import { XLSXSheeter } from "../sheet/xlsx-sheeter.ts";
+import { XLSXSheeter } from "../files/xlsx-sheeter.ts";
 
 export function makeGetStudentsInformationSheetUseCase() {
   const coursesRepository = new PrismaCoursesRepository()

@@ -1,4 +1,4 @@
-import { Sheeter, WriteProps } from "@/domain/boletim/app/sheet/sheeter.ts";
+import { Sheeter, WriteProps } from "@/domain/boletim/app/files/sheeter.ts";
 import { utils, writeFile } from "../libs/xlsx.ts";
 
 export class XLSXSheeter implements Sheeter {

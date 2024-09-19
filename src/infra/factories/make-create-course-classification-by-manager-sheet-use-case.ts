@@ -1,5 +1,5 @@
 import { PrismaCoursesRepository } from "../database/repositories/prisma-courses-repository.ts";
-import { XLSXSheeter } from "../sheet/xlsx-sheeter.ts";
+import { XLSXSheeter } from "../files/xlsx-sheeter.ts";
 import { PrismaStudentsPolesRepository } from "../database/repositories/prisma-students-poles-repository.ts";
 import { makeGetCourseClassificationByPoleUseCase } from "./make-get-course-classification-by-pole-use-case.ts";
 import { PrismaManagersCoursesRepository } from "../database/repositories/prisma-managers-courses-repository.ts";
