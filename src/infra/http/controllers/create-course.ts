@@ -25,20 +25,11 @@ export async function createCourse(
           imageUrl: z.string().url(),
           isPeriod: z.boolean().default(false),
           endsAt: z.string().transform(transformDate),
-          poleIds: z.array(z.string()),
-          disciplines: z.array(
-            z.object({
-              id: z.string().uuid(),
-              expected: z.string(),
-              hours: z.number(),
-              module: z.number(),
-            })
-          )
         })
       }
     },
       async (req, res) => {
-        const { formula, name, imageUrl, isPeriod, poleIds, disciplines, endsAt } = req.body
+        const { formula, name, imageUrl, isPeriod, endsAt } = req.body
 
         const useCase = makeCreateCourseUseCase()
         const result = await useCase.execute({
@@ -46,8 +37,6 @@ export async function createCourse(
           name,
           imageUrl,
           isPeriod,
-          poleIds,
-          disciplines,
           endsAt,
         })
 

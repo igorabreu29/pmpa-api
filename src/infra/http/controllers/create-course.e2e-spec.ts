@@ -15,7 +15,7 @@ describe('Create Course (e2e)', () => {
   })
 
   it ('POST /courses', async () => {
-    const administrator = await prisma.user.create({
+    await prisma.user.create({
       data: {
         username: 'John Doe',
         civilId: '02345',
@@ -34,30 +34,6 @@ describe('Create Course (e2e)', () => {
       })
     const { token } = authenticateResponse.body
 
-    const pole = await prisma.pole.create({
-      data: {
-          name: 'pole-1'
-      },
-    })
-
-    const pole2 = await prisma.pole.create({
-      data: {
-        name: 'pole-2'
-      }
-    })
-
-    const discipline = await prisma.discipline.create({
-      data: {
-        name: 'discipline-1'
-      }
-    })
-
-    const discipline2 = await prisma.discipline.create({
-      data: {
-        name: 'discipline-2'
-      }
-    })
-
     const response = await request(app.server)
       .post('/courses')
       .set('Authorization', `Bearer ${token}`)
@@ -67,21 +43,6 @@ describe('Create Course (e2e)', () => {
         imageUrl: 'http://localhost:3333',
         isPeriod: false,
         endsAt: '01/11/2050',
-        poleIds: [pole.id, pole2.id],
-        disciplines: [
-          {
-            id: discipline.id,
-            expected: 'VF',
-            hours: 30,
-            module: 1
-          },
-          {
-            id: discipline2.id,
-            expected: 'VF',
-            hours: 30,
-            module: 1 
-          }
-        ]
       })
 
       expect(response.statusCode).toEqual(201)

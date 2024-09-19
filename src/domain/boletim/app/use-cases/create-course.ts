@@ -18,13 +18,6 @@ interface CreateCourseUseCaseRequest {
   imageUrl: string
   endsAt: Date
   isPeriod: boolean
-  poleIds: string[]
-  disciplines: {
-    id: string
-    expected: string
-    hours: number
-    module: number
-  }[]
 }
 
 type CreateCourseUseCaseResponse = Either<
@@ -37,11 +30,9 @@ type CreateCourseUseCaseResponse = Either<
 export class CreateCourseUseCase {
   constructor (
     private coursesRepository: CoursesRepository,
-    private coursesPolesRepository: CoursesPoleRepository,
-    private coursesDisciplinesRepository: CoursesDisciplinesRepository
   ) {}
 
-  async execute({ formula, name, imageUrl, endsAt, poleIds, disciplines, isPeriod }: CreateCourseUseCaseRequest): Promise<CreateCourseUseCaseResponse> {
+  async execute({ formula, name, imageUrl, endsAt, isPeriod }: CreateCourseUseCaseRequest): Promise<CreateCourseUseCaseResponse> {
     const courseAlreadyExist = await this.coursesRepository.findByName(name)
     if (courseAlreadyExist) return left(new ResourceAlreadyExistError('Course already present on the platform.'))
 
@@ -62,23 +53,6 @@ export class CreateCourseUseCase {
       
     const course = courseOrError.value
     await this.coursesRepository.create(course)
-
-    const coursePoles = poleIds.map(poleId => {
-      return CoursePole.create({
-        courseId: course.id,
-        poleId: new UniqueEntityId(poleId)
-      })
-    })
-    await this.coursesPolesRepository.createMany(coursePoles)
-
-    const courseDisciplines = disciplines.map(discipline => {
-      return CourseDiscipline.create({
-        courseId: course.id,
-        disciplineId: new UniqueEntityId(discipline.id),
-        ...discipline
-      })
-    })
-    await this.coursesDisciplinesRepository.createMany(courseDisciplines)
 
     return right(null)
   }
