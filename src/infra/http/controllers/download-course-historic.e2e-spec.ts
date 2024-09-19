@@ -21,8 +21,16 @@ describe('Download Course Historic (e2e)', () => {
         formula: 'CAS',
         imageUrl: '',
         name: 'CAS',
-        isPeriod: false
-      }
+        isPeriod: false,
+
+        coursesHistorics: {
+          create: {
+            classname: 'random',
+            finishDate: endsAt,
+            startDate: new Date(),
+          }
+        }
+      },
     })
 
     const pole = await prisma.pole.create({
