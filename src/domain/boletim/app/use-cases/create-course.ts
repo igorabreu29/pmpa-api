@@ -16,6 +16,7 @@ interface CreateCourseUseCaseRequest {
   formula: Formula
   name: string
   imageUrl: string
+  startAt?: Date
   endsAt: Date
   isPeriod: boolean
 }
@@ -24,7 +25,9 @@ type CreateCourseUseCaseResponse = Either<
    | ResourceAlreadyExistError
    | InvalidNameError
    | InvalidDateError,
-   null
+   {
+    id: UniqueEntityId
+   }
   >
 
 export class CreateCourseUseCase {
@@ -32,7 +35,7 @@ export class CreateCourseUseCase {
     private coursesRepository: CoursesRepository,
   ) {}
 
-  async execute({ formula, name, imageUrl, endsAt, isPeriod }: CreateCourseUseCaseRequest): Promise<CreateCourseUseCaseResponse> {
+  async execute({ formula, name, imageUrl, startAt, endsAt, isPeriod }: CreateCourseUseCaseRequest): Promise<CreateCourseUseCaseResponse> {
     const courseAlreadyExist = await this.coursesRepository.findByName(name)
     if (courseAlreadyExist) return left(new ResourceAlreadyExistError('Course already present on the platform.'))
 
@@ -46,6 +49,7 @@ export class CreateCourseUseCase {
       formula, 
       name: nameOrError.value, 
       imageUrl, 
+      startAt,
       endsAt: endsAtOrError.value,
       isPeriod
     })
@@ -54,6 +58,8 @@ export class CreateCourseUseCase {
     const course = courseOrError.value
     await this.coursesRepository.create(course)
 
-    return right(null)
+    return right({
+      id: course.id
+    })
   }
 }

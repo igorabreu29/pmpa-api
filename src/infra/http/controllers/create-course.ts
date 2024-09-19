@@ -24,12 +24,14 @@ export async function createCourse(
           name: z.string().min(3).max(30),
           imageUrl: z.string().url(),
           isPeriod: z.boolean().default(false),
+          startAt: z.string().transform(transformDate).optional(),
           endsAt: z.string().transform(transformDate),
         })
       }
     },
       async (req, res) => {
-        const { formula, name, imageUrl, isPeriod, endsAt } = req.body
+        const { formula, name, imageUrl, isPeriod, startAt, endsAt } = req.body
+        console.log(endsAt)
 
         const useCase = makeCreateCourseUseCase()
         const result = await useCase.execute({
@@ -37,6 +39,7 @@ export async function createCourse(
           name,
           imageUrl,
           isPeriod,
+          startAt,
           endsAt,
         })
 
@@ -55,7 +58,9 @@ export async function createCourse(
           }
         }
 
-        return res.status(201).send()
+        const { id } = result.value
+
+        return res.status(201).send({ id: id.toValue() })
       }
     )
 }
