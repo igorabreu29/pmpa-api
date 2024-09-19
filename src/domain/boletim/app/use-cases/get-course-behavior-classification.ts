@@ -76,9 +76,17 @@ export class GetCourseBehaviorClassificationUseCase {
     }))
 
     const behaviorAverageGroupedByPole = coursePoles.map(coursePole => {
-      const studentsGroup = studentsWithBehaviorAverage.filter(item => item.studentPole.id.equals(coursePole.id)) as StudentWithBehaviorAverage[]
-      const behaviorAverageByPole = studentsGroup
-        .reduce((acc, item) => acc + item.behaviorAverage.behaviorAverageStatus.behaviorAverage, 0) / studentsGroup.length
+      const studentsGroup = studentsWithBehaviorAverage.filter(item => item.studentPole.id.equals(coursePole.id))
+
+      const averages = []
+    
+      for (const student of studentsGroup) {
+        const average = student.behaviorAverage.behaviorAverageStatus.reduce((acc, item) => acc + item.behaviorAverage, 0)
+        averages.push(average)
+      }
+      
+      const behaviorAverageByPole = averages
+        .reduce((acc, item) => acc + item, 0) / studentsGroup.length
 
       return {
         poleAverage: {

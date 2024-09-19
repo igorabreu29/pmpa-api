@@ -29,10 +29,10 @@ describe('Behavior Average By Formula', () => {
     const formulaTypeModule = defineBehaviorByFormulaType['module']({ behaviorMonthsNotes })
 
     expect(formulaTypeModule).toMatchObject({
-      behaviorAverageStatus: {
+      behaviorAverageStatus: [{
         behaviorAverage: 6.556,
         status: 'approved'
-      },
+      }],
       behaviorsCount: 9
     })
   })

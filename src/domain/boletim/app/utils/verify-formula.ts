@@ -18,7 +18,7 @@ export interface AssessmentWithModule {
 interface FormulaProps {
   assessments: (AssessmentWithModule | null)[],
   behaviorAverage?: {
-    behaviorAverageStatus: GenerateBehaviorStatus | GenerateBehaviorStatus[]
+    behaviorAverageStatus: GenerateBehaviorStatus[]
     behaviorsCount: number
   } 
 }
@@ -29,7 +29,7 @@ interface BehaviorAveragePerPeriod {
 }
 
 interface BehaviorAveragePerModule {
-  behaviorAverageStatus: GenerateBehaviorStatus
+  behaviorAverageStatus: GenerateBehaviorStatus[]
   behaviorsCount: number
 }
 
@@ -140,7 +140,7 @@ export const formulas = {
     const averages = assessments.map(item => item?.average)
     if (behaviorAverage) {
       const { behaviorAverageStatus } = behaviorAverage as BehaviorAveragePerModule
-      behaviorAverageStatus.behaviorAverage ? averages.push(behaviorAverageStatus.behaviorAverage) : averages
+      behaviorAverageStatus.length ? averages.push(...behaviorAverageStatus.map(item => item.behaviorAverage)) : averages
     }
 
     const assessmentsAverage = Number(averages.reduce((previousAverageAssessment, currentAverageAssessment) => {

@@ -35,7 +35,7 @@ type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError,
   grades: {
     averageInform: {
       geralAverage: number | string;
-      behaviorAverageStatus: GenerateBehaviorStatus[] | GenerateBehaviorStatus
+      behaviorAverageStatus: GenerateBehaviorStatus[]
       behaviorsCount: number
       studentAverageStatus: GetGeralStudentAverageStatusResponse
     }
@@ -48,7 +48,7 @@ type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError,
   } | {
     averageInform: {
       geralAverage: number | string;
-      behaviorAverageStatus: GenerateBehaviorStatus[] | GenerateBehaviorStatus
+      behaviorAverageStatus: GenerateBehaviorStatus[]
       behaviorsCount: number
       studentAverageStatus: GetGeralStudentAverageStatusResponse
     }

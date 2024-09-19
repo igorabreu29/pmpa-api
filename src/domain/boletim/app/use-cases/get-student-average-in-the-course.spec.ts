@@ -98,10 +98,10 @@ describe(('Get Student Average In The Course Use Case'), () => {
       grades: {
         averageInform: {
           geralAverage: 6.986,
-          behaviorAverageStatus: {
+          behaviorAverageStatus: [{
             behaviorAverage: 6.958, 
             status: 'approved'
-          },
+          }],
           studentAverageStatus: {
             concept: 'regular',
             status: 'approved'

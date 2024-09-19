@@ -25,10 +25,10 @@ describe('Behavior Average', () => {
     const behaviorAverageByModule = generateBehaviorAverage({ behaviorMonths })
 
     expect(behaviorAverageByModule).toMatchObject({
-      behaviorAverageStatus: {
+      behaviorAverageStatus: [{
         behaviorAverage: 6.994, 
         status: 'approved'
-      },
+      }],
       behaviorsCount: 12
     })
   })

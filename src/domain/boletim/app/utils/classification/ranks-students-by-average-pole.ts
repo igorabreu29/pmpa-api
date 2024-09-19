@@ -19,7 +19,7 @@ export interface StudentWithAssessmentAverage {
 
 export interface StudentWithBehaviorAverage {
   behaviorAverage: {
-    behaviorAverageStatus: GenerateBehaviorStatus
+    behaviorAverageStatus: GenerateBehaviorStatus[]
     behaviorsCount: number
   }
   studentName: string

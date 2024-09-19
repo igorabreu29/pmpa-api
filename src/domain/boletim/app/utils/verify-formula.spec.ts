@@ -220,10 +220,10 @@ describe('Verify Formulas', () => {
         averageInform: {
           geralAverage: 6.497,
           studentAverageStatus: { concept: 'regular', status: 'second season' },
-          behaviorAverageStatus: {
+          behaviorAverageStatus: [{
             behaviorAverage: 6.821,
             status: 'approved'
-          }
+          }]
         },
         
         assessments: [

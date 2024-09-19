@@ -39,7 +39,7 @@ export const defineBehaviorByFormulaType = {
     const behaviorsCount = behaviorMonthsNotes.length
 
     return {
-      behaviorAverageStatus,
+      behaviorAverageStatus: [behaviorAverageStatus],
       behaviorsCount
     }
   } 
