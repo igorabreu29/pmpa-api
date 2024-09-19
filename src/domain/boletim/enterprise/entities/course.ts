@@ -75,7 +75,7 @@ export class Course extends Entity<CourseProps> {
     Course
   > {
     const course = new Course({
-      startAt: new Date(),
+      startAt: props.startAt ?? new Date(),
       isPeriod: false,
       isActive: true,
       ...props
