@@ -1,18 +1,12 @@
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
-import { makeGetCourseStudentUseCase } from "@/infra/factories/make-get-course-student-use-case.ts";
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
-import puppeteer from "puppeteer";
-import { makeGetCourseUseCase } from "@/infra/factories/make-get-course-use-case.ts";
-import { makeGetStudentAverageInTheCourseUseCase } from "@/infra/factories/make-get-student-average-in-the-course-use-case.ts";
 
-import { join } from 'node:path'
-import fs from 'node:fs'
-import { makeFetchCourseDisciplinesUseCase } from "@/infra/factories/make-fetch-course-disciplines.ts";
-import { dayjs } from '@/infra/libs/dayjs.ts'
+import { makeDownloadHistoricUseCase } from "@/infra/factories/make-download-historic-use-case.ts";
+import { verifyJWT } from "../middlewares/verify-jwt.ts";
 
 export async function downloadCourseHistoric(
   app: FastifyInstance
@@ -20,6 +14,7 @@ export async function downloadCourseHistoric(
   app
     .withTypeProvider<ZodTypeProvider>()
     .post('/courses/:courseId/download-historic', {
+      onRequest: [verifyJWT],
       schema: {
         params: z.object({
           courseId: z.string().uuid()
@@ -33,29 +28,15 @@ export async function downloadCourseHistoric(
     const { courseId } = req.params
     const { studentId } = req.body
 
-    const getCourseStudent = makeGetCourseStudentUseCase()
-    const resultGetCourseStudent = await getCourseStudent.execute({
+    const useCase = makeDownloadHistoricUseCase()
+    const result = await useCase.execute({
       courseId,
-      id: studentId
+      studentId
     })
 
-    if (resultGetCourseStudent.isLeft()) {
-      const error = resultGetCourseStudent.value
+    if (result.isLeft()) {
+      const error = result.value
 
-      switch(error.constructor) {
-        case ResourceNotFoundError: 
-          throw new NotFound(error.message)
-        default: 
-          throw new ClientError('Ocurred something error')
-      }
-    }
-
-    const getCourse = makeGetCourseUseCase()
-    const resultGetCourse = await getCourse.execute({ id: courseId })
-
-    if (resultGetCourse.isLeft()) {
-      const error = resultGetCourse.value
-      
       switch(error.constructor) {
         case ResourceNotFoundError: 
           throw new NotFound(error.message)
@@ -64,118 +45,13 @@ export async function downloadCourseHistoric(
       }
     }
 
-    const getStudentAverage = makeGetStudentAverageInTheCourseUseCase()
-    const resultGetStudentAverage = await getStudentAverage.execute({
-      courseId: courseId, 
-      studentId,
-      isPeriod: false
+    const { filename } = result.value
+
+    const fullUrl = req.protocol.concat('://').concat(req.hostname)
+    const fileUrl = new URL(`/uploads/${filename}`, fullUrl)
+
+    return res.status(201).send({
+      fileUrl: fileUrl.href
     })
-
-    if (resultGetStudentAverage.isLeft()) {
-      const error = resultGetStudentAverage.value
-
-      switch(error.constructor) {
-        case ResourceNotFoundError: 
-          throw new NotFound(error.message)
-        default: 
-          throw new ClientError('Ocurred something error')
-      }
-    }
-
-    const getCourseDisciplines = makeFetchCourseDisciplinesUseCase()
-    const resultGetCourseDisciplines = await getCourseDisciplines.execute({
-      courseId, 
-    })
-
-    if (resultGetCourseDisciplines.isLeft()) {
-      const error = resultGetCourseDisciplines.value
-
-      switch(error.constructor) {
-        case ResourceNotFoundError: 
-          throw new NotFound(error.message)
-        default: 
-          throw new ClientError('Ocurred something error')
-      }
-    }
-
-    
-    const { student } = resultGetCourseStudent.value
-    const { course } = resultGetCourse.value
-    const { grades } = resultGetStudentAverage.value
-    const { disciplines } = resultGetCourseDisciplines.value
-
-    const htmlFilePath = join(import.meta.dirname, '../../html/template.html')
-    let htmlContent = fs.readFileSync(htmlFilePath, 'utf8')
-
-    const dynamic = {
-      list: disciplines.map((discipline, key) => {
-        return `
-          <tr>
-            <td class="text-sm font-bold">
-              ${discipline.disciplineName}
-            </td>
-            <td class="text-sm font-bold">
-              N/A
-            </td>
-            <td class="text-sm font-bold">
-              ${grades.assessments[key]?.avi ?? ''}
-            </td>
-            <td class="text-sm font-bold">
-              ${grades.assessments[key]?.avii ?? ''}
-            </td>
-            <td class="text-sm font-bold">
-              ${grades.assessments[key]?.vf}
-            </td>
-            <td class="text-sm font-bold">
-              ${grades.assessments[key]?.vfe ?? ''}
-            </td>
-            <td class="text-sm font-bold">
-              ${grades.assessments[key]?.average}
-            </td>
-            <td class="text-sm font-bold">
-              ${grades.assessments[key]?.status}
-            </td>
-          </tr>
-        `
-      }).join('')
-    }
-
-    const currentDate = dayjs(new Date()).format('DD/MM/YYYY')
-
-    const assessmentsSecondSeasonQuantity = grades.assessments.filter(assessment => assessment?.vf).length
-    
-    htmlContent = htmlContent
-      .replaceAll('{{ dynamic_course }}', course.name.value)
-      .replace('{{ dynamic_course_startAt }}', String(course.startAt))
-      .replace('{{ dynamic_course_endsAt }}', String(course.endsAt.value))
-      .replace('{{ dynamic_student_username }}', student.username)
-      .replace('{{ dynamic_student_militaryId }}', student.militaryId ?? '')
-      .replace('{{ dynamic_student_father }}', student.parent?.fatherName ?? '')
-      .replace('{{ dynamic_student_mother }}', student.parent?.motherName ?? '')
-      .replace('{{ dynamic_student_birthday }}', String(student.birthday))
-      .replace('{{ dynamic_student_county }}', student.county ?? '')
-      .replace('{{ dynamic_student_state }}', student.state ?? '')
-      .replace('{{ dynamic_list }}', dynamic.list)
-      .replace('{{ dynamic_second_season_quantity }}', String(assessmentsSecondSeasonQuantity))
-      .replace('{{ dynamic_current_date }}', currentDate)
-
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-  
-    await page.setContent(htmlContent);
-  
-    await page.pdf({
-      path: 'Histórico Escolar.pdf',
-      format: 'A4',
-      printBackground: true,
-      margin: {
-        top: '20px',
-        bottom: '20px',
-        left: '20px',
-        right: '20px'
-      }
-    });
-  
-    await browser.close();
   })
 }
