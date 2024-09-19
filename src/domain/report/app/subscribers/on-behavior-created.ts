@@ -26,11 +26,11 @@ export class OnBehaviorCreated implements EventHandler {
       await this.sendReport.execute({
         title: 'Notas de comportamento adicionadas',
         content: `
-          IP: ${reporterIp} \n
-          Curso: ${courseName} \n
-          Remetente: ${reporter.username.value} \n
-          Estudante: ${studentName} \n
-          Data: ${ocurredAt} \n
+          IP: ${reporterIp}
+          Curso: ${courseName}
+          Remetente: ${reporter.username.value}
+          Estudante: ${studentName}
+          Data: ${ocurredAt}
           ${reporter.username.value} adicionou notas de comportamento para o aluno: ${studentName}
         `,
         ip: reporterIp,

@@ -26,9 +26,9 @@ export class OnManagerUpdated implements EventHandler {
       await this.sendReport.execute({
         title: 'Gerente atualizado',
         content: `
-          IP: ${reporterIp} \n
-          Remetente: ${reporter.username.value} \n
-          Gerente: ${manager.username.value} \n
+          IP: ${reporterIp}
+          Remetente: ${reporter.username.value}
+          Gerente: ${manager.username.value}
           Data: ${ocurredAt}
           ${reporter.username.value} atualizou o gerente: ${manager.username.value}
         `,

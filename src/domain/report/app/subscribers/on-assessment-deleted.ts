@@ -37,12 +37,12 @@ export class OnAssessmentDeleted implements EventHandler {
       await this.sendReport.execute({
         title: `Notas removidas`,
         content: `
-          IP: ${reporterIp} \n
-          Course: ${course.name.value} \n
-          Disciplina: ${discipline.name} \n
-          Remetente: ${reporter.username.value} \n
-          Estudante: ${student.username.value} \n
-          Data: ${ocurredAt} \n
+          IP: ${reporterIp}
+          Course: ${course.name.value}
+          Disciplina: ${discipline.name}
+          Remetente: ${reporter.username.value}
+          Estudante: ${student.username.value}
+          Data: ${ocurredAt}
           ${reporter.username.value} removeu notas do aluno: ${student.username.value}
         `,
         ip: reporterIp,

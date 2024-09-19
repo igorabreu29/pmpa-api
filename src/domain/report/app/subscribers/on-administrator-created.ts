@@ -26,9 +26,9 @@ export class OnAdministratorCreated implements EventHandler {
       await this.sendReport.execute({
         title: 'Administrador criado',
         content: `
-          IP: ${reporterIp} \n
-          Remetente: ${reporter.username.value} \n
-          Administrador: ${administrator.username.value} \n
+          IP: ${reporterIp}
+          Remetente: ${reporter.username.value}
+          Administrador: ${administrator.username.value}
           Data: ${ocurredAt}
           ${reporter.username.value} adicionou o administrador: ${administrator.username.value}
         `,

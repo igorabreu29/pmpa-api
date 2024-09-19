@@ -21,9 +21,9 @@ export class OnStudentLoginConfirmed implements EventHandler {
     await this.sendReport.execute({
       title: `Confirmação de login`,
       content: `
-        IP: ${studentIp} \n
-        Estudante: ${student.username.value} \n
-        Data: ${ocurredAt} \n
+        IP: ${studentIp}
+        Estudante: ${student.username.value}
+        Data: ${ocurredAt}
         ${student.username.value} confirmou seu login!
       `,
       ip: studentIp,

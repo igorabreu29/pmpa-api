@@ -31,11 +31,11 @@ export class OnStudentBatchUpdated implements EventHandler {
       await this.sendReportBatch.execute({
         title: 'Notas atualizadas em lote',
         content: `
-          IP: ${reporterIp} \n
-          Course: ${course.name.value} \n
-          Remetente: ${reporter.username.value} \n
-          Link do arquivo: ${studentBatch.fileLink} \n
-          Data: ${ocurredAt} \n
+          IP: ${reporterIp}
+          Course: ${course.name.value}
+          Remetente: ${reporter.username.value}
+          Link do arquivo: ${studentBatch.fileLink}
+          Data: ${ocurredAt}
           ${reporter.username.value} adicionou notas em lote
         `,
         reporterId: reporter.id.toValue(),

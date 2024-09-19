@@ -26,9 +26,9 @@ export class OnStudentUpdated implements EventHandler {
       await this.sendReport.execute({
         title: 'Estudante atulizado',
         content: `
-          IP: ${reporterIp} \n
-          Remetente: ${reporter.username.value} \n
-          Estudante: ${student.username.value} \n
+          IP: ${reporterIp}
+          Remetente: ${reporter.username.value}
+          Estudante: ${student.username.value}
           Data: ${ocurredAt}
           ${reporter.username.value} atualizou o aluno: ${student.username.value}
         `,

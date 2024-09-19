@@ -37,11 +37,11 @@ export class OnAssessmentUpdated implements EventHandler {
       await this.sendReport.execute({
         title: `Notas Atualizadas`,
         content: `
-          IP: ${reporterIp} \n
-          Course: ${course.name.value} \n
-          Disciplina: ${discipline.name.value} \n
-          Remetente: ${reporter.username.value} \n
-          Estudante: ${student.username.value} \n
+          IP: ${reporterIp}
+          Course: ${course.name.value}
+          Disciplina: ${discipline.name.value}
+          Remetente: ${reporter.username.value}
+          Estudante: ${student.username.value}
           Data: ${ocurredAt}
           ${reporter.username.value} atualizou notas do aluno: ${student.username.value}
         `,

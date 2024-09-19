@@ -26,9 +26,9 @@ export class OnStudentDeleted implements EventHandler {
       await this.sendReport.execute({
         title: 'Estudante deletado',
         content: `
-          IP: ${reporterIp} \n
-          Remetente: ${reporter.username.value} \n
-          Estudante: ${student.username.value} \n
+          IP: ${reporterIp}
+          Remetente: ${reporter.username.value}
+          Estudante: ${student.username.value}
           Data: ${ocurredAt}
           ${reporter.username.value} deletou o aluno: ${student.username.value}
         `,

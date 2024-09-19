@@ -35,11 +35,11 @@ export class OnBehaviorUpdated implements EventHandler {
       await this.sendReport.execute({
         title: 'Notas de comportamento atualizadas',
         content: `
-          IP: ${reporterIp} \n
-          Curso: ${course.name.value} \n
-          Remetente: ${reporter.username.value} \n
-          Estudante: ${student.username.value} \n
-          Data: ${ocurredAt} \n
+          IP: ${reporterIp}
+          Curso: ${course.name.value}
+          Remetente: ${reporter.username.value}
+          Estudante: ${student.username.value}
+          Data: ${ocurredAt}
           ${reporter.username.value} atualizou notas de comportamento do aluno: ${student.username.value}
         `,
         ip: reporterIp,

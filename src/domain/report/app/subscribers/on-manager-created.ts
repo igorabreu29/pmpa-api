@@ -32,9 +32,9 @@ export class OnManagerCreated implements EventHandler {
       await this.sendReport.execute({
         title: 'Gerente criado',
         content: `
-          IP: ${reporterIp} \n
-          Remetente: ${reporter.username.value} \n
-          Gerente: ${manager.username.value} \n
+          IP: ${reporterIp}
+          Remetente: ${reporter.username.value}
+          Gerente: ${manager.username.value}
           Curso: ${course.name.value}
           Data: ${ocurredAt}
           ${reporter.username.value} adicionou o gerente: ${manager.username.value}
