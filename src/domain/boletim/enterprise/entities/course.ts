@@ -61,9 +61,15 @@ export class Course extends Entity<CourseProps> {
   get startAt() {
     return this.props.startAt
   }
+  set startAt(value) {
+    this.props.startAt = value
+  }
 
   get endsAt() {
     return this.props.endsAt
+  }
+  set endsAt(value) {
+    this.props.endsAt = value
   }
 
   static create(
