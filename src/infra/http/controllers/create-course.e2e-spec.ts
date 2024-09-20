@@ -42,7 +42,7 @@ describe('Create Course (e2e)', () => {
         name: 'CGS TURMA I - 2022',
         imageUrl: 'http://localhost:3333',
         isPeriod: false,
-        endsAt: '01/11/2050',
+        endsAt: '2050/11/01',
       })
 
       expect(response.statusCode).toEqual(201)
