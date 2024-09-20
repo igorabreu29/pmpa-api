@@ -36,16 +36,25 @@ export class PrismaCoursePolesRepository implements CoursesPoleRepository {
   }
 
   async create(coursePole: CoursePole): Promise<void> {
-    const prismaMapper = PrismaCoursesPolesMapper.toPrisma(coursePole)
+    const raw = PrismaCoursesPolesMapper.toPrisma(coursePole)
     await prisma.courseOnPole.create({
-      data: prismaMapper
+      data: raw
     })
   }
 
   async createMany(coursesPoles: CoursePole[]): Promise<void> {
-    const prismaMapper = coursesPoles.map(coursePole => PrismaCoursesPolesMapper.toPrisma(coursePole))
+    const raw = coursesPoles.map(coursePole => PrismaCoursesPolesMapper.toPrisma(coursePole))
     await prisma.courseOnPole.createMany({
-      data: prismaMapper
+      data: raw
+    })
+  }
+
+  async delete(coursePole: CoursePole): Promise<void> {
+    const raw = PrismaCoursesPolesMapper.toPrisma(coursePole)
+    await prisma.courseOnPole.delete({
+      where: {
+        id: raw.id
+      }
     })
   }
 }

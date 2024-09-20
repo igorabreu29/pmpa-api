@@ -26,4 +26,6 @@ export abstract class CoursesDisciplinesRepository {
 
   abstract create(courseDiscipline: CourseDiscipline): Promise<void>
   abstract createMany(coursesDisciplines: CourseDiscipline[]): Promise<void>
+
+  abstract delete(courseDiscipline: CourseDiscipline): Promise<void>
 }

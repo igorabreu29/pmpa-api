@@ -42,4 +42,9 @@ export class InMemoryCoursesPolesRepository implements CoursesPoleRepository {
       this.items.push(coursePole)
     })
   }
+
+  async delete(coursePole: CoursePole): Promise<void> {
+    const coursePoleIndex = this.items.findIndex(item => item.equals(coursePole))
+    this.items.splice(coursePoleIndex, 1)
+  }
 }

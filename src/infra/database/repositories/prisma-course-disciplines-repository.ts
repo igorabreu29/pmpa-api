@@ -75,16 +75,25 @@ export class PrismaCourseDisciplinesRepository implements CoursesDisciplinesRepo
   }
 
   async create(courseDiscipline: CourseDiscipline): Promise<void> {
-    const prismaMapper = PrismaCourseDisciplinesMapper.toPrisma(courseDiscipline)
+    const raw = PrismaCourseDisciplinesMapper.toPrisma(courseDiscipline)
     await prisma.courseOnDiscipline.create({
-      data: prismaMapper
+      data: raw
     })
   }
 
   async createMany(coursesDisciplines: CourseDiscipline[]): Promise<void> {
-    const prismaMapper = coursesDisciplines.map(courseDiscipline => PrismaCourseDisciplinesMapper.toPrisma(courseDiscipline))
+    const raw = coursesDisciplines.map(courseDiscipline => PrismaCourseDisciplinesMapper.toPrisma(courseDiscipline))
     await prisma.courseOnDiscipline.createMany({
-      data: prismaMapper
+      data: raw
+    })
+  }
+
+  async delete(courseDiscipline: CourseDiscipline): Promise<void> {
+    const raw = PrismaCourseDisciplinesMapper.toPrisma(courseDiscipline)
+    await prisma.courseOnDiscipline.delete({
+      where: {
+        id: raw.id
+      }
     })
   }
 }

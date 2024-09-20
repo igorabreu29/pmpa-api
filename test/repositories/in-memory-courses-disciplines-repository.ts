@@ -72,4 +72,9 @@ export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesR
       this.items.push(courseDiscipline)
     })
   }
+
+  async delete(courseDiscipline: CourseDiscipline): Promise<void> {
+    const courseDisciplineIndex = this.items.findIndex(item => item.equals(courseDiscipline))
+  this.items.splice(courseDisciplineIndex, 1)
+  }
 }

@@ -6,4 +6,5 @@ export abstract class CoursesPoleRepository {
   abstract findManyByCourseId({ courseId }: { courseId: string }): Promise<Pole[]>
   abstract create(coursePole: CoursePole): Promise<void>
   abstract createMany(coursesPoles: CoursePole[]): Promise<void>
+  abstract delete(coursePole: CoursePole): Promise<void>
 }
