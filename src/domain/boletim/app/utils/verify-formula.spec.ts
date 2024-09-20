@@ -16,7 +16,8 @@ describe('Verify Formulas', () => {
           module: 1,
           average: 6.5,
           isRecovering: true,
-          status: 'approved second season' as Status
+          status: 'approved second season' as Status,
+          disciplineName: 'discipline-1'
         },
         {
           id: 'assessment-2',
@@ -27,7 +28,8 @@ describe('Verify Formulas', () => {
           module: 1,
           average: 6.5,
           isRecovering: true,
-          status: 'approved second season' as Status
+          status: 'approved second season' as Status,
+          disciplineName: 'discipline-1'
         },
         {
           id: 'assessment-3',
@@ -38,7 +40,8 @@ describe('Verify Formulas', () => {
           module: 2,
           average: 6.5,
           isRecovering: true,
-          status: 'approved second season' as Status
+          status: 'approved second season' as Status,
+          disciplineName: 'discipline-1'
         },
         {
           id: 'assessment-4',
@@ -49,7 +52,8 @@ describe('Verify Formulas', () => {
           module: 3,
           average: 8,
           isRecovering: true,
-          status: 'approved' as Status
+          status: 'approved' as Status,
+          disciplineName: 'discipline-1'
         },
       ]
       
@@ -137,7 +141,8 @@ describe('Verify Formulas', () => {
           module: 1,
           average: 6.67,
           isRecovering: false,
-          status: 'second season' as Status
+          status: 'second season' as Status,
+          disciplineName: 'discipline-1'
         },
         {
           id: 'assessment-2',
@@ -147,7 +152,8 @@ describe('Verify Formulas', () => {
           module: 1,
           average: 6,
           isRecovering: false,
-          status: 'second season' as Status
+          status: 'second season' as Status,
+          disciplineName: 'discipline-1'
         },
       ]
 
@@ -183,7 +189,8 @@ describe('Verify Formulas', () => {
           module: 1,
           average: 6.67,
           isRecovering: false,
-          status: 'second season' as Status
+          status: 'second season' as Status,
+          disciplineName: 'discipline-1'
         },
         {
           id: 'assessment-2',
@@ -193,7 +200,8 @@ describe('Verify Formulas', () => {
           module: 1,
           average: 6,
           isRecovering: false,
-          status: 'second season' as Status
+          status: 'second season' as Status,
+          disciplineName: 'discipline-1'
         },
       ]
 
