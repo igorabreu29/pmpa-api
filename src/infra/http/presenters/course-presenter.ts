@@ -7,6 +7,7 @@ export class CoursePresenter {
       id: course.id.toValue(),
       name: course.name.value,
       endsAt: course.endsAt.value,
+      startAt: course.startAt,
       formula: course.formula,
       imageUrl: course.imageUrl,
       isPeriod: course.isPeriod,
