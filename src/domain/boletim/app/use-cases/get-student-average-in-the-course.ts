@@ -14,6 +14,7 @@ interface GetStudentAverageInTheCourseUseCaseRequest {
   courseId: string
   isPeriod: boolean
   hasBehavior?: boolean
+  module?: number
 }
 
 interface Month {
@@ -81,6 +82,7 @@ export class GetStudentAverageInTheCourseUseCase {
     studentId,
     courseId,
     isPeriod,
+    module,
     hasBehavior = true
 }: GetStudentAverageInTheCourseUseCaseRequest): Promise<GetStudentAverageInTheCourseUseCaseResponse> {
     const assessments = await this.assessmentsRepository.findManyByStudentIdAndCourseId({
@@ -155,8 +157,13 @@ export class GetStudentAverageInTheCourseUseCase {
     const courseWithoutModule = assessmentWithDisciplineModule.some(item => item === null)
     if (courseWithoutModule) return left(new ResourceNotFoundError('Course does not have module.'))
 
+    let assessmentsByModule: (AssessmentWithModule | null)[] = []
+    if (module) {
+      assessmentsByModule = assessmentWithDisciplineModule.filter(assessment => assessment?.module === module)
+    }
+
     const gradesByFormula = formulas[isPeriod ? 'period' : 'module']({
-      assessments: assessmentWithDisciplineModule,
+      assessments: module ? assessmentsByModule : assessmentWithDisciplineModule,
       behaviorAverage: hasBehavior ? behaviorAverage : undefined,
     })
 
