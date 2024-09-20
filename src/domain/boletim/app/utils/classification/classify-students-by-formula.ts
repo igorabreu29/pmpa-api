@@ -142,3 +142,46 @@ export const classifyStudentsByCGSAndCASFormula = (studentsWithAverage: StudentC
     return 0
   })
 }
+
+export const classifyStudentsBySUBFormula = (studentsWithAverage: StudentClassficationByPeriod[]) => {
+  return studentsWithAverage.sort((studentA, studentB) => {
+    const geralAverageStudentA = studentA.studentAverage.averageInform.geralAverage
+    const geralAverageStudentB = studentB.studentAverage.averageInform.geralAverage
+
+    const isSecondSeasonInFirstModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module1']
+     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved')
+    const isSecondSeasonInFirstModuleStudentB = studentA.studentAverage.assessmentsPerPeriod['module1']
+     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved')
+
+    const isSecondSeasonInSecondModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module2']
+     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved')
+
+    const isSecondSeasonInSecondModuleStudentB = studentA.studentAverage.assessmentsPerPeriod['module2']
+     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved')
+
+    const studentABirthday = Number(studentA.studentBirthday?.getTime())
+    const studentBBirthday = Number(studentB.studentBirthday?.getTime())
+
+    if (!(isSecondSeasonInFirstModuleStudentB || isSecondSeasonInSecondModuleStudentB) && !(isSecondSeasonInFirstModuleStudentA || isSecondSeasonInSecondModuleStudentA)) {
+      if (geralAverageStudentA !== geralAverageStudentB) {
+        return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+      }
+
+      if (studentABirthday !== studentBBirthday) {
+        return studentABirthday - studentBBirthday
+      }
+    }
+
+    if (!(isSecondSeasonInFirstModuleStudentB || isSecondSeasonInSecondModuleStudentB) && !(isSecondSeasonInFirstModuleStudentA || isSecondSeasonInSecondModuleStudentA)) {
+      if (geralAverageStudentA !== geralAverageStudentB) {
+        return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+      }
+
+      if (studentABirthday !== studentBBirthday) {
+        return studentABirthday - studentBBirthday
+      }
+    }
+
+    return 0
+  })
+}
