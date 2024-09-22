@@ -29,7 +29,6 @@ export async function createCourseHistoric(
           finishDate: z.string().transform(transformDate), 
           speechs: z.number().optional(), 
           internships: z.number().optional(), 
-          totalHours: z.number().optional(), 
           divisionBoss: z.string().optional(), 
           commander: z.string().optional(), 
         })
@@ -37,7 +36,7 @@ export async function createCourseHistoric(
     },
       async (req, res) => {
         const { courseId } = req.params
-        const { className, startDate, finishDate, speechs, internships, totalHours, divisionBoss, commander } = req.body
+        const { className, startDate, finishDate, speechs, internships, divisionBoss, commander } = req.body
 
         const useCase = makeCreateCourseHistoricUseCase()
         const result = await useCase.execute({
@@ -47,7 +46,6 @@ export async function createCourseHistoric(
           finishDate,
           speechs,
           internships,
-          totalHours,
           divisionBoss,
           commander
         })
