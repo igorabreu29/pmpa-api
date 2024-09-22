@@ -2,7 +2,7 @@ import { app } from "@/infra/app.ts";
 import { prisma } from "@/infra/database/lib/prisma.ts";
 import { transformDate } from "@/infra/utils/transform-date.ts";
 import { Course, User } from "@prisma/client";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import bcrypt from 'bcryptjs'
 import { makeAuth } from "test/factories/make-auth.ts";
 import request from "supertest";
@@ -105,12 +105,13 @@ describe('Download Course Historic (e2e)', () => {
 
   afterAll(async () => await app.close())
 
-  it ('POST /courses/:courseId/download-historic', async () => {
+  it ('POST /historics/download', async () => {
     const { token } = await makeAuth()
 
     const response = await request(app.server)
-      .post(`/courses/${course.id}/download-historic`)
+      .post(`/historics/download`)
       .send({
+        courseId: course.id,
         studentId: student.id
       })
       .set('Authorization', `Bearer ${token}`)

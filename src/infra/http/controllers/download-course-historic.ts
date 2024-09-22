@@ -13,20 +13,16 @@ export async function downloadCourseHistoric(
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/courses/:courseId/download-historic', {
+    .post('/historics/download', {
       onRequest: [verifyJWT],
       schema: {
-        params: z.object({
-          courseId: z.string().uuid()
-        }),
-
         body: z.object({
+          courseId: z.string().uuid(),
           studentId: z.string().uuid()
         })
       }
   }, async (req, res) => {
-    const { courseId } = req.params
-    const { studentId } = req.body
+    const { courseId, studentId } = req.body
 
     const useCase = makeDownloadHistoricUseCase()
     const result = await useCase.execute({
