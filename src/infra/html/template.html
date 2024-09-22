@@ -53,7 +53,7 @@
             <li class="border-2 border-black font-bold text-sm">CONCEITO: {{ dynamic_concept }}</li>
             <li class="border-2 border-black font-bold text-sm">INÍCIO DO CURSO: {{ dynamic_course_startAt }}</li>
             <li class="border-2 border-black font-bold text-sm">TÉRMINO DO CURSO: {{ dynamic_course_endsAt }}</li>
-            <li class="border-2 border-black font-bold text-sm">CLASSIFICAÇÃO: 1°</li>
+            <li class="border-2 border-black font-bold text-sm">CLASSIFICAÇÃO: {{ dynamic_classification }}°</li>
           </ul>
         </section>
 
@@ -93,8 +93,8 @@
           Belém-PA, {{ dynamic_current_date }}
         </div>
 
-        <div id="qr-code-render" width="600px">
-            <img id="qr-code" src=""/>
+        <div class="flex items-center justify-center w-full">
+          {{ dynamic_qr_code }}
         </div>
         <button onclick="downloadHistoric()" class="print:hidden">Download</button>
     </div>
