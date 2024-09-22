@@ -38,7 +38,8 @@ export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesR
       courseId: courseDiscipline.courseId,
       disciplineId: discipline.id,
       disciplineName: discipline.name.value,
-      module: courseDiscipline.module
+      module: courseDiscipline.module,
+      hours: courseDiscipline.hours,
     })
   }
 
@@ -53,7 +54,8 @@ export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesR
           courseId: courseDiscipline.courseId,
           disciplineId: discipline.id,
           disciplineName: discipline.name.value,
-          module: courseDiscipline.module
+          module: courseDiscipline.module,
+          hours: courseDiscipline.hours
         })
       })
       .filter(courseWithDiscipline => {

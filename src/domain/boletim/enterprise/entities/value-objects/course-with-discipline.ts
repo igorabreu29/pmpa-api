@@ -5,6 +5,7 @@ interface CourseWithDisciplineProps {
   courseId: UniqueEntityId
   disciplineId: UniqueEntityId
   disciplineName: string
+  hours: number
   module: number
 }
 
@@ -23,6 +24,10 @@ export class CourseWithDiscipline extends ValueObject<CourseWithDisciplineProps>
 
   get module() {
     return this.props.module
+  }
+
+  get hours() {
+    return this.props.hours
   }
 
   static create(props: CourseWithDisciplineProps) {
