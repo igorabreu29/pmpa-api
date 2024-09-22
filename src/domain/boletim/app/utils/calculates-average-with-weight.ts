@@ -1,7 +1,7 @@
 interface CalculatesAverageWithWeightProps {  
   assessmentsQuantityPerPeriod: number
   assessmentAverage: number
-  behaviorAveragePerPeriod: number
+  behaviorAveragePerPeriod: number | null
   weight: number
 }
 
