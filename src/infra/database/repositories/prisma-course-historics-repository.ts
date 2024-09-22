@@ -4,6 +4,17 @@ import { PrismaCourseHistoricsMapper } from "../mappers/prisma-course-historics-
 import { prisma } from "../lib/prisma.ts";
 
 export class PrismaCourseHistoricsRepository implements CourseHistoricRepository {
+  async findById(id: string): Promise<CourseHistoric | null> {
+    const courseHistoric = await prisma.courseHistoric.findFirst({
+      where: {
+        id
+      }
+    })
+    if (!courseHistoric) return null
+
+    return PrismaCourseHistoricsMapper.toDomain(courseHistoric)
+  }
+
   async findByCourseId(courseId: string): Promise<CourseHistoric | null> {
     const courseHistoric = await prisma.courseHistoric.findFirst({
       where: {
