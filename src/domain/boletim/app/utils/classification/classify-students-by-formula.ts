@@ -149,20 +149,30 @@ export const classifyStudentsBySUBFormula = (studentsWithAverage: StudentClassfi
     const geralAverageStudentB = studentB.studentAverage.averageInform.geralAverage
 
     const isSecondSeasonInFirstModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module1']
-     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved')
+     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
     const isSecondSeasonInFirstModuleStudentB = studentA.studentAverage.assessmentsPerPeriod['module1']
-     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved')
+     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
 
     const isSecondSeasonInSecondModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module2']
-     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved')
+     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
 
     const isSecondSeasonInSecondModuleStudentB = studentA.studentAverage.assessmentsPerPeriod['module2']
-     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved')
+     ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
 
     const studentABirthday = Number(studentA.studentBirthday?.getTime())
     const studentBBirthday = Number(studentB.studentBirthday?.getTime())
 
-    if (!(isSecondSeasonInFirstModuleStudentB || isSecondSeasonInSecondModuleStudentB) && !(isSecondSeasonInFirstModuleStudentA || isSecondSeasonInSecondModuleStudentA)) {
+    if (isSecondSeasonInFirstModuleStudentB || isSecondSeasonInSecondModuleStudentB) {
+      if (geralAverageStudentA !== geralAverageStudentB) {
+        return Number(geralAverageStudentA) - Number(geralAverageStudentB)
+      }
+
+      if (studentABirthday !== studentBBirthday) {
+        return studentABirthday - studentBBirthday
+      }
+    }
+
+    if (isSecondSeasonInFirstModuleStudentA || isSecondSeasonInSecondModuleStudentA) {
       if (geralAverageStudentA !== geralAverageStudentB) {
         return Number(geralAverageStudentB) - Number(geralAverageStudentA)
       }
@@ -172,14 +182,12 @@ export const classifyStudentsBySUBFormula = (studentsWithAverage: StudentClassfi
       }
     }
 
-    if (!(isSecondSeasonInFirstModuleStudentB || isSecondSeasonInSecondModuleStudentB) && !(isSecondSeasonInFirstModuleStudentA || isSecondSeasonInSecondModuleStudentA)) {
-      if (geralAverageStudentA !== geralAverageStudentB) {
-        return Number(geralAverageStudentB) - Number(geralAverageStudentA)
-      }
+    if (geralAverageStudentA !== geralAverageStudentB) {
+      return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+    }
 
-      if (studentABirthday !== studentBBirthday) {
-        return studentABirthday - studentBBirthday
-      }
+    if (studentABirthday !== studentBBirthday) {
+      return studentABirthday - studentBBirthday
     }
 
     return 0
