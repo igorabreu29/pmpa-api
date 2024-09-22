@@ -101,6 +101,7 @@ import { createClassificationByManagerSheet } from "./http/controllers/create-cl
 import { createAverageClassificationCoursePolesSheet } from "./http/controllers/create-average-classification-course-poles-sheet.ts";
 import { deleteCourseDiscipline } from "./http/controllers/delete-course-discipline.ts";
 import { deleteCoursePole } from "./http/controllers/delete-course-pole.ts";
+import { validateCourseHistoric } from "./http/controllers/validate-course-historic.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -176,6 +177,7 @@ app.register(deleteCourseDiscipline)
 app.register(createCourseHistoric)
 app.register(deleteCourseHistoric)
 app.register(downloadCourseHistoric)
+app.register(validateCourseHistoric)
 app.register(getStudentProfile)
 app.register(getManagerProfile)
 app.register(getAdministratorProfile)
