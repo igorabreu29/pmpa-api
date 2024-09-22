@@ -2,37 +2,13 @@ import { CourseHistoric } from "../../enterprise/entities/course-historic.ts"
 import { Course } from "../../enterprise/entities/course.ts"
 import { Student } from "../../enterprise/entities/student.ts"
 import { CourseWithDiscipline } from "../../enterprise/entities/value-objects/course-with-discipline.ts"
-import { GenerateBehaviorStatus } from "../utils/get-behavior-average-status.ts"
-import { GetGeralStudentAverageStatusResponse } from "../utils/get-geral-student-average-status.ts"
-import { AssessmentWithModule } from "../utils/verify-formula.ts"
+import type { StudentClassficationByModule, StudentClassficationByPeriod } from "../types/generate-students-classification.js"
 
 interface Row {
   course: Course
   student: Student
-  grades: {
-    averageInform: {
-      geralAverage: number | string;
-      behaviorAverageStatus: GenerateBehaviorStatus[]
-      behaviorsCount: number
-      studentAverageStatus: GetGeralStudentAverageStatusResponse
-    }
-
-    assessmentsPerPeriod: {
-      [x: string]: AssessmentWithModule[]
-    },
-    assessments: AssessmentWithModule[]
-    assessmentsCount: number
-  } | {
-    averageInform: {
-      geralAverage: number | string;
-      behaviorAverageStatus: GenerateBehaviorStatus[]
-      behaviorsCount: number
-      studentAverageStatus: GetGeralStudentAverageStatusResponse
-    }
-
-    assessments: (AssessmentWithModule | null)[],
-    assessmentsCount: number
-  }
+  studentClassification: number
+  grades: StudentClassficationByModule | StudentClassficationByPeriod
   courseWithDisciplines: CourseWithDiscipline[]
   courseHistoric: CourseHistoric
 }
