@@ -1,11 +1,11 @@
 import { Hasher } from "@/domain/boletim/app/cryptography/hasher.ts";
 
 export class FakeHasher implements Hasher {
-  hash = async (password: string): Promise<string> => {
-    return password.concat('-hasher')
+  hash = async (plainText: string): Promise<string> => {
+    return plainText.concat('-hasher')
   }
   
-  compare = async (password: string, passwordHash: string): Promise<boolean> => {
-    return password.concat('-hasher') === passwordHash
+  compare = async (plainText: string, hash: string): Promise<boolean> => {
+    return plainText.concat('-hasher') === hash
   }
 }
