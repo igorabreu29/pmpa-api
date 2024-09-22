@@ -7,17 +7,31 @@ import { ConflictError } from './errors/conflict-error.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
 import { ResourceAlreadyExistError } from '@/core/errors/use-case/resource-already-exist-error.ts'
 import { makeCourseHistoric } from 'test/factories/make-course-historic.ts'
+import { InMemoryCoursesDisciplinesRepository } from 'test/repositories/in-memory-courses-disciplines-repository.ts'
+import type { DisciplinesRepository } from '../repositories/disciplines-repository.ts'
+import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
+import { makeDiscipline } from 'test/factories/make-discipline.ts'
+import { makeCourseDiscipline } from 'test/factories/make-course-discipline.ts'
+
+let disciplinesRepository: InMemoryDisciplinesRepository
 
 let coursesRepository: InMemoryCoursesRepository
+let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let courseHistoricRepository: InMemoryCourseHistoricRepository
 let sut: CreateCourseHistoricUseCase
 
 describe('Create Course Historic Use Case', () => {
   beforeEach(() => {
+    disciplinesRepository = new InMemoryDisciplinesRepository()
+
     coursesRepository = new InMemoryCoursesRepository()
+    courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
+      disciplinesRepository
+    )
     courseHistoricRepository = new InMemoryCourseHistoricRepository()
     sut = new CreateCourseHistoricUseCase(
       coursesRepository,
+      courseDisciplinesRepository,
       courseHistoricRepository
     )
   })
@@ -73,15 +87,24 @@ describe('Create Course Historic Use Case', () => {
     const course = makeCourse()
     coursesRepository.create(course)
 
+    const discipline = makeDiscipline()
+    disciplinesRepository.create(discipline)
+
+    const courseDiscipline = makeCourseDiscipline({ courseId: course.id, disciplineId: discipline.id, hours: 10 })
+    courseDisciplinesRepository.create(courseDiscipline)
+
     const result = await sut.execute({
       courseId: course.id.toValue(), 
       className: 'CFP - 2022',
       startDate: new Date(2024, 2, 12),
       finishDate: new Date(2025, 5, 12),
+      speechs: 10,
+      internships: 10
     })
 
     expect(result.isRight()).toBe(true)
     expect(courseHistoricRepository.items).toHaveLength(1)
     expect(courseHistoricRepository.items[0].id).toBeTruthy()
+    expect(courseHistoricRepository.items[0].totalHours).toEqual(30)
   }) 
 })
