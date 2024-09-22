@@ -23,6 +23,15 @@ interface FormulaProps {
   } 
 }
 
+interface FormulaSubProps {
+  assessments: (AssessmentWithModule | null)[],
+  behaviorAverage?: {
+    behaviorAverageStatus: GenerateBehaviorStatus[]
+    behaviorsCount: number
+  } 
+  disciplineModule: number
+}
+
 interface BehaviorAveragePerPeriod {
   behaviorAverageStatus: GenerateBehaviorStatus[]
   behaviorsCount: number
@@ -141,6 +150,152 @@ export const formulas = {
     return {
       averageInform: {
         geralAverage: geralAverageWithBehavior ? Number(geralAverageWithBehavior.toFixed(3)) : Number(generalAverage.toFixed(3)), 
+        behaviorAverageStatus: behaviorAverage ? behaviorAverage.behaviorAverageStatus : [],
+        behaviorsCount: behaviorAverage ? behaviorAverage.behaviorsCount : 0,
+        studentAverageStatus
+      },
+      
+      assessmentsPerPeriod: {
+        ...assessmentsPerPeriod
+      },
+
+      assessments,
+      assessmentsCount,
+    }
+  },
+
+  sub({ assessments, behaviorAverage, disciplineModule }: FormulaSubProps) {
+    const assessmentsPerPeriod: AssessmentsPerPeriod = {}
+
+    for(const assessment of assessments) {
+      if (!assessment) continue
+
+      if (!assessmentsPerPeriod[`module${assessment.module}`]) {
+        assessmentsPerPeriod[`module${assessment.module}`] = []
+      }
+
+      assessmentsPerPeriod[`module${assessment.module}`].push({
+        ...assessment
+      })
+    }
+
+    let average: number = 0
+    
+    if (behaviorAverage) {
+      const { behaviorAverageStatus } = behaviorAverage as BehaviorAveragePerPeriod
+
+      if (disciplineModule === 1) {
+        const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module1`]?.reduce((previousAverage, currentAverage) => {
+          return Number(previousAverage) + Number(currentAverage.average)
+        }, 0)
+
+        const periodAverageWithWeight = calculatesAverageWithWeight({ 
+          assessmentAverage: assessmentsAveragePerPeriod,
+          assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module1`]?.length, 
+          behaviorAveragePerPeriod: behaviorAverageStatus[0]?.behaviorAverage, 
+          weight: 1 
+        })
+
+        average = periodAverageWithWeight
+      }
+
+      if (disciplineModule === 2) {
+        const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module2`]?.reduce((previousAverage, currentAverage) => {
+          return Number(previousAverage) + Number(currentAverage.average)
+        }, 0)
+
+        const periodAverageWithWeight = calculatesAverageWithWeight({ 
+          assessmentAverage: assessmentsAveragePerPeriod,
+          assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module2`]?.length, 
+          behaviorAveragePerPeriod: behaviorAverageStatus[1]?.behaviorAverage, 
+          weight: 1 
+        })
+
+        average = periodAverageWithWeight
+      }
+
+      if (disciplineModule === 3) {
+        const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module3`]?.reduce((previousAverage, currentAverage) => {
+          return Number(previousAverage) + Number(currentAverage.average)
+        }, 0)
+
+        const periodAverageWithWeight = calculatesAverageWithWeight({ 
+          assessmentAverage: assessmentsAveragePerPeriod,
+          assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module3`]?.length, 
+          behaviorAveragePerPeriod: behaviorAverageStatus[2]?.behaviorAverage, 
+          weight: 2
+        })
+
+        average = periodAverageWithWeight / 2
+      }
+    }
+
+    if (!behaviorAverage) {
+      if (disciplineModule === 1) {
+        const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module1`]?.reduce((previousAverage, currentAverage) => {
+          return Number(previousAverage) + Number(currentAverage.average)
+        }, 0)
+
+        const periodAverageWithWeight = calculatesAverageWithWeight({ 
+          assessmentAverage: assessmentsAveragePerPeriod,
+          assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module1`]?.length, 
+          behaviorAveragePerPeriod: null, 
+          weight: 1 
+        })
+
+        average = periodAverageWithWeight
+      }
+
+      if (disciplineModule === 2) {
+        const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module2`]?.reduce((previousAverage, currentAverage) => {
+          return Number(previousAverage) + Number(currentAverage.average)
+        }, 0)
+
+        const periodAverageWithWeight = calculatesAverageWithWeight({ 
+          assessmentAverage: assessmentsAveragePerPeriod,
+          assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module2`]?.length, 
+          behaviorAveragePerPeriod: null, 
+          weight: 1 
+        })
+
+        average = periodAverageWithWeight
+      }
+
+      if (disciplineModule === 3) {
+        const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module3`]?.reduce((previousAverage, currentAverage) => {
+          return Number(previousAverage) + Number(currentAverage.average)
+        }, 0)
+
+        const periodAverageWithWeight = calculatesAverageWithWeight({ 
+          assessmentAverage: assessmentsAveragePerPeriod,
+          assessmentsQuantityPerPeriod: assessmentsPerPeriod[`module3`]?.length, 
+          behaviorAveragePerPeriod: null, 
+          weight: 2
+        })
+
+        average = periodAverageWithWeight / 2
+      }
+    }
+
+    assessments = assessments.filter(assessment => assessment?.module === disciplineModule)
+
+    const isStudentRecovering = assessments.some((item) => item?.isRecovering)    
+    const studentAverageStatus = getGeralStudentAverageStatus({ average, isRecovering: isStudentRecovering })
+
+    const isStudentSecondSeason = assessments.some(assessment => assessment?.status === 'second season')
+
+    studentAverageStatus.status = isStudentSecondSeason ? 'second season' : studentAverageStatus.status
+
+    const assessmentTotalVF = assessments.filter(assessment => assessment?.vf !== null).length
+    const assessmentTotalAVI = assessments.filter(assessment => assessment?.avi !== null).length
+    const assessmentTotalAVII = assessments.filter(assessment => assessment?.avii !== null).length
+    
+    const assessmentsCount = 
+      assessmentTotalVF + assessmentTotalAVI + assessmentTotalAVII
+
+    return {
+      averageInform: {
+        geralAverage: Number(average.toFixed(3)), 
         behaviorAverageStatus: behaviorAverage ? behaviorAverage.behaviorAverageStatus : [],
         behaviorsCount: behaviorAverage ? behaviorAverage.behaviorsCount : 0,
         studentAverageStatus
