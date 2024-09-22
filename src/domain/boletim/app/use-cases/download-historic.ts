@@ -6,13 +6,15 @@ import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-th
 import { CoursesDisciplinesRepository } from "../repositories/courses-disciplines-repository.ts"
 import { PDF } from "../files/pdf.ts"
 import { CourseHistoricRepository } from "../repositories/course-historic-repository.ts"
+import type { GetCourseClassificationUseCase } from "./get-course-classification.ts"
+import type { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error.ts"
 
 interface DownloadHistoricUseCaseRequest {
   courseId: string
   studentId: string
 }
 
-type DownloadHistoricUseCaseResponse = Either<ResourceNotFoundError, {
+type DownloadHistoricUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError, {
   filename: string
 }>
 
@@ -22,7 +24,7 @@ export class DownloadHistoricUseCase {
     private courseHistoricRepository: CourseHistoricRepository,
     private studentsRepository: StudentsRepository,
     private courseDisciplinesRepository: CoursesDisciplinesRepository,
-    private getStudentAverage: GetStudentAverageInTheCourseUseCase,
+    private getCourseClassification: GetCourseClassificationUseCase,
     private pdf: PDF
   ) {}
 
@@ -39,14 +41,19 @@ export class DownloadHistoricUseCase {
     const courseHistoric = await this.courseHistoricRepository.findByCourseId(course.id.toValue())
     if (!courseHistoric) return left(new ResourceNotFoundError('Couse historic not found.'))
 
-    const result = await this.getStudentAverage.execute({
+    const result = await this.getCourseClassification.execute({
       courseId: course.id.toValue(),
-      studentId: student.id.toValue(),
-      isPeriod: course.isPeriod
     })
 
     if (result.isLeft()) return left(result.value)
-    const { grades } = result.value
+    const { studentsWithAverage } = result.value
+
+    const studentData = studentsWithAverage.find(item => item.studentName === student.username.value)
+    const studentClassification = studentsWithAverage.findIndex(item => {
+      return item.studentName === student.username.value
+    })
+
+    if (!studentData) return left(new ResourceNotFoundError('Student not found.'))
 
     const courseWithDisciplines = await this.courseDisciplinesRepository.findManyByCourseIdWithDiscipliine({
       courseId: course.id.toValue()
@@ -56,7 +63,8 @@ export class DownloadHistoricUseCase {
       rows: {
         course,
         student,
-        grades,
+        studentClassification: studentClassification + 1,
+        grades: studentData,
         courseWithDisciplines,
         courseHistoric
       }

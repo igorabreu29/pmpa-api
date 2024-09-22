@@ -18,19 +18,22 @@ import { makeStudent } from "test/factories/make-student.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { InMemoryCourseHistoricRepository } from "test/repositories/in-memory-course-historic-repository.ts";
 import { makeCourseHistoric } from "test/factories/make-course-historic.ts";
+import type { GetCourseClassificationUseCase } from "./get-course-classification.ts";
+import { makeGetCourseClassificationUseCase } from "test/factories/make-get-course-classification-use-case.ts";
 
-let studentCoursesResitory: InMemoryStudentsCoursesRepository
-let studentPolesRepository: InMemoryStudentsPolesRepository
-let polesRepository: InMemoryPolesRepository
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
+let getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
+let studentCoursesRepository: InMemoryStudentsCoursesRepository
+let studentPolesRepository: InMemoryStudentsPolesRepository
+let polesRepository: InMemoryPolesRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
 
 let coursesRepository: InMemoryCoursesRepository
 let courseHistoricRepository: InMemoryCourseHistoricRepository
 let studentsRepository: InMemoryStudentsRepository
 let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
-let getStudentAverage: GetStudentAverageInTheCourseUseCase
+let getCourseClassification: GetCourseClassificationUseCase
 let fakePDF: FakePDF
 
 let sut: DownloadHistoricUseCase
@@ -40,36 +43,42 @@ describe('Download Historic Use Case', () => {
     polesRepository = new InMemoryPolesRepository()
     studentPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
-      studentCoursesResitory,
+      studentCoursesRepository,
       coursesRepository,
       polesRepository
     )
-    studentCoursesResitory = new InMemoryStudentsCoursesRepository(
+    studentsRepository = new InMemoryStudentsRepository(
+      studentCoursesRepository,
+      coursesRepository,
+      studentPolesRepository,
+      polesRepository
+    )
+    studentCoursesRepository = new InMemoryStudentsCoursesRepository(
       studentsRepository,
       coursesRepository,
       studentPolesRepository,
       polesRepository
     )
+    disciplinesRepository = new InMemoryDisciplinesRepository()
     assessmentsRepository = new InMemoryAssessmentsRepository()
     behaviorsRepository = new InMemoryBehaviorsRepository()
-    disciplinesRepository = new InMemoryDisciplinesRepository()
 
     coursesRepository = new InMemoryCoursesRepository()
     courseHistoricRepository = new InMemoryCourseHistoricRepository()
-    studentsRepository = new InMemoryStudentsRepository(
-      studentCoursesResitory,
-      coursesRepository,
-      studentPolesRepository,
-      polesRepository
-    )
+
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
       disciplinesRepository
     )
-    getStudentAverage = makeGetStudentAverageInTheCourseUseCase({
-      disciplinesRepository,
-      courseDisciplinesRepository,
+    getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase({
       assessmentsRepository,
-      behaviorsRepository
+      behaviorsRepository,
+      courseDisciplinesRepository,
+      disciplinesRepository
+    })
+    getCourseClassification = makeGetCourseClassificationUseCase({
+      coursesRepository,
+      getStudentAverageInTheCourseUseCase,
+      studentCoursesRepository,
     })
     fakePDF = new FakePDF()
 
@@ -78,7 +87,7 @@ describe('Download Historic Use Case', () => {
       courseHistoricRepository,
       studentsRepository,
       courseDisciplinesRepository,
-      getStudentAverage,
+      getCourseClassification,
       fakePDF
     )
   })
