@@ -1,7 +1,9 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts'
 import { ResourceNotFoundError } from '@/core/errors/use-case/resource-not-found-error.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
-import { makeGetStudentAverageInTheCourseUseCase } from 'test/factories/make-get-student-average-in-the-course-use-case.ts'
+import { makeManagerCourse } from 'test/factories/make-manager-course.ts'
+import { makeManagerPole } from 'test/factories/make-manager-pole.ts'
+import { makeManager } from 'test/factories/make-manager.ts'
 import { makePole } from 'test/factories/make-pole.ts'
 import { makeStudentCourse } from 'test/factories/make-student-course.ts'
 import { makeStudentPole } from 'test/factories/make-student-pole.ts'
@@ -10,21 +12,30 @@ import { InMemoryAssessmentsRepository } from "test/repositories/in-memory-asses
 import { InMemoryBehaviorsRepository } from "test/repositories/in-memory-behaviors-repository.ts"
 import { InMemoryCoursesDisciplinesRepository } from 'test/repositories/in-memory-courses-disciplines-repository.ts'
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
+import { InMemoryManagersCoursesRepository } from 'test/repositories/in-memory-managers-courses-repository.ts'
+import { InMemoryManagersPolesRepository } from 'test/repositories/in-memory-managers-poles-repository.ts'
+import { InMemoryManagersRepository } from 'test/repositories/in-memory-managers-repository.ts'
 import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
 import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-students-courses-repository.ts'
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
 import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository.ts'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { GetCourseClassificationUseCase } from './get-course-classification.ts'
+import { GetCourseClassificationByPoleUseCase } from './get-course-classification-by-pole.ts'
 import { GetStudentAverageInTheCourseUseCase } from './get-student-average-in-the-course.ts'
+import { makeGetStudentAverageInTheCourseUseCase } from 'test/factories/make-get-student-average-in-the-course-use-case.ts'
 import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
-import { GetCourseSubClassificationUseCase } from './get-course-sub-classification.ts'
+import { GetCourseSubClassificationByPoleUseCase } from './get-course-sub-classification-by-pole.ts'
+
+let managersRepository: InMemoryManagersRepository
+let managersCoursesRepository: InMemoryManagersCoursesRepository
+let managersPolesRepository: InMemoryManagersPolesRepository
 
 let studentsRepository: InMemoryStudentsRepository
-let coursesRepository: InMemoryCoursesRepository
-let studentsPolesRepository: InMemoryStudentsPolesRepository
-let polesRepository: InMemoryPolesRepository
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
+let studentsPolesRepository: InMemoryStudentsPolesRepository
+
+let coursesRepository: InMemoryCoursesRepository
+let polesRepository: InMemoryPolesRepository
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
@@ -32,10 +43,17 @@ let disciplinesRepository: InMemoryDisciplinesRepository
 let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
 
-let sut: GetCourseSubClassificationUseCase
+let sut: GetCourseSubClassificationByPoleUseCase
 
-describe('Get Course Sub Classification Use Case', () => {
+describe('Get Course Sub Classfication By Pole Use Case', () => {
   beforeEach(() => {
+    studentsCoursesRepository = new InMemoryStudentsCoursesRepository(
+      studentsRepository,
+      coursesRepository,
+      studentsPolesRepository,
+      polesRepository
+    )
+
     studentsRepository = new InMemoryStudentsRepository(
       studentsCoursesRepository,
       coursesRepository,
@@ -43,17 +61,26 @@ describe('Get Course Sub Classification Use Case', () => {
       polesRepository
     )
     coursesRepository = new InMemoryCoursesRepository ()
+    polesRepository = new InMemoryPolesRepository()
+
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
       coursesRepository,
       polesRepository
     )
-    polesRepository = new InMemoryPolesRepository()
-    studentsCoursesRepository = new InMemoryStudentsCoursesRepository(
-      studentsRepository,
+    
+    managersRepository = new InMemoryManagersRepository(
+      managersCoursesRepository,
       coursesRepository,
-      studentsPolesRepository,
+      managersPolesRepository,
+      polesRepository
+    )
+    managersPolesRepository = new InMemoryManagersPolesRepository()
+    managersCoursesRepository = new InMemoryManagersCoursesRepository(
+      managersRepository,
+      coursesRepository,
+      managersPolesRepository,
       polesRepository
     )
 
@@ -70,9 +97,11 @@ describe('Get Course Sub Classification Use Case', () => {
       courseDisciplinesRepository
     })
 
-    sut = new GetCourseSubClassificationUseCase(
+    sut = new GetCourseSubClassificationByPoleUseCase (
       coursesRepository,
-      studentsCoursesRepository,
+      polesRepository,
+      managersCoursesRepository,
+      studentsPolesRepository,
       getStudentAverageInTheCourseUseCase
     )
   })
@@ -88,7 +117,19 @@ describe('Get Course Sub Classification Use Case', () => {
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it ('should be able to get course sub classification with disciplineModule 1 or 2', async () => {
+  it ('should not be able to get classification if pole does not exist', async () => {
+    const result = await sut.execute({
+      courseId: '',
+      page: 1,
+      managerId: '',
+      disciplineModule: 1
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+  })
+  
+  it ('should be able to get course sub classification by pole with disciplineModule 1 or 2', async () => {
     const course = makeCourse({ formula: 'CAS' }, new UniqueEntityId('course-1'))
     coursesRepository.create(course)
 
@@ -114,7 +155,8 @@ describe('Get Course Sub Classification Use Case', () => {
     const result = await sut.execute({
       courseId: 'course-1',
       page: 1,
-      disciplineModule: 1
+      disciplineModule: 1,
+      poleId: pole1.id.toValue()
     })
 
     expect(result.isRight()).toBe(true)
@@ -135,32 +177,16 @@ describe('Get Course Sub Classification Use Case', () => {
           },
           studentName: student1.username.value
         },
-        {
-          studentAverage: {
-            averageInform: {
-              geralAverage: 6.454,
-            },
-
-            assessments: [
-              {
-                module: 1,
-                average: 7.2
-              }
-            ]
-          },
-          studentName: student2.username.value
-        }
       ]
     })
   })
-
-  it ('should be able to get course sub classification with module 3', async () => {
-    const course = makeCourse({ formula: 'CAS' }, new UniqueEntityId('course-1'))
+  
+  it ('should be able to get course sub classification by manager with module 3', async () => {
+    const course = makeCourse({ isPeriod: true }, new UniqueEntityId('course-1'))
     coursesRepository.create(course)
 
-    const pole1 = makePole()
-    const pole2 = makePole()
-    polesRepository.createMany([pole1, pole2])
+    const pole1 = makePole({}, new UniqueEntityId('pole-1'))
+    polesRepository.createMany([pole1])
 
     const student1 = makeStudent({}, new UniqueEntityId('student-1'))
     const student2 = makeStudent({}, new UniqueEntityId('student-2'))
@@ -173,14 +199,24 @@ describe('Get Course Sub Classification Use Case', () => {
     studentsCoursesRepository.create(studentCourse2)
 
     const studentPole1 = makeStudentPole({ studentId: studentCourse1.id, poleId: pole1.id })
-    const studentPole2 = makeStudentPole({ studentId: studentCourse2.id, poleId: pole2.id })
+    const studentPole2 = makeStudentPole({ studentId: studentCourse2.id, poleId: pole1.id })
     studentsPolesRepository.create(studentPole1)
     studentsPolesRepository.create(studentPole2)
+
+    const manager = makeManager()
+    managersRepository.create(manager)
+
+    const managerCourse = makeManagerCourse({ managerId: manager.id, courseId: course.id })
+    managersCoursesRepository.create(managerCourse)
+
+    const managerPole = makeManagerPole({ managerId: managerCourse.id, poleId: pole1.id })
+    managersPolesRepository.create(managerPole)
 
     const result = await sut.execute({
       courseId: 'course-1',
       page: 1,
-      disciplineModule: 3
+      disciplineModule: 3,
+      managerId: manager.id.toValue()
     })
 
     expect(result.isRight()).toBe(true)

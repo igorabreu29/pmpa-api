@@ -9,7 +9,7 @@ import { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error
 
 interface GetCourseSubClassificationUseCaseRequest {
   courseId: string
-  module: number
+  disciplineModule: number
   page?: number
   hasBehavior?: boolean
 }
@@ -27,7 +27,7 @@ export class GetCourseSubClassificationUseCase {
     private getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
   ) {}
 
-  async execute({ courseId, module, page, hasBehavior = true }: GetCourseSubClassificationUseCaseRequest): Promise<GetCourseSubClassificationUseCaseResponse> {
+  async execute({ courseId, disciplineModule, page, hasBehavior = true }: GetCourseSubClassificationUseCaseRequest): Promise<GetCourseSubClassificationUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Course not found.'))
 
@@ -37,9 +37,9 @@ export class GetCourseSubClassificationUseCase {
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({
         studentId: student.studentId.toValue(),
         courseId,
-        isPeriod: module !== 3 ? false : true,
+        isPeriod: course.isPeriod,
         hasBehavior,
-        module: module !== 3 ? module : undefined
+        disciplineModule
       })
 
       if (studentAverage.isLeft()) return studentAverage.value
@@ -56,11 +56,9 @@ export class GetCourseSubClassificationUseCase {
     const error = studentsWithAverageOrError.find(item => item instanceof ResourceNotFoundError)
     if (error) return left(error)
 
-    if (module === 3) {
+    if (disciplineModule === 3) {
       const classifiedBySUBFormula = classificationByCourseFormula['SUB'](studentsWithAverageOrError as StudentClassficationByPeriod[])
-      const classified = classifiedBySUBFormula.filter(item => item.studentAverage.assessments.some(assessment => assessment.module === module))
-
-      return right({ studentsWithAverage: classified, pages, totalItems })
+      return right({ studentsWithAverage: classifiedBySUBFormula, pages, totalItems })
     }
 
     const classifiedByCFPFormula = classificationByCourseFormula['CFP'](studentsWithAverageOrError as StudentClassficationByModule[])
