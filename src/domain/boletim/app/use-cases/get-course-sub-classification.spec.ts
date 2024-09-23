@@ -155,7 +155,7 @@ describe('Get Course Sub Classification Use Case', () => {
   })
 
   it ('should be able to get course sub classification with module 3', async () => {
-    const course = makeCourse({ formula: 'CAS' }, new UniqueEntityId('course-1'))
+    const course = makeCourse({ formula: 'CFO', isPeriod: true }, new UniqueEntityId('course-1'))
     coursesRepository.create(course)
 
     const pole1 = makePole()
