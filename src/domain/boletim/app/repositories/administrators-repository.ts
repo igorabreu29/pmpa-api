@@ -9,13 +9,14 @@ export interface FindManyProps {
   page: number
   cpf?: string
   username?: string
+  isEnabled?: boolean
 }
 
 export abstract class AdministratorsRepository {
   abstract findById(id: string): Promise<Administrator | null>
   abstract findByCPF(cpf: string): Promise<Administrator | null>
   abstract findByEmail(email: string): Promise<Administrator | null>
-  abstract findMany({ page, cpf, username }: FindManyProps): Promise<{
+  abstract findMany({ page, cpf, username, isEnabled }: FindManyProps): Promise<{
     administrators: Administrator[]
     pages: number
     totalItems: number
