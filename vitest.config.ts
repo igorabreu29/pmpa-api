@@ -9,5 +9,10 @@ export default defineConfig({
       module: { type: 'es6' }
     })
   ],
-  test: {}
+  test: {
+    coverage: {
+      enabled: false
+    },
+    isolate: false,
+  },
 })
