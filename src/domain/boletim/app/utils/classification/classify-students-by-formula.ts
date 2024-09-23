@@ -150,13 +150,13 @@ export const classifyStudentsBySUBFormula = (studentsWithAverage: StudentClassfi
 
     const isSecondSeasonInFirstModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module1']
      ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
-    const isSecondSeasonInFirstModuleStudentB = studentA.studentAverage.assessmentsPerPeriod['module1']
+    const isSecondSeasonInFirstModuleStudentB = studentB.studentAverage.assessmentsPerPeriod['module1']
      ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
 
     const isSecondSeasonInSecondModuleStudentA = studentA.studentAverage.assessmentsPerPeriod['module2']
      ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
 
-    const isSecondSeasonInSecondModuleStudentB = studentA.studentAverage.assessmentsPerPeriod['module2']
+    const isSecondSeasonInSecondModuleStudentB = studentB.studentAverage.assessmentsPerPeriod['module2']
      ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
 
     const studentABirthday = Number(studentA.studentBirthday?.getTime())
@@ -174,11 +174,11 @@ export const classifyStudentsBySUBFormula = (studentsWithAverage: StudentClassfi
 
     if (isSecondSeasonInFirstModuleStudentA || isSecondSeasonInSecondModuleStudentA) {
       if (geralAverageStudentA !== geralAverageStudentB) {
-        return Number(geralAverageStudentB) - Number(geralAverageStudentA)
+        return Number(geralAverageStudentA) - Number(geralAverageStudentB)
       }
 
       if (studentABirthday !== studentBBirthday) {
-        return studentABirthday - studentBBirthday
+        return studentBBirthday - studentABirthday
       }
     }
 
