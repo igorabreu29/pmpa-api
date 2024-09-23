@@ -26,7 +26,7 @@ export async function getClassification(
 
         querystring: z.object({
           page: z.string().optional(),
-          hasBehavior: z.boolean().default(true)
+          hasBehavior: z.string().transform((item) => item === 'true'),
         })
       }
     }, async (req, res) => {
