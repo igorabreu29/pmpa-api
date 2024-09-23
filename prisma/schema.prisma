@@ -20,6 +20,8 @@ model User {
   cpf      String @unique
   password String
 
+  isActive Boolean @default(true)
+
   username         String
   avatarUrl        String?
   isLoginConfirmed DateTime?
