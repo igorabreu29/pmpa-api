@@ -20,6 +20,11 @@ import { InMemoryCourseHistoricRepository } from "test/repositories/in-memory-co
 import { makeCourseHistoric } from "test/factories/make-course-historic.ts";
 import type { GetCourseClassificationUseCase } from "./get-course-classification.ts";
 import { makeGetCourseClassificationUseCase } from "test/factories/make-get-course-classification-use-case.ts";
+import { makeDiscipline } from "test/factories/make-discipline.ts";
+import { makeCourseDiscipline } from "test/factories/make-course-discipline.ts";
+import { makeStudentCourse } from "test/factories/make-student-course.ts";
+import { makeStudentPole } from "test/factories/make-student-pole.ts";
+import { makePole } from "test/factories/make-pole.ts";
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
@@ -40,6 +45,7 @@ let sut: DownloadHistoricUseCase
 
 describe('Download Historic Use Case', () => {
   beforeEach(() => {
+    coursesRepository = new InMemoryCoursesRepository()
     polesRepository = new InMemoryPolesRepository()
     studentPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
@@ -63,7 +69,6 @@ describe('Download Historic Use Case', () => {
     assessmentsRepository = new InMemoryAssessmentsRepository()
     behaviorsRepository = new InMemoryBehaviorsRepository()
 
-    coursesRepository = new InMemoryCoursesRepository()
     courseHistoricRepository = new InMemoryCourseHistoricRepository()
 
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
@@ -135,8 +140,17 @@ describe('Download Historic Use Case', () => {
     const course = makeCourse({}, new UniqueEntityId('course-1'))
     coursesRepository.create(course)
 
+    const pole = makePole()
+    polesRepository.create(pole)
+
     const student = makeStudent({}, new UniqueEntityId('student-1'))
     studentsRepository.create(student)
+
+    const studentCourse = makeStudentCourse({ studentId: student.id, courseId: course.id })
+    const studentPole = makeStudentPole({ studentId: studentCourse.id, poleId: pole.id })
+
+    studentCoursesRepository.create(studentCourse)
+    studentPolesRepository.create(studentPole)
 
     const courseHistoric = makeCourseHistoric({ courseId: course.id })
     courseHistoricRepository.create(courseHistoric)
