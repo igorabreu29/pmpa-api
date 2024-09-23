@@ -18,17 +18,19 @@ export async function getAdministrators(
         querystring: z.object({
           cpf: z.string().optional(),
           username: z.string().optional(),
-          page: z.coerce.number().default(1)
+          page: z.coerce.number().default(1),
+          isEnabled: z.string().transform(item => item === 'true')
         })
       }
     }, async (req, res) => {
-      const { cpf, username, page } = req.query
+      const { cpf, username, page, isEnabled } = req.query
 
       const useCase = makeFetchAdministratorsUseCase()
       const result = await useCase.execute({
         cpf,
         username,
-        page
+        page,
+        isEnabled
       })
 
       if (result.isLeft()) {

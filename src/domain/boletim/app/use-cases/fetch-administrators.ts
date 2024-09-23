@@ -6,6 +6,7 @@ interface FetchAdministratorsUseCaseRequest {
   page: number
   cpf?: string
   username?: string
+  isEnabled?: boolean
 }
 
 type FetchAdministratorsUseCaseResponse = Either<null, {
@@ -20,8 +21,8 @@ export class FetchAdministratorsUseCase {
     private administratorsRepository: AdministratorsRepository
   ) {}
 
-  async execute({ page, cpf, username }: FetchAdministratorsUseCaseRequest): Promise<FetchAdministratorsUseCaseResponse> {
-    const { administrators, pages, totalItems } = await this.administratorsRepository.findMany({ page, cpf, username })
+  async execute({ page, cpf, username, isEnabled = true }: FetchAdministratorsUseCaseRequest): Promise<FetchAdministratorsUseCaseResponse> {
+    const { administrators, pages, totalItems } = await this.administratorsRepository.findMany({ page, cpf, username, isEnabled })
 
     return right({
       administrators,

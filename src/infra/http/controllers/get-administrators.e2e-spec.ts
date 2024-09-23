@@ -60,7 +60,7 @@ describe('Get Administrators (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .get(`/administrators`)
+      .get(`/administrators?isEnabled=true`)
       .set('Authorization', `Bearer ${token}`)
 
     const { administrators, pages, totalItems } = response.body
