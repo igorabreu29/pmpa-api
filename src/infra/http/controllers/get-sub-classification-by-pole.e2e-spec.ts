@@ -1,15 +1,16 @@
 import { app } from "@/infra/app.ts";
 import { prisma } from "@/infra/database/lib/prisma.ts";
 import { transformDate } from "@/infra/utils/transform-date.ts";
-import type { Course, User } from "@prisma/client";
+import type { Course, Pole } from "@prisma/client";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import bcrypt from 'bcryptjs'
-import request from 'supertest'
+import bcrypt from 'bcryptjs';
+import request from 'supertest';
 
 let course: Course
+let pole: Pole
 
-describe('Get Classification (e2e)', () => {
+describe('Get Classification By Pole (e2e)', () => {
   beforeAll(async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
@@ -17,14 +18,14 @@ describe('Get Classification (e2e)', () => {
     course = await prisma.course.create({
       data: {
         endsAt,
-        formula: 'CAS',
+        formula: 'CFO',
         imageUrl: '',
-        name: 'CAS',
-        isPeriod: false
+        name: 'CHO',
+        isPeriod: true
       }
     })
 
-    const pole = await prisma.pole.create({
+    pole = await prisma.pole.create({
       data: {
         name: 'pole-1'
       }
@@ -61,7 +62,7 @@ describe('Get Classification (e2e)', () => {
         email: 'Jey@acne.com', 
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
-        birthday: transformDate('01/02/2001'),
+        birthday: transformDate('2001/02/01'),
         
         usersOnCourses: {
           create: {
@@ -84,7 +85,7 @@ describe('Get Classification (e2e)', () => {
         email: 'test@acne.com', 
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
-        birthday: transformDate('01/02/2000'),
+        birthday: transformDate('2000/02/01'),
         
         usersOnCourses: {
           create: {
@@ -106,8 +107,84 @@ describe('Get Classification (e2e)', () => {
           createMany: {
             data: [
               {
-                vf: 8,
+                vf: 10,
+                avi: 9.5,
+                courseId: course.id,
+                studentId: student.id,
+              },
+              {
+                vf: 10, 
+                avi: 7,
+                courseId: course.id,
+                studentId: student2.id
+              },
+              {
+                vf: 10, 
+                avi: 7,
+                courseId: course.id,
+                studentId: student3.id
+              },
+            ]
+          }
+        },
+        courseOnDisciplines: {
+          create: {
+            courseId: course.id,
+            expected: 'VF',
+            hours: 30,
+            module: 3,
+          }
+        }
+      }
+    })
+    
+    await prisma.discipline.create({
+      data: {
+        name: 'discipline-2',
+        assessments: {
+          createMany: {
+            data: [
+              {
+                vf: 4,
                 avi: 5,
+                courseId: course.id,
+                studentId: student.id,
+              },
+              {
+                vf: 10, 
+                avi: 7,
+                courseId: course.id,
+                studentId: student2.id
+              },
+              {
+                vf: 8, 
+                avi: 9,
+                courseId: course.id,
+                studentId: student3.id
+              },
+            ]
+          }
+        },
+        courseOnDisciplines: {
+          create: {
+            courseId: course.id,
+            expected: 'VF',
+            hours: 30,
+            module: 2,
+          }
+        }
+      }
+    })
+
+    await prisma.discipline.create({
+      data: {
+        name: 'discipline-3',
+        assessments: {
+          createMany: {
+            data: [
+              {
+                vf: 10,
+                avi: 9.5,
                 courseId: course.id,
                 studentId: student.id,
               },
@@ -170,7 +247,7 @@ describe('Get Classification (e2e)', () => {
     await app.close()
   })
 
-  it ('GET /courses/:id/classification', async () => {
+  it ('GET /courses/:id/poles/:poleId/classification', async () => {
     const developer = await prisma.user.create(({
       data: {
         username: 'Jonas Doe',
@@ -192,7 +269,7 @@ describe('Get Classification (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .get(`/courses/${course.id}/classification?page=1&hasBehavior=true`)
+      .get(`/courses/${course.id}/poles/${pole.id}/classification/sub?hasBehavior=true&disciplineModule=3`)
       .set('Authorization', `Bearer ${token}`)
 
     const { studentsWithAverage } = response.body
@@ -201,7 +278,7 @@ describe('Get Classification (e2e)', () => {
       {
         studentAverage: {
           averageInform: {
-            geralAverage: 8.184,
+            geralAverage: 8.5,
             studentAverageStatus: { status: 'approved' }
           }
         },
@@ -209,7 +286,7 @@ describe('Get Classification (e2e)', () => {
       {
         studentAverage: {
           averageInform: {
-            geralAverage: 8.184,
+            geralAverage: 8.5,
             studentAverageStatus: { status: 'approved' }
           }
         },
@@ -217,8 +294,8 @@ describe('Get Classification (e2e)', () => {
       {
         studentAverage: {
           averageInform: {
-            geralAverage: 7,
-            studentAverageStatus: { status: 'second season' }
+            geralAverage: 9.75,
+            studentAverageStatus: { status: 'approved' }
           }
         },
       }

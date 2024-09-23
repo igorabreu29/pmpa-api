@@ -9,7 +9,7 @@ import request from 'supertest'
 
 let course: Course
 
-describe('Get Classification (e2e)', () => {
+describe('Get Sub Classification (e2e)', () => {
   beforeAll(async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
@@ -192,7 +192,7 @@ describe('Get Classification (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .get(`/courses/${course.id}/classification?page=1&hasBehavior=true`)
+      .get(`/courses/${course.id}/classification/sub?disciplineModule=1&hasBehavior=true`)
       .set('Authorization', `Bearer ${token}`)
 
     const { studentsWithAverage } = response.body

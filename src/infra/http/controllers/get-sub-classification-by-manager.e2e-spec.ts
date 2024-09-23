@@ -1,15 +1,16 @@
 import { app } from "@/infra/app.ts";
 import { prisma } from "@/infra/database/lib/prisma.ts";
 import { transformDate } from "@/infra/utils/transform-date.ts";
-import type { Course, User } from "@prisma/client";
+import type { Course, Pole, User } from "@prisma/client";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import bcrypt from 'bcryptjs'
 import request from 'supertest'
 
 let course: Course
+let manager: User
 
-describe('Get Classification (e2e)', () => {
+describe('Get Sub Classification By Manager (e2e)', () => {
   beforeAll(async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
@@ -17,10 +18,10 @@ describe('Get Classification (e2e)', () => {
     course = await prisma.course.create({
       data: {
         endsAt,
-        formula: 'CAS',
+        formula: 'CFO',
         imageUrl: '',
-        name: 'CAS',
-        isPeriod: false
+        name: 'CHO',
+        isPeriod: true
       }
     })
 
@@ -28,6 +29,29 @@ describe('Get Classification (e2e)', () => {
       data: {
         name: 'pole-1'
       }
+    })
+
+    manager = await prisma.user.create({
+      data: {
+        username: 'Manager Test',
+        civilId: '02345',
+        cpf: '00000000001',
+        email: 'managertest@acne.com', 
+        password: await bcrypt.hash('node-20', 8),
+        birthday: transformDate('01/02/1999'),
+        role: 'MANAGER',
+        
+        usersOnCourses: {
+          create: {
+            courseId: course.id,
+             usersOnPoles: {
+              create: {
+                poleId: pole.id
+              }
+            }
+          }
+        }
+      },
     })
 
     const student = await prisma.user.create({
@@ -38,7 +62,7 @@ describe('Get Classification (e2e)', () => {
         email: 'john@acne.com', 
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
-        birthday: transformDate('01/02/2001'),
+        birthday: transformDate('2001/02/01'),
         
         usersOnCourses: {
           create: {
@@ -61,7 +85,7 @@ describe('Get Classification (e2e)', () => {
         email: 'Jey@acne.com', 
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
-        birthday: transformDate('01/02/2001'),
+        birthday: transformDate('2001/02/01'),
         
         usersOnCourses: {
           create: {
@@ -84,7 +108,7 @@ describe('Get Classification (e2e)', () => {
         email: 'test@acne.com', 
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
-        birthday: transformDate('01/02/2000'),
+        birthday: transformDate('2000/02/01'),
         
         usersOnCourses: {
           create: {
@@ -106,8 +130,8 @@ describe('Get Classification (e2e)', () => {
           createMany: {
             data: [
               {
-                vf: 8,
-                avi: 5,
+                vf: 10,
+                avi: 9.5,
                 courseId: course.id,
                 studentId: student.id,
               },
@@ -131,7 +155,7 @@ describe('Get Classification (e2e)', () => {
             courseId: course.id,
             expected: 'VF',
             hours: 30,
-            module: 1,
+            module: 2,
           }
         }
       }
@@ -170,19 +194,7 @@ describe('Get Classification (e2e)', () => {
     await app.close()
   })
 
-  it ('GET /courses/:id/classification', async () => {
-    const developer = await prisma.user.create(({
-      data: {
-        username: 'Jonas Doe',
-        civilId: '02345',
-        cpf: '00000000001',
-        email: 'jonas@acne.com', 
-        password: await bcrypt.hash('node-20', 8),
-        birthday: transformDate('02/01/2006'),
-        role: 'DEV'
-      }
-    }))
-
+  it ('GET /courses/:id/manager/classification/sub', async () => {
     const authenticateResponse = await request(app.server)
     .post('/credentials/auth')
     .send({
@@ -192,16 +204,17 @@ describe('Get Classification (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .get(`/courses/${course.id}/classification?page=1&hasBehavior=true`)
+      .get(`/courses/${course.id}/manager/classification/sub?hasBehavior=tru&disciplineModule=2`)
       .set('Authorization', `Bearer ${token}`)
 
     const { studentsWithAverage } = response.body
 
+    expect(response.statusCode).toEqual(200)
     expect(studentsWithAverage).toMatchObject([
       {
         studentAverage: {
           averageInform: {
-            geralAverage: 8.184,
+            geralAverage: 9.75,
             studentAverageStatus: { status: 'approved' }
           }
         },
@@ -209,7 +222,7 @@ describe('Get Classification (e2e)', () => {
       {
         studentAverage: {
           averageInform: {
-            geralAverage: 8.184,
+            geralAverage: 8.5,
             studentAverageStatus: { status: 'approved' }
           }
         },
@@ -217,8 +230,8 @@ describe('Get Classification (e2e)', () => {
       {
         studentAverage: {
           averageInform: {
-            geralAverage: 7,
-            studentAverageStatus: { status: 'second season' }
+            geralAverage: 8.5,
+            studentAverageStatus: { status: 'approved' }
           }
         },
       }

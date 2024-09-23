@@ -102,6 +102,9 @@ import { createAverageClassificationCoursePolesSheet } from "./http/controllers/
 import { deleteCourseDiscipline } from "./http/controllers/delete-course-discipline.ts";
 import { deleteCoursePole } from "./http/controllers/delete-course-pole.ts";
 import { validateCourseHistoric } from "./http/controllers/validate-course-historic.ts";
+import { getSubClassification } from "./http/controllers/get-sub-classification.ts";
+import { getSubClassificationByPole } from "./http/controllers/get-sub-classification-by-pole.ts";
+import { getSubClassificationByManager } from "./http/controllers/get-sub-classification-by-manager.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -203,9 +206,12 @@ app.register(searchStudentCourseByPoleDetails)
 app.register(searchStudentsCourseByManagerDetails)
 app.register(search)
 app.register(getClassification)
+app.register(getSubClassification)
 app.register(getClassificationByPole)
+app.register(getSubClassificationByPole)
 app.register(getAverageClassificationCoursePoles)
 app.register(getClassificationByManager)
+app.register(getSubClassificationByManager)
 app.register(getAssessmentClassification)
 app.register(getBehaviorClassification)
 app.register(getReports)
