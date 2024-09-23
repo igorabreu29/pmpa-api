@@ -105,6 +105,8 @@ import { validateCourseHistoric } from "./http/controllers/validate-course-histo
 import { getSubClassification } from "./http/controllers/get-sub-classification.ts";
 import { getSubClassificationByPole } from "./http/controllers/get-sub-classification-by-pole.ts";
 import { getSubClassificationByManager } from "./http/controllers/get-sub-classification-by-manager.ts";
+import { activeAdministrator } from "./http/controllers/active-administrator.ts";
+import { disableAdministrator } from "./http/controllers/disable-administrator.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -146,6 +148,8 @@ app.register(changeManagerProfile)
 app.register(changeManagerAvatar)
 app.register(getAdministrators)
 app.register(createAdministrator)
+app.register(activeAdministrator)
+app.register(disableAdministrator)
 app.register(updateAdministrator)
 app.register(changeAdministratorProfile)
 app.register(changeAdministratorAvatar)

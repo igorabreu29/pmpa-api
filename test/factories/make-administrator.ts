@@ -74,4 +74,6 @@ export async function makePrismaAdministrator(
    await prisma.user.create({
     data: PrismaAdministratorsMapper.toPrisma(administrator)
   })
+
+  return administrator
 }

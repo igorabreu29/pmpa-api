@@ -24,6 +24,7 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
         createdAt: true,
         isLoginConfirmed: true,
         role: true,
+        isActive: true,
         profile: {
           select: {
             userId: true,
@@ -61,6 +62,7 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
         avatarUrl: true,
         password: true,
         createdAt: true,
+        isActive: true,
         isLoginConfirmed: true,
         role: true,
       }
@@ -87,6 +89,7 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
         avatarUrl: true,
         password: true,
         createdAt: true,
+        isActive: true,
         isLoginConfirmed: true,
         role: true,
       }
@@ -99,7 +102,8 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
   async findMany({ 
     page, 
     cpf, 
-    username 
+    username,
+    isEnabled = true
   }: FindManyProps): Promise<{
      administrators: Administrator[]; 
      pages: number; 
@@ -110,6 +114,7 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     const administrators = await prisma.user.findMany({
       where: {
         role: 'ADMIN',
+        isActive: isEnabled ? true : false,
         cpf: {
           contains: cpf
         },
@@ -127,6 +132,7 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
         birthday: true,
         avatarUrl: true,
         password: true,
+        isActive: true,
         createdAt: true,
         isLoginConfirmed: true,
         role: true,

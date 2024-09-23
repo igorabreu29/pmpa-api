@@ -4,6 +4,7 @@ import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { AdministratorsRepository } from "../repositories/administrators-repository.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { CoursesRepository } from "../repositories/courses-repository.ts";
+import { ChangeAdministratorStatusEvent } from "../../enterprise/events/change-administrator-status.ts";
 
 interface ActiveAdministratorUseCaseRequest {
   id: string
@@ -29,14 +30,14 @@ export class ActiveAdministratorUseCase {
 
     administrator.isActive = true
 
-    // administratorCourse.addDomainAdministratorCourseEvent(
-    //   new ChangeAdministratorStatusEvent({
-    //     administratorCourse,
-    //     reason,
-    //     reporterId: userId,
-    //     reporterIp: userIp
-    //   })
-    // )
+    administrator.addDomainAdministratorEvent(
+      new ChangeAdministratorStatusEvent({
+        administrator,
+        reason,
+        reporterId: userId,
+        reporterIp: userIp
+      })
+    )
 
     await this.administratorsRepository.save(administrator)
 
