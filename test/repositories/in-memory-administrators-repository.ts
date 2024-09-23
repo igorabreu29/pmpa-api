@@ -20,7 +20,7 @@ export class InMemoryAdministratorsRepository implements AdministratorsRepositor
     return admin ?? null
   }
 
-  async findMany({ page, cpf, username }: FindManyProps): Promise<
+  async findMany({ page, cpf, username, isEnabled = true }: FindManyProps): Promise<
     { 
       administrators: Administrator[]; 
       pages: number; 
@@ -32,7 +32,8 @@ export class InMemoryAdministratorsRepository implements AdministratorsRepositor
     const allAdministrators = this.items
       .filter(item => {
         return item.cpf.value.includes(cpf ?? '')
-          && item.username.value.toLowerCase().includes(username ? username.toLowerCase() : '')
+          && item.username.value.toLowerCase().includes(username ? username.toLowerCase() : '') 
+          && isEnabled ? item.isActive : !item.isActive
       })
       .sort((adminA, adminB) => adminA.createdAt.getTime() - adminB.createdAt.getTime())
 
