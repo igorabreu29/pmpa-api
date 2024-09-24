@@ -9,6 +9,7 @@ import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { NotAllowed } from "../errors/not-allowed.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { makeDisableAdministratorUseCase } from "@/infra/factories/make-disable-administrator-use-case.ts";
+import { makeOnAdministratorDisabled } from "@/infra/factories/make-on-administrator-disabled.ts";
 
 export async function disableAdministrator(
   app: FastifyInstance
@@ -33,7 +34,7 @@ export async function disableAdministrator(
 
     const ip = req.ip
 
-    makeDisableAdministratorUseCase()
+    makeOnAdministratorDisabled()
     const useCase = makeDisableAdministratorUseCase()
     const result = await useCase.execute({
       id,
