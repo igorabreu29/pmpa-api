@@ -18,7 +18,7 @@ export async function getSubClassificationByPole(
   app
     .withTypeProvider<ZodTypeProvider>()
     .get('/courses/:id/poles/:poleId/classification/sub', {
-      onRequest: [verifyJWT, verifyUserRole(['manager', 'admin', "dev"])],
+      onRequest: [verifyJWT, verifyUserRole(['admin', "dev"])],
       schema: {
         params: z.object({
           id: z.string().uuid(),
