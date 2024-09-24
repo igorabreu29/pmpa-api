@@ -5,13 +5,14 @@ import { PrismaStudentsRepository } from "../database/repositories/prisma-studen
 import { GeneratePDF } from "../files/pdf.ts";
 import { makeGetStudentAverageInTheCourseUseCase } from "./make-get-student-average-in-the-course-use-case.ts";
 import { PrismaCourseHistoricsRepository } from "../database/repositories/prisma-course-historics-repository.ts";
+import { makeGetCourseClassificationUseCase } from "./make-get-course-classification-use-case.ts";
 
 export function makeDownloadHistoricUseCase() {
   const coursesRepository = new PrismaCoursesRepository()
   const courseHistoricRepository = new PrismaCourseHistoricsRepository()
   const studentsRepository = new PrismaStudentsRepository()
   const courseDisciplinesRepository = new PrismaCourseDisciplinesRepository()
-  const getStudentAverage = makeGetStudentAverageInTheCourseUseCase()
+  const getCourseClassification = makeGetCourseClassificationUseCase()
   const pdf = new GeneratePDF()
 
   return new DownloadHistoricUseCase (
@@ -19,7 +20,7 @@ export function makeDownloadHistoricUseCase() {
     courseHistoricRepository,
     studentsRepository,
     courseDisciplinesRepository,
-    getStudentAverage,
+    getCourseClassification,
     pdf
   )
 }
