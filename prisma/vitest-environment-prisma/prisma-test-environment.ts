@@ -4,8 +4,15 @@ import { PrismaClient } from '@prisma/client'
 import { execSync } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
 import { Environment } from 'vitest'
+import { DomainEvents } from '@/core/events/domain-events.ts'
+import { Redis } from 'ioredis'
+import { env } from '@/infra/env/index.ts'
 
 const prisma = new PrismaClient()
+const redis = new Redis({
+    host: env.REDIS_HOST,
+    port: env.REDIS_PORT,
+})
 
 function generateDatabaseURL(schema: string) {
     if (!process.env.DATABASE_URL) {
@@ -24,8 +31,12 @@ export default <Environment> {
     async setup() {
         const schema = randomUUID()
         const databaseURL = generateDatabaseURL(schema)
+        
+        DomainEvents.shouldRun = false
 
         process.env.DATABASE_URL = databaseURL
+
+        await redis.flushdb()
 
         execSync('npx prisma migrate deploy')
 
