@@ -14,4 +14,27 @@ export class PrismaAuthenticatesRepository implements AuthenticatesRepository {
 
     return PrismaAuthenticatesMapper.toDomain(authenticate)
   }
+
+  async findByEmail({ email }: { email: string; }): Promise<Authenticate | null> {
+    const authenticate = await prisma.user.findUnique({
+      where: {
+        email
+      }
+    })
+    if (!authenticate) return null
+
+    return PrismaAuthenticatesMapper.toDomain(authenticate)
+  }
+
+  async save(authenticate: Authenticate): Promise<void> {
+    await prisma.user.update({
+      where: {
+        id: authenticate.id.toValue()
+      },
+
+      data: {
+        password: authenticate.passwordHash.value
+      }
+    })
+  }
 }

@@ -8,4 +8,14 @@ export class InMemoryAuthenticatesRepository implements AuthenticatesRepository 
     const authenticate = this.items.find(item => item.cpf.value === cpf) 
     return authenticate ?? null
   }
+
+  async findByEmail({ email }: { email: string; }): Promise<Authenticate | null> {
+    const authenticate = this.items.find(item => item.email.value === email) 
+    return authenticate ?? null
+  }
+
+  async save(authenticate: Authenticate): Promise<void> {
+    const authenticateIndex = this.items.findIndex(item => item.equals(authenticate)) 
+    this.items[authenticateIndex] = authenticate
+  }
 }
