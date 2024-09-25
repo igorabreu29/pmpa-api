@@ -23,7 +23,7 @@ export async function activeAdministrator(
           id: z.string().uuid(),
         }),
         body: z.object({
-          reason: z.string().min(3, 'A mensagem não pode ser menor que 3 characters').max(200, 'A mensagem não pode ser maior que 200 caracteres')
+          reason: z.string().min(3, 'A mensagem não pode ser menor que 3 caracters').max(200, 'A mensagem não pode ser maior que 200 caracteres')
         })
       },
     }, 
