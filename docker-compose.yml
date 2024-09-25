@@ -8,3 +8,12 @@ services:
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=docker
       - POSTGRES_DB=boletims
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_HOST=127.0.0.1
+      - REDIS_PORT=6379
+    ports:
+      - "6379:6379"
