@@ -5,11 +5,13 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import { Either, right } from "@/core/either.ts";
 import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts";
 import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts";
+import type { Email } from "./value-objects/email.ts";
 
 export type Role = 'student' | 'manager' | 'admin' | 'dev'
 
 interface AuthenticateProps {
   cpf: CPF
+  email: Email
   passwordHash: Password
   role: Role
   isLoginConfirmed?: boolean
@@ -20,8 +22,15 @@ export class Authenticate extends Entity<AuthenticateProps> {
     return this.props.cpf
   }
 
+  get email() {
+    return this.props.email
+  }
+
   get passwordHash() {
     return this.props.passwordHash
+  }
+  set passwordHash(value) {
+    this.props.passwordHash = value
   }
 
   get role() {
