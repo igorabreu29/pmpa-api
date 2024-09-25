@@ -35,7 +35,7 @@ export async function search(
       })
 
       if (result.isLeft()) {
-        throw new ClientError('Ocurred something error')
+        throw new ClientError('Houve algum erro')
       }
 
       const { searchs, pages, totalItems } = result.value

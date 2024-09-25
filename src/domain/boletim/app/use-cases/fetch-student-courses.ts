@@ -24,7 +24,7 @@ export class FetchStudentCoursesUseCase {
 
   async execute({ studentId, page, perPage }: FetchStudentCoursesUseCaseRequest): Promise<FetchStudentCoursesUseCaseResponse> {
     const student = await this.studentsRepository.findById(studentId)
-    if (!student) return left(new ResourceNotFoundError('Student not found.'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
 
     const { studentCourses, pages, totalItems } = await this.studentsCoursesRepository.findManyByStudentIdWithCourse({ studentId, page, perPage })
 

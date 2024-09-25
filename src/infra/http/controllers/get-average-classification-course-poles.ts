@@ -42,7 +42,7 @@ export async function getAverageClassificationCoursePoles(
             case InvalidCourseFormulaError: 
               throw new Conflict(error.message)
             default: 
-              throw new ClientError('Ocurred something error')
+              throw new ClientError('Houve algum erro')
           }
         }
 

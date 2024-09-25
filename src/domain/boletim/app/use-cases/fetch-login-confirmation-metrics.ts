@@ -36,7 +36,7 @@ export class FetchLoginConfirmationMetrics {
     courseId
   }: FetchLoginConfirmationMetricsRequest): Promise<FetchLoginConfirmationMetricsResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const coursePoles = await this.coursesPolesRepository.findManyByCourseId({ courseId })
     const studentsCourse = await this.studentsCoursesRepository.findManyByCourseIdWithPole({ courseId })

@@ -53,7 +53,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     if (!studentCourse) return null
 
     const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-    if (!poleExist) throw new Error('Pole not found.')
+    if (!poleExist) throw new Error('Pólo não encontrado!')
 
     const studentCourseMapper = {
       ...studentCourse.user,
@@ -251,7 +251,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
   
       const studentsCourseMapper = studentsCourse.map(studentCourse => {
         const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-        if (!poleExist) throw new Error('Pole not found.')
+        if (!poleExist) throw new Error('Pólo não encontrado!')
   
         return {
           ...studentCourse.user,
@@ -337,7 +337,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
 
     const studentsCourseMapper = studentsCourse.map(studentCourse => {
       const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-      if (!poleExist) throw new Error('Pole not found.')
+      if (!poleExist) throw new Error('Pólo não encontrado!')
 
       return {
         ...studentCourse.user,
@@ -395,7 +395,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
 
     const studentsCourseMapper = studentCourses.map(studentCourse => {
       const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-      if (!poleExist) throw new Error('Pole not found.')
+      if (!poleExist) throw new Error('Pólo não encontrado!')
 
       return {
         ...studentCourse.user,

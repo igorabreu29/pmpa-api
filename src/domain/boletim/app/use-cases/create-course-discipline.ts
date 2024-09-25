@@ -31,13 +31,13 @@ export class CreateCourseDisciplineUseCase {
     module
   }: CreateCourseDisciplineRequest): Promise<CreateCourseDisciplineResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const discipline = await this.disciplinesRepository.findById(disciplineId)
-    if (!discipline) return left(new ResourceNotFoundError('Discipline not found.'))
+    if (!discipline) return left(new ResourceNotFoundError('Disciplina não encontrada!'))
 
     const courseDisciplineAlreadyExist = await this.coursesDisciplinesRepository.findByCourseAndDisciplineId({ courseId, disciplineId })
-    if (courseDisciplineAlreadyExist) return left(new ResourceAlreadyExistError())
+    if (courseDisciplineAlreadyExist) return left(new ResourceAlreadyExistError('Disciplina já presente no curso.'))
 
     const courseDiscipline = CourseDiscipline.create({
       courseId: course.id,

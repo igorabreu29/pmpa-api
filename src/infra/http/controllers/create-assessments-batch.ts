@@ -64,7 +64,7 @@ export async function createAssessmentBatch(
         
         switch(error.constructor) {
           case NotAllowedError: 
-            throw new NotAllowed('Invalid access level')
+            throw new NotAllowed('Nível de acesso inválido')
           case ResourceNotFoundError:
             const notFound = error as ResourceNotFoundError
             throw new NotFound(notFound.message)
@@ -72,7 +72,7 @@ export async function createAssessmentBatch(
             const conflict = error as ConflictError
             throw new Conflict(conflict.message)
           default: 
-            throw new ClientError('Ocurred something error')
+            throw new ClientError('Houve algum erro')
         }
       }
 

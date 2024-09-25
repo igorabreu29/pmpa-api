@@ -29,7 +29,7 @@ export class GetCourseSubClassificationUseCase {
 
   async execute({ courseId, disciplineModule, page, hasBehavior = true }: GetCourseSubClassificationUseCaseRequest): Promise<GetCourseSubClassificationUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const { studentsCourse: students, pages, totalItems } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
 

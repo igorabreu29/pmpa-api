@@ -50,7 +50,7 @@ export class ChangeAdministratorProfileUseCase {
     state 
   }: ChangeAdministratorProfileUseCaseRequest): Promise<ChangeAdministratorProfileUseCaseResponse> {
     const administrator = await this.administratorsRepository.findById(id)
-    if (!administrator) return left(new ResourceNotFoundError('Administrator not found.'))
+    if (!administrator) return left(new ResourceNotFoundError('Administrador não encontrado.'))
 
     const nameOrError = Name.create(username ?? administrator.username.value)
     const emailOrError = Email.create(email ?? administrator.email.value)

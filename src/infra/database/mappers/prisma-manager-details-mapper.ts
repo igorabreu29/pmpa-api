@@ -51,7 +51,7 @@ export class PrismaManagerDetailsMapper {
         const managerCourse = managerDetails.managerCourses.find(managerCourse => {
           return managerCourse.courseId === course.id
         })
-        if (!managerCourse) throw new Error('Course not found.')
+        if (!managerCourse) throw new Error('Curso não existente.')
 
         return {
           managerCourseId: new UniqueEntityId(managerCourse.id),
@@ -70,7 +70,7 @@ export class PrismaManagerDetailsMapper {
         const managerPole = managerDetails.managerPoles.find(managerPole => {
           return managerPole.poleId === pole.id
         })
-        if (!managerPole) throw new Error('Pole not found.')
+        if (!managerPole) throw new Error('Pólo não encontrado!')
 
         return {
           managerPoleId: new UniqueEntityId(managerPole.id),

@@ -64,12 +64,12 @@ export class CreateBehaviorUseCase {
     if (role === 'student') return left(new NotAllowedError())
 
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
-    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
+    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Curso finalizado!'))
       
     const student = await this.studentsRepository.findById(studentId)
-    if (!student) return left(new ResourceNotFoundError('Student not found.'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
 
     const behavior = Behavior.create({
       studentId: new UniqueEntityId(studentId),

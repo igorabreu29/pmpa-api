@@ -26,7 +26,7 @@ export class CreateCourseClassificationSheetUseCase {
 
   async execute({ courseId, hasBehavior = true }: CreateCourseClassificationSheetUseCaseRequest): Promise<CreateCourseClassificationSheetUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const { studentsCourse: students } = await this.studentCoursesRepository.findManyDetailsByCourseId({ courseId: course.id.toValue() })
 

@@ -28,7 +28,7 @@ export class SearchStudentCourseDetailsUseCase {
     page
   }: SearchStudentCourseDetailsUseCaseRequest): Promise<SearchStudentCourseDetailsUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const { studentCoursesDetails: students, pages, totalItems } = await this.studentsCoursesRepository.searchManyDetailsByCourseId({
       courseId,

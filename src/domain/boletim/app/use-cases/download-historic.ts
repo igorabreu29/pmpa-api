@@ -33,13 +33,13 @@ export class DownloadHistoricUseCase {
     studentId
   }: DownloadHistoricUseCaseRequest): Promise<DownloadHistoricUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId) 
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
     
     const student = await this.studentsRepository.findById(studentId)
-    if (!student) return left(new ResourceNotFoundError('Student not found.'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
 
     const courseHistoric = await this.courseHistoricRepository.findByCourseId(course.id.toValue())
-    if (!courseHistoric) return left(new ResourceNotFoundError('Couse historic not found.'))
+    if (!courseHistoric) return left(new ResourceNotFoundError('Histórico do curso não encontrado!'))
 
     const result = await this.getCourseClassification.execute({
       courseId: course.id.toValue(),
@@ -53,7 +53,7 @@ export class DownloadHistoricUseCase {
       return item.studentName === student.username.value
     })
 
-    if (!studentData) return left(new ResourceNotFoundError('Student not found.'))
+    if (!studentData) return left(new ResourceNotFoundError('Estudante não encontrado.'))
 
     const courseWithDisciplines = await this.courseDisciplinesRepository.findManyByCourseIdWithDiscipliine({
       courseId: course.id.toValue()

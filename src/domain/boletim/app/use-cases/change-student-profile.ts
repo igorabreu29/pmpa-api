@@ -50,7 +50,7 @@ export class ChangeStudentProfileUseCase {
     county
   }: ChangeStudentProfileUseCaseRequest): Promise<ChangeStudentProfileUseCaseResponse> {
     const student = await this.studentsRepository.findById(id)
-    if (!student) return left(new ResourceNotFoundError('Student not found.'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
 
     const nameOrError = Name.create(username ?? student.username.value)
     const emailOrError = Email.create(email ?? student.email.value)

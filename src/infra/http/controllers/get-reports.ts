@@ -27,7 +27,7 @@ export async function getReports(
       const result = await useCase.execute({ action, page })
 
       if (result.isLeft()) {
-        throw new ClientError('Ocurred something error')
+        throw new ClientError('Houve algum erro')
       }
 
       const { reports, pages, totalItems } = result.value

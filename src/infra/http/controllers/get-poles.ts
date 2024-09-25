@@ -19,7 +19,7 @@ export async function getPoles(
       const result = await useCase.execute()
 
       if (result.isLeft()) {
-        throw new ClientError('Ocurred something error')
+        throw new ClientError('Houve algum erro')
       }
 
       const { poles } = result.value

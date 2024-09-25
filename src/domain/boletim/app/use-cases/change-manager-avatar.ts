@@ -16,7 +16,7 @@ export class ChangeManagerAvatarUseCase {
 
   async execute({ id, fileLink }: ChangeManagerAvatarUseCaseRequest): Promise<ChangeManagerAvatarUseCaseResponse> {
     const manager = await this.managersRepository.findById(id)
-    if (!manager) return left(new ResourceNotFoundError('Manager not found'))
+    if (!manager) return left(new ResourceNotFoundError('Gerente não encontrado'))
 
     manager.avatarUrl = fileLink
     await this.managersRepository.save(manager)

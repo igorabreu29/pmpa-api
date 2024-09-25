@@ -18,7 +18,7 @@ export class CreatePoleUseCase {
 
   async execute({ name }: CreatePoleUseCaseRequest): Promise<CreatePoleUseCaseResponse> {
     const poleAlreadyExist = await this.polesRepository.findByName(name)
-    if (poleAlreadyExist) return left(new ResourceAlreadyExistError('Pole already exist.'))
+    if (poleAlreadyExist) return left(new ResourceAlreadyExistError('Pólo já existe na plataforma.'))
 
     const nameOrError = Name.create(name)
     if (nameOrError.isLeft()) return left(nameOrError.value)

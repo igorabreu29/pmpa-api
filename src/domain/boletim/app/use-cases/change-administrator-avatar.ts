@@ -16,7 +16,7 @@ export class ChangeAdministratorAvatarUseCase {
 
   async execute({ id, fileLink }: ChangeAdministratorAvatarUseCaseRequest): Promise<ChangeAdministratorAvatarUseCaseResponse> {
     const administrator = await this.administratorsRepository.findById(id)
-    if (!administrator) return left(new ResourceNotFoundError('Administrator not found'))
+    if (!administrator) return left(new ResourceNotFoundError('Administrador não encontrado.'))
 
     administrator.avatarUrl = fileLink
     await this.administratorsRepository.save(administrator)

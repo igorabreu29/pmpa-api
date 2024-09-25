@@ -35,7 +35,7 @@ export class Password extends ValueObject<PasswordProps> {
   
   static create(password: string): Either<InvalidPasswordError, Password> {
     if (!this.validate(password)) {
-      return left(new InvalidPasswordError(password))
+      return left(new InvalidPasswordError('Senha inválida!'))
     }
 
     return right(new Password({ password }))

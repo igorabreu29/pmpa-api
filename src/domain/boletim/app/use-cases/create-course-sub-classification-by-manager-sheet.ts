@@ -30,13 +30,13 @@ export class CreateCourseSubClassificationByManagerSheetUseCase {
 
   async execute({ courseId, managerId, hasBehavior = true, disciplineModule }: CreateCourseSubClassificationByManagerSheetUseCaseRequest): Promise<CreateCourseSubClassificationByManagerSheetUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const managerCourse = await this.managerCoursesRepository.findDetailsByManagerAndCourseId({
       courseId: course.id.toValue(),
       managerId
     })
-    if (!managerCourse) return left(new ResourceNotFoundError('Manager is not present in this course'))
+    if (!managerCourse) return left(new ResourceNotFoundError('Gerente não está presente no curso..'))
 
     const { studentsPole } = await this.studentPolesRepository.findManyDetailsByPoleId({ poleId: managerCourse.poleId.toValue() })
 

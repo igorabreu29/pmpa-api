@@ -30,10 +30,10 @@ export class CreateCourseSubClassificationByPoleSheetUseCase {
 
   async execute({ courseId, poleId, hasBehavior = true, disciplineModule }: CreateCourseSubClassificationByPoleSheetUseCaseRequest): Promise<CreateCourseSubClassificationByPoleSheetUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
+    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
 
     const { studentsPole  } = await this.studentPolesRepository.findManyDetailsByPoleId({ poleId: pole.id.toValue() })
 

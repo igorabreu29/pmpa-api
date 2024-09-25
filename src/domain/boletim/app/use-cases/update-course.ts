@@ -33,7 +33,7 @@ export class UpdateCourseUseCase {
     endsAt
   }: UpdateCourseUseCaseRequest): Promise<UpdateCourseUseCaseResponse> {
     const course = await this.coursesRepository.findById(id)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const nameOrError = Name.create(name ?? course.name.value)
     if (nameOrError.isLeft()) return left(nameOrError.value)

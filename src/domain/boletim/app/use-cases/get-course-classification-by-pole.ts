@@ -34,20 +34,20 @@ export class GetCourseClassificationByPoleUseCase {
 
   async execute({ managerId, courseId, page, poleId, hasBehavior = true }: GetCourseClassificationByPoleUseCaseRequest): Promise<GetCourseClassificationByPoleUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     let poleIdAssigned: string = ''
 
     if (poleId) {
       const pole = await this.polesRepository.findById(poleId)
-      if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
+      if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
 
       poleIdAssigned = pole.id.toValue()
     }
 
     if (managerId) {
       const managerCourse = await this.managersCoursesRepository.findDetailsByManagerAndCourseId({ managerId, courseId: course.id.toValue() })
-      if (!managerCourse) return left(new ResourceNotFoundError('Manager Course not found.'))
+      if (!managerCourse) return left(new ResourceNotFoundError('Gerente não está presente no curso!'))
 
       poleIdAssigned = managerCourse.poleId.toValue()
     }

@@ -26,7 +26,7 @@ export class ActiveAdministratorUseCase {
     if (role !== 'dev') return left(new NotAllowedError())
 
     const administrator = await this.administratorsRepository.findById(id)
-    if (!administrator) return left(new ResourceNotFoundError('Administrator does not be present on the course.'))
+    if (!administrator) return left(new ResourceNotFoundError('Administrador não encontrado!'))
 
     administrator.isActive = true
 

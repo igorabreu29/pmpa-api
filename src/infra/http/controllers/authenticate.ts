@@ -35,7 +35,7 @@ export async function authenticate(
 
       switch(error.constructor) {
         case InvalidCredentialsError: 
-          throw new UnauthorizedError('CPF or password invalid')
+          throw new UnauthorizedError('CPF ou Senha inválidos!')
         default: 
           throw new ClientError('Bad Request')
       }

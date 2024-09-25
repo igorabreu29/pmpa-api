@@ -28,7 +28,7 @@ export class GetCourseClassificationUseCase {
 
   async execute({ courseId, page, hasBehavior = true }: GetCourseClassificationUseCaseRequest): Promise<GetCourseClassificationUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const { studentsCourse: students, pages, totalItems } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
 

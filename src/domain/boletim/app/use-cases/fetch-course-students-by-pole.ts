@@ -33,10 +33,10 @@ export class FetchCourseStudentsByPole {
 
   async execute({ courseId, poleId, cpf, username, isEnabled = true, page, perPage }: FetchCourseStudentsByPoleRequest): Promise<FetchCourseStudentsByPoleResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
+    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
 
     const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyDetailsByPoleId({ page, perPage, poleId, cpf, username, isEnabled }) 
     const studentPolesByCourse = studentsPole.filter(studentPole => studentPole.courseId.equals(course.id))

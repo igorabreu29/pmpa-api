@@ -84,7 +84,7 @@ export class UpdateStudentUseCase {
     if (role === 'student') return left(new NotAllowedError())
 
     const student = await this.studentsRepository.findById(id)
-    if (!student) return left(new ResourceNotFoundError('Student not found.'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
 
     let studentCourse = await this.studentCoursesRepository.findByStudentIdAndCourseId({
       courseId,
@@ -120,7 +120,7 @@ export class UpdateStudentUseCase {
       const currentStudentPole = await this.studentPolesRepository.findByStudentId({
         studentId: studentCourse.id.toValue()
       })
-      if (!currentStudentPole) return left(new ResourceNotFoundError('Student pole not found.'))
+      if (!currentStudentPole) return left(new ResourceNotFoundError('Student pólo não encontrado!'))
 
       const newStudentPole = StudentPole.create({
         poleId: new UniqueEntityId(poleId),

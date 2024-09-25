@@ -25,7 +25,7 @@ export class DeleteAssessmentUseCaseUseCase {
     if (role === 'student') return left(new NotAllowedError())
     
     const assessment = await this.assessmentsRepository.findById({ id }) 
-    if (!assessment) return left(new ResourceNotFoundError('Assessment not found.'))
+    if (!assessment) return left(new ResourceNotFoundError('Av não encontrada.'))
 
     assessment.addDomainAssessmentEvent(new AssessmentDeletedEvent({
       assessment,

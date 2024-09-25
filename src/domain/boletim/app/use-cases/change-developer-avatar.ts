@@ -16,7 +16,7 @@ export class ChangeDeveloperAvatarUseCase {
 
   async execute({ id, fileLink }: ChangeDeveloperAvatarUseCaseRequest): Promise<ChangeDeveloperAvatarUseCaseResponse> {
     const developer = await this.developersRepository.findById(id)
-    if (!developer) return left(new ResourceNotFoundError('Developer not found'))
+    if (!developer) return left(new ResourceNotFoundError('Desenvolvedor não encontrado'))
 
     developer.avatarUrl = fileLink
     await this.developersRepository.save(developer)

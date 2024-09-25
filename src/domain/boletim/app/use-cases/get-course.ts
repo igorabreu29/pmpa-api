@@ -18,7 +18,7 @@ export class GetCourseUseCase {
 
   async execute({ id }: GetCourseUseCaseRequest): Promise<GetCourseUseCaseResponse> {
     const course = await this.coursesRepository.findById(id)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     return right({
       course

@@ -40,10 +40,10 @@ export class FetchCourseStudentsByManagerUseCase {
     perPage 
   }: FetchCourseStudentsByManagerUseCaseRequest): Promise<FetchCourseStudentsByManagerUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const managerCourse = await this.managerCoursesRepository.findDetailsByManagerAndCourseId({ courseId: course.id.toValue(), managerId })
-    if (!managerCourse) return left(new ResourceNotFoundError('Manager not found.'))
+    if (!managerCourse) return left(new ResourceNotFoundError('Gerente não encontrado.'))
 
     const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyDetailsByPoleId({ 
       page, 

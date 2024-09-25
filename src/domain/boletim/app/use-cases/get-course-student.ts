@@ -21,16 +21,16 @@ export class GetCourseStudentUseCase {
 
   async execute({ courseId, id }: GetCourseStudentUseCaseRequest): Promise<GetCourseStudentUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const student = await this.studentsCoursesRepository.findByStudentIdAndCourseId({ courseId, studentId: id })
-    if (!student) return left(new ResourceNotFoundError('Student is not present in the course.'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não está presente no curso.'))
 
     const studentCourseDetails = await this.studentsCoursesRepository.findDetailsByCourseAndStudentId({
       courseId,
       studentId: id
     })
-    if (!studentCourseDetails) return left(new ResourceNotFoundError('Student is not present in the course.'))
+    if (!studentCourseDetails) return left(new ResourceNotFoundError('Estudante não está presente no curso.'))
 
     return right({
       student: studentCourseDetails

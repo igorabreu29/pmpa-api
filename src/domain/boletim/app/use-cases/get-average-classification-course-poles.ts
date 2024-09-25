@@ -26,7 +26,7 @@ export class GetAverageClassificationCoursePolesUseCase {
 
   async execute({ courseId }: GetAverageClassificationCoursePolesUseCaseRequest): Promise<GetAverageClassificationCoursePolesUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const coursePoles = await this.coursePolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
 

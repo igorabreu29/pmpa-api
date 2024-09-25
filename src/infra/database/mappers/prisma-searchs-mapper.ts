@@ -61,7 +61,7 @@ export class PrismaSearchsDetailsMapper {
           const searchCourse = search.searchCourses.find(searchCourse => {
             return searchCourse.courseId === course.id
           })
-          if (!searchCourse) throw new Error('Course not found.')
+          if (!searchCourse) throw new Error('Curso não existente.')
   
           return {
             searchCourseId: new UniqueEntityId(searchCourse.id),
@@ -80,7 +80,7 @@ export class PrismaSearchsDetailsMapper {
         const searchPole = search.searchPoles.find(searchPole => {
           return searchPole.poleId === pole.id
         })
-        if (!searchPole) throw new Error('Pole not found.')
+        if (!searchPole) throw new Error('Pólo não encontrado!')
 
         return {
           searchPoleId: new UniqueEntityId(searchPole.id),

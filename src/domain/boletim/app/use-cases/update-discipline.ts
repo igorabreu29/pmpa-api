@@ -31,7 +31,7 @@ export class UpdateDisciplineUseCase {
     if (!['admin', 'dev'].includes(role)) return left(new NotAllowedError())
 
     const discipline = await this.disciplinesRepository.findById(id)
-    if (!discipline) return left(new ResourceNotFoundError('Discipline not found.'))
+    if (!discipline) return left(new ResourceNotFoundError('Disciplina não encontrada!'))
 
     const nameOrError = Name.create(name ?? discipline.name.value)
     if (nameOrError.isLeft()) return left(nameOrError.value)

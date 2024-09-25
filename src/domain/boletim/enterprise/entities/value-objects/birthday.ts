@@ -28,7 +28,7 @@ export class Birthday extends ValueObject<BirthdayProps> {
 
   static create(birthday: Date): Either<InvalidBirthdayError, Birthday> {
     if (!this.validate(birthday)) {
-      return left(new InvalidBirthdayError())
+      return left(new InvalidBirthdayError('Data de nascimento inválida!'))
     }
 
     return right(new Birthday({ birthday }))

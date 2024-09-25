@@ -19,12 +19,12 @@ export class ForgotPasswordUseCase {
 
   async execute({ cpf }: ForgotPasswordUseCaseRequest): Promise<ForgotPasswordUseCaseResponse> {
     const user = await this.authenticatesRepository.findByCPF({ cpf })
-    if (!user) return left(new ResourceNotFoundError('User not found.'))
+    if (!user) return left(new ResourceNotFoundError('Usuário não encotrado!'))
 
     await this.mailer.sendMail({ from: 'pmpa@dgec.com', to: user.email.value })
 
     return right({
-      message: 'An email was sent. Verify your checkbox.'
+      message: 'Um e-mail foi enviado para sua caixa de texto! Verifique-a para continuar o processo.'
     })
   }
 }

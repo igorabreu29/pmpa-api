@@ -30,16 +30,16 @@ export class ActiveManagerCourseUseCase {
     if (role === 'manager' || role === 'student') return left(new NotAllowedError())
 
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const manager = await this.managersRepository.findById(id)
-    if (!manager) return left(new ResourceNotFoundError('Manager not found.'))
+    if (!manager) return left(new ResourceNotFoundError('Gerente não encontrado.'))
 
     const managerCourse = await this.managerCoursesRepository.findByManagerIdAndCourseId({
       courseId,
       managerId: id
     })
-    if (!managerCourse) return left(new ResourceNotFoundError('Manager does not be present on the course.'))
+    if (!managerCourse) return left(new ResourceNotFoundError('Gerente não está presente no curso.'))
 
     managerCourse.isActive = true
 

@@ -21,7 +21,7 @@ export class GetDeveloperProfileUseCase {
   
   async execute({ id }: GetDeveloperProfileUseCaseRequest): Promise<GetDeveloperProfileUseCaseResponse> {
     const developer = await this.developersRepository.findById(id)
-    if (!developer) return left(new ResourceNotFoundError())
+    if (!developer) return left(new ResourceNotFoundError('Desenvolvedor não encontrado!'))
       
     return right({
       developer

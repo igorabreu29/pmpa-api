@@ -17,7 +17,7 @@ export class DeleteCourseHistoricUseCase {
     courseId,
   }: DeleteCourseHistoricUseCaseRequest): Promise<DeleteCourseHistoricUseCaseResponse> {
     const coursehistoric = await this.coursehistoricsRepository.findByCourseId(courseId)
-    if (!coursehistoric) return left(new ResourceNotFoundError('Course historic not found.'))
+    if (!coursehistoric) return left(new ResourceNotFoundError('Histórico do curso não encontrado!'))
 
     await this.coursehistoricsRepository.delete(coursehistoric)
 

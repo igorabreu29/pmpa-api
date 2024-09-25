@@ -23,13 +23,13 @@ export class DeleteCoursePoleUseCase {
     poleId,
   }: DeleteCoursePoleUseCaseRequest): Promise<DeleteCoursePoleUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
+    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
 
     const coursePole = await this.coursesPolesRepository.findByCourseIdAndPoleId({ courseId, poleId })
-    if (!coursePole) return left(new ResourceNotFoundError('Course pole not found.'))
+    if (!coursePole) return left(new ResourceNotFoundError('Pólo do curso não encontrado!'))
 
     await this.coursesPolesRepository.delete(coursePole)
 

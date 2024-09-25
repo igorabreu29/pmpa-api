@@ -25,7 +25,7 @@ export class EndsAt extends ValueObject<EndsAtProps> {
 
   static create(endsAt: Date): Either<InvalidDateError, EndsAt> {
     if (!this.validate(endsAt)) {
-      return left(new InvalidDateError())
+      return left(new InvalidDateError('Data inválida!'))
     }
 
     return right(new EndsAt({ endsAt }))

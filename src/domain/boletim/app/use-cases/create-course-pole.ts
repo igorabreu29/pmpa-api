@@ -25,10 +25,10 @@ export class CreateCoursePoleUseCase {
     poleId
   }: CreateCoursePoleRequest): Promise<CreateCoursePoleResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
+    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
 
     const coursePoleAlreadyExist = await this.coursesPolesRepository.findByCourseIdAndPoleId({ courseId, poleId })
     if (coursePoleAlreadyExist) return left(new ResourceAlreadyExistError())

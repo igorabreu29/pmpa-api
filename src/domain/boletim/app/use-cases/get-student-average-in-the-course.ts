@@ -155,7 +155,7 @@ export class GetStudentAverageInTheCourseUseCase {
     }))
 
     const courseWithoutModule = assessmentWithDisciplineModule.some(item => item === null)
-    if (courseWithoutModule) return left(new ResourceNotFoundError('Course does not have module.'))
+    if (courseWithoutModule) return left(new ResourceNotFoundError('Disciplina do curso não existente.'))
 
     if (disciplineModule) {
       const gradesByFormula = formulas['sub']({

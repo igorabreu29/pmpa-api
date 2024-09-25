@@ -26,7 +26,7 @@ export class DeleteAdministratorUseCase {
     if (role !== 'dev') return left(new NotAllowedError())
       
     const administrator = await this.administratorsRepository.findById(id)
-    if (!administrator) return left(new ResourceNotFoundError('Administrator not found.'))
+    if (!administrator) return left(new ResourceNotFoundError('Administrador não encontrado.'))
     
     await this.administratorsRepository.delete(administrator)
 

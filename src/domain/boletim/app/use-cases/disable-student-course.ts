@@ -30,16 +30,16 @@ export class DisableStudentCourseUseCase {
     if (role === 'student') return left(new NotAllowedError())
 
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const student = await this.studentsRepository.findById(id)
-    if (!student) return left(new ResourceNotFoundError('Student not found.'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
 
     const studentCourse = await this.studentCoursesRepository.findByStudentIdAndCourseId({
       courseId,
       studentId: id
     })
-    if (!studentCourse) return left(new ResourceNotFoundError('Student does not be present on the course.'))
+    if (!studentCourse) return left(new ResourceNotFoundError('Estudante não está presente no curso!'))
 
     studentCourse.isActive = false
 

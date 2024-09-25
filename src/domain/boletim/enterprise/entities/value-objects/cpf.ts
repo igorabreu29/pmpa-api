@@ -34,7 +34,7 @@ export class CPF extends ValueObject<CPFProps> {
 
   static create(cpf: string): Either<InvalidCPFError, CPF> {
     if (!this.validate(cpf)) {
-      return left(new InvalidCPFError())
+      return left(new InvalidCPFError('CPF inválido!'))
     }
 
     const formattedcpf = this.format(cpf)

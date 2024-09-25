@@ -75,10 +75,10 @@ export class CreateAdminUseCase {
     const administrator = administratorOrError.value
 
     const administratorAlreadyExistWithCPF = await this.administratorsRepository.findByCPF(administrator.cpf.value)
-    if (administratorAlreadyExistWithCPF) return left(new ResourceAlreadyExistError('Administrator already exist.'))
+    if (administratorAlreadyExistWithCPF) return left(new ResourceAlreadyExistError('Administrador já está na plataforma.'))
 
     const userAlreadyExistWithEmail = await this.administratorsRepository.findByEmail(administrator.email.value)
-    if (userAlreadyExistWithEmail) return left(new ResourceAlreadyExistError('Administrator already exist.'))
+    if (userAlreadyExistWithEmail) return left(new ResourceAlreadyExistError('Administrador já está na plataforma.'))
 
     administrator.addDomainAdministratorEvent(
       new AdministratorEvent({

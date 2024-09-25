@@ -90,21 +90,21 @@ export async function updateManager(
         case ResourceNotFoundError: 
           throw new NotFound(error.message)
         case NotAllowedError: 
-          throw new NotAllowed('Invalid access level')
+          throw new NotAllowed('Nível de acesso inválido')
         case InvalidEmailError:
-          throw new Conflict('This email is not valid.') 
+          throw new Conflict('Email inválido!') 
         case InvalidPasswordError:
-          throw new Conflict('This password is not valid.') 
+          throw new Conflict('Senha inválida!') 
         case InvalidBirthdayError:
-          throw new Conflict('This birthday is not valid.') 
+          throw new Conflict('Data de nascimento inválida!') 
         case InvalidNameError:
-          throw new Conflict('This name is not valid.') 
+          throw new Conflict('Nome inválido!') 
         case InvalidCPFError:
-          throw new Conflict('This cpf is not valid.') 
+          throw new Conflict('CPF inválido!') 
         case InvalidBirthdayError:
           throw new Conflict('This date is not valid.') 
         default: 
-          throw new ClientError('Ocurred something problem')
+          throw new ClientError('Houve algum problema')
       }
     }
 

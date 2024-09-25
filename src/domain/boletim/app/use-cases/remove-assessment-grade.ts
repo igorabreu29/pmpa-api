@@ -44,7 +44,7 @@ export class RemoveAssessmentGradeUseCase {
     if (role === 'student') return left(new NotAllowedError())
 
     const assessment = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({ courseId, disciplineId, studentId })
-    if (!assessment) return left(new ResourceNotFoundError('Assessment not found.'))
+    if (!assessment) return left(new ResourceNotFoundError('Av não encontrada.'))
 
     assessment.vf = vf ? null : assessment.vf
     assessment.avi = avi ? null : assessment.avi

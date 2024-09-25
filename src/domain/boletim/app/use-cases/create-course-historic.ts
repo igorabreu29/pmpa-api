@@ -39,7 +39,7 @@ export class CreateCourseHistoricUseCase {
     commander
   }: CreateCourseHistoricUseCaseRequest): Promise<CreateCourseHistoricUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const courseDisciplines = await this.courseDisciplinesRepository.findManyByCourseIdWithDiscipliine(
       {
@@ -50,7 +50,7 @@ export class CreateCourseHistoricUseCase {
     const courseHasHistoric = await this.courseHistoricRepository.findByCourseId(courseId)
     if (courseHasHistoric) return left(new ResourceAlreadyExistError('This course already has a historic.'))
 
-    if (finishDate.getTime() < startDate.getTime()) return left(new ConflictError('Conflict between dates. Finish Date cannot be less than Start Date.'))
+    if (finishDate.getTime() < startDate.getTime()) return left(new ConflictError('Conflito entre a data de início e de fim!'))
 
     const totalDisciplinesHours = courseDisciplines.reduce((hours, courseDiscipline) => hours + courseDiscipline.hours, 0)
     const totalHours = 

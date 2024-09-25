@@ -27,7 +27,7 @@ export class DeleteStudentUseCase {
     if (role === 'student') return left(new NotAllowedError())
       
     const student = await this.studentsRepository.findById(id)
-    if (!student) return left(new ResourceNotFoundError('Student not found.'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
       
     await this.studentsRepository.delete(student)
 

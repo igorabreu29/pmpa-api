@@ -21,7 +21,7 @@ export class FetchCourseDisciplinesUseCase {
 
   async execute({ courseId, search }: FetchCourseDisciplinesUseCaseRequest): Promise<FetchCourseDisciplinesUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
     
     const disciplines = await this.courseDisciplinesRepository.findManyByCourseIdWithDiscipliine({ courseId: course.id.toValue(), search })
     return right({

@@ -53,23 +53,23 @@ export class CreateAssessmentsBatchUseCase {
     if (role === 'student') return left(new NotAllowedError())
     
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
-    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
+    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Curso finalizado!'))
 
     const assessmentsBatchOrError = await Promise.all(studentAssessments.map(async (studentAssessment) => {
       const student = await this.studentsRepository.findByCPF(studentAssessment.cpf)
-      if (!student) return new ResourceNotFoundError('Student not found.')
+      if (!student) return new ResourceNotFoundError('Estudante não encontrado.')
 
       const discipline = await this.disciplinesRepository.findByName(studentAssessment.disciplineName)
-      if (!discipline) return new ResourceNotFoundError('Discipline not found.')
+      if (!discipline) return new ResourceNotFoundError('Disciplina não encontrada!')
 
       const assessmentAlreadyExistToStudent = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({
         studentId: student.id.toValue(),
         disciplineId: discipline.id.toValue(),
         courseId: course.id.toValue(),
       })
-      if (assessmentAlreadyExistToStudent) return new ResourceAlreadyExistError('Assessment already released to the student')
+      if (assessmentAlreadyExistToStudent) return new ResourceAlreadyExistError('Av já lançada para o estudante!')
 
       const assessmentOrError = Assessment.create({
         courseId: course.id,

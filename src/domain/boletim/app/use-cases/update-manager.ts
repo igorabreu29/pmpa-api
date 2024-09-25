@@ -83,7 +83,7 @@ export class UpdateManagerUseCase {
     if (role === 'manager' || role === 'manager') return left(new NotAllowedError())
       
     const manager = await this.managersRepository.findById(id)
-    if (!manager) return left(new ResourceNotFoundError('manager not found.'))
+    if (!manager) return left(new ResourceNotFoundError('gerente não encontrado.'))
 
     let managerCourse = await this.managerCoursesRepository.findByManagerIdAndCourseId({
       courseId,
@@ -120,7 +120,7 @@ export class UpdateManagerUseCase {
       const currentManagerPole = await this.managerPolesRepository.findByManagerId({
         managerId: managerCourse.id.toValue()
       })
-      if (!currentManagerPole) return left(new ResourceNotFoundError('Manager pole not found.'))
+      if (!currentManagerPole) return left(new ResourceNotFoundError('Manager pólo não encontrado!'))
 
       const newManagerPole = ManagerPole.create({
         poleId: new UniqueEntityId(poleId),

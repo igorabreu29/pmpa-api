@@ -24,7 +24,7 @@ export async function activeStudent(
           courseId: z.string().uuid(),
         }),
         body: z.object({
-          reason: z.string().min(3, 'The reason message cannot be less than 3 characters').max(200, 'The reason message cannot be bigger than 200 characters')
+          reason: z.string().min(3, 'A mensagem não pode ser menor que 3 caracteres').max(200, 'A mensagem não pode ser maior que 200 caracteres')
         })
       },
     }, 

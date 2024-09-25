@@ -26,7 +26,7 @@ export class DeleteDisciplineUseCase {
     if (!['admin', 'dev'].includes(role)) return left(new NotAllowedError())
 
     const discipline = await this.disciplinesRepository.findById(id)
-    if (!discipline) return left(new ResourceNotFoundError('Discipline not found.'))
+    if (!discipline) return left(new ResourceNotFoundError('Disciplina não encontrada!'))
 
     await this.disciplinesRepository.delete(discipline)
 

@@ -20,7 +20,7 @@ export class FetchCoursePolesUseCase {
 
   async execute({ courseId }: FetchCoursePolesUseCaseRequest): Promise<FetchCoursePolesUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
     
     const poles = await this.coursePolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
     return right({

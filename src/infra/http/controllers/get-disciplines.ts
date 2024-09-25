@@ -26,7 +26,7 @@ export async function getDisciplines(
       const result = await useCase.execute({ page })
 
       if (result.isLeft()) {
-        throw new ClientError('Ocurred something error')
+        throw new ClientError('Houve algum erro')
       }
 
       const { disciplines, pages, totalItems } = result.value

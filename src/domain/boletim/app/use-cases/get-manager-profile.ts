@@ -21,7 +21,7 @@ export class GetManagerProfileUseCase {
   
   async execute({ id }: GetManagerProfileUseCaseRequest): Promise<GetManagerProfileUseCaseResponse> {
     const manager = await this.managersRepository.findDetailsById(id)
-    if (!manager) return left(new ResourceNotFoundError())
+    if (!manager) return left(new ResourceNotFoundError('Gerente não encontrado!'))
       
     return right({
       manager

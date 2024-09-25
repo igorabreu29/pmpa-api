@@ -67,19 +67,19 @@ export class UpdateStudentsBatchUseCase {
     if (role === 'student') return left(new NotAllowedError())
     
     const currentCourse = await this.coursesRepository.findById(courseId)
-    if (!currentCourse) return left(new ResourceNotFoundError('Course not found.'))
+    if (!currentCourse) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const studentsOrError = await Promise.all(students.map(async (student) => {
       const course = await this.coursesRepository.findByName(student.courseName)
-      if (!course) return new ResourceNotFoundError('Course not found.')
+      if (!course) return new ResourceNotFoundError('Curso não existente.')
 
       const pole = await this.polesRepository.findByName(student.poleName)
-      if (!pole) return new ResourceNotFoundError('Pole not found.')
+      if (!pole) return new ResourceNotFoundError('Pólo não encontrado!')
 
       const formattedCPF = CPF.format(student.cpf)
 
       const studentExist = await this.studentsRepository.findByCPF(formattedCPF)
-      if (!studentExist) return new ResourceNotFoundError('Student not found.')
+      if (!studentExist) return new ResourceNotFoundError('Estudante não encontrado.')
 
       let studentCourse = await this.studentCoursesRepository.findByStudentIdAndCourseId({
         studentId: studentExist.id.toValue(),
@@ -116,7 +116,7 @@ export class UpdateStudentsBatchUseCase {
         const currentStudentPole = await this.studentPolesRepository.findByStudentId({
           studentId: studentCourse.id.toValue()
         })
-        if (!currentStudentPole) return new ResourceNotFoundError('Student pole not found.')
+        if (!currentStudentPole) return new ResourceNotFoundError('Student pólo não encontrado!')
 
         const newStudentPole = StudentPole.create({
           poleId: pole.id,

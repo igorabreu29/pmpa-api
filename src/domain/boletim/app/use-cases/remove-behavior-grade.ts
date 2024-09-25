@@ -56,7 +56,7 @@ export class RemoveBehaviorGradeUseCase {
     if (role === 'student') return left(new NotAllowedError())
 
     const behavior = await this.behaviorsRepository.findById({ id })
-    if (!behavior) return left(new ResourceNotFoundError('Assessment not found.'))
+    if (!behavior) return left(new ResourceNotFoundError('Av não encontrada.'))
 
     behavior.january = january ? null : behavior.january
     behavior.february = february ? null : behavior.february

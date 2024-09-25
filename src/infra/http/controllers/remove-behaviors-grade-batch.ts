@@ -63,13 +63,13 @@ export async function removeBehaviorsGradeBatch(
         
         switch(error.constructor) {
           case NotAllowedError: 
-            throw new NotAllowed('Invalid access level')
+            throw new NotAllowed('Nível de acesso inválido')
           case ResourceNotFoundError:
             throw new NotFound(error.message)
           case ConflictError:
             throw new Conflict(error.message)
           default: 
-            throw new ClientError('Ocurred something error')
+            throw new ClientError('Houve algum erro')
         }
       }
 

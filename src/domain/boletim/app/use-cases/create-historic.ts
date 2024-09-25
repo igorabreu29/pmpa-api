@@ -23,8 +23,8 @@ export class CreateHistoricUseCase {
 
   async execute({ className, courseId, finishDate, startDate }: CreateHistoricUseCaseRequest): Promise<CreateHistoricUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('It is not possible to record the history of a course that does not exist'))
-    if (finishDate.getTime() < startDate.getTime()) return left(new NotAllowedError('The finish date cannot be before from start date'))
+    if (!course) return left(new ResourceNotFoundError('Não é possível gerar o histórico escolar de um curso não existente.'))
+    if (finishDate.getTime() < startDate.getTime()) return left(new NotAllowedError('Conflito entre as datas de ínicio e término do curso.'))
 
     const courseHistoric = CourseHistoric.create({
       className,

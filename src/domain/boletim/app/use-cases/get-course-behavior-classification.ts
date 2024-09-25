@@ -25,7 +25,7 @@ export class GetCourseBehaviorClassificationUseCase {
 
   async execute({ courseId }: GetCourseBehaviorClassificationUseCaseRequest): Promise<GetCourseBehaviorClassificationUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const coursePoles = await this.coursesPolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
 

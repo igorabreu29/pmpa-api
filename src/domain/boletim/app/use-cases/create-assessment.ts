@@ -53,18 +53,18 @@ export class CreateAssessmentUseCase {
     if (role === 'student') return left(new NotAllowedError())
       
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
-    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
+    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Curso finalizado!'))
 
     const discipline = await this.disciplinesRepository.findById(disciplineId)
-    if (!discipline) return left(new ResourceNotFoundError('Discipline not found.'))
+    if (!discipline) return left(new ResourceNotFoundError('Disciplina não encontrada!'))
 
     const student = await this.studentsRepository.findById(studentId)
-    if (!student) return left(new ResourceNotFoundError('Student not found.'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
 
     const assessmentAlreadyAdded = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({ studentId, courseId, disciplineId }) 
-    if (assessmentAlreadyAdded) return left(new ResourceAlreadyExistError('Assessment already exist.'))
+    if (assessmentAlreadyAdded) return left(new ResourceAlreadyExistError('Av já existente.'))
 
     const assessmentOrError = Assessment.create({
       studentId: new UniqueEntityId(studentId),

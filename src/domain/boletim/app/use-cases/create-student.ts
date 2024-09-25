@@ -77,10 +77,10 @@ export class CreateStudentUseCase {
     if (role === 'student') return left(new NotAllowedError())
       
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
       
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pole not found.'))
+    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
 
     const defaultPassword = `Pmp@${cpf}`
 
@@ -114,7 +114,7 @@ export class CreateStudentUseCase {
     const studentWithCPF = await this.studentsRepository.findByCPF(student.cpf.value)
     if (studentWithCPF) {
       const studentAlreadyPresentInTheCourse = await this.studentsCoursesRepository.findByStudentIdAndCourseId({ studentId: studentWithCPF.id.toValue(), courseId })
-      if (studentAlreadyPresentInTheCourse) return left(new ResourceAlreadyExistError('Student already present in the course'))
+      if (studentAlreadyPresentInTheCourse) return left(new ResourceAlreadyExistError('Estudante já está presente no curso!'))
 
       const studentCourse = StudentCourse.create({
         studentId: studentWithCPF.id,
@@ -123,7 +123,7 @@ export class CreateStudentUseCase {
       await this.studentsCoursesRepository.create(studentCourse)
       
       const studentAlreadyPresentAtPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
-      if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Student already present at a pole'))
+      if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Estudante já está presente no pólo'))
 
       const studentPole = StudentPole.create({
         studentId: studentCourse.id,
@@ -148,7 +148,7 @@ export class CreateStudentUseCase {
     const studentWithEmail = await this.studentsRepository.findByEmail(student.email.value)
     if (studentWithEmail) {
       const studentAlreadyPresentInTheCourse = await this.studentsCoursesRepository.findByStudentIdAndCourseId({ studentId: studentWithEmail.id.toValue(), courseId })
-      if (studentAlreadyPresentInTheCourse) return left(new ResourceAlreadyExistError('Student already present in the course'))
+      if (studentAlreadyPresentInTheCourse) return left(new ResourceAlreadyExistError('Estudante já está presente no curso!'))
 
       const studentCourse = StudentCourse.create({
         studentId: studentWithEmail.id,
@@ -157,7 +157,7 @@ export class CreateStudentUseCase {
       await this.studentsCoursesRepository.create(studentCourse)
       
       const studentAlreadyPresentAtPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
-      if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Student already present at a pole'))
+      if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Estudante já está presente no pólo'))
       
       const studentPole = StudentPole.create({
         studentId: studentCourse.id,

@@ -37,7 +37,7 @@ export async function getManagerReports(
       })
 
       if (result.isLeft()) {
-        throw new ClientError('Ocurred something error')
+        throw new ClientError('Houve algum erro')
       }
 
       const { reports, pages, totalItems } = result.value

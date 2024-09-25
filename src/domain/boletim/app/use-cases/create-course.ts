@@ -37,7 +37,7 @@ export class CreateCourseUseCase {
 
   async execute({ formula, name, imageUrl, startAt, endsAt, isPeriod }: CreateCourseUseCaseRequest): Promise<CreateCourseUseCaseResponse> {
     const courseAlreadyExist = await this.coursesRepository.findByName(name)
-    if (courseAlreadyExist) return left(new ResourceAlreadyExistError('Course already present on the platform.'))
+    if (courseAlreadyExist) return left(new ResourceAlreadyExistError('Curso já presente na plataforma.'))
 
     const nameOrError = Name.create(name)
     const endsAtOrError = EndsAt.create(endsAt)

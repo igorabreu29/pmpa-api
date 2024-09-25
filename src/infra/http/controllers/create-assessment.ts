@@ -62,7 +62,7 @@ export async function createAssessment(
         
         switch(error.constructor) {
           case NotAllowedError: 
-            throw new NotAllowed('Invalid access level')
+            throw new NotAllowed('Nível de acesso inválido')
           case ResourceNotFoundError:
             throw new NotFound(error.message)
           case ResourceAlreadyExistError:
@@ -70,7 +70,7 @@ export async function createAssessment(
           case ConflictError:
             throw new Conflict(error.message)
           default: 
-            throw new ClientError('Ocurred something problem')
+            throw new ClientError('Houve algum problema')
         }
       }
 

@@ -27,7 +27,7 @@ export class DeleteManagerUseCase {
     if (role === 'student' || role === 'manager') return left(new NotAllowedError())
       
     const manager = await this.managersRepository.findById(id)
-    if (!manager) return left(new ResourceNotFoundError('Manager not found.'))
+    if (!manager) return left(new ResourceNotFoundError('Gerente não encontrado.'))
 
     await this.managersRepository.delete(manager)
     

@@ -67,12 +67,12 @@ export class CreateBehaviorsBatchUseCase {
     if (role === 'student') return left(new NotAllowedError())
 
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
-    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
+    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Curso finalizado!'))
 
     const studentBehaviorsOrError = await Promise.all(studentBehaviors.map(async (studentBehavior) => {
       const student = await this.studentsRepository.findByCPF(studentBehavior.cpf)
-      if (!student) return new ResourceNotFoundError('Student not found.')
+      if (!student) return new ResourceNotFoundError('Estudante não encontrado.')
 
       const behaviorAlreadyExist = await this.behaviorsRepository.findByStudentAndCourseIdAndYear({
         courseId: course.id.toValue(),
@@ -80,7 +80,7 @@ export class CreateBehaviorsBatchUseCase {
         year: studentBehavior.currentYear
       })
 
-      if (behaviorAlreadyExist) return new ResourceAlreadyExistError('Behavior already exist.')
+      if (behaviorAlreadyExist) return new ResourceAlreadyExistError('Comportamento já lançado para o estudante!')
 
       const behavior = Behavior.create({
         courseId: course.id,

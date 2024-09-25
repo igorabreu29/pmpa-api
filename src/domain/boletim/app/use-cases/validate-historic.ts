@@ -23,18 +23,18 @@ export class ValidateHistoricUseCase {
 
   async execute({ id, hash }: ValidateHistoricUseCaseRequest): Promise<ValidateHistoricUseCaseResponse> {
     const courseHistoric = await this.courseHistoricsRepository.findById(id)
-    if (!courseHistoric) return left(new ResourceNotFoundError('Course historic not found.'))
+    if (!courseHistoric) return left(new ResourceNotFoundError('Histórico do curso não encontrado!'))
 
     const course = await this.coursesRepository.findById(courseHistoric.courseId.toValue())
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const plainText = `${course.name.value} - PMPA`
     const isValid = await this.hasher.compare(plainText, hash)
 
-    if (!isValid) return left(new ConflictError('Invalid text.'))
+    if (!isValid) return left(new ConflictError('Histórico inválido!'))
 
     return right({
-      message: 'Course historic is valid.'
+      message: 'Histórico do curso é válido!'
     })
   }
 }

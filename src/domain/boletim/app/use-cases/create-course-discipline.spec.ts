@@ -28,7 +28,7 @@ describe('Create Course Discipline', () => {
     )
   })
 
-  it ('should not be able to create course discipline if course not found.', async () => {
+  it ('should not be able to create course discipline if course does not exist', async () => {
     const result = await sut.execute({
       courseId: '',
       disciplineId: '',
@@ -41,7 +41,7 @@ describe('Create Course Discipline', () => {
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it ('should not be able to create course discipline if discipline not found.', async () => {
+  it ('should not be able to create course discipline if disciplina não encontrada!', async () => {
     const course = makeCourse()
     coursesRepository.create(course)
 

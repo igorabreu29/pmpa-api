@@ -54,7 +54,7 @@ export async function createCourse(
             case InvalidDateError:
               throw new Conflict(error.message)
             default: 
-              throw new ClientError('Ocurred something error')
+              throw new ClientError('Houve algum erro')
           }
         }
 

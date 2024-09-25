@@ -16,7 +16,7 @@ export class ChangeStudentAvatarUseCase {
 
   async execute({ id, fileLink }: ChangeStudentAvatarUseCaseRequest): Promise<ChangeStudentAvatarUseCaseResponse> {
     const student = await this.studentsRepository.findById(id)
-    if (!student) return left(new ResourceNotFoundError('Student not found'))
+    if (!student) return left(new ResourceNotFoundError('Estudante não encontrado'))
 
     student.avatarUrl = fileLink
     await this.studentsRepository.save(student)

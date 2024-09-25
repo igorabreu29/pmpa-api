@@ -52,7 +52,7 @@ export async function getClassificationByManager(
           case InvalidCourseFormulaError:
             throw new Conflict(error.message)
           default: 
-            throw new ClientError('Ocurred something wrong')
+            throw new ClientError('Houve algum erro')
         }
       }
 

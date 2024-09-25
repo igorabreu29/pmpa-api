@@ -64,24 +64,24 @@ export class Assessment extends AggregateRoot<AssessmentProps> {
     props: Optional<AssessmentProps, 'avi' | 'avii' | 'vfe'>,
     id?: UniqueEntityId
   ): Either<ConflictError, Assessment> {
-    if (!props.vf && props.avi) return left(new ConflictError('VF is missing'))
+    if (!props.vf && props.avi) return left(new ConflictError('Está faltando a VF.'))
 
     if (props.avi && (
         props.avi > 10 || props.avi < 0
       )
-    ) return left(new ConflictError('Invalid size number'))
+    ) return left(new ConflictError('A notas não podem ser maiores que 10 ou menores que 0'))
 
-    if (!props.avi && props.avii) return left(new ConflictError('Invalid expected'))
+    if (!props.avi && props.avii) return left(new ConflictError('Está faltado a AVI'))
 
     if (props.avi && props.avii && (
         props.avii > 10 || props.avii < 0
       )
-    ) return left(new ConflictError('Invalid size number'))
+    ) return left(new ConflictError('A notas não podem ser maiores que 10 ou menores que 0'))
 
     if (props.vfe && (
         props.vfe > 10 || props.vfe < 0
       )
-    ) return left(new ConflictError('Invalid size number'))
+    ) return left(new ConflictError('A notas não podem ser maiores que 10 ou menores que 0'))
 
     const assessment = new Assessment({
       avi: props.avi ?? null,

@@ -23,7 +23,7 @@ export class CreateDisciplineUseCase {
     if (!['admin', 'dev'].includes(role)) return left(new NotAllowedError())
 
     const disciplineAlreadyExist = await this.disciplinesRepository.findByName(name)
-    if (disciplineAlreadyExist) return left(new ResourceAlreadyExistError('Discipline already exist.'))
+    if (disciplineAlreadyExist) return left(new ResourceAlreadyExistError('Disciplina já existente.'))
 
     const nameOrError = Name.create(name)
     if (nameOrError.isLeft()) throw new Error(nameOrError.value.message)

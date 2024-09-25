@@ -46,7 +46,6 @@ describe('Create Course Historic Use Case', () => {
     
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
-    expect(result.value?.message).toEqual('Course not found.')
   }) 
 
   it ('should not be able to create course historic if it aldready has one', async () => {

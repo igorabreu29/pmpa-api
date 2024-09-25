@@ -43,7 +43,7 @@ export class UpdateAssessmentUseCaseUseCase {
     if (role === 'student') return left(new NotAllowedError())
 
     const assessment = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({ studentId, disciplineId, courseId }) 
-    if (!assessment) return left(new ResourceNotFoundError('Assessment not found.'))
+    if (!assessment) return left(new ResourceNotFoundError('Av não encontrada.'))
 
     const assessmentOrError = Assessment.create({
       courseId: assessment.courseId,

@@ -29,7 +29,7 @@ describe('Forgot Password Use Case', () => {
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it ('should receive "An email was sent. Verify your checkbox." if user exist', async () => {
+  it ('should receive "Um e-mail foi enviado para sua caixa de texto! Verifique-a para continuar o processo." if user exist', async () => {
     const authenticate = makeAuthenticate()
     authenticatesRepository.items.push(authenticate)
 
@@ -39,7 +39,7 @@ describe('Forgot Password Use Case', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      message: 'An email was sent. Verify your checkbox.'
+      message: 'Um e-mail foi enviado para sua caixa de texto! Verifique-a para continuar o processo.'
     })
   })
 })

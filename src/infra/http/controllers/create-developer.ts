@@ -52,21 +52,21 @@ export async function createDeveloper(
 
       switch(error.constructor) {
         case InvalidEmailError:
-          throw new Conflict('This email is not valid.') 
+          throw new Conflict('Email inválido!') 
         case InvalidPasswordError:
-          throw new Conflict('This password is not valid.') 
+          throw new Conflict('Senha inválida!') 
         case InvalidBirthdayError:
-          throw new Conflict('This birthday is not valid.') 
+          throw new Conflict('Data de nascimento inválida!') 
         case InvalidNameError:
-          throw new Conflict('This name is not valid.') 
+          throw new Conflict('Nome inválido!') 
         case InvalidCPFError:
-          throw new Conflict('This cpf is not valid.') 
+          throw new Conflict('CPF inválido!') 
         case InvalidBirthdayError:
           throw new Conflict('This date is not valid.') 
         case ResourceAlreadyExistError: 
-          throw new Conflict('Student already be present in the platform')
+          throw new Conflict('Estudante já presente na plataforma')
         default: 
-          throw new ClientError('Ocurred something problem')
+          throw new ClientError('Houve algum problema')
       }
     }
 

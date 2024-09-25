@@ -66,19 +66,19 @@ export class UpdateBehaviorsBatchUseCase {
     if (role === 'student') return left(new NotAllowedError())
 
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
-    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Course has been finished.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
+    if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Curso finalizado!'))
 
     const studentBehaviorsOrError = await Promise.all(studentBehaviors.map(async (studentBehavior) => {
       const student = await this.studentsRepository.findByCPF(studentBehavior.cpf)
-      if (!student) return new ResourceNotFoundError('Student not found.')
+      if (!student) return new ResourceNotFoundError('Estudante não encontrado.')
         
       const behavior = await this.behaviorsRepository.findByStudentAndCourseIdAndYear({ 
         studentId: student.id.toValue(), 
         courseId: course.id.toValue(),
         year: studentBehavior.currentYear 
       }) 
-      if (!behavior) return new ResourceNotFoundError('Behavior not found.')
+      if (!behavior) return new ResourceNotFoundError('Comportamento não encontrado .')
 
       behavior.january =  studentBehavior.january ?? behavior.january
       behavior.february =  studentBehavior.february ?? behavior.february

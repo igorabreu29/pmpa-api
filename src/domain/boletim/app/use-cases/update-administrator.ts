@@ -54,7 +54,7 @@ export class UpdateAdministratorUseCase {
     if (role !== 'dev') return left(new NotAllowedError())
       
     const administrator = await this.administratorsRepository.findById(id)
-    if (!administrator) return left(new ResourceNotFoundError('Administrator not found.'))
+    if (!administrator) return left(new ResourceNotFoundError('Administrador não encontrado.'))
 
     const cpfFormatted = formatCPF(administrator.cpf.value)
 

@@ -45,7 +45,7 @@ export async function createCoursePole(
             case ResourceNotFoundError: 
               throw new NotFound(error.message)
             default: 
-              throw new ClientError('Ocurred something error')
+              throw new ClientError('Houve algum erro')
           }
         }
 

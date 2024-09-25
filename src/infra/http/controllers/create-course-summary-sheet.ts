@@ -35,7 +35,7 @@ export async function createCourseSummarySheet(
           case ResourceNotFoundError: 
             throw new NotFound(error.message)
           default: 
-            throw new ClientError()
+            throw new ClientError('Houve algum erro')
         }
       }
 

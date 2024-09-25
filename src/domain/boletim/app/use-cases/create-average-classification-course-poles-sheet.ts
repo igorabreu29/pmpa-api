@@ -22,7 +22,7 @@ export class CreateAverageClassificationCoursePolesSheetUseCase {
   
   async execute({ courseId }: CreateAverageClassificationCoursePolesSheetUseCaseRequest): Promise<CreateAverageClassificationCoursePolesSheetUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const classification = await this.getAverageClassificationCoursePoles.execute({
       courseId: course.id.toValue()

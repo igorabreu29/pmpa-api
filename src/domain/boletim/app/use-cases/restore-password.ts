@@ -21,9 +21,9 @@ export class RestorePasswordUseCase {
 
   async execute({ email, newPassword, confirmPassword }: RestorePasswordUseCaseRequest): Promise<RestorePasswordUseCaseResponse> {
     const user = await this.authenticatesRepository.findByEmail({ email })
-    if (!user) return left(new ResourceNotFoundError('User not found.'))
+    if (!user) return left(new ResourceNotFoundError('Usuário não encontrado.'))
 
-    if (newPassword !== confirmPassword) return left(new ConflictError('Passwords not equals.'))
+    if (newPassword !== confirmPassword) return left(new ConflictError('Senhas incompatíveis.'))
 
     const passwordOrError = Password.create(newPassword)
     if (passwordOrError.isLeft()) return left(passwordOrError.value)

@@ -24,13 +24,13 @@ export class DeleteCourseDisciplineUseCase {
     disciplineId,
   }: DeleteCourseDisciplineUseCaseRequest): Promise<DeleteCourseDisciplineUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const discipline = await this.disciplinesRepository.findById(disciplineId)
-    if (!discipline) return left(new ResourceNotFoundError('Discipline not found.'))
+    if (!discipline) return left(new ResourceNotFoundError('Disciplina não encontrada!'))
 
     const courseDiscipline = await this.coursesDisciplinesRepository.findByCourseAndDisciplineId({ courseId, disciplineId })
-    if (!courseDiscipline) return left(new ResourceNotFoundError('Course discipline not found.'))
+    if (!courseDiscipline) return left(new ResourceNotFoundError('Disciplina não existe no curso.'))
 
     await this.coursesDisciplinesRepository.delete(courseDiscipline)
 

@@ -30,7 +30,7 @@ export class DeleteBehaviorUseCaseUseCase {
     if (role === 'student') return left(new NotAllowedError())
 
     const behavior = await this.behaviorsRepository.findById({ id }) 
-    if (!behavior) return left(new ResourceNotFoundError('Behavior not found.'))
+    if (!behavior) return left(new ResourceNotFoundError('Comportamento não encontrado!'))
 
     behavior.addDomainBehaviorEvent(new BehaviorDeletedEvent({
       behavior,

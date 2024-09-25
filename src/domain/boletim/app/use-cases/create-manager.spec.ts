@@ -64,7 +64,7 @@ describe('Create Manager Use Case', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilId: 0,
+        civilId: '0',
         userId: '',
         userIp: '',
         role: 'manager'
@@ -74,7 +74,7 @@ describe('Create Manager Use Case', () => {
       expect(result.value).toBeInstanceOf(NotAllowedError)
     })
 
-    it ('should not be able to create manager if course not found', async () => {
+    it ('should not be able to create manager if course does not exist', async () => {
       const result = await sut.execute({
         courseId: '',
         poleId: '',
@@ -82,7 +82,7 @@ describe('Create Manager Use Case', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilId: 0,
+        civilId: '0',
         userId: '',
         userIp: '',
         role: 'admin'
@@ -103,7 +103,7 @@ describe('Create Manager Use Case', () => {
         email: '',
         username: '',
         birthday: new Date(),
-        civilId: 0,
+        civilId: '0',
         userId: '',
         userIp: '',
         role: 'admin'
@@ -131,7 +131,7 @@ describe('Create Manager Use Case', () => {
         email: 'john@example.com',
         username: 'John Doe',
         birthday: new Date('2002'),
-        civilId: 4444,
+        civilId: '4444',
         userId: '',
         userIp: '',
         role: 'admin'
@@ -168,7 +168,7 @@ describe('Create Manager Use Case', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: new Date('2002-2'),
-        civilId: 0,
+        civilId: '0',
         userId: '',
         userIp: '',
         role: 'admin'
@@ -195,7 +195,7 @@ describe('Create Manager Use Case', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: new Date('2004-4-2'),
-        civilId: 0,
+        civilId: '0',
         userId: '',
         userIp: '',
         role: 'admin'
@@ -228,7 +228,7 @@ describe('Create Manager Use Case', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: new Date('2002'),
-        civilId: 0,
+        civilId: '0',
         userId: '',
         userIp: '',
         role: 'admin'
@@ -255,7 +255,7 @@ describe('Create Manager Use Case', () => {
         email: manager.email.value,
         username: manager.username.value,
         birthday: manager.birthday.value,
-        civilId: 0,
+        civilId: '0',
         userId: '',
         userIp: '',
         role: 'admin'

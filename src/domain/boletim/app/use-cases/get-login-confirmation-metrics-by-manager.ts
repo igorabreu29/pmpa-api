@@ -38,10 +38,10 @@ export class GetLoginConfirmationMetricsByManager {
     managerId
   }: GetLoginConfirmationMetricsByManagerRequest): Promise<GetLoginConfirmationMetricsByManagerResponse> {
     const course = await this.coursesRepository.findById(courseId)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const managerCourse = await this.managersCoursesRepository.findDetailsByManagerAndCourseId({ courseId, managerId }) 
-    if (!managerCourse) return left(new ResourceNotFoundError('Manager course not found'))
+    if (!managerCourse) return left(new ResourceNotFoundError('Gerente não está presente no curso.'))
 
     const { totalConfirmedSize, totalNotConfirmedSize } = await this.studentsPolesRepository.findLoginConfirmationMetricsByPoleId({ poleId: managerCourse.poleId.toValue() })
 

@@ -50,7 +50,7 @@ export class ChangeDeveloperProfileUseCase {
     state
   }: ChangeDeveloperProfileUseCaseRequest): Promise<ChangeDeveloperProfileUseCaseResponse> {
     const developer = await this.developersRepository.findById(id)
-    if (!developer) return left(new ResourceNotFoundError('Developer not found.'))
+    if (!developer) return left(new ResourceNotFoundError('Desenvolvedor não encontrado.'))
 
     const nameOrError = Name.create(username ?? developer.username.value)
     const emailOrError = Email.create(email ?? developer.email.value)

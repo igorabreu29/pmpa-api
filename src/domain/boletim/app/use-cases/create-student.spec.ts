@@ -81,7 +81,7 @@ describe('Create Student Use Case', () => {
       expect(result.value).toBeInstanceOf(NotAllowedError)
     })
 
-    it ('should not be able to create student if course not found', async () => {
+    it ('should not be able to create student if course does not exist', async () => {
       const result = await sut.execute({
         courseId: '',
         poleId: '',

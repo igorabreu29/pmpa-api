@@ -23,7 +23,7 @@ export class Name extends ValueObject<NameProps> {
 
   static create(name: string): Either<InvalidNameError, Name> {
     if (!this.validate(name)) {
-      return left(new InvalidNameError())
+      return left(new InvalidNameError('Nome inválido!'))
     }
 
     return right(new Name({ name }))

@@ -17,7 +17,7 @@ export class DeleteCourseUseCase {
     id,
   }: DeleteCourseUseCaseRequest): Promise<DeleteCourseUseCaseResponse> {
     const course = await this.coursesRepository.findById(id)
-    if (!course) return left(new ResourceNotFoundError('Course not found.'))
+    if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     await this.coursesRepository.delete(course)
 

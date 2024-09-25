@@ -21,7 +21,7 @@ export class GetAdministratorProfileUseCase {
   
   async execute({ id }: GetAdministratorProfileUseCaseRequest): Promise<GetAdministratorProfileUseCaseResponse> {
     const administrator = await this.administratorsRepository.findById(id)
-    if (!administrator) return left(new ResourceNotFoundError())
+    if (!administrator) return left(new ResourceNotFoundError('Administrador não encontrado!'))
       
     return right({
       administrator

@@ -51,7 +51,7 @@ export class PrismaStudentDetailsMapper {
         const studentCourse = studentDetails.studentCourses.find(studentCourse => {
           return studentCourse.courseId === course.id
         })
-        if (!studentCourse) throw new Error('Course not found.')
+        if (!studentCourse) throw new Error('Curso não existente.')
 
         return {
           studentCourseId: new UniqueEntityId(studentCourse.id),
@@ -70,7 +70,7 @@ export class PrismaStudentDetailsMapper {
         const studentPole = studentDetails.studentPoles.find(studentPole => {
           return studentPole.poleId === pole.id
         })
-        if (!studentPole) throw new Error('Pole not found.')
+        if (!studentPole) throw new Error('Pólo não encontrado!')
 
         return {
           studentPoleId: new UniqueEntityId(studentPole.id),
