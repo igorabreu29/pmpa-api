@@ -48,7 +48,7 @@ export async function makePrismaAdministrator(
   const nameOrError = Name.create(data.username?.value ?? faker.person.firstName())
   if (nameOrError.isLeft()) throw nameOrError.value
 
-  const cpfOrError = CPF.create(data.cpf?.value ?? '000.000.000-01')
+  const cpfOrError = CPF.create(data.cpf?.value ?? '000.000.000-02')
   if (cpfOrError.isLeft()) throw cpfOrError.value
 
   const emailOrError = Email.create(data.email?.value ?? faker.internet.email())

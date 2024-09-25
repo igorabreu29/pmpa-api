@@ -38,7 +38,7 @@ describe('Active Manager (e2e)', () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
-        cpf: '000.000.000-01',
+        cpf: '000.000.000-02',
         password: 'node-20'
       })
 

@@ -16,9 +16,9 @@ describe('Authenticate (e2e)', () => {
   it ('POST /credentials/auth', async () => {
     await prisma.user.create({
       data: {
-        cpf: '05399970210',
+        cpf: '00000000000',
         password: '$2a$08$grhz.fiRrbOMRnJ9Sb/lZOIGf4fmkcC9bZUUX3IDCTWxu9XA6WtKi',
-        email: '',
+        email: 'john@example.com',
         username: 'igor',
         role: 'DEV',
         civilId: '00009'
@@ -26,7 +26,7 @@ describe('Authenticate (e2e)', () => {
     })
 
     const data = {
-      cpf: '053.999.702-10',
+      cpf: '000.000.000-00',
       password: 'node-20'
     }
 
