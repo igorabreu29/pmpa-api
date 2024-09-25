@@ -107,6 +107,11 @@ import { getSubClassificationByPole } from "./http/controllers/get-sub-classific
 import { getSubClassificationByManager } from "./http/controllers/get-sub-classification-by-manager.ts";
 import { activeAdministrator } from "./http/controllers/active-administrator.ts";
 import { disableAdministrator } from "./http/controllers/disable-administrator.ts";
+import { restorePassword } from "./http/controllers/restore-password.ts";
+import { forgotPassword } from "./http/controllers/forgot-password.ts";
+import { createSubClassificationSheet } from "./http/controllers/create-sub-classification-sheet.ts";
+import { createSubClassificationByPoleSheet } from "./http/controllers/create-sub-classification-by-pole-sheet.ts";
+import { createSubClassificationByManagerSheet } from "./http/controllers/create-sub-classification-by-manager-sheet.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -129,6 +134,8 @@ app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
 
 app.register(authenticate)
+app.register(restorePassword)
+app.register(forgotPassword)
 app.register(getStudentsInformationSheet)
 app.register(createStudent)
 app.register(createStudentBatch)
@@ -228,6 +235,9 @@ app.register(createCourseSummarySheet)
 app.register(createClassificationSheet)
 app.register(createClassificationByPoleSheet)
 app.register(createClassificationByManagerSheet)
+app.register(createSubClassificationSheet)
+app.register(createSubClassificationByPoleSheet)
+app.register(createSubClassificationByManagerSheet)
 app.register(createAssessmentClassificationSheet)
 app.register(createBehaviorClassificationSheet)
 app.register(createAverageClassificationCoursePolesSheet)
