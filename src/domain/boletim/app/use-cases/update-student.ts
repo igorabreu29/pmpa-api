@@ -120,7 +120,7 @@ export class UpdateStudentUseCase {
       const currentStudentPole = await this.studentPolesRepository.findByStudentId({
         studentId: studentCourse.id.toValue()
       })
-      if (!currentStudentPole) return left(new ResourceNotFoundError('Student pólo não encontrado!'))
+      if (!currentStudentPole) return left(new ResourceNotFoundError('Student polo não encontrado!'))
 
       const newStudentPole = StudentPole.create({
         poleId: new UniqueEntityId(poleId),

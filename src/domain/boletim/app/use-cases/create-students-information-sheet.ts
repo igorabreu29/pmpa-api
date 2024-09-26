@@ -63,7 +63,7 @@ export class CreateStudentsInformationSheetUseCase {
       'NOME DO PAI',
       'NOME DA MÃE',
       'CURSO',
-      'PÓLO',
+      'POLO',
     ], sheetName: `${course.name.value} - Informações dos estudantes.xlsx` })
 
     return right({

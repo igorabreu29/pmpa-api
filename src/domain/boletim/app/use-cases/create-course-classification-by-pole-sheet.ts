@@ -31,7 +31,7 @@ export class CreateCourseClassificationByPoleSheetUseCase {
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
+    if (!pole) return left(new ResourceNotFoundError('Polo não encontrado!'))
 
     const { studentsPole  } = await this.studentPolesRepository.findManyDetailsByPoleId({ poleId: pole.id.toValue() })
 
@@ -59,7 +59,7 @@ export class CreateCourseClassificationByPoleSheetUseCase {
         'DATA DE NASCIMENTO',
         'MÉDIA FINAL',
         'CONCEITO',
-        'PÓLO',
+        'POLO',
         'RG CIVIL',
         'RG MILITAR',
         'PAI',

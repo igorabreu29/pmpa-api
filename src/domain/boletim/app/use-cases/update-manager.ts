@@ -120,7 +120,7 @@ export class UpdateManagerUseCase {
       const currentManagerPole = await this.managerPolesRepository.findByManagerId({
         managerId: managerCourse.id.toValue()
       })
-      if (!currentManagerPole) return left(new ResourceNotFoundError('Manager pólo não encontrado!'))
+      if (!currentManagerPole) return left(new ResourceNotFoundError('Manager polo não encontrado!'))
 
       const newManagerPole = ManagerPole.create({
         poleId: new UniqueEntityId(poleId),

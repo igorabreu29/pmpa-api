@@ -28,7 +28,7 @@ export class CreateCoursePoleUseCase {
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
+    if (!pole) return left(new ResourceNotFoundError('Polo não encontrado!'))
 
     const coursePoleAlreadyExist = await this.coursesPolesRepository.findByCourseIdAndPoleId({ courseId, poleId })
     if (coursePoleAlreadyExist) return left(new ResourceAlreadyExistError())

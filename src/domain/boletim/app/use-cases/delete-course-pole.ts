@@ -26,10 +26,10 @@ export class DeleteCoursePoleUseCase {
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
+    if (!pole) return left(new ResourceNotFoundError('Polo não encontrado!'))
 
     const coursePole = await this.coursesPolesRepository.findByCourseIdAndPoleId({ courseId, poleId })
-    if (!coursePole) return left(new ResourceNotFoundError('Pólo do curso não encontrado!'))
+    if (!coursePole) return left(new ResourceNotFoundError('Polo do curso não encontrado!'))
 
     await this.coursesPolesRepository.delete(coursePole)
 

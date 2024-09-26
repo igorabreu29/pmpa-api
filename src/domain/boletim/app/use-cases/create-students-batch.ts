@@ -67,7 +67,7 @@ export class CreateStudentsBatchUseCase {
 
     const studentsOrError = await Promise.all(students.map(async (student) => {
       const pole = await this.polesRepository.findByName(student.poleName)
-      if (!pole) return new ResourceNotFoundError('Pólo não encontrado!')
+      if (!pole) return new ResourceNotFoundError('Polo não encontrado!')
 
       const defaultPassword = `Pmp@${student.cpf}`
 
@@ -97,7 +97,7 @@ export class CreateStudentsBatchUseCase {
         })
 
         const studentAlreadyBePresentInPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
-        if (studentAlreadyBePresentInPole) return new ResourceAlreadyExistError('Estudante já está presente no pólo!')
+        if (studentAlreadyBePresentInPole) return new ResourceAlreadyExistError('Estudante já está presente no polo!')
 
         const studentPole = StudentPole.create({
           poleId: new UniqueEntityId(),
@@ -122,7 +122,7 @@ export class CreateStudentsBatchUseCase {
         })
 
         const studentAlreadyBePresentInPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
-        if (studentAlreadyBePresentInPole) return new ResourceAlreadyExistError('Estudante já está presente no pólo!')
+        if (studentAlreadyBePresentInPole) return new ResourceAlreadyExistError('Estudante já está presente no polo!')
 
         const studentPole = StudentPole.create({
           poleId: new UniqueEntityId(pole.id.toValue()),

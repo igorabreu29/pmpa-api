@@ -62,7 +62,7 @@ export class CreateCourseClassificationByManagerSheetUseCase {
         'DATA DE NASCIMENTO',
         'MÉDIA FINAL',
         'CONCEITO',
-        'PÓLO',
+        'POLO',
         'RG CIVIL',
         'RG MILITAR',
         'PAI',

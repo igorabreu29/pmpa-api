@@ -53,7 +53,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     if (!studentCourse) return null
 
     const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-    if (!poleExist) throw new Error('Pólo não encontrado!')
+    if (!poleExist) throw new Error('Polo não encontrado!')
 
     const studentCourseMapper = {
       ...studentCourse.user,
@@ -180,7 +180,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     courseId, 
     page, 
     cpf,
-    isEnabled = true,
+    isEnabled,
     username,
     perPage 
   }: { 
@@ -195,11 +195,168 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     pages?: number; 
     totalItems?: number; 
   }> {
-    if (page) {
+    if (isEnabled !== undefined) {
+      if (page) {
+        const studentsCourse = await prisma.userOnCourse.findMany({
+          where: {
+            courseId,
+            isActive: isEnabled ? true : false,
+            user: {
+              role: 'STUDENT',
+              username: {
+                contains: username
+              },
+              cpf: {
+                contains: cpf
+              },
+            },
+          },
+    
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                cpf: true,
+                email: true,
+                civilId: true,
+                birthday: true,
+                avatarUrl: true,
+                password: true,
+                createdAt: true,
+                isLoginConfirmed: true,
+                role: true,
+                profile: {
+                  select: {
+                    userId: true,
+                    fatherName: true,
+                    motherName: true,
+                    county: true,
+                    militaryId: true,
+                    state: true
+                  }
+                },
+              }
+            },
+            course: true,
+            usersOnPoles: {
+              include: {
+                pole: true
+              }
+            }
+          },
+    
+          skip: (page - 1) * perPage,
+          take: perPage
+        })
+    
+        const studentsCourseMapper = studentsCourse.map(studentCourse => {
+          const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
+          if (!poleExist) throw new Error('Polo não encontrado!')
+    
+          return {
+            ...studentCourse.user,
+            profile: studentCourse.user.profile ?? undefined,
+            course: studentCourse.course,
+            pole: poleExist.pole
+          }
+        })
+    
+        const studentsCourseCount = await prisma.userOnCourse.count({
+          where: {
+            courseId,
+            isActive: isEnabled ? true : false,
+            user: {
+              role: 'STUDENT',
+              username: {
+                contains: username
+              },
+              cpf: {
+                contains: cpf
+              },
+            },
+          },
+        })
+        const pages = Math.ceil(studentsCourseCount / perPage)
+    
+        return {
+          studentsCourse: studentsCourseMapper.map(studentCourse => PrismaStudentCourseDetailsMapper.toDomain(studentCourse)),
+          pages,
+          totalItems: studentsCourseCount
+        }
+      }
+  
       const studentsCourse = await prisma.userOnCourse.findMany({
         where: {
           courseId,
           isActive: isEnabled ? true : false,
+          user: {
+            role: 'STUDENT',
+            username: {
+              contains: username
+            },
+            cpf: {
+              contains: cpf
+            },
+          },
+        },
+  
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              cpf: true,
+              email: true,
+              civilId: true,
+              birthday: true,
+              avatarUrl: true,
+              password: true,
+              createdAt: true,
+              isLoginConfirmed: true,
+              role: true,
+              profile: {
+                select: {
+                  userId: true,
+                  fatherName: true,
+                  motherName: true,
+                  county: true,
+                  militaryId: true,
+                  state: true
+                }
+              },
+            }
+          },
+          course: true,
+          usersOnPoles: {
+            include: {
+              pole: true
+            }
+          }
+        },
+      })
+  
+      const studentsCourseMapper = studentsCourse.map(studentCourse => {
+        const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
+        if (!poleExist) throw new Error('Polo não encontrado!')
+  
+        return {
+          ...studentCourse.user,
+          profile: studentCourse.user.profile ?? undefined,
+          course: studentCourse.course,
+          pole: poleExist.pole
+        }
+      })
+  
+      return {
+        studentsCourse: studentsCourseMapper.map(studentCourse => PrismaStudentCourseDetailsMapper.toDomain(studentCourse)),
+      }
+    }
+
+    if (page) {
+      const studentsCourse = await prisma.userOnCourse.findMany({
+        where: {
+          courseId,
           user: {
             role: 'STUDENT',
             username: {
@@ -251,7 +408,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
   
       const studentsCourseMapper = studentsCourse.map(studentCourse => {
         const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-        if (!poleExist) throw new Error('Pólo não encontrado!')
+        if (!poleExist) throw new Error('Polo não encontrado!')
   
         return {
           ...studentCourse.user,
@@ -264,7 +421,6 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       const studentsCourseCount = await prisma.userOnCourse.count({
         where: {
           courseId,
-          isActive: isEnabled ? true : false,
           user: {
             role: 'STUDENT',
             username: {
@@ -288,7 +444,6 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const studentsCourse = await prisma.userOnCourse.findMany({
       where: {
         courseId,
-        isActive: isEnabled ? true : false,
         user: {
           role: 'STUDENT',
           username: {
@@ -337,7 +492,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
 
     const studentsCourseMapper = studentsCourse.map(studentCourse => {
       const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-      if (!poleExist) throw new Error('Pólo não encontrado!')
+      if (!poleExist) throw new Error('Polo não encontrado!')
 
       return {
         ...studentCourse.user,
@@ -395,7 +550,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
 
     const studentsCourseMapper = studentCourses.map(studentCourse => {
       const poleExist = studentCourse.usersOnPoles.find(item => item.userOnCourseId === studentCourse.id)
-      if (!poleExist) throw new Error('Pólo não encontrado!')
+      if (!poleExist) throw new Error('Polo não encontrado!')
 
       return {
         ...studentCourse.user,

@@ -37,8 +37,8 @@ export class CreateCourseAssessmentClassificationSheetUseCase {
     const { filename } = this.sheeter.write({
       keys: [
         'CLASSIFICAÇÃO',
-        'PÓLO',
-        'MÉDIA DO PÓLO'
+        'POLO',
+        'MÉDIA DO POLO'
       ],
       rows: assessmentAverageGroupedByPole.map((assessmentAverage, index) => {
         return {

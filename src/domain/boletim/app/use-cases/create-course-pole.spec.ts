@@ -38,7 +38,7 @@ describe('Create Course Pole', () => {
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it ('should not be able to create course pole if pólo não encontrado!', async () => {
+  it ('should not be able to create course pole if polo não encontrado!', async () => {
     const course = makeCourse()
     coursesRepository.create(course)
 

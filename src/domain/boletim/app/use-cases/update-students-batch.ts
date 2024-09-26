@@ -74,7 +74,7 @@ export class UpdateStudentsBatchUseCase {
       if (!course) return new ResourceNotFoundError('Curso não existente.')
 
       const pole = await this.polesRepository.findByName(student.poleName)
-      if (!pole) return new ResourceNotFoundError('Pólo não encontrado!')
+      if (!pole) return new ResourceNotFoundError('Polo não encontrado!')
 
       const formattedCPF = CPF.format(student.cpf)
 
@@ -116,7 +116,7 @@ export class UpdateStudentsBatchUseCase {
         const currentStudentPole = await this.studentPolesRepository.findByStudentId({
           studentId: studentCourse.id.toValue()
         })
-        if (!currentStudentPole) return new ResourceNotFoundError('Student pólo não encontrado!')
+        if (!currentStudentPole) return new ResourceNotFoundError('Student polo não encontrado!')
 
         const newStudentPole = StudentPole.create({
           poleId: pole.id,

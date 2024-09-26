@@ -80,7 +80,7 @@ export class PrismaSearchsDetailsMapper {
         const searchPole = search.searchPoles.find(searchPole => {
           return searchPole.poleId === pole.id
         })
-        if (!searchPole) throw new Error('Pólo não encontrado!')
+        if (!searchPole) throw new Error('Polo não encontrado!')
 
         return {
           searchPoleId: new UniqueEntityId(searchPole.id),

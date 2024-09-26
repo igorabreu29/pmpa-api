@@ -80,7 +80,7 @@ export class CreateStudentUseCase {
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
       
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
+    if (!pole) return left(new ResourceNotFoundError('Polo não encontrado!'))
 
     const defaultPassword = `Pmp@${cpf}`
 
@@ -123,7 +123,7 @@ export class CreateStudentUseCase {
       await this.studentsCoursesRepository.create(studentCourse)
       
       const studentAlreadyPresentAtPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
-      if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Estudante já está presente no pólo'))
+      if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Estudante já está presente no polo'))
 
       const studentPole = StudentPole.create({
         studentId: studentCourse.id,
@@ -157,7 +157,7 @@ export class CreateStudentUseCase {
       await this.studentsCoursesRepository.create(studentCourse)
       
       const studentAlreadyPresentAtPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
-      if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Estudante já está presente no pólo'))
+      if (studentAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Estudante já está presente no polo'))
       
       const studentPole = StudentPole.create({
         studentId: studentCourse.id,

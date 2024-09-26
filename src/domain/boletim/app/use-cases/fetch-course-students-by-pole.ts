@@ -36,7 +36,7 @@ export class FetchCourseStudentsByPole {
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
+    if (!pole) return left(new ResourceNotFoundError('Polo não encontrado!'))
 
     const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyDetailsByPoleId({ page, perPage, poleId, cpf, username, isEnabled }) 
     const studentPolesByCourse = studentsPole.filter(studentPole => studentPole.courseId.equals(course.id))

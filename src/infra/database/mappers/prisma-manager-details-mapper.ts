@@ -70,7 +70,7 @@ export class PrismaManagerDetailsMapper {
         const managerPole = managerDetails.managerPoles.find(managerPole => {
           return managerPole.poleId === pole.id
         })
-        if (!managerPole) throw new Error('Pólo não encontrado!')
+        if (!managerPole) throw new Error('Polo não encontrado!')
 
         return {
           managerPoleId: new UniqueEntityId(managerPole.id),

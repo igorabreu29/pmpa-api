@@ -77,7 +77,7 @@ export class CreateManagerUseCase {
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
+    if (!pole) return left(new ResourceNotFoundError('Polo não encontrado!'))
 
     const defaultPassword = `Pmp@${cpf}`
 
@@ -119,7 +119,7 @@ export class CreateManagerUseCase {
       await this.managersCoursesRepository.create(managerCourse)
       
       const managerAlreadyPresentAtPole = await this.managersPolesRepository.findByManagerId({ managerId: managerWithCPF.id.toValue() })
-      if (managerAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Gerente já presente no pólo!'))
+      if (managerAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Gerente já presente no polo!'))
 
       const managerPole = ManagerPole.create({
         managerId: managerCourse.id,
@@ -142,7 +142,7 @@ export class CreateManagerUseCase {
       await this.managersCoursesRepository.create(managerCourse)
       
       const managerAlreadyPresentAtPole = await this.managersPolesRepository.findByManagerId({ managerId: managerWithEmail.id.toValue() })
-      if (managerAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Gerente já presente no pólo!'))
+      if (managerAlreadyPresentAtPole) return left(new ResourceAlreadyExistError('Gerente já presente no polo!'))
 
       const managerPole = ManagerPole.create({
         managerId: managerCourse.id,

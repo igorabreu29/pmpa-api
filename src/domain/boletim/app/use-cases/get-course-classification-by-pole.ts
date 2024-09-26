@@ -40,7 +40,7 @@ export class GetCourseClassificationByPoleUseCase {
 
     if (poleId) {
       const pole = await this.polesRepository.findById(poleId)
-      if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
+      if (!pole) return left(new ResourceNotFoundError('Polo não encontrado!'))
 
       poleIdAssigned = pole.id.toValue()
     }

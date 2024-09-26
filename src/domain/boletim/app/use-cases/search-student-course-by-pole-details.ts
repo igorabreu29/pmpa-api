@@ -35,7 +35,7 @@ export class SearchStudentCourseByPoleDetailsUseCase {
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
     const pole = await this.polesRepository.findById(poleId)
-    if (!pole) return left(new ResourceNotFoundError('Pólo não encontrado!'))
+    if (!pole) return left(new ResourceNotFoundError('Polo não encontrado!'))
 
     const { studentCoursesDetails: students, pages, totalItems } = await this.studentsPolesRepository.searchManyDetailsByPoleId({
       poleId,
