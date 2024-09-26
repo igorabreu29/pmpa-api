@@ -16,7 +16,7 @@ async function seed() {
   await prisma.user.deleteMany()
   await prisma.course.deleteMany()
   await prisma.pole.deleteMany()
-
+  
   await prisma.user.create({
     data: {
       cpf: '05399970210',
