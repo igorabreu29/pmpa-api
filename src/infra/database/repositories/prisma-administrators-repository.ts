@@ -111,7 +111,7 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     }> {
     const filterPayload: Record<string, object> = {
       where: {
-        role: 'MANAGER',
+        role: 'ADMIN',
         username: {
           contains: username,
           mode: 'insensitive'
@@ -158,15 +158,7 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     })
 
     const administratorsCount = await prisma.user.count({
-      where: {
-        role: 'ADMIN',
-        cpf: {
-          contains: cpf
-        },
-        username: {
-          contains: username
-        },
-      },
+      where: filterPayload.where,
     })
     
     const pages = Math.ceil(administratorsCount / PER_PAGE)
