@@ -79,7 +79,7 @@ describe('Create Course Historic Use Case', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ConflictError)
-    expect(result.value?.message).toEqual('Conflict between dates. Finish Date cannot be less than Start Date.')
+    expect(result.value?.message).toEqual('Conflito entre a data de início e de fim!')
   }) 
 
   it('should be able to create course historic', async () => {
