@@ -17,16 +17,18 @@ export async function getReports(
       schema: {
         querystring: z.object({
           action: z.enum(['add', 'remove', 'update', 'login confirmed']).optional(),
+          username: z.string().optional(),
           page: z.coerce.number().default(1)
         })
       }
     }, async (req, res) => {
-      const { action, page } = req.query
+      const { action, username, page } = req.query
       const { payload } = req.user
 
       const useCase = makeFetchReportsUseCase()
       const result = await useCase.execute({
         action,
+        username,
         page,
         role: payload.sub
       })

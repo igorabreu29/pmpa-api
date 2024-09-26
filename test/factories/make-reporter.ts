@@ -12,6 +12,7 @@ export function makeReporter (
 
   const reporterOrError = Reporter.create({
     username: nameOrError.value,
+    role: 'student',
     ...override
   }, id)
   if (reporterOrError.isLeft()) throw new Error('Invalid reporter')

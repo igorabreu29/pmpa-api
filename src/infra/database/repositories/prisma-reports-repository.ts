@@ -18,7 +18,7 @@ export class PrismaReportsRepository implements ReportsRepository {
     return PrismaReportsMapper.toDomain(report)
   }
 
-  async findMany({ action, page, role }: FindManyProps): Promise<{
+  async findMany({ action, page, role, username }: FindManyProps): Promise<{
     reports: Report[]
     pages: number
     totalItems: number
@@ -32,6 +32,11 @@ export class PrismaReportsRepository implements ReportsRepository {
         reports = await prisma.report.findMany({
           where: {
             reporter: {
+              username: {
+                contains: username,
+                mode: 'insensitive'
+              },
+              
               NOT: {
                 OR: [
                   {
@@ -65,7 +70,13 @@ export class PrismaReportsRepository implements ReportsRepository {
   
       reports = await prisma.report.findMany({
         where: {
-          action: convertActionToPrisma(action)
+          reporter: {
+            username: {
+              contains: username,
+              mode: 'insensitive'
+            },
+          },
+          action: convertActionToPrisma(action),
         },
         orderBy: {
           createdAt: 'desc'
@@ -93,6 +104,15 @@ export class PrismaReportsRepository implements ReportsRepository {
 
     if (!action) {
       reports = await prisma.report.findMany({
+        where: {
+          reporter: {
+            username: {
+              contains: username,
+              mode: 'insensitive'
+            },
+          },
+        },
+
         orderBy: {
           createdAt: 'desc'
         },
@@ -113,7 +133,14 @@ export class PrismaReportsRepository implements ReportsRepository {
 
     reports = await prisma.report.findMany({
       where: {
-        action: convertActionToPrisma(action)
+        action: convertActionToPrisma(action),
+        
+        reporter: {
+          username: {
+            contains: username,
+            mode: 'insensitive'
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc'

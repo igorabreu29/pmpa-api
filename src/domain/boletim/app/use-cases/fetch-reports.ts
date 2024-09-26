@@ -4,6 +4,7 @@ import type { Report } from "@/domain/report/enterprise/entities/report.ts";
 
 interface FetchReportsUseCaseRequest {
   action?: string
+  username?: string
   role: string
   page: number
 }
@@ -19,11 +20,12 @@ export class FetchReportsUseCase {
     private reportsRepository: ReportsRepository
   ) {}
 
-  async execute({ action, page, role }: FetchReportsUseCaseRequest): Promise<FetchReportsUseCaseResponse> {
+  async execute({ action, username, page, role }: FetchReportsUseCaseRequest): Promise<FetchReportsUseCaseResponse> {
     const { reports, pages, totalItems } = await this.reportsRepository.findMany({
       action,
       page,
-      role
+      role,
+      username
     })
 
     return right({
