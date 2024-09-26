@@ -30,8 +30,14 @@ export class SearchStudentsDetailsManagerUseCase {
       page,
       query,
       role: 'manager',
-      courses: manager.courses,
-      poles: manager.poles
+      courses: manager.courses.map(({ course, managerCourseId }) => ({
+        course,
+        searchCourseId: managerCourseId
+      })),
+      poles: manager.poles.map(({ pole, managerPoleId }) => ({
+        pole,
+        searchPoleId: managerPoleId
+      })),
     })
 
     return right({
