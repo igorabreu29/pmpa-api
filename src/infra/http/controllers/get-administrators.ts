@@ -19,7 +19,7 @@ export async function getAdministrators(
           cpf: z.string().optional(),
           username: z.string().optional(),
           page: z.coerce.number().default(1),
-          isEnabled: z.string().transform(item => item === 'true')
+          isEnabled: z.string().optional()
         })
       }
     }, async (req, res) => {
@@ -30,7 +30,7 @@ export async function getAdministrators(
         cpf,
         username,
         page,
-        isEnabled
+        isEnabled: isEnabled ? isEnabled === 'true' : undefined
       })
 
       if (result.isLeft()) {

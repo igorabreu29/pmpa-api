@@ -103,25 +103,36 @@ export class PrismaAdministratorsRepository implements AdministratorsRepository 
     page, 
     cpf, 
     username,
-    isEnabled = true
+    isEnabled,
   }: FindManyProps): Promise<{
      administrators: Administrator[]; 
      pages: number; 
      totalItems: number; 
     }> {
-    const PER_PAGE = 10
-
-    const administrators = await prisma.user.findMany({
+    const filterPayload: Record<string, object> = {
       where: {
-        role: 'ADMIN',
-        isActive: isEnabled ? true : false,
+        role: 'MANAGER',
+        username: {
+          contains: username,
+          mode: 'insensitive'
+        },
         cpf: {
           contains: cpf
         },
-        username: {
-          contains: username
-        },
-      },
+      }
+    }
+
+    if (isEnabled !== undefined) {
+      filterPayload.where = {
+        ...filterPayload.where,
+        isActive: isEnabled
+      }
+    }
+
+    const PER_PAGE = 10
+
+    const administrators = await prisma.user.findMany({
+      where: filterPayload.where,
 
       select: {
         id: true,

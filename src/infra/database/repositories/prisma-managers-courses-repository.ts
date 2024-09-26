@@ -79,104 +79,92 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
     pages?: number; 
     totalItems?: number; 
   }> {
-    if (page && perPage) {
-      const managerCourses = await prisma.userOnCourse.findMany({
-        where: {
-          courseId,
-          isActive: isEnabled ? true : false,
-          user: {
-            role: 'MANAGER',
-            username: {
-              contains: username
-            },
-            cpf: {
-              contains: cpf
-            },
-          },
-        },
-  
-        skip: (page - 1) * perPage,
-        take: perPage,
-  
-        include: {
-          course: true,
-          user: true,
-          usersOnPoles: {
-            select: {
-              pole: true
-            }
-          }
-        }
-      })
-  
-      const managerCoursesMapper = managerCourses.map(managerCourses => {
-        return {
-          ...managerCourses.user,
-          course: managerCourses.course,
-          pole: managerCourses.usersOnPoles[0].pole
-        }
-      })
-  
-      const managerCoursesCount = await prisma.userOnCourse.count({
-        where: {
-          courseId,
-          isActive: isEnabled ? true : false,
-          user: {
-            role: 'MANAGER',
-            username: {
-              contains: username
-            },
-            cpf: {
-              contains: cpf
-            },
-          },
-        },
-      })
-      const pages = Math.ceil(managerCoursesCount / perPage)
-  
-      return {
-        managersCourse: managerCoursesMapper.map(managerCourse => PrismaManagerCourseDetailsMapper.toDomain(managerCourse)),
-        pages,
-        totalItems: managerCoursesCount
-      }
-    }
-
-    const managerCourses = await prisma.userOnCourse.findMany({
+    const filterPayload: Record<string, object> = {
       where: {
         courseId,
-        isActive: isEnabled ? true : false,
         user: {
           role: 'MANAGER',
           username: {
-            contains: username
+            contains: username,
+            mode: 'insensitive'
           },
           cpf: {
             contains: cpf
           },
         },
-      },
+      }
+    }
+
+    if (isEnabled !== undefined) {
+      filterPayload.where = {
+        ...filterPayload.where,
+        isActive: isEnabled
+      }
+    }
+
+    const managersCourse = await prisma.userOnCourse.findMany({
+      where: filterPayload.where,
 
       include: {
-        course: true,
-        user: true,
-        usersOnPoles: {
+        user: {
           select: {
+            id: true,
+            username: true,
+            cpf: true,
+            email: true,
+            civilId: true,
+            birthday: true,
+            avatarUrl: true,
+            password: true,
+            createdAt: true,
+            isLoginConfirmed: true,
+            role: true,
+            isActive: true,
+            profile: {
+              select: {
+                userId: true,
+                fatherName: true,
+                motherName: true,
+                county: true,
+                militaryId: true,
+                state: true
+              }
+            },
+          }
+        },
+        course: true,
+        usersOnPoles: {
+          include: {
             pole: true
           }
         }
+      },
+
+      skip: page && perPage ? (page - 1) * perPage : undefined,
+      take: perPage
+    })
+
+    const managersCourseMapper = managersCourse.map(managerCourse => {
+      const poleExist = managerCourse.usersOnPoles.find(item => item.userOnCourseId === managerCourse.id)
+      if (!poleExist) throw new Error('Polo não encontrado!')
+
+      return {
+        ...managerCourse.user,
+        profile: managerCourse.user.profile ?? undefined,
+        course: managerCourse.course,
+        pole: poleExist.pole
       }
     })
 
-    const managerCoursesMapper = managerCourses.map(managerCourses => {
-      return {
-        ...managerCourses.user,
-        course: managerCourses.course,
-        pole: managerCourses.usersOnPoles[0].pole
-      }
+    const managersCourseCount = await prisma.userOnCourse.count({
+      where: filterPayload.where
     })
+    const pages = perPage && Math.ceil(managersCourseCount / perPage)
 
     return {
-      managersCourse: managerCoursesMapper.map(managerCourse => PrismaManagerCourseDetailsMapper.toDomain(managerCourse)),
+      managersCourse: managersCourseMapper.map(managerCourse => PrismaManagerCourseDetailsMapper.toDomain(managerCourse)),
+      pages,
+      totalItems: managersCourseCount
     }
   }
 

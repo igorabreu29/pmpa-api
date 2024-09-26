@@ -21,7 +21,7 @@ export class FetchAdministratorsUseCase {
     private administratorsRepository: AdministratorsRepository
   ) {}
 
-  async execute({ page, cpf, username, isEnabled = true }: FetchAdministratorsUseCaseRequest): Promise<FetchAdministratorsUseCaseResponse> {
+  async execute({ page, cpf, username, isEnabled }: FetchAdministratorsUseCaseRequest): Promise<FetchAdministratorsUseCaseResponse> {
     const { administrators, pages, totalItems } = await this.administratorsRepository.findMany({ page, cpf, username, isEnabled })
 
     return right({

@@ -38,7 +38,7 @@ export async function getCourseManagers(
           page: page ? Number(page) : undefined,
           cpf,
           username,
-          isEnabled: isEnabled === 'true' ? true : false,
+          isEnabled: isEnabled ? isEnabled === 'true' : undefined,
           perPage: 10,
         })
 

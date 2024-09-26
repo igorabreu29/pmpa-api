@@ -38,7 +38,7 @@ export async function getCourseStudents(
           page: page ? Number(page) : undefined,
           cpf,
           username,
-          isEnabled: isEnabled === 'true' ? true : false,
+          isEnabled: isEnabled ? isEnabled === 'true' : undefined,
           perPage: 10,
         })
 

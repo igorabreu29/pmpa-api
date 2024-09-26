@@ -25,7 +25,7 @@ export class FetchCourseStudentsUseCase {
     private studentsCoursesRepository: StudentsCoursesRepository,
   ) {}
 
-  async execute({ courseId, page, cpf, isEnabled = true, username, perPage }: FetchCourseStudentsUseCaseRequest): Promise<FetchCourseStudentsUseCaseResponse> {
+  async execute({ courseId, page, cpf, isEnabled, username, perPage }: FetchCourseStudentsUseCaseRequest): Promise<FetchCourseStudentsUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
