@@ -48,7 +48,8 @@ export class PrismaAdministratorsMapper {
       parent: {
         fatherName: administrator?.profile?.fatherName ?? undefined,
         motherName: administrator?.profile?.motherName ?? undefined,
-      }
+      },
+      isActive: administrator.isActive,
     }, new UniqueEntityId(administrator.id))
     if (administratorOrError.isLeft()) throw new Error(administratorOrError.value.message)
 
@@ -73,7 +74,8 @@ export class PrismaAdministratorsMapper {
         militaryId: administrator.militaryId,
         fatherName: administrator.parent?.fatherName,
         motherName: administrator.parent?.motherName,
-      }
+      },
+      isActive: administrator.isActive
     }
   }
 }
