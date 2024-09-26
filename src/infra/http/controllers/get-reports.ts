@@ -22,9 +22,14 @@ export async function getReports(
       }
     }, async (req, res) => {
       const { action, page } = req.query
+      const { payload } = req.user
 
       const useCase = makeFetchReportsUseCase()
-      const result = await useCase.execute({ action, page })
+      const result = await useCase.execute({
+        action,
+        page,
+        role: payload.sub
+      })
 
       if (result.isLeft()) {
         throw new ClientError('Houve algum erro')

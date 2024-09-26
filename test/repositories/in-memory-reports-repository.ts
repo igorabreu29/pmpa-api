@@ -17,7 +17,7 @@ export class InMemoryReportsRepository implements ReportsRepository {
     const PER_PAGE = 10
 
     const allReports = this.items
-      .filter(item => item.action.includes(action))
+      .filter(item => item.action.includes(action ?? ''))
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
 
     const reports = allReports.slice((page - 1) * PER_PAGE, page * PER_PAGE)

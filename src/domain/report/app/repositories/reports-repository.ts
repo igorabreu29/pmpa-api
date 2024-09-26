@@ -2,6 +2,7 @@ import { Report, type TypeAction } from "../../enterprise/entities/report.ts";
 
 export interface FindManyProps {
   action?: string
+  role: string
   page: number
 }
 

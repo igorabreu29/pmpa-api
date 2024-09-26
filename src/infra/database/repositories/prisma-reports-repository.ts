@@ -18,12 +18,76 @@ export class PrismaReportsRepository implements ReportsRepository {
     return PrismaReportsMapper.toDomain(report)
   }
 
-  async findMany({ action, page }: FindManyProps): Promise<{
+  async findMany({ action, page, role }: FindManyProps): Promise<{
     reports: Report[]
     pages: number
     totalItems: number
   }> {
     const PER_PAGE = 10
+
+    if (role === 'admin') {
+      let reports: PrismaReport[] = []
+
+      if (!action) {
+        reports = await prisma.report.findMany({
+          where: {
+            reporter: {
+              NOT: {
+                OR: [
+                  {
+                    role: 'DEV',
+                  },
+                  {
+                    role: 'ADMIN'
+                  }
+                ]
+              },
+            }
+          },
+
+          orderBy: {
+            createdAt: 'desc'
+          },
+          
+          skip: (page - 1) * PER_PAGE,
+          take: PER_PAGE
+        })
+        
+        const reportsCount = await prisma.report.count()
+        const pages = Math.ceil(reportsCount / PER_PAGE)
+  
+        return {
+          reports: reports.map(report => PrismaReportsMapper.toDomain(report)),
+          pages,
+          totalItems: reportsCount
+        }
+      }
+  
+      reports = await prisma.report.findMany({
+        where: {
+          action: convertActionToPrisma(action)
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        skip: (page - 1) * PER_PAGE,
+        take: PER_PAGE
+      })
+  
+      const reportsCount = await prisma.report.count({
+        where: {
+          action: convertActionToPrisma(action)
+        },
+      })
+      const pages = Math.ceil(reportsCount / PER_PAGE)
+  
+      return {
+        reports: reports.map(report => PrismaReportsMapper.toDomain(report)),
+        pages,
+        totalItems: reportsCount
+      }
+    }
+
 
     let reports: PrismaReport[] = []
 
