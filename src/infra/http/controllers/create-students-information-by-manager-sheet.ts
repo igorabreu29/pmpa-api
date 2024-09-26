@@ -46,6 +46,8 @@ export async function createStudentsInformationByManagerSheet(
       const fullUrl = req.protocol.concat('://').concat(req.hostname)
       const fileUrl = new URL(`/uploads/${filename}`, fullUrl)
 
-      return res.send(fileUrl.href)
+      return res.send({
+        fileUrl: fileUrl.href
+      })
     })
 }
