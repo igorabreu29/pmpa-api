@@ -31,6 +31,6 @@ describe('Forgot Password (e2e)', () => {
     const { message } = response.body
       
     expect(response.statusCode).toBe(200)
-    expect(message).toEqual('An email was sent. Verify your checkbox.')
+    expect(message).toEqual('Um e-mail foi enviado para sua caixa de texto! Verifique-a para continuar o processo.')
   })
 })

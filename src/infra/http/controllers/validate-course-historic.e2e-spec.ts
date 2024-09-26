@@ -120,6 +120,6 @@ describe('Validate Course Historic (e2e)', () => {
     const { message } = response.body
 
     expect(response.statusCode).toBe(200)
-    expect(message).toEqual('Course historic is valid.')
+    expect(message).toEqual('Histórico do curso é válido!')
   })
 })
