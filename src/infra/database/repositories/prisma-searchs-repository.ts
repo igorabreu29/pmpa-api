@@ -10,7 +10,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
     const PER_PAGE = 10
 
     if (role === 'manager') {
-      const searchs = await prisma.user.findMany({
+      const searchsData = await prisma.user.findMany({
         where: {
           role: 'STUDENT',
           OR: [
@@ -32,9 +32,6 @@ export class PrismaSearchsRepository implements SearchsRepository {
           username: 'asc'
         },
 
-        skip: (page - 1) * PER_PAGE,
-        take: PER_PAGE,
-
         select: {
           id: true,
           username: true,
@@ -55,7 +52,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
         }
       })
 
-      const searchMapperToDomain = searchs
+      const searchMapperToDomain = searchsData
         .map(search => ({
           id: search.id,
           username: search.username,
@@ -89,29 +86,15 @@ export class PrismaSearchsRepository implements SearchsRepository {
             })
         })
 
-        const searchsCount = await prisma.user.count({
-          where: {
-            role: 'STUDENT',
-            OR: [
-              {
-                username: {
-                  contains: query
-                }
-              },
-              {
-                cpf: {
-                  contains: query
-                }
-              }
-            ]
-          },
-        })
-        const pages = Math.ceil(searchsCount / PER_PAGE)
+        const totalItems = searchMapperToDomain.length
+        const pages = Math.ceil(totalItems / PER_PAGE)
+
+        const searchs = searchMapperToDomain.slice((page - 1) * PER_PAGE, page * PER_PAGE)
   
         return {
-          searchs: searchMapperToDomain.map(searchMapper => PrismaSearchsDetailsMapper.toDomain(searchMapper)),
+          searchs: searchs.map(searchMapper => PrismaSearchsDetailsMapper.toDomain(searchMapper)),
           pages,
-          totalItems: searchsCount
+          totalItems
         }
     }
 
