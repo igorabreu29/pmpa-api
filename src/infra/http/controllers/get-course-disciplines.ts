@@ -18,15 +18,21 @@ export async function getCourseDisciplines(
       schema: {
         params: z.object({
           id: z.string().uuid()
+        }),
+
+        querystring: z.object({
+          search: z.string().optional()
         })
       }
     }, 
       async (req, res) => {
         const { id } = req.params
+        const { search } = req.query
 
         const useCase = makeFetchCourseDisciplinesUseCase()
         const result = await useCase.execute({
           courseId: id, 
+          search
         })
 
         if (result.isLeft()) {

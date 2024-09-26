@@ -55,7 +55,8 @@ export class PrismaCourseDisciplinesRepository implements CoursesDisciplinesRepo
         courseId,
         discipline: {
           name: {
-            contains: search
+            contains: search,
+            mode: 'insensitive'
           }
         }
       },
