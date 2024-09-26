@@ -30,14 +30,9 @@ export class CreateStudentsInformationSheetUseCase {
 
     const { studentsCourse: studentCoursesDetails } = await this.studentCoursesRepository.findManyDetailsByCourseId({
       courseId: course.id.toValue(),
-      perPage: 10
     })
 
     const studentsInformation = await Promise.all(studentCoursesDetails.map(async (studentCourseDetails) => {
-      const courseDisciplines = await this.courseDisciplinesRepository.findManyByCourseIdWithDiscipliine({
-        courseId: course.id.toValue()
-      })
-
       return {
           username: studentCourseDetails.username,
           email: studentCourseDetails.email,
