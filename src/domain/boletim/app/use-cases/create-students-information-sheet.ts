@@ -38,29 +38,6 @@ export class CreateStudentsInformationSheetUseCase {
         courseId: course.id.toValue()
       })
 
-      const courseDisciplineWithAssessment = await Promise.all(courseDisciplines.map(async (courseDiscipline) => {
-        const assessment = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({
-          courseId: course.id.toValue(),
-          studentId: studentCourseDetails.studentId.toValue(),
-          disciplineId: courseDiscipline.disciplineId.toValue()
-        })
-        if (!assessment) return null
-
-        const studentCondition = generateAssessmentAverage({ 
-          vf: !assessment.vf ? -1 : assessment.vf, 
-          avi: !assessment.avi ? -1 : assessment.avi,
-          avii: !assessment.avii ? -1 : assessment.avii, 
-          vfe: assessment.vfe
-        })
-
-        return {
-          disciplineId: courseDiscipline.disciplineId,
-          module: courseDiscipline.module,
-          disciplineName: courseDiscipline.disciplineName,
-          ...studentCondition,
-        }
-      }))
-
       return {
           username: studentCourseDetails.username,
           email: studentCourseDetails.email,
@@ -75,7 +52,6 @@ export class CreateStudentsInformationSheetUseCase {
           motherName: studentCourseDetails.parent?.motherName,
           course: studentCourseDetails.course,
           pole: studentCourseDetails.pole,
-          courseDisciplineWithAssessment: courseDisciplineWithAssessment.map(item => Number(item?.average))[0]
       }
     }))
 
