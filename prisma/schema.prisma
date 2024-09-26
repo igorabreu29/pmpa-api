@@ -125,7 +125,7 @@ model CourseHistoric {
   divisionBoss String? @map("division_boss")
   commander    String?
 
-  course Course @relation(fields: [courseId], references: [id])
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
 
 model CourseOnPole {
@@ -133,7 +133,7 @@ model CourseOnPole {
   courseId String
   poleId   String
 
-  course Course @relation(fields: [courseId], references: [id])
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   pole   Pole   @relation(fields: [poleId], references: [id])
 
   @@unique([courseId, poleId])
@@ -149,7 +149,7 @@ model CourseOnDiscipline {
   hours    Int
   expected String
 
-  course     Course     @relation(fields: [courseId], references: [id])
+  course     Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
   discipline Discipline @relation(fields: [disciplineId], references: [id])
 
   @@unique([courseId, disciplineId])
@@ -188,7 +188,7 @@ model Assessment {
   vfe  Decimal?
 
   user       User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  course     Course     @relation(fields: [courseId], references: [id])
+  course     Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
   discipline Discipline @relation(fields: [disciplineId], references: [id])
 
   @@map("assessments")
@@ -214,7 +214,7 @@ model Behavior {
   currentYear Int?
 
   user   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  course Course @relation(fields: [courseId], references: [id])
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@map("behaviors")
 }
@@ -223,6 +223,8 @@ enum Action {
   ADD
   REMOVE
   UPDATE
+  LOGIN_CONFIRMED
+  STATUS
 }
 
 model Report {
@@ -238,5 +240,5 @@ model Report {
   action     Action   @default(ADD)
 
   reporter User    @relation(fields: [reporterId], references: [id], onDelete: Cascade)
-  course   Course? @relation(fields: [courseId], references: [id])
+  course   Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
