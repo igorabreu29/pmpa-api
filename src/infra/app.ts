@@ -85,7 +85,6 @@ import { deleteCourseHistoric } from "./http/controllers/delete-course-historic.
 import { getAssessmentClassification } from "./http/controllers/get-assessment-classification.ts";
 import { getCourseManager } from "./http/controllers/get-course-manager.ts";
 import { cwd } from "node:process";
-import { getStudentsInformationSheet } from "./http/controllers/get-students-information-sheet.ts";
 import { createCourseSummarySheet } from "./http/controllers/create-course-summary-sheet.ts";
 import { removeBehaviorGrade } from "./http/controllers/remove-behavior-grade.ts";
 import { getCourseBehaviors } from "./http/controllers/get-course-behaviors.ts";
@@ -112,6 +111,8 @@ import { forgotPassword } from "./http/controllers/forgot-password.ts";
 import { createSubClassificationSheet } from "./http/controllers/create-sub-classification-sheet.ts";
 import { createSubClassificationByPoleSheet } from "./http/controllers/create-sub-classification-by-pole-sheet.ts";
 import { createSubClassificationByManagerSheet } from "./http/controllers/create-sub-classification-by-manager-sheet.ts";
+import { createStudentsInformationSheet } from "./http/controllers/create-students-information-sheet.ts";
+import { createStudentsInformationByManagerSheet } from "./http/controllers/create-students-information-by-manager-sheet.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -136,7 +137,8 @@ app.setSerializerCompiler(serializerCompiler)
 app.register(authenticate)
 app.register(restorePassword)
 app.register(forgotPassword)
-app.register(getStudentsInformationSheet)
+app.register(createStudentsInformationSheet)
+app.register(createStudentsInformationByManagerSheet)
 app.register(createStudent)
 app.register(createStudentBatch)
 app.register(activeStudent)
