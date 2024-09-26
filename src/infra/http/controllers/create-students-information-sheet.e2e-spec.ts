@@ -10,7 +10,7 @@ import request from 'supertest'
 
 let course: Course
 
-describe('GET Students Information (e2e)', () => {
+describe('Create Students Information Sheet (e2e)', () => {
   beforeAll(async () => {
     course = await makePrismaCourse()
     const pole = await prisma.pole.create({
@@ -76,11 +76,14 @@ describe('GET Students Information (e2e)', () => {
     await app.close()
   })
 
-  it ('GET /courses/:courseId/students/sheet', async () => {
+  it ('POST /students/sheet', async () => {
     const { token } = await makeAuth()
 
     const response = await request(app.server)
-      .get(`/courses/${course.id.toValue()}/students/sheet`)
+      .post(`/students/sheet`)
+      .send({
+        courseId: course.id.toValue()
+      })
       .set('Authorization', `Bearer ${token}`)
 
     expect(response.status).toBe(200)

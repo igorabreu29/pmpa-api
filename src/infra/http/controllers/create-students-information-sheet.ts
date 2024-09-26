@@ -8,20 +8,20 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
 
-export async function getStudentsInformationSheet(
+export async function createStudentsInformationSheet(
   app: FastifyInstance
 ) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .get('/courses/:courseId/students/sheet', {
+    .post('/students/sheet', {
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
-        params: z.object({
+        body: z.object({
           courseId: z.string().uuid()
         })
       },
     }, async (req, res) => {
-      const { courseId } = req.params
+      const { courseId } = req.body
 
       const useCase = makeGetStudentsInformationSheetUseCase()
       const result = await useCase.execute({
