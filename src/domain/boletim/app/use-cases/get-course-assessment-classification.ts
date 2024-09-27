@@ -65,7 +65,7 @@ export class GetCourseAssessmentClassificationUseCase {
         },
         studentBirthday: student.birthday,
         studentName: student.username,
-        studentCivilID: student.civilId,
+        studentId: student.civilId,
         studentPole: {
           id: student.poleId,
           name: student.pole,

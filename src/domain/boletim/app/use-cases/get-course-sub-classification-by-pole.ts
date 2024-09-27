@@ -68,11 +68,12 @@ export class GetCourseSubClassificationByPoleUseCase {
       if (studentAverage.isLeft()) return studentAverage.value
       
       return {
+        studentId: student.studentId.toValue(),
+        studentCivilOrMilitaryId: student.militaryId ?? student.civilId,
         studentAverage: studentAverage.value.grades,
         studentBirthday: student.birthday,
-        studentName: student.username,
-        studentCivilID: student.civilId,
-        studentPole: student.pole
+        studentPole: student.pole,
+        studentName: student.username
       }
     }))
 

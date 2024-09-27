@@ -45,7 +45,7 @@ export class GetAverageClassificationCoursePolesUseCase {
       return {
         studentAverage: studentAverage.value.grades,
         studentBirthday: student.birthday,
-        studentCivilID: student.civilId,
+        studentId: student.civilId,
         studentPole: student.pole,
         studentName: student.username
       }

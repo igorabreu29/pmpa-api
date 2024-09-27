@@ -28,7 +28,7 @@ export class CreateCourseSummarySheetUseCase {
     })
 
     const { filename } = this.sheeter.write({
-      keys: ['DISCIPLINA'],
+      keys: ['DISCIPLINAS'],
       rows: courseDisciplines.map(courseDiscipline => ({
         name: courseDiscipline.disciplineName
       })),

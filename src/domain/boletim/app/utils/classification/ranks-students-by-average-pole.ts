@@ -10,7 +10,7 @@ export interface StudentWithAssessmentAverage {
     };
     studentBirthday: Date;
     studentName: string;
-    studentCivilID: string;
+    studentId: string;
     studentPole: {
         id: UniqueEntityId
         name: string
@@ -24,7 +24,7 @@ export interface StudentWithBehaviorAverage {
   }
   studentName: string
   studentBirthday: Date
-  studentCivilID: string
+  studentId: string
   studentPole: {
     id: UniqueEntityId
     name: string
