@@ -39,7 +39,7 @@ export class DownloadHistoricUseCase {
     if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
 
     const courseHistoric = await this.courseHistoricRepository.findByCourseId(course.id.toValue())
-    if (!courseHistoric) return left(new ResourceNotFoundError('Histórico do curso não encontrado!'))
+    if (!courseHistoric) return left(new ResourceNotFoundError('Histórico não pode ser acessado! O curso ainda está em andamento.'))
 
     const result = await this.getCourseClassification.execute({
       courseId: course.id.toValue(),

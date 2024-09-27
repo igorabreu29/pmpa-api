@@ -15,28 +15,28 @@ export class GeneratePDF implements PDF {
     const list = rows.courseWithDisciplines.map((discipline, key) => {
       return `
         <tr>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             ${discipline.disciplineName}
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             N/A
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             ${rows.grades.studentAverage.assessments[key]?.avi ?? ''}
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             ${rows.grades.studentAverage.assessments[key]?.avii ?? ''}
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             ${rows.grades.studentAverage.assessments[key]?.vf}
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             ${rows.grades.studentAverage.assessments[key]?.vfe ?? ''}
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             ${rows.grades.studentAverage.assessments[key]?.average}
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             ${rows.grades.studentAverage.assessments[key]?.status}
           </td>
         </tr>
@@ -51,24 +51,24 @@ export class GeneratePDF implements PDF {
 
     list.push(`
         <tr>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             Comportamento Escolar
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             N/A
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             ${behaviorAverage}
           </td>
-          <td class="text-sm font-bold">
+          <td class="text-sm font-bold border border-black rounded">
             ${status}
           </td>
         </tr>
@@ -111,6 +111,8 @@ export class GeneratePDF implements PDF {
       .replace('{{ dynamic_average }}', String(rows.grades.studentAverage.averageInform.geralAverage))
       .replace('{{ dynamic_concept }}', String(rows.grades.studentAverage.averageInform.studentAverageStatus.concept))
       .replace('{{ dynamic_classification }}', String(rows.studentClassification))
+      .replace('{{ dynamic_cmt }}', rows.courseHistoric.commander ?? '')
+      .replace('{{ dynamic_division_boss }}', rows.courseHistoric.divisionBoss ?? '')
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
