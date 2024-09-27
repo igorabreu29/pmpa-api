@@ -26,15 +26,13 @@ export class OnAssessmentCreated implements EventHandler {
       await this.sendReport.execute({
         title: 'Notas adicionadas',
         content: `
-          <ul>
-            <li>IP: ${reporterIp}</li>
-            <li>Course: ${courseName}</li>
-            <li>Disciplina: ${disciplineName}</li>
-            <li>Remetente: ${reporter.username.value}</li>
-            <li>Estudante: ${studentName}</li>
-            <li>Data: ${ocurredAt}</li>
-            <li>${reporter.username.value} adicionou notas para o aluno: ${studentName}</li>
-          </ul>
+          IP: ${reporterIp}
+          Course: ${courseName}
+          Disciplina: ${disciplineName}
+          Remetente: ${reporter.username.value}
+          Estudante: ${studentName}
+          Data: ${ocurredAt}
+          ${reporter.username.value} atualizou notas do aluno: ${studentName}
         `,
         ip: reporterIp,
         courseId: assessment.courseId.toValue(),
