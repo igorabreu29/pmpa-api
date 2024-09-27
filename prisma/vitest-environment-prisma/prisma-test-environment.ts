@@ -29,12 +29,14 @@ export default <Environment> {
     name: 'prisma',
     transformMode: 'ssr',
     async setup() {
+        await prisma.$connect()
+
         const schema = randomUUID()
         const databaseURL = generateDatabaseURL(schema)
         
-        DomainEvents.shouldRun = false
-
         process.env.DATABASE_URL = databaseURL
+
+        DomainEvents.shouldRun = false
 
         await redis.flushdb()
 
