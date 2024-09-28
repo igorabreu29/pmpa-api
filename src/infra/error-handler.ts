@@ -5,10 +5,19 @@ import { ClientError } from './http/errors/client-error.ts'
 import { Conflict } from './http/errors/conflict-error.ts'
 import { NotFound } from './http/errors/not-found.ts'
 import { UnauthorizedError } from './http/errors/unauthorized-error.ts'
+import { Prisma } from '@prisma/client'
 
 type FastifyErrorHandler = FastifyInstance['errorHandler']
 
 export const errorHandler: FastifyErrorHandler = (error, _, res) => {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === 'P2002') {
+      return res.status(409).send({
+        message: 'O usuário não pode ser criado com um CPF ou E-mail já existentes.'
+      })
+    }
+  }
+
   if (error instanceof ZodError) {
     return res.status(400).send({
       message: 'Error during validation',
