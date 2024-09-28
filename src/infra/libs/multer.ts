@@ -10,7 +10,7 @@ export const upload = multer({
             callback(null, resolve(cwd(), './uploads'))
         },
         filename: (req, file, callback) => {
-            const fileName = `${randomUUID()}-${file.originalname}`
+            const fileName = file.originalname
             callback(null, fileName)
         },
     }),
