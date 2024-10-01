@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { InMemoryStudentsRepository } from "test/repositories/in-memory-students-repository.ts";
-import { ChangeStudentStatusUseCase } from "./change-student-status.ts";
 import { makeStudent } from "test/factories/make-student.ts";
 import { InMemoryStudentsCoursesRepository } from "test/repositories/in-memory-students-courses-repository.ts";
 import { InMemoryStudentsPolesRepository } from "test/repositories/in-memory-students-poles-repository.ts";
