@@ -10,7 +10,14 @@ export const upload = multer({
             callback(null, resolve(cwd(), './uploads'))
         },
         filename: (req, file, callback) => {
-            const fileName = file.originalname
+            const fileName = file.originalname.normalize('NFKD')
+                .toLowerCase()
+                .trim()
+                .replace(/\s+/g, '-')
+                .replace(/_/g, '-')
+                .replace(/--+/g, '-')
+                .replace(/-$/g, '')
+
             callback(null, fileName)
         },
     }),
