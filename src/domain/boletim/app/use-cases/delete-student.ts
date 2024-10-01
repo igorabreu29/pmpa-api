@@ -28,8 +28,6 @@ export class DeleteStudentUseCase {
       
     const student = await this.studentsRepository.findById(id)
     if (!student) return left(new ResourceNotFoundError('Estudante não encontrado.'))
-      
-    await this.studentsRepository.delete(student)
 
     student.addDomainStudentEvent(
       new StudentEvent({
@@ -38,6 +36,8 @@ export class DeleteStudentUseCase {
         student
       })
     )
+      
+    await this.studentsRepository.delete(student)
 
     return right(null)
   }

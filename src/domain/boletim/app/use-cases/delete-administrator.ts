@@ -27,8 +27,6 @@ export class DeleteAdministratorUseCase {
       
     const administrator = await this.administratorsRepository.findById(id)
     if (!administrator) return left(new ResourceNotFoundError('Administrador não encontrado.'))
-    
-    await this.administratorsRepository.delete(administrator)
 
     administrator.addDomainAdministratorEvent(
       new AdministratorEvent({
@@ -37,6 +35,8 @@ export class DeleteAdministratorUseCase {
         reporterIp: userIp
       })
     )
+  
+    await this.administratorsRepository.delete(administrator)
 
     return right(null)
   }
