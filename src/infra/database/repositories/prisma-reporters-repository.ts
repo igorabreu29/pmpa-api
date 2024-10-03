@@ -16,7 +16,8 @@ export class PrismaReportersRepository implements ReportersRepository {
         password: true,
         email: true,
         cpf: true,
-        civilId: true
+        civilId: true,
+        role: true
       }
     })
     if (!reporter) return null
