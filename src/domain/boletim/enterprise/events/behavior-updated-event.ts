@@ -3,6 +3,7 @@ import { DomainEvent } from "@/core/events/domain-event.ts";
 import { Behavior } from "../entities/behavior.ts";
 
 export interface BehaviorUpdatedEventProps {
+  previousBehavior: Behavior
   behavior: Behavior
 
   reporterId: string
@@ -11,11 +12,13 @@ export interface BehaviorUpdatedEventProps {
 
 export class BehaviorUpdatedEvent implements DomainEvent {
   public ocurredAt: Date;
+  public previousBehavior: Behavior
   public behavior: Behavior
   public reporterId: string
   public reporterIp: string
 
-  public constructor({ behavior, reporterId, reporterIp }: BehaviorUpdatedEventProps) {
+  public constructor({ previousBehavior, behavior, reporterId, reporterIp }: BehaviorUpdatedEventProps) {
+    this.previousBehavior = previousBehavior
     this.behavior = behavior
     this.reporterId = reporterId
     this.reporterIp = reporterIp

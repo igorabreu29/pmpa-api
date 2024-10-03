@@ -3,6 +3,7 @@ import { DomainEvent } from "@/core/events/domain-event.ts";
 import { Assessment } from "../entities/assessment.ts";
 
 interface AssessmentEventProps {
+  previousAssessment: Assessment
   assessment: Assessment
   reporterId: string
   reporterIp: string
@@ -10,16 +11,19 @@ interface AssessmentEventProps {
 
 export class AssessmentUpdatedEvent implements DomainEvent {
   public ocurredAt: Date
+  public previousAssessment: Assessment
   public assessment: Assessment
 
   public reporterId: string
   public reporterIp: string
 
   public constructor({
+    previousAssessment,
     assessment,
     reporterId,
     reporterIp
   }: AssessmentEventProps) {
+    this.previousAssessment = previousAssessment
     this.assessment = assessment
     this.reporterId = reporterId
     this.reporterIp = reporterIp

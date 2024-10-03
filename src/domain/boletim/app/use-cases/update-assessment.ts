@@ -58,6 +58,7 @@ export class UpdateAssessmentUseCaseUseCase {
     const assessmentCreated = assessmentOrError.value
 
     assessmentCreated.addDomainAssessmentEvent(new AssessmentUpdatedEvent({
+      previousAssessment: assessment,
       assessment: assessmentCreated,
       reporterId: userId,
       reporterIp: userIp
