@@ -51,7 +51,7 @@ describe('On Manager Disabled', () => {
     )
 
     reportersRepository = new InMemoryReportersRepository()
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     
     sendReportUseCase = new SendReportUseCase(
       reportsRepository

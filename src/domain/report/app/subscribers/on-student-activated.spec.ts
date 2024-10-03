@@ -6,8 +6,6 @@ import { InMemoryReportsRepository } from 'test/repositories/in-memory-reports-r
 import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
-import { OnStudentCreated } from './on-student-created.ts'
-import { StudentEvent } from '@/domain/boletim/enterprise/events/student-event.ts'
 import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository.ts'
 import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-students-courses-repository.ts'
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
@@ -58,7 +56,7 @@ describe('On Student Activated', () => {
     )
 
     reportersRepository = new InMemoryReportersRepository()
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     
     sendReportUseCase = new SendReportUseCase(
       reportsRepository

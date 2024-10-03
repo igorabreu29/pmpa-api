@@ -9,12 +9,14 @@ import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-s
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
 import { InMemoryPolesRepository } from 'test/repositories/in-memory-poles-repository.ts'
+import { InMemoryReportersRepository } from 'test/repositories/in-memory-reporters-repository.ts'
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let coursesRepository: InMemoryCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
 let polesRepository: InMemoryPolesRepository
 let studentsRepository: InMemoryStudentsRepository
+let reportersRepository: InMemoryReportersRepository
 
 let reportsRepository: InMemoryReportsRepository
 let sendReportUseCase: SendReportUseCase
@@ -36,6 +38,7 @@ describe('On Assessment Batch Created', () => {
     studentsPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
       studentsCoursesRepository,
+      coursesRepository,
       polesRepository
     )
     polesRepository = new InMemoryPolesRepository()
@@ -46,7 +49,9 @@ describe('On Assessment Batch Created', () => {
       studentsPolesRepository,
       polesRepository
     )
-    reportsRepository = new InMemoryReportsRepository()
+
+    reportersRepository = new InMemoryReportersRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
 
     sendReportUseCase = new SendReportUseCase( 
       reportsRepository

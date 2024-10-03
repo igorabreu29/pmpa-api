@@ -4,7 +4,6 @@ import { makeReporter } from 'test/factories/make-reporter.ts'
 import { InMemoryBehaviorsBatchRepository } from 'test/repositories/in-memory-behaviors-batch-repository.ts'
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
 import { InMemoryReportersRepository } from 'test/repositories/in-memory-reporters-repository.ts'
-import { InMemoryReportsBatchRepository } from 'test/repositories/in-memory-reports-batch-repository.ts'
 import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportBatchUseCase, SendReportBatchUseCaseRequest, SendReportBatchUseCaseResponse } from '../use-cases/send-report-batch.ts'
@@ -33,7 +32,7 @@ describe('On Behavior Batch Created', () => {
     coursesRepository = new InMemoryCoursesRepository()
     reportersRepository = new InMemoryReportersRepository()
 
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     behaviorsBatchRepository = new InMemoryBehaviorsBatchRepository(
       behaviorsRepository
     )

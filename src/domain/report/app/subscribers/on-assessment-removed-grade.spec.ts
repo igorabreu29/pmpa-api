@@ -15,8 +15,6 @@ import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students
 import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
-import { OnAssessmentUpdated } from './on-assessment-updated.ts'
-import { AssessmentUpdatedEvent } from '@/domain/boletim/enterprise/events/assessment-updated-event.ts'
 import { OnAssessmentRemovedGrade } from './on-assessment-removed-grade.ts'
 import { AssessmentRemovedGradeEvent } from '@/domain/boletim/enterprise/events/assessment-removed-grade-event.ts'
 
@@ -65,7 +63,7 @@ describe('On Assessment Removed Grade', () => {
     reportersRepository = new InMemoryReportersRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
 
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     assessmentsRepository = new InMemoryAssessmentsRepository()
 
     sendReportUseCase = new SendReportUseCase(

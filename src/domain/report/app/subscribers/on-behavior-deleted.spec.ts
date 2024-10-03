@@ -1,4 +1,3 @@
-import { BehaviorEvent } from '@/domain/boletim/enterprise/events/behavior-event.ts'
 import { makeBehavior } from 'test/factories/make-behavior.ts'
 import { makeCourse } from 'test/factories/make-course.ts'
 import { makeReporter } from 'test/factories/make-reporter.ts'
@@ -60,7 +59,7 @@ describe('On Behavior Created', () => {
     )
     reportersRepository = new InMemoryReportersRepository()
 
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     behaviorsRepository = new InMemoryBehaviorsRepository()
 
     sendReportUseCase = new SendReportUseCase(

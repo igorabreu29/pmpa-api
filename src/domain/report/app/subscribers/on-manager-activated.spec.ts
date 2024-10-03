@@ -6,8 +6,6 @@ import { InMemoryReportsRepository } from 'test/repositories/in-memory-reports-r
 import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
-import { OnManagerCreated } from './on-manager-created.ts'
-import { ManagerEvent } from '@/domain/boletim/enterprise/events/manager-event.ts'
 import { InMemoryManagersRepository } from 'test/repositories/in-memory-managers-repository.ts'
 import { InMemoryManagersCoursesRepository } from 'test/repositories/in-memory-managers-courses-repository.ts'
 import { InMemoryManagersPolesRepository } from 'test/repositories/in-memory-managers-poles-repository.ts'
@@ -53,7 +51,7 @@ describe('On Manager Activated', () => {
     )
 
     reportersRepository = new InMemoryReportersRepository()
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     
     sendReportUseCase = new SendReportUseCase(
       reportsRepository

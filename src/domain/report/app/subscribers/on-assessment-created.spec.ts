@@ -24,7 +24,7 @@ describe('On Assessment Created', () => {
   beforeEach(() => {
     reportersRepository = new InMemoryReportersRepository()
 
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     assessmentsRepository = new InMemoryAssessmentsRepository()
 
     sendReportUseCase = new SendReportUseCase(

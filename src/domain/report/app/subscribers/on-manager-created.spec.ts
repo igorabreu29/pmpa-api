@@ -12,7 +12,6 @@ import { InMemoryReportsRepository } from 'test/repositories/in-memory-reports-r
 import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportUseCase, SendReportUseCaseRequest, SendReportUseCaseResponse } from '../use-cases/send-report.ts'
-import { OnStudentCreated } from './on-student-created.ts'
 import { OnManagerCreated } from './on-manager-created.ts'
 
 let managersCoursesRepository: InMemoryManagersCoursesRepository
@@ -51,7 +50,7 @@ describe('On Manager Created', () => {
     )
 
     reportersRepository = new InMemoryReportersRepository()
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     
     sendReportUseCase = new SendReportUseCase(
       reportsRepository

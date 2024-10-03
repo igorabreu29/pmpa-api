@@ -2,7 +2,6 @@ import { makeCourse } from 'test/factories/make-course.ts'
 import { makeReporter } from 'test/factories/make-reporter.ts'
 import { InMemoryCoursesRepository } from 'test/repositories/in-memory-courses-repository.ts'
 import { InMemoryReportersRepository } from 'test/repositories/in-memory-reporters-repository.ts'
-import { InMemoryReportsBatchRepository } from 'test/repositories/in-memory-reports-batch-repository.ts'
 import { waitFor } from 'test/utils/wait-for.ts'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 import { SendReportBatchUseCase, SendReportBatchUseCaseRequest, SendReportBatchUseCaseResponse } from '../use-cases/send-report-batch.ts'
@@ -57,7 +56,7 @@ describe('On Assessment Batch Created', () => {
 
     reportersRepository = new InMemoryReportersRepository()
 
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     studentsBatchRepository = new InMemoryStudentsBatchRepository(
       studentsRepository
     )

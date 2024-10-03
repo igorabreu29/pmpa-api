@@ -32,7 +32,7 @@ describe('On Assessment Batch Updated', () => {
     coursesRepository = new InMemoryCoursesRepository()
     reportersRepository = new InMemoryReportersRepository()
 
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     assessmentsBatchRepository = new InMemoryAssessmentsBatchRepository(
       assessmentsRepository
     )

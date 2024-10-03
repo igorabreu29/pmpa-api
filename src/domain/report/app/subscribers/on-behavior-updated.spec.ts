@@ -60,7 +60,7 @@ describe('On Behavior Created', () => {
     )
     reportersRepository = new InMemoryReportersRepository()
 
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     behaviorsRepository = new InMemoryBehaviorsRepository()
 
     sendReportUseCase = new SendReportUseCase(
@@ -87,9 +87,12 @@ describe('On Behavior Created', () => {
     reportersRepository.items.push(reporter)
 
     const behavior = makeBehavior({ courseId: course.id, studentId: student.id, january: 10 })
+    let previousBehavior = behavior
+
     behavior.january = 5
 
     behavior.addDomainBehaviorEvent(new BehaviorUpdatedEvent({
+      previousBehavior,
       behavior,
       reporterId: reporter.id.toValue(),
       reporterIp: ''

@@ -63,7 +63,7 @@ describe('On Assessment Created', () => {
     reportersRepository = new InMemoryReportersRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
 
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     assessmentsRepository = new InMemoryAssessmentsRepository()
 
     sendReportUseCase = new SendReportUseCase(
@@ -93,7 +93,7 @@ describe('On Assessment Created', () => {
     reportersRepository.items.push(reporter)
 
     const assessment = makeAssessment({ courseId: course.id, studentId: student.id, disciplineId: discipline.id })
-    assessment.addDomainAssessmentEvent(new AssessmentUpdatedEvent({ assessment, reporterId: reporter.id.toValue(), reporterIp: '' }))
+    assessment.addDomainAssessmentEvent(new AssessmentUpdatedEvent({ previousAssessment: assessment,assessment, reporterId: reporter.id.toValue(), reporterIp: '' }))
 
     assessment.vf = 10
 

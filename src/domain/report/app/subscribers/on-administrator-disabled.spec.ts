@@ -26,7 +26,7 @@ describe('On Administrator Disabled', () => {
     administratorsRepository = new InMemoryAdministratorsRepository()
 
     reportersRepository = new InMemoryReportersRepository()
-    reportsRepository = new InMemoryReportsRepository()
+    reportsRepository = new InMemoryReportsRepository(reportersRepository)
     
     sendReportUseCase = new SendReportUseCase(
       reportsRepository
