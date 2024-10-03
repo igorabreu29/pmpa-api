@@ -1,7 +1,7 @@
 import { TypeAction } from "@/domain/report/enterprise/entities/report.ts";
 import { Action as PrismaAction, Role as PrismaRole } from "@prisma/client";
 
-export function convertActionToPrisma(action: TypeAction): PrismaAction {
+export function convertActionToPrisma(action: string): PrismaAction {
   if (action === 'login confirmed') return 'LOGIN_CONFIRMED'
   if (action === 'status') return 'STATUS'
   if (action === 'remove') return 'REMOVE'
