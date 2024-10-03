@@ -37,7 +37,7 @@ export class OnAdministratorDisabled implements EventHandler {
         title: 'Adminstrador Desativado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter?.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Administrador: ${administrator?.username.value}
           Data: ${formattedDate}
           Razão: ${reason}

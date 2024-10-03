@@ -35,7 +35,7 @@ export class OnManagerDeleted implements EventHandler {
         title: 'Gerente deletado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Gerente: ${manager.username.value}
           Data: ${formattedDate}
           ${reporter.username.value} deletou o gerente: ${manager.username.value}

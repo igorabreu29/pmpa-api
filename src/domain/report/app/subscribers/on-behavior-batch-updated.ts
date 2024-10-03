@@ -41,7 +41,7 @@ export class OnBehaviorBatchUpdated implements EventHandler {
         content: `
           IP: ${reporterIp}
           Curso: ${course.name.value}
-          Remetente: ${reporter.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Link do arquivo: ${behaviorBatch.fileLink}
           Data: ${formattedDate}
           ${reporter.username.value} adicionou notas de comportamento em lote

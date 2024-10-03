@@ -42,7 +42,7 @@ export class OnManagerCreated implements EventHandler {
         title: 'Gerente criado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Gerente: ${manager.username.value}
           Curso: ${course.name.value}
           Data: ${formattedDate}

@@ -37,7 +37,7 @@ export class OnBehaviorCreated implements EventHandler {
         content: `
           IP: ${reporterIp}
           Curso: ${courseName}
-          Remetente: ${reporter.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Estudante: ${studentName}
           Data: ${formattedDate}
           ${reporter.username.value} adicionou notas de comportamento para o aluno: ${studentName}

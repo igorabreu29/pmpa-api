@@ -58,7 +58,7 @@ export class OnBehaviorUpdated implements EventHandler {
         content: `
           IP: ${reporterIp}
           Curso: ${course.name.value}
-          Remetente: ${reporter.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Estudante: ${student.username.value}
           Data: ${formattedDate}
           

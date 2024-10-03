@@ -40,7 +40,7 @@ export class OnStudentCreated implements EventHandler {
         title: 'Estudante criado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Estudante: ${student.username.value}
           Curso: ${course.name.value}
           Data: ${formattedDate}

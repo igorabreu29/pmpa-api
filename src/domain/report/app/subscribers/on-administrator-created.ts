@@ -35,7 +35,7 @@ export class OnAdministratorCreated implements EventHandler {
         title: 'Administrador criado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Administrador: ${administrator.username.value}
           Data: ${formattedDate}
           ${reporter.username.value} adicionou o administrador: ${administrator.username.value}

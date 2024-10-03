@@ -38,12 +38,12 @@ export class OnStudentActivated implements EventHandler {
     ])
     const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
 
-    if (course) {
+    if (course && reporter) {
       await this.sendReport.execute({
         title: 'Estudante Ativado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter?.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Estudante: ${student?.username.value}
           Curso: ${course.name.value}
           Data: ${formattedDate}

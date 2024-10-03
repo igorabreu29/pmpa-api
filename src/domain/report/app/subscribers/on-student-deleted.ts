@@ -35,7 +35,7 @@ export class OnStudentDeleted implements EventHandler {
         title: 'Estudante deletado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Estudante: ${student.username.value}
           Data: ${formattedDate}
           ${reporter.username.value} deletou o aluno: ${student.username.value}

@@ -48,7 +48,7 @@ export class OnAssessmentRemovedGrade implements EventHandler {
           IP: ${reporterIp}
           Curso: ${course.name.value}
           Disciplina: ${discipline.name.value}
-          Remetente: ${reporter.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Estudante: ${student.username.value}
           Data: ${formattedDate}
           ${reporter.username.value} removeu notas do aluno: ${student.username.value}

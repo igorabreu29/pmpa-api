@@ -38,12 +38,12 @@ export class OnManagerActivated implements EventHandler {
     ])
     const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
 
-    if (course) {
+    if (course && reporter) {
       await this.sendReport.execute({
         title: 'Gerente Ativado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter?.username.value}
+          Remetente: ${reporter.username.value} (reporter.role)
           Gerente: ${manager?.username.value}
           Curso: ${course.name.value}
           Data: ${formattedDate}
