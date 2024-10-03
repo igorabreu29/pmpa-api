@@ -7,6 +7,13 @@ import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import { BehaviorEvent } from "@/domain/boletim/enterprise/events/behavior-event.ts";
 import { BehaviorDeletedEvent } from "@/domain/boletim/enterprise/events/behavior-deleted-event.ts";
 
+import dayjs from "dayjs";
+import localizedFormat from 'dayjs/plugin/localizedFormat.js'
+import 'dayjs/locale/pt-br.js'
+
+dayjs.locale('pt-br')
+dayjs.extend(localizedFormat)
+
 export class OnBehaviorDeleted implements EventHandler {
   constructor (
     private studentsRepository: StudentsRepository,
@@ -30,6 +37,7 @@ export class OnBehaviorDeleted implements EventHandler {
       this.reportersRepository.findById({ id: reporterId }),
       this.studentsRepository.findById(behavior.studentId.toValue())
     ])
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
 
     if (course && reporter && student) {
       await this.sendReport.execute({
@@ -39,7 +47,7 @@ export class OnBehaviorDeleted implements EventHandler {
           Curso: ${course.name.value}
           Remetente: ${reporter.username.value}
           Estudante: ${student.username.value}
-          Data: ${ocurredAt}
+          Data: ${formattedDate}
           ${reporter.username.value} deletou notas de comportamento do aluno: ${student.username.value}
         `,
         courseId: behavior.courseId.toValue(),

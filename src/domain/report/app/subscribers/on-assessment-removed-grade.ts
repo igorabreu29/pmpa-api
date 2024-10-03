@@ -7,6 +7,13 @@ import { SendReportUseCase } from "../use-cases/send-report.ts";
 import type { DisciplinesRepository } from "@/domain/boletim/app/repositories/disciplines-repository.ts";
 import { AssessmentRemovedGradeEvent } from "@/domain/boletim/enterprise/events/assessment-removed-grade-event.ts";
 
+import dayjs from "dayjs";
+import localizedFormat from 'dayjs/plugin/localizedFormat.js'
+import 'dayjs/locale/pt-br.js'
+
+dayjs.locale('pt-br')
+dayjs.extend(localizedFormat)
+
 export class OnAssessmentRemovedGrade implements EventHandler {
   constructor (
     private studentsRepository: StudentsRepository,
@@ -32,17 +39,18 @@ export class OnAssessmentRemovedGrade implements EventHandler {
       this.reportersRepository.findById({ id: reporterId }),
       this.studentsRepository.findById(assessment.studentId.toValue())
     ])
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
 
     if (course && discipline && reporter && student) {
       await this.sendReport.execute({
         title: `Notas removidas`,
         content: `
           IP: ${reporterIp}
-          Course: ${course.name.value}
+          Curso: ${course.name.value}
           Disciplina: ${discipline.name.value}
           Remetente: ${reporter.username.value}
           Estudante: ${student.username.value}
-          Data: ${ocurredAt}
+          Data: ${formattedDate}
           ${reporter.username.value} removeu notas do aluno: ${student.username.value}
         `,
         ip: reporterIp,

@@ -54,6 +54,8 @@ export class UpdateBehaviorUseCaseUseCase {
 
     const behavior = await this.behaviorsRepository.findById({ id }) 
     if (!behavior) return left(new ResourceNotFoundError('Comportamento não encontrado .'))
+
+    let previousBehavior = behavior
     
     behavior.january = january || behavior.january
     behavior.february = february || behavior.february
@@ -69,6 +71,7 @@ export class UpdateBehaviorUseCaseUseCase {
     behavior.december = december || behavior.december
 
     behavior.addDomainBehaviorEvent(new BehaviorUpdatedEvent({
+      previousBehavior,
       behavior,
       reporterId: userId,
       reporterIp: userIp

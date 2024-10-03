@@ -6,6 +6,13 @@ import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-rep
 import { ChangeManagerStatusEvent } from "@/domain/boletim/enterprise/events/change-manager-status-event.ts";
 import type { ManagersRepository } from "@/domain/boletim/app/repositories/managers-repository.ts";
 
+import dayjs from "dayjs";
+import localizedFormat from 'dayjs/plugin/localizedFormat.js'
+import 'dayjs/locale/pt-br.js'
+
+dayjs.locale('pt-br')
+dayjs.extend(localizedFormat)
+
 export class OnManagerDisabled implements EventHandler {
   constructor (
     private reportersRepository: ReportersRepository,
@@ -29,6 +36,8 @@ export class OnManagerDisabled implements EventHandler {
       this.managersRepository.findById(managerCourse.managerId.toValue()),
       this.coursesRepository.findById(managerCourse.courseId.toValue())
     ])
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
+    
 
     if (course) {
       await this.sendReport.execute({
@@ -38,7 +47,7 @@ export class OnManagerDisabled implements EventHandler {
           Remetente: ${reporter?.username.value}
           Gerente: ${manager?.username.value}
           Curso: ${course.name.value}
-          Data: ${ocurredAt}
+          Data: ${formattedDate}
           Razão: ${reason}
           ${reporter?.username.value} desativou o gerente: ${manager?.username.value}
         `,

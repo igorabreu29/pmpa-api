@@ -4,6 +4,13 @@ import { StudentEvent } from "@/domain/boletim/enterprise/events/student-event.t
 import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import { SendReportUseCase } from "../use-cases/send-report.ts";
 
+import dayjs from "dayjs";
+import localizedFormat from 'dayjs/plugin/localizedFormat.js'
+import 'dayjs/locale/pt-br.js'
+
+dayjs.locale('pt-br')
+dayjs.extend(localizedFormat)
+
 export class OnStudentUpdated implements EventHandler {
   constructor (
     private reportersRepository: ReportersRepository,
@@ -21,6 +28,7 @@ export class OnStudentUpdated implements EventHandler {
 
   private async sendUpdateStudentReport({ student, reporterId, courseId, reporterIp, ocurredAt }: StudentEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
 
     if (reporter) {
       await this.sendReport.execute({
@@ -29,7 +37,7 @@ export class OnStudentUpdated implements EventHandler {
           IP: ${reporterIp}
           Remetente: ${reporter.username.value}
           Estudante: ${student.username.value}
-          Data: ${ocurredAt}
+          Data: ${formattedDate}
           ${reporter.username.value} atualizou o aluno: ${student.username.value}
         `,
         ip: reporterIp,

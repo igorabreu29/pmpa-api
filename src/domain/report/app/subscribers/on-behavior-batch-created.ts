@@ -5,6 +5,13 @@ import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import { SendReportBatchUseCase } from "../use-cases/send-report-batch.ts";
 import { BehaviorBatchEvent } from "@/domain/boletim/enterprise/events/behavior-batch-event.ts";
 
+import dayjs from "dayjs";
+import localizedFormat from 'dayjs/plugin/localizedFormat.js'
+import 'dayjs/locale/pt-br.js'
+
+dayjs.locale('pt-br')
+dayjs.extend(localizedFormat)
+
 export class OnBehaviorBatchCreated implements EventHandler {
   constructor (
     private reportersRepository: ReportersRepository,
@@ -26,16 +33,17 @@ export class OnBehaviorBatchCreated implements EventHandler {
       this.coursesRepository.findById(behaviorBatch.courseId.toValue()),
       this.reportersRepository.findById({ id: behaviorBatch.userId.toValue() })
     ])
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
 
     if (course && reporter) {
       await this.sendReportBatch.execute({
         title: 'Notas de comportamento adicionadas em lote',
         content: `
           IP: ${reporterIp}
-          Course: ${course.name.value}
+          Curso: ${course.name.value}
           Remetente: ${reporter.username.value}
           Link do arquivo: ${behaviorBatch.fileLink}
-          Data: ${ocurredAt}
+          Data: ${formattedDate}
           ${reporter.username.value} adicionou notas de comportamento em lote
         `,
         courseId: behaviorBatch.courseId.toValue(),

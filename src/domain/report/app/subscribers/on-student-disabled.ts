@@ -6,6 +6,13 @@ import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-rep
 import { ChangeStudentStatusEvent } from "@/domain/boletim/enterprise/events/change-student-status-event.ts";
 import type { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
 
+import dayjs from "dayjs";
+import localizedFormat from 'dayjs/plugin/localizedFormat.js'
+import 'dayjs/locale/pt-br.js'
+
+dayjs.locale('pt-br')
+dayjs.extend(localizedFormat)
+
 export class OnStudentDisabled implements EventHandler {
   constructor (
     private reportersRepository: ReportersRepository,
@@ -29,6 +36,7 @@ export class OnStudentDisabled implements EventHandler {
       this.studentsRepository.findById(studentCourse.studentId.toValue()),
       this.coursesRepository.findById(studentCourse.courseId.toValue())
     ])
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
 
     if (course) {
       await this.sendReport.execute({
@@ -38,7 +46,7 @@ export class OnStudentDisabled implements EventHandler {
           Remetente: ${reporter?.username.value}
           Estudante: ${student?.username.value}
           Curso: ${course.name.value}
-          Data: ${ocurredAt}
+          Data: ${formattedDate}
           Razão: ${reason}
           ${reporter?.username.value} desativou o aluno: ${student?.username.value}
         `,

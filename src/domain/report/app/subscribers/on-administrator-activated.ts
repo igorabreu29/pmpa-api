@@ -4,6 +4,13 @@ import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import { SendReportUseCase } from "../use-cases/send-report.ts";
 import { ChangeAdministratorStatusEvent } from "@/domain/boletim/enterprise/events/change-administrator-status.ts";
 
+import dayjs from "dayjs";
+import localizedFormat from 'dayjs/plugin/localizedFormat.js'
+import 'dayjs/locale/pt-br.js'
+
+dayjs.locale('pt-br')
+dayjs.extend(localizedFormat)
+
 export class OnAdministratorActivated implements EventHandler {
   constructor (
     private reportersRepository: ReportersRepository,
@@ -24,6 +31,8 @@ export class OnAdministratorActivated implements EventHandler {
       this.reportersRepository.findById({ id: reporterId }),
     ])
 
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
+
     if (reporter) {
       await this.sendReport.execute({
         title: 'Administrador Ativado',
@@ -31,7 +40,7 @@ export class OnAdministratorActivated implements EventHandler {
           IP: ${reporterIp}
           Remetente: ${reporter?.username.value}
           Administrador: ${administrator?.username.value}
-          Data: ${ocurredAt}
+          Data: ${formattedDate}
           Razão: ${reason}
           ${reporter?.username.value} ativou o aluno: ${administrator?.username.value}
         `,

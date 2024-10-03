@@ -4,6 +4,13 @@ import { ReportersRepository } from "../repositories/reporters-repository.ts";
 import { SendReportUseCase } from "../use-cases/send-report.ts";
 import { ManagerEvent } from "@/domain/boletim/enterprise/events/manager-event.ts";
 
+import dayjs from "dayjs";
+import localizedFormat from 'dayjs/plugin/localizedFormat.js'
+import 'dayjs/locale/pt-br.js'
+
+dayjs.locale('pt-br')
+dayjs.extend(localizedFormat)
+
 export class OnManagerDeleted implements EventHandler {
   constructor (
     private reportersRepository: ReportersRepository,
@@ -21,6 +28,7 @@ export class OnManagerDeleted implements EventHandler {
 
   private async sendDeleteManagerReport({ manager, reporterId, reporterIp, ocurredAt }: ManagerEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
 
     if (reporter) {
       await this.sendReport.execute({
@@ -29,7 +37,7 @@ export class OnManagerDeleted implements EventHandler {
           IP: ${reporterIp}
           Remetente: ${reporter.username.value}
           Gerente: ${manager.username.value}
-          Data: ${ocurredAt}
+          Data: ${formattedDate}
           ${reporter.username.value} deletou o gerente: ${manager.username.value}
         `,
         ip: reporterIp,
