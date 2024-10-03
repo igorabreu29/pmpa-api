@@ -53,7 +53,7 @@ export class OnAssessmentUpdated implements EventHandler {
           IP: ${reporterIp}
           Curso: ${course.name.value}
           Disciplina: ${discipline.name.value}
-          Remetente: ${reporter.username.value} (reporter.role)
+          Remetente: ${reporter.username.value} (${reporter.role})
           Estudante: ${student.username.value}
           Data: ${formattedDate}
         

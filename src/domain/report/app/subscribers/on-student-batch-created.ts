@@ -41,7 +41,7 @@ export class OnStudentBatchCreated implements EventHandler {
         content: `
           IP: ${reporterIp}
           Curso: ${course.name.value}
-          Remetente: ${reporter.username.value} (reporter.role)
+          Remetente: ${reporter.username.value} (${reporter.role})
           Link do arquivo: ${studentBatch.fileLink}
           Data: ${formattedDate}
           ${reporter.username.value} adicionou notas em lote

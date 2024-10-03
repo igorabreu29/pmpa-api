@@ -45,7 +45,7 @@ export class OnBehaviorDeleted implements EventHandler {
         content: `
           IP: ${reporterIp}
           Curso: ${course.name.value}
-          Remetente: ${reporter.username.value} (reporter.role)
+          Remetente: ${reporter.username.value} (${reporter.role})
           Estudante: ${student.username.value}
           Data: ${formattedDate}
           ${reporter.username.value} deletou notas de comportamento do aluno: ${student.username.value}

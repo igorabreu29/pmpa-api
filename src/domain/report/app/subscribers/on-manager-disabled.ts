@@ -44,7 +44,7 @@ export class OnManagerDisabled implements EventHandler {
         title: 'Gerente desativado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter.username.value} (reporter.role)
+          Remetente: ${reporter.username.value} (${reporter.role})
           Gerente: ${manager?.username.value}
           Curso: ${course.name.value}
           Data: ${formattedDate}

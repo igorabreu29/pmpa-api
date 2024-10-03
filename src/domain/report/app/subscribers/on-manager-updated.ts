@@ -35,7 +35,7 @@ export class OnManagerUpdated implements EventHandler {
         title: 'Gerente atualizado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter.username.value} (reporter.role)
+          Remetente: ${reporter.username.value} (${reporter.role})
           Gerente: ${manager.username.value}
           Data: ${formattedDate}
           ${reporter.username.value} atualizou o gerente: ${manager.username.value}

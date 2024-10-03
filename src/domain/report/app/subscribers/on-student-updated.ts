@@ -35,7 +35,7 @@ export class OnStudentUpdated implements EventHandler {
         title: 'Estudante atulizado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter.username.value} (reporter.role)
+          Remetente: ${reporter.username.value} (${reporter.role})
           Estudante: ${student.username.value}
           Data: ${formattedDate}
           ${reporter.username.value} atualizou o aluno: ${student.username.value}

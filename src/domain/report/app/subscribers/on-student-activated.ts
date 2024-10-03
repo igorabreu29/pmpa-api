@@ -43,7 +43,7 @@ export class OnStudentActivated implements EventHandler {
         title: 'Estudante Ativado',
         content: `
           IP: ${reporterIp}
-          Remetente: ${reporter.username.value} (reporter.role)
+          Remetente: ${reporter.username.value} (${reporter.role})
           Estudante: ${student?.username.value}
           Curso: ${course.name.value}
           Data: ${formattedDate}
