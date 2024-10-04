@@ -31,7 +31,6 @@ export async function createCourse(
     },
       async (req, res) => {
         const { formula, name, imageUrl, isPeriod, startAt, endsAt } = req.body
-        console.log(endsAt)
 
         const useCase = makeCreateCourseUseCase()
         const result = await useCase.execute({

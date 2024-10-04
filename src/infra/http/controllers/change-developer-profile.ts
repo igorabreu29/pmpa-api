@@ -73,8 +73,6 @@ export async function changeDeveloperProfile(
       state 
     })
 
-    console.log(civilId)
-
     if (result.isLeft()) {
       const error = result.value
 

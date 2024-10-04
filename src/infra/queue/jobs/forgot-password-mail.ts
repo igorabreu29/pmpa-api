@@ -11,7 +11,6 @@ export interface MailProps {
 export const forgotPasswordMailConfig = {
   key: 'forgot-password-mail',
   async handle({ data }: MailProps) {
-    console.log(data)
     const { from, to } = data
 
     await transporter.sendMail({
