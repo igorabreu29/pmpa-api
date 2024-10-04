@@ -300,6 +300,8 @@ export class PrismaStudentsRepository implements StudentsRepository {
         }
       }
     })
+
+    DomainEvents.dispatchEventsForAggregate(student.id)
   }
 
   async updateLoginConfirmed(student: Student): Promise<void> {
