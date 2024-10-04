@@ -69,7 +69,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
             return {
               id: userOnCourse.usersOnPoles[0].id,
               poleId: userOnCourse.usersOnPoles[0].poleId,
-              userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+              userOnCourseId: userOnCourse.usersOnPoles[0].id,
             }
           }),
           courses: search.usersOnCourses.map(item => item.course),
@@ -141,9 +141,17 @@ export class PrismaSearchsRepository implements SearchsRepository {
           civilId: true,
           role: true,
           usersOnCourses: {
+            orderBy: {
+              createdAt: 'desc'
+            },
+
             include: {
               course: true,
               usersOnPoles: {
+                orderBy: {
+                  createdAt: 'desc'
+                },
+
                 include: {
                   pole: true
                 }
@@ -169,7 +177,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
           return {
             id: userOnCourse.usersOnPoles[0].id,
             poleId: userOnCourse.usersOnPoles[0].poleId,
-            userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+            userOnCourseId: userOnCourse.usersOnPoles[0].id,
           }
         }),
         courses: search.usersOnCourses.map(item => item.course),
@@ -271,7 +279,7 @@ export class PrismaSearchsRepository implements SearchsRepository {
         return {
           id: userOnCourse.usersOnPoles[0].id,
           poleId: userOnCourse.usersOnPoles[0].poleId,
-          userOnCourseId: userOnCourse.usersOnPoles[0].userOnCourseId,
+          userOnCourseId: userOnCourse.usersOnPoles[0].id,
         }
       }),
       courses: search.usersOnCourses.map(item => item.course),

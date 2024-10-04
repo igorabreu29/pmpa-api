@@ -41,7 +41,10 @@ export class PrismaSearchsDetailsMapper {
       cpf: cpfOrError.value,
       email: emailOrError.value,
       role: defineRoleAccessToPrisma(search.role as Role),
-      courses: search.courses.map(course => {
+      courses: search.searchCourses.map(searchCourse => {
+        const course = search.courses.find(course => course.id === searchCourse.courseId)
+        if (!course) throw new Error('Curso não existente.')
+
         const nameOrError = Name.create(course.name)
         const endsAtOrError = EndsAt.create(course.endsAt)
         if (nameOrError.isLeft()) throw new Error(nameOrError.value.message)
@@ -58,17 +61,15 @@ export class PrismaSearchsDetailsMapper {
         }, new UniqueEntityId(course.id))
         if (courseOrError.isLeft()) throw new Error(courseOrError.value.message)
 
-          const searchCourse = search.searchCourses.find(searchCourse => {
-            return searchCourse.courseId === course.id
-          })
-          if (!searchCourse) throw new Error('Curso não existente.')
-  
-          return {
-            searchCourseId: new UniqueEntityId(searchCourse.id),
-            course: courseOrError.value
-          }
+        return {
+          searchCourseId: new UniqueEntityId(searchCourse.id),
+          course: courseOrError.value
+        }
       }),
-      poles: search.poles.map(pole => {
+      poles: search.searchPoles.map(searchPole => {
+        const pole = search.poles.find(pole => pole.id === searchPole.poleId)
+        if (!pole) throw new Error('Polo não encontrado!')
+
         const nameOrError = Name.create(pole.name)
         if (nameOrError.isLeft()) throw new Error(nameOrError.value.message)
 
@@ -76,11 +77,6 @@ export class PrismaSearchsDetailsMapper {
           name: nameOrError.value
         }, new UniqueEntityId(pole.id))
         if (poleOrError.isLeft()) throw new Error(poleOrError.value.message)
-
-        const searchPole = search.searchPoles.find(searchPole => {
-          return searchPole.poleId === pole.id
-        })
-        if (!searchPole) throw new Error('Polo não encontrado!')
 
         return {
           searchPoleId: new UniqueEntityId(searchPole.id),
