@@ -58,10 +58,10 @@ export class OnAssessmentUpdated implements EventHandler {
           Data: ${formattedDate}
         
           ${reporter.username.value} atualizou notas do aluno: ${student.username.value}
-          VF: ${vfWasUpdated ? `${previousAssessment.vf} para ${assessment.vf}` : assessment.vf}
-          VF: ${aviWasUpdated ? `${previousAssessment.avi} para ${assessment.avi}` : assessment.avi}
-          VF: ${aviiWasUpdated ? `${previousAssessment.avii} para ${assessment.avii}` : assessment.avii}
-          VF: ${vfeWasUpdated ? `${previousAssessment.vfe} para ${assessment.vfe}` : assessment.vfe}
+          VF: ${vfWasUpdated ? `${previousAssessment.vf} para ${assessment.vf}` : assessment.vf ?? ''}
+          AVI: ${aviWasUpdated ? `${previousAssessment.avi} para ${assessment.avi}` : assessment.avi ?? ''}
+          AVII: ${aviiWasUpdated ? `${previousAssessment.avii} para ${assessment.avii}` : assessment.avii ?? ''}
+          VFE: ${vfeWasUpdated ? `${previousAssessment.vfe} para ${assessment.vfe}` : assessment.vfe ?? ''}
         `,
         ip: reporterIp,
         courseId: assessment.courseId.toValue(),
