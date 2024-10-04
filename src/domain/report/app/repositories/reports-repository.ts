@@ -4,7 +4,7 @@ export interface FindManyProps {
   action?: string
   username?: string
   role: string
-  page: number
+  page?: number
 }
 
 export interface FindManyByCourseAndReporterProps {
@@ -18,8 +18,8 @@ export abstract class ReportsRepository {
   abstract findByTitle({ title }: { title: string }): Promise<Report | null>
   abstract findMany({ action, username, page, role }: FindManyProps): Promise<{
     reports: Report[]
-    pages: number
-    totalItems: number
+    pages?: number
+    totalItems?: number
   }>
   abstract findManyByCourseAndReporterId({
     courseId,

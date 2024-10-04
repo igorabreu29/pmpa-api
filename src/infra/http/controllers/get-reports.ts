@@ -18,7 +18,7 @@ export async function getReports(
         querystring: z.object({
           action: z.enum(['add', 'remove', 'update', 'login confirmed']).optional(),
           username: z.string().optional(),
-          page: z.coerce.number().default(1)
+          page: z.string().optional()
         })
       }
     }, async (req, res) => {
@@ -29,8 +29,8 @@ export async function getReports(
       const result = await useCase.execute({
         action,
         username,
-        page,
-        role: payload.sub
+        page: page ? Number(page) : undefined,
+        role: payload.role
       })
 
       if (result.isLeft()) {

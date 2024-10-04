@@ -20,141 +20,86 @@ export class PrismaReportsRepository implements ReportsRepository {
 
   async findMany({ action, page, role, username }: FindManyProps): Promise<{
     reports: Report[]
-    pages: number
-    totalItems: number
+    pages?: number
+    totalItems?: number
   }> {
-    const PER_PAGE = 10
+      const PER_PAGE = 10
+
+      const queryPayload: {
+        where: Object,
+        take?: number
+        skip?: number
+      } = {
+        where: {
+          reporter: {
+            username: {
+              contains: username,
+              mode: 'insensitive'
+            }
+        }
+      },
+
+      take: undefined,
+      skip: undefined
+    }
+
+    const queryCountPayload = {
+      where: {}
+    }
+
+    let reportsCount: number | undefined
+    let pages: number | undefined
+
+    if (action) {
+      queryPayload.where = {
+        ...queryPayload,
+        action: convertActionToPrisma(action)
+      }
+
+      queryCountPayload.where = {
+        action: convertActionToPrisma(action)
+      }
+    }
+
+    if (page) {
+      queryPayload.take = PER_PAGE
+      queryPayload.skip = (page - 1) * PER_PAGE
+      
+      reportsCount = await prisma.report.count({
+        ...queryCountPayload
+      })
+
+      pages = Math.ceil(reportsCount / PER_PAGE)
+    }
 
     if (role === 'admin') {
-      let reports: PrismaReport[] = []
-
-      if (!action) {
-        reports = await prisma.report.findMany({
-          where: {
-            reporter: {
-              username: {
-                contains: username,
-                mode: 'insensitive'
-              },
-              
-              NOT: {
-                OR: [
-                  {
-                    role: 'DEV',
-                  },
-                  {
-                    role: 'ADMIN'
-                  }
-                ]
-              },
-            }
-          },
-
-          orderBy: {
-            createdAt: 'desc'
-          },
-          
-          skip: (page - 1) * PER_PAGE,
-          take: PER_PAGE
-        })
-        
-        const reportsCount = await prisma.report.count()
-        const pages = Math.ceil(reportsCount / PER_PAGE)
-  
-        return {
-          reports: reports.map(report => PrismaReportsMapper.toDomain(report)),
-          pages,
-          totalItems: reportsCount
-        }
-      }
-  
-      reports = await prisma.report.findMany({
-        where: {
-          reporter: {
-            username: {
-              contains: username,
-              mode: 'insensitive'
-            },
-          },
-          action: convertActionToPrisma(action),
-        },
-        orderBy: {
-          createdAt: 'desc'
-        },
-        skip: (page - 1) * PER_PAGE,
-        take: PER_PAGE
-      })
-  
-      const reportsCount = await prisma.report.count({
-        where: {
-          action: convertActionToPrisma(action)
-        },
-      })
-      const pages = Math.ceil(reportsCount / PER_PAGE)
-  
-      return {
-        reports: reports.map(report => PrismaReportsMapper.toDomain(report)),
-        pages,
-        totalItems: reportsCount
-      }
-    }
-
-
-    let reports: PrismaReport[] = []
-
-    if (!action) {
-      reports = await prisma.report.findMany({
-        where: {
-          reporter: {
-            username: {
-              contains: username,
-              mode: 'insensitive'
-            },
-          },
-        },
-
-        orderBy: {
-          createdAt: 'desc'
-        },
-        
-        skip: (page - 1) * PER_PAGE,
-        take: PER_PAGE
-      })
-      
-      const reportsCount = await prisma.report.count()
-      const pages = Math.ceil(reportsCount / PER_PAGE)
-
-      return {
-        reports: reports.map(report => PrismaReportsMapper.toDomain(report)),
-        pages,
-        totalItems: reportsCount
-      }
-    }
-
-    reports = await prisma.report.findMany({
-      where: {
-        action: convertActionToPrisma(action),
-        
+      queryPayload.where = {
         reporter: {
           username: {
             contains: username,
             mode: 'insensitive'
           },
-        },
-      },
+
+          NOT: {
+            OR: [
+              {
+                role: 'DEV',
+              },
+              {
+                role: 'ADMIN'
+              }
+            ]
+          }
+        }
+      }
+    }
+
+    const reports = await prisma.report.findMany({
+      ...queryPayload,
       orderBy: {
         createdAt: 'desc'
       },
-      skip: (page - 1) * PER_PAGE,
-      take: PER_PAGE
     })
-
-    const reportsCount = await prisma.report.count({
-      where: {
-        action: convertActionToPrisma(action)
-      },
-    })
-    const pages = Math.ceil(reportsCount / PER_PAGE)
 
     return {
       reports: reports.map(report => PrismaReportsMapper.toDomain(report)),

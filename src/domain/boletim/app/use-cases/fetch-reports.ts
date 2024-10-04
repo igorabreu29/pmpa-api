@@ -6,13 +6,13 @@ interface FetchReportsUseCaseRequest {
   action?: string
   username?: string
   role: string
-  page: number
+  page?: number
 }
 
 type FetchReportsUseCaseResponse = Either<null, {
   reports: Report[]
-  pages: number
-  totalItems: number
+  pages?: number
+  totalItems?: number
 }>
 
 export class FetchReportsUseCase {
