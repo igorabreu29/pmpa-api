@@ -85,9 +85,6 @@ export class PrismaReportsRepository implements ReportsRepository {
               {
                 role: 'DEV',
               },
-              {
-                role: 'ADMIN'
-              }
             ]
           }
         }
