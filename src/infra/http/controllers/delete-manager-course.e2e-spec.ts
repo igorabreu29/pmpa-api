@@ -39,6 +39,7 @@ describe('Delete Manager Course (e2e)', () => {
       data: {
         ...data,
         birthday: transformDate(data.birthday),
+        role: 'MANAGER',
 
         usersOnCourses: {
           create: {
