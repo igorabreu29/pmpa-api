@@ -236,5 +236,7 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
         id: prismaMapper.id
       }
     })
+
+    DomainEvents.dispatchEventsForAggregate(managerCourse.id)
   }
 }

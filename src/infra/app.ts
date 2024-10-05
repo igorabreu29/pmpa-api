@@ -113,6 +113,8 @@ import { createSubClassificationByPoleSheet } from "./http/controllers/create-su
 import { createSubClassificationByManagerSheet } from "./http/controllers/create-sub-classification-by-manager-sheet.ts";
 import { createStudentsInformationSheet } from "./http/controllers/create-students-information-sheet.ts";
 import { createStudentsInformationByManagerSheet } from "./http/controllers/create-students-information-by-manager-sheet.ts";
+import { deleteStudentCourse } from "./http/controllers/delete-student-course.ts";
+import { deleteManagerCourse } from "./http/controllers/delete-manager-course.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -148,10 +150,12 @@ app.register(updateStudentBatch)
 app.register(changeStudentProfile)
 app.register(changeStudentAvatar)
 app.register(deleteStudent)
+app.register(deleteStudentCourse)
 app.register(createManager)
 app.register(activeManager)
 app.register(disableManager)
 app.register(deleteManager)
+app.register(deleteManagerCourse)
 app.register(updateManager)
 app.register(changeManagerProfile)
 app.register(changeManagerAvatar)

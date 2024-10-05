@@ -404,5 +404,7 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
         id: prismaMapper.id,
       }
     })
+
+    DomainEvents.dispatchEventsForAggregate(studentCourse.id)
   }
 }

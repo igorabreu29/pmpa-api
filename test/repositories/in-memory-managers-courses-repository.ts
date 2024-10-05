@@ -206,5 +206,7 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
 
     const managerCourseIndex = this.items.findIndex(item => item.equals(managerCourse))
     this.items.splice(managerCourseIndex, 1)
+
+    DomainEvents.dispatchEventsForAggregate(managerCourse.id)
   }
 }

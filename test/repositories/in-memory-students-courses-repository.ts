@@ -423,5 +423,7 @@ export class InMemoryStudentsCoursesRepository implements StudentsCoursesReposit
 
     const studentCourseIndex = this.items.findIndex(item => item.equals(studentCourse))
     this.items.splice(studentCourseIndex, 1)
+
+    DomainEvents.dispatchEventsForAggregate(studentCourse.id)
   }
 }
