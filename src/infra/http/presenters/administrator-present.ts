@@ -4,11 +4,16 @@ import { dayjs } from '@/infra/libs/dayjs.ts'
 import { defineRoleAccessToDomain, defineRoleAccessToPrisma } from "@/infra/utils/define-role.ts";
 
 export class AdministratorPresenter {
-  static toHTTP(administrator: Administrator): Prisma.UserUncheckedCreateInput {
+  static toHTTP(administrator: Administrator): Prisma.UserUncheckedCreateInput & Prisma.ProfileUncheckedUpdateInput {
     return {
       id: administrator.id.toValue(),
       cpf: administrator.cpf.value,
       civilId: String(administrator.civilId),
+      militaryId: administrator.militaryId ?? '',
+      state: administrator.state ?? '',
+      county: administrator.county ?? '',
+      fatherName: administrator.parent?.fatherName ?? '',
+      motherName: administrator.parent?.motherName ?? '',
       email: administrator.email.value,
       username: administrator.username.value,
       password: '',
