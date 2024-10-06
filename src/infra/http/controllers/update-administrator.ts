@@ -32,14 +32,18 @@ export async function updateAdministrator(
           email: z.string().optional(),
           cpf: z.string().optional(),
           password: z.string().optional(),
-          birthday: z.string().transform(birthday => {
-            const [day, month, year] = birthday.split('/')
+          birthday: z.string().optional().transform((birthday) => {
+            if (birthday) {
+              const [day, month, year] = birthday.split('/')
 
-            const date = new Date()
-            date.setFullYear(Number(year), Number(month), Number(day))
+              const date = new Date()
+              date.setFullYear(Number(year), Number(month), Number(day))
+  
+              return date
+            }
 
-            return date
-          }).optional(),
+            return undefined
+          }),
           civilId: z.string().optional(),
           militaryId: z.string().optional(),
           motherName: z.string().min(3).max(50).optional(),
