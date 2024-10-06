@@ -69,6 +69,7 @@ model UserOnCourse {
   usersOnPoles UserCourseOnPole[]
 
   @@unique([userId, courseId])
+  @@map("user_on_courses")
 }
 
 model UserCourseOnPole {
@@ -79,6 +80,8 @@ model UserCourseOnPole {
 
   usersOnCourse UserOnCourse @relation(fields: [userOnCourseId], references: [id], onDelete: Cascade)
   pole          Pole         @relation(fields: [poleId], references: [id])
+
+  @@map("user_course_on_poles")
 }
 
 enum Formula {
@@ -126,6 +129,8 @@ model CourseHistoric {
   commander    String?
 
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("course_historic")
 }
 
 model CourseOnPole {
@@ -153,7 +158,7 @@ model CourseOnDiscipline {
   discipline Discipline @relation(fields: [disciplineId], references: [id])
 
   @@unique([courseId, disciplineId])
-  @@map("courses_on_disciplines")
+  @@map("course_on_disciplines")
 }
 
 model Pole {
@@ -241,4 +246,6 @@ model Report {
 
   reporter User    @relation(fields: [reporterId], references: [id], onDelete: Cascade)
   course   Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
 }
