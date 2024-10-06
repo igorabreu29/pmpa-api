@@ -6,18 +6,16 @@ import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
 
 import bcrypt from 'bcryptjs'
-import { Course, Discipline, User } from '@prisma/client'
+import { Course, Discipline, User, type Assessment } from '@prisma/client'
 
-let course: Course
-let discipline: Discipline
-let student: User
+let assessment: Assessment
 
 describe('Update Assessment (e2e)', () => {
   beforeAll(async () => {
     const endsAt = new Date()
     endsAt.setMinutes(new Date().getMinutes() + 10)
 
-    course = await prisma.course.create({
+    const course = await prisma.course.create({
       data: {
         endsAt,
         formula: 'CAS',
@@ -26,7 +24,7 @@ describe('Update Assessment (e2e)', () => {
       }
     })
 
-    discipline = await prisma.discipline.create({
+    const discipline = await prisma.discipline.create({
       data: {
         name: 'discipline-1'
       }
@@ -41,11 +39,11 @@ describe('Update Assessment (e2e)', () => {
       civilId: '00000',
     }
 
-    student = await prisma.user.create({
+    const student = await prisma.user.create({
       data
     })
 
-    await prisma.assessment.create({
+    assessment = await prisma.assessment.create({
       data: {
         studentId: student.id,
         disciplineId: discipline.id,
@@ -62,7 +60,7 @@ describe('Update Assessment (e2e)', () => {
   })
 
   it ('PUT /disciplines/:disciplineId/assessment', async () => {
-    const administrator = await prisma.user.create({
+    await prisma.user.create({
       data: {
         username: 'John Doe',
         civilId: '02345',
@@ -81,13 +79,11 @@ describe('Update Assessment (e2e)', () => {
     const { token } = authenticateResponse.body
 
     const response = await request(app.server)
-      .put(`/disciplines/${discipline.id}/assessment`)
+      .put(`/assessments/${assessment.id}`)
       .send({
       })
       .set('Authorization', `Bearer ${token}`)
       .send({
-        studentId: student.id,
-        courseId: course.id,
         vf: 10
       })
 
