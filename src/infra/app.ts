@@ -115,6 +115,7 @@ import { createStudentsInformationSheet } from "./http/controllers/create-studen
 import { createStudentsInformationByManagerSheet } from "./http/controllers/create-students-information-by-manager-sheet.ts";
 import { deleteStudentCourse } from "./http/controllers/delete-student-course.ts";
 import { deleteManagerCourse } from "./http/controllers/delete-manager-course.ts";
+import { getCourseAssessments } from "./http/controllers/get-course-assessments.ts";
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -170,6 +171,7 @@ app.register(deleteAdministrator)
 app.register(createDeveloper)
 app.register(changeDeveloperProfile)
 app.register(changeDeveloperAvatar)
+app.register(getCourseAssessments)
 app.register(createAssessment)
 app.register(createAssessmentBatch)
 app.register(updateAssessment)

@@ -5,6 +5,11 @@ export interface StudentAssessmentsByCourse {
   courseId: string
 }
 
+export interface StudentAssessmentsByCourseAndDiscipline {
+  courseId: string 
+  disciplineId: string
+}
+
 export interface StudentAssessmentsByStudentAndDisciplineAndCourseId {
   studentId: string
   disciplineId: string 
@@ -20,6 +25,7 @@ export abstract class AssessmentsRepository {
     studentId
   }: StudentAssessmentsByStudentAndDisciplineAndCourseId): Promise<Assessment | null>
   abstract findManyByStudentIdAndCourseId({ studentId, courseId }: StudentAssessmentsByCourse): Promise<Assessment[]>
+  abstract findManyByDisciplineAndCourseId({ courseId, disciplineId }: StudentAssessmentsByCourseAndDiscipline): Promise<Assessment[]>
   abstract create(assessment: Assessment): Promise<void>
   abstract createMany(assessments: Assessment[]): Promise<void>
   abstract update(assessment: Assessment): Promise<void>

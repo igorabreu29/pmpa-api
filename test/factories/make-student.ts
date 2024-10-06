@@ -1,4 +1,5 @@
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import { formatCPF } from "@/core/utils/formatCPF.ts";
 import { Student, StudentProps } from "@/domain/boletim/enterprise/entities/student.ts";
 import { Birthday } from "@/domain/boletim/enterprise/entities/value-objects/birthday.ts";
 import { CPF } from "@/domain/boletim/enterprise/entities/value-objects/cpf.ts";
@@ -57,7 +58,7 @@ export async function makePrismaStudent({
   const nameOrError = Name.create(data.username?.value ?? faker.person.firstName())
   if (nameOrError.isLeft()) throw nameOrError.value
 
-  const cpfOrError = CPF.create(data.cpf?.value ?? '000.000.000-00')
+  const cpfOrError = CPF.create(data.cpf?.value ? formatCPF(data.cpf.value) : '000.000.000-00')
   if (cpfOrError.isLeft()) throw cpfOrError.value
 
   const emailOrError = Email.create(data.email?.value ?? faker.internet.email())

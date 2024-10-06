@@ -1,5 +1,5 @@
 import { DomainEvents } from "@/core/events/domain-events.ts";
-import { AssessmentsRepository, StudentAssessmentsByCourse, StudentAssessmentsByStudentAndDisciplineAndCourseId } from "@/domain/boletim/app/repositories/assessments-repository.ts";
+import { AssessmentsRepository, StudentAssessmentsByCourse, StudentAssessmentsByStudentAndDisciplineAndCourseId, type StudentAssessmentsByCourseAndDiscipline } from "@/domain/boletim/app/repositories/assessments-repository.ts";
 import { Assessment } from "@/domain/boletim/enterprise/entities/assessment.ts";
 
 export class InMemoryAssessmentsRepository implements AssessmentsRepository {
@@ -32,6 +32,14 @@ export class InMemoryAssessmentsRepository implements AssessmentsRepository {
 
   async findManyByStudentIdAndCourseId({ studentId, courseId }: StudentAssessmentsByCourse): Promise<Assessment[]> {
     const assessments = this.items.filter(item => item.studentId.toValue() === studentId && item.courseId.toValue() === courseId)
+    return assessments
+  }
+
+  async findManyByDisciplineAndCourseId({ courseId, disciplineId }: StudentAssessmentsByCourseAndDiscipline): Promise<Assessment[]> {
+    const assessments = this.items.filter(item => {
+      return item.disciplineId.toValue() === disciplineId && item.courseId.toValue() === courseId
+    })
+    
     return assessments
   }
 
