@@ -9,7 +9,7 @@ export interface ExcelCreateStudentsBatch {
   'E-MAIL': string
   'RG CIVIL'?: string
   'RG MILITAR'?: string
-  'DATA DE NASCIMENTO': Date
+  'DATA DE NASCIMENTO': string
   CURSO: string
   POLO: string
 }
@@ -20,7 +20,7 @@ export interface ExcelUpdateStudentsBatch {
   'E-MAIL'?: string
   'RG CIVIL'?: string
   'RG MILITAR'?: string
-  'DATA DE NASCIMENTO'?: Date
+  'DATA DE NASCIMENTO'?: string
   CURSO: string
   POLO: string
 }
@@ -51,6 +51,11 @@ export interface ExcelBehaviorsBatch {
   ANO: number
 }
 
+function convertDate(date: string) {
+  const birthday = date.split('/').reverse().join('-')
+  return new Date(birthday)
+}
+
 export function createStudentsBatchExcelToJSON(fileUrl: string) {
   const workbook = readFile(join(cwd(), fileUrl))
   const worksheet = workbook.Sheets[workbook.SheetNames[0]]
@@ -63,7 +68,7 @@ export function createStudentsBatchExcelToJSON(fileUrl: string) {
     email: student['E-MAIL'],
     civilId: student['RG CIVIL'],
     militaryID: student['RG MILITAR'],
-    birthday: new Date(student['DATA DE NASCIMENTO']),
+    birthday: convertDate(student['DATA DE NASCIMENTO']),
     courseName: student['CURSO'],
     poleName: student['POLO'],
   }))
@@ -81,7 +86,7 @@ export function updateStudentsBatchExcelToJSON(fileUrl: string) {
     email: student['E-MAIL'],
     civilId: student['RG CIVIL'],
     militaryID: student['RG MILITAR'],
-    birthday: student['DATA DE NASCIMENTO'] ? new Date(student['DATA DE NASCIMENTO']) :  undefined,
+    birthday: student['DATA DE NASCIMENTO'] ? convertDate(student['DATA DE NASCIMENTO']) :  undefined,
     courseName: student['CURSO'],
     poleName: student['POLO'],
   }))
