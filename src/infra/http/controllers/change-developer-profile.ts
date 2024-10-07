@@ -13,6 +13,7 @@ import { NotFound } from "../errors/not-found.ts";
 import { verifyJWT } from "../middlewares/verify-jwt.ts";
 import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { makeChangeDeveloperProfileUseCase } from "@/infra/factories/make-change-developer-profile-use-case.ts";
+import { transformDate } from "@/infra/utils/transform-date.ts";
 
 export async function changeDeveloperProfile(
   app: FastifyInstance
@@ -28,14 +29,9 @@ export async function changeDeveloperProfile(
           password: z.string().optional(),
           birthday: z.string().optional().transform((birthday) => {
             if (birthday) {
-              const [day, month, year] = birthday.split('/')
-
-              const date = new Date()
-              date.setFullYear(Number(year), Number(month), Number(day))
-  
-              return date
+              return transformDate(birthday)
             }
-
+            
             return undefined
           }),
           motherName: z.string().optional(),

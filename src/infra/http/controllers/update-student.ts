@@ -16,6 +16,7 @@ import { verifyUserRole } from "../middlewares/verify-user-role.ts";
 import { NotAllowed } from "../errors/not-allowed.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { makeOnStudentUpdated } from "@/infra/factories/make-on-student-updated.ts";
+import { transformDate } from "@/infra/utils/transform-date.ts";
 
 export async function updateStudent(
   app: FastifyInstance
@@ -38,12 +39,7 @@ export async function updateStudent(
           password: z.string().optional(),
           birthday: z.string().optional().transform((birthday) => {
             if (birthday) {
-              const [day, month, year] = birthday.split('/')
-
-              const date = new Date()
-              date.setFullYear(Number(year), Number(month), Number(day))
-  
-              return date
+              return transformDate(birthday)
             }
 
             return undefined

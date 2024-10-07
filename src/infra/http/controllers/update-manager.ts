@@ -16,6 +16,7 @@ import { NotAllowed } from "../errors/not-allowed.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { makeUpdateManagerUseCase } from "@/infra/factories/make-update-manager-use-case.ts";
 import { makeOnManagerUpdated } from "@/infra/factories/make-on-manager-updated.ts";
+import { transformDate } from "@/infra/utils/transform-date.ts";
 
 export async function updateManager(
   app: FastifyInstance
@@ -38,12 +39,7 @@ export async function updateManager(
           password: z.string().optional(),
           birthday: z.string().optional().transform((birthday) => {
             if (birthday) {
-              const [day, month, year] = birthday.split('/')
-
-              const date = new Date()
-              date.setFullYear(Number(year), Number(month), Number(day))
-  
-              return date
+              return transformDate(birthday)
             }
 
             return undefined
