@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import 'dotenv/config.js'
 
 import fastify from "fastify";
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
