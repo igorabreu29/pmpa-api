@@ -55,7 +55,6 @@
     "bcryptjs": "^2.4.3",
     "bull": "^4.16.3",
     "dayjs": "^1.11.11",
-    "esbuild": "^0.24.0",
     "fastify": "^5.0.0",
     "fastify-multer": "^2.0.3",
     "fastify-type-provider-zod": "^4.0.2",
