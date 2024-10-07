@@ -4,9 +4,6 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "engines": {
-    "node": ">=20"
-  },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
