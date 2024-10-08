@@ -39,7 +39,7 @@ export class OnAssessmentDeleted implements EventHandler {
       this.reportersRepository.findById({ id: reporterId }),
       this.studentsRepository.findById(assessment.studentId.toValue())
     ])
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
 
     if (course && discipline && reporter && student) {
       await this.sendReport.execute({

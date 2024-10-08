@@ -35,7 +35,7 @@ export class OnManagerCreated implements EventHandler {
       this.coursesRepository.findById(String(courseId))
     ])
 
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
 
     if (reporter && course) {
       await this.sendReport.execute({

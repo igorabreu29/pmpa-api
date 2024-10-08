@@ -37,7 +37,7 @@ export class OnBehaviorDeleted implements EventHandler {
       this.reportersRepository.findById({ id: reporterId }),
       this.studentsRepository.findById(behavior.studentId.toValue())
     ])
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
 
     if (course && reporter && student) {
       await this.sendReport.execute({

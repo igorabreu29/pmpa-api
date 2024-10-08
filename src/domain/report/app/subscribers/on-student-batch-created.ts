@@ -33,7 +33,7 @@ export class OnStudentBatchCreated implements EventHandler {
       this.coursesRepository.findById(studentBatch.courseId.toValue()),
       this.reportersRepository.findById({ id: studentBatch.userId.toValue() })
     ])
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
 
     if (course && reporter) {
       await this.sendReportBatch.execute({

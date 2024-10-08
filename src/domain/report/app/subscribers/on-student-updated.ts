@@ -28,7 +28,7 @@ export class OnStudentUpdated implements EventHandler {
 
   private async sendUpdateStudentReport({ student, reporterId, courseId, reporterIp, ocurredAt }: StudentEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
 
     if (reporter) {
       await this.sendReport.execute({

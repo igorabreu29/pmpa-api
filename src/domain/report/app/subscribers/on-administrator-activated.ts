@@ -31,7 +31,7 @@ export class OnAdministratorActivated implements EventHandler {
       this.reportersRepository.findById({ id: reporterId }),
     ])
 
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - HH:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
 
     if (reporter) {
       await this.sendReport.execute({
