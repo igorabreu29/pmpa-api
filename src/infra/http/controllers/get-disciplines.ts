@@ -16,14 +16,16 @@ export async function getDisciplines(
       onRequest: [verifyJWT, verifyUserRole(['admin', 'dev'])],
       schema: {
         querystring: z.object({
-          page: z.coerce.number().default(1)
+          page: z.string().optional()
         })
       }
     }, async (req, res) => {
       const { page } = req.query
 
       const useCase = makeFetchDisciplinesUseCase()
-      const result = await useCase.execute({ page })
+      const result = await useCase.execute({
+        page: page ? Number(page) : undefined 
+      })
 
       if (result.isLeft()) {
         throw new ClientError('Houve algum erro')
