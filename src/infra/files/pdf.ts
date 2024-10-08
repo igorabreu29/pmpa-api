@@ -1,6 +1,7 @@
 import { PDF, PDFCreateProps } from "@/domain/boletim/app/files/pdf.ts";
-import { join } from "path";
-import fs from 'fs'
+import { join } from "node:path";
+import fs from 'node:fs'
+import { cwd } from 'node:process'
 import { dayjs } from '../libs/dayjs.ts'
 import puppeteer from "puppeteer";
 import { getBehaviorAverageStatus } from "@/domain/boletim/app/utils/get-behavior-average-status.ts";
@@ -9,7 +10,7 @@ import bcrypt from 'bcryptjs'
 
 export class GeneratePDF implements PDF {
   async create({ rows }: PDFCreateProps) {
-    const htmlFilePath = join(import.meta.dirname, '../html/template.html')
+    const htmlFilePath = join(cwd(), './src/infra/html/template.html')
     let htmlContent = fs.readFileSync(htmlFilePath, 'utf8')
 
     const list = rows.courseWithDisciplines.map((discipline, key) => {
