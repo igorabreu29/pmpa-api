@@ -6,8 +6,8 @@ const configTransporterTest = {
   host: 'smtp.ethereal.email',
   port: 587,
   auth: {
-    user: 'janice.heaney10@ethereal.email',
-    pass: 'BKP9vqa9BQZ9Yh3RAH'
+      user: 'remington.beatty@ethereal.email',
+      pass: '3Fkm1nRq7D6bcrXsgx'
   }
 }
 
