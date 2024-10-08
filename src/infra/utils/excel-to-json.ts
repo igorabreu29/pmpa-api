@@ -9,7 +9,7 @@ export interface ExcelCreateStudentsBatch {
   'E-MAIL': string
   'RG CIVIL'?: string
   'RG MILITAR'?: string
-  'DATA DE NASCIMENTO': string
+  'DATA DE NASCIMENTO': number
   CURSO: string
   POLO: string
 }
@@ -20,7 +20,7 @@ export interface ExcelUpdateStudentsBatch {
   'E-MAIL'?: string
   'RG CIVIL'?: string
   'RG MILITAR'?: string
-  'DATA DE NASCIMENTO'?: string
+  'DATA DE NASCIMENTO'?: number
   CURSO: string
   POLO: string
 }
@@ -51,8 +51,8 @@ export interface ExcelBehaviorsBatch {
   ANO: number
 }
 
-function convertDate(date: string) {
-  const birthday = date.split('/').reverse().join('-')
+function convertDate(date: number) {
+  const birthday = (date - (25567 + 1)) * 860400 * 100
   return new Date(birthday)
 }
 
