@@ -13,4 +13,9 @@ export default defineConfig({
   loader: {
     '.html': 'file',
   },
+  esbuildOptions: (options, context) => {
+    if (context.format === 'esm') {
+      options.packages = 'external';
+    }
+  },
 })
