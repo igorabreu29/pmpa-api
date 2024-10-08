@@ -43,8 +43,17 @@ export class PrismaReportsRepository implements ReportsRepository {
       skip: undefined
     }
 
-    const queryCountPayload = {
-      where: {}
+    const queryCountPayload: {
+      where: Object,
+    } = {
+      where: {
+        reporter: {
+          username: {
+            contains: username,
+            mode: 'insensitive'
+          }
+        }
+      },
     }
 
     let reportsCount: number | undefined
@@ -52,11 +61,12 @@ export class PrismaReportsRepository implements ReportsRepository {
 
     if (action) {
       queryPayload.where = {
-        ...queryPayload,
+        ...queryPayload.where,
         action: convertActionToPrisma(action)
       }
 
       queryCountPayload.where = {
+        ...queryCountPayload.where,
         action: convertActionToPrisma(action)
       }
     }
@@ -66,7 +76,14 @@ export class PrismaReportsRepository implements ReportsRepository {
       queryPayload.skip = (page - 1) * PER_PAGE
       
       reportsCount = await prisma.report.count({
-        ...queryCountPayload
+        where: {
+          reporter: {
+            username: {
+              contains: username,
+              mode: 'insensitive'
+            }
+          }
+        },
       })
 
       pages = Math.ceil(reportsCount / PER_PAGE)
