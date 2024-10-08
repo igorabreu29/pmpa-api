@@ -31,7 +31,7 @@ export class GetCourseSubClassificationUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
-    const { studentsCourse: students, pages, totalItems } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, page, perPage: 30 })
+    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId })
 
     const studentsWithAverageOrError = await Promise.all(students.map(async (student) => {
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({
@@ -58,11 +58,21 @@ export class GetCourseSubClassificationUseCase {
     if (error) return left(error)
 
     if (disciplineModule === 3) {
-      const classifiedBySUBFormula = classificationByCourseFormula['SUB'](studentsWithAverageOrError as StudentClassficationByPeriod[])
-      return right({ studentsWithAverage: classifiedBySUBFormula, pages, totalItems })
+      const classifiedByCFPFormula = classificationByCourseFormula['SUB'](studentsWithAverageOrError as StudentClassficationByPeriod[])
+  
+      const classifiedByCFPFormulaPaginated = page ? classifiedByCFPFormula.slice((page - 1) * 30, page * 30) : classifiedByCFPFormula
+  
+      const pagesCFP = Math.ceil(classifiedByCFPFormula.length / 30)
+      const totalItemsCFP = classifiedByCFPFormula.length
+      return right({ studentsWithAverage: classifiedByCFPFormulaPaginated, pages: pagesCFP, totalItems: totalItemsCFP })
     }
 
     const classifiedByCFPFormula = classificationByCourseFormula['CFP'](studentsWithAverageOrError as StudentClassficationByModule[])
-    return right({ studentsWithAverage: classifiedByCFPFormula, pages, totalItems })
+  
+    const classifiedByCFPFormulaPaginated = page ? classifiedByCFPFormula.slice((page - 1) * 30, page * 30) : classifiedByCFPFormula
+
+    const pagesCFP = Math.ceil(classifiedByCFPFormula.length / 30)
+    const totalItemsCFP = classifiedByCFPFormula.length
+    return right({ studentsWithAverage: classifiedByCFPFormulaPaginated, pages: pagesCFP, totalItems: totalItemsCFP })
   }
 }

@@ -53,7 +53,7 @@ export class GetCourseSubClassificationByPoleUseCase {
       poleIdAssigned = managerCourse.poleId.toValue()
     }
 
-    const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyDetailsByPoleId({ poleId: poleIdAssigned, page, perPage: 30 })
+    const { studentsPole } = await this.studentsPolesRepository.findManyDetailsByPoleId({ poleId: poleIdAssigned })
     const students = studentsPole.filter(studentPole => studentPole.courseId.equals(course.id))
 
     const studentsWithAverageOrError = await Promise.all(students.map(async (student) => {
@@ -81,11 +81,21 @@ export class GetCourseSubClassificationByPoleUseCase {
     if (error) return left(error)
 
     if (disciplineModule === 3) {
-      const classifiedBySUBFormula = classificationByCourseFormula['SUB'](studentsWithAverageOrError as StudentClassficationByPeriod[])
-      return right({ studentsWithAverage: classifiedBySUBFormula, pages, totalItems })
+      const classifiedByCFPFormula = classificationByCourseFormula['SUB'](studentsWithAverageOrError as StudentClassficationByPeriod[])
+  
+      const classifiedByCFPFormulaPaginated = page ? classifiedByCFPFormula.slice((page - 1) * 30, page * 30) : classifiedByCFPFormula
+  
+      const pagesCFP = Math.ceil(classifiedByCFPFormula.length / 30)
+      const totalItemsCFP = classifiedByCFPFormula.length
+      return right({ studentsWithAverage: classifiedByCFPFormulaPaginated, pages: pagesCFP, totalItems: totalItemsCFP })
     }
 
     const classifiedByCFPFormula = classificationByCourseFormula['CFP'](studentsWithAverageOrError as StudentClassficationByModule[])
-    return right({ studentsWithAverage: classifiedByCFPFormula, pages, totalItems })
+  
+    const classifiedByCFPFormulaPaginated = page ? classifiedByCFPFormula.slice((page - 1) * 30, page * 30) : classifiedByCFPFormula
+
+    const pagesCFP = Math.ceil(classifiedByCFPFormula.length / 30)
+    const totalItemsCFP = classifiedByCFPFormula.length
+    return right({ studentsWithAverage: classifiedByCFPFormulaPaginated, pages: pagesCFP, totalItems: totalItemsCFP })
   }
 }

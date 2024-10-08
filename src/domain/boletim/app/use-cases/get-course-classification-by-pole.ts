@@ -52,7 +52,7 @@ export class GetCourseClassificationByPoleUseCase {
       poleIdAssigned = managerCourse.poleId.toValue()
     }
 
-    const { studentsPole, pages, totalItems } = await this.studentsPolesRepository.findManyDetailsByPoleId({ poleId: poleIdAssigned, page, perPage: 30 })
+    const { studentsPole } = await this.studentsPolesRepository.findManyDetailsByPoleId({ poleId: poleIdAssigned })
     const students = studentsPole.filter(studentPole => studentPole.courseId.equals(course.id))
 
     const studentsWithAverageOrError = await Promise.all(students.map(async (student) => {
@@ -78,24 +78,46 @@ export class GetCourseClassificationByPoleUseCase {
     const error = studentsWithAverageOrError.find(item => item instanceof ResourceNotFoundError)
     if (error) return left(error)
 
-    switch (course.formula) {
-      case 'CGS': 
-        const classifiedByCGSFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
-        return right({ studentsWithAverage: classifiedByCGSFormula, pages, totalItems })
-      case 'CAS': 
-        const classifiedByCASFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
-        return right({ studentsWithAverage: classifiedByCASFormula, pages, totalItems })
-      case 'CFP': 
-        const classifiedByCFPFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
-        return right({ studentsWithAverage: classifiedByCFPFormula, pages, totalItems })
-      case 'CHO': 
-        const classifiedByCFOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
-        return right({ studentsWithAverage: classifiedByCFOFormula, pages, totalItems })
-      case 'CFO': 
-        const classifiedByCHOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByPeriod[])
-        return right({ studentsWithAverage: classifiedByCHOFormula, pages, totalItems })
-      default: 
-        return left(new InvalidCourseFormulaError(`This formula: ${course.formula} is invalid.`))
-    }
+      switch (course.formula) {
+        case 'CGS': 
+          const classifiedByCGSFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
+          const classifiedByCGSFormulaPaginated = page ? classifiedByCGSFormula.slice((page - 1) * 30, page * 30) : classifiedByCGSFormula
+  
+          const pages = Math.ceil(classifiedByCGSFormula.length / 30)
+          const totalItems = classifiedByCGSFormula.length
+  
+          return right({ studentsWithAverage: classifiedByCGSFormulaPaginated, pages, totalItems })
+        case 'CAS': 
+          const classifiedByCASFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
+          const classifiedByCASFormulaPaginated = page ? classifiedByCASFormula.slice((page - 1) * 30, page * 30) : classifiedByCASFormula
+  
+          const pagesCas = Math.ceil(classifiedByCASFormula.length / 30)
+          const totalItemsCas = classifiedByCASFormula.length
+          return right({ studentsWithAverage: classifiedByCASFormulaPaginated, pages: pagesCas, totalItems: totalItemsCas })
+        case 'CFP': 
+          const classifiedByCFPFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
+  
+          const classifiedByCFPFormulaPaginated = page ? classifiedByCFPFormula.slice((page - 1) * 30, page * 30) : classifiedByCFPFormula
+  
+          const pagesCFP = Math.ceil(classifiedByCFPFormula.length / 30)
+          const totalItemsCFP = classifiedByCFPFormula.length
+          return right({ studentsWithAverage: classifiedByCFPFormulaPaginated, pages: pagesCFP, totalItems: totalItemsCFP })
+        case 'CHO': 
+          const classifiedByCFOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByModule[])
+          const classifiedByCFOFormulaPaginated = page ? classifiedByCFOFormula.slice((page - 1) * 30, page * 30) : classifiedByCFOFormula
+  
+          const pagesCFO = Math.ceil(classifiedByCFOFormula.length / 30)
+          const totalItemsCFO = classifiedByCFOFormula.length
+          return right({ studentsWithAverage: classifiedByCFOFormulaPaginated, pages: pagesCFO, totalItems: totalItemsCFO })
+        case 'CFO': 
+          const classifiedByCHOFormula = classificationByCourseFormula[course.formula](studentsWithAverageOrError as StudentClassficationByPeriod[])
+          const classifiedByCHOFormulaPaginated = page ? classifiedByCHOFormula.slice((page - 1) * 30, page * 30) : classifiedByCHOFormula
+  
+          const pagesCHO = Math.ceil(classifiedByCHOFormula.length / 30)
+          const totalItemsCHO = classifiedByCHOFormula.length
+          return right({ studentsWithAverage: classifiedByCHOFormulaPaginated, pages: pagesCHO, totalItems: totalItemsCHO })
+        default: 
+          return left(new InvalidCourseFormulaError(`Esta fórmula: ${course.formula} é inválida.`))
+      }
   }
 }
