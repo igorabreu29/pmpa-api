@@ -122,7 +122,7 @@ import { getCourseAssessments } from "./http/controllers/get-course-assessments.
 export const app = fastify()
 app.register(import("@fastify/cors"), {
   origin: [
-    'http://localhost:5173'
+    env.WEB_URL,
   ],
   credentials: true
 })
