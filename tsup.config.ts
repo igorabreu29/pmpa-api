@@ -9,6 +9,7 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   target: 'es6',
+  external: ['dotenv'],
   loader: {
     '.html': 'file',
   },
