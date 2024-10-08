@@ -19,8 +19,8 @@ export async function uploadAttachment(
       })
   
       const { filename } = assessmentFileSchema.parse(req.file)
-  
-      const fullUrl = req.protocol.concat('://').concat(req.hostname)
+      
+      const fullUrl = req.protocol.concat('://').concat(req.host)
       const fileUrl = new URL(`/uploads/${filename}`, fullUrl)
 
       return res.status(201).send({
