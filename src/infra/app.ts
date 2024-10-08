@@ -122,7 +122,8 @@ import { getCourseAssessments } from "./http/controllers/get-course-assessments.
 export const app = fastify()
 app.register(import("@fastify/cors"), {
   origin: [
-    env.WEB_URL,
+    'https://boletim-app-2-0.onrender.com/',
+    env.WEB_URL
   ],
   credentials: true
 })
