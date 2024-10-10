@@ -69,7 +69,8 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
         courseId: managerCourse.courseId,
         course: course.name.value,
         poleId: pole.id,
-        pole: pole.name.value
+        pole: pole.name.value,
+        birthday: manager.birthday.value,
       })
   }
 
@@ -124,7 +125,8 @@ export class InMemoryManagersCoursesRepository implements ManagersCoursesReposit
           courseId: course.id,
           course: course.name.value,
           poleId: pole.id,
-          pole: pole.name.value
+          pole: pole.name.value,
+          birthday: manager.birthday.value,
         })
       }).filter(item => {
         return item.username.toLowerCase().includes(username ? username.toLowerCase() : '') && 
