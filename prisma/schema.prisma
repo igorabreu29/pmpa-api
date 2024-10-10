@@ -58,10 +58,13 @@ model Profile {
 }
 
 model UserOnCourse {
-  id        String   @id @default(uuid())
-  userId    String
-  courseId  String
-  isActive  Boolean  @default(true)
+  id       String @id @default(uuid())
+  userId   String
+  courseId String
+
+  isActive Boolean @default(true)
+  reason   String?
+
   createdAt DateTime @default(now()) @map("created_at")
 
   course       Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
