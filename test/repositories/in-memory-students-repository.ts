@@ -69,7 +69,7 @@ export class InMemoryStudentsRepository implements StudentsRepository {
       username: student.username.value,
       email: student.email.value,
       cpf: student.cpf.value,
-      civilId: student.civilId ?? 0e2,
+      civilId: student.civilId ?? '0e2',
       birthday: student.birthday.value,
       assignedAt: student.createdAt,
       role: student.role,
@@ -121,7 +121,7 @@ export class InMemoryStudentsRepository implements StudentsRepository {
         return StudentDetails.create({
           studentId: student.id,
           username: student.username.value,
-          civilId: student.civilId,
+          civilId: student.civilId ?? '',
           cpf: student.cpf.value,
           email: student.email.value,
           birthday: student.birthday.value,

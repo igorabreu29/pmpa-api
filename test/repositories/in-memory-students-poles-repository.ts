@@ -44,7 +44,7 @@ export class InMemoryStudentsPolesRepository implements StudentsPolesRepository 
           studentId: student.id,
           username: student.username.value,
           email: student.email.value,
-          civilId: student.civilId,
+          civilId: student.civilId ?? '',
           cpf: student.cpf.value,
           birthday: student.birthday.value,
           assignedAt: student.createdAt,
