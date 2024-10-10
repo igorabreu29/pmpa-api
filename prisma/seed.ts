@@ -10,6 +10,7 @@ async function seed() {
     prisma.report.deleteMany(),
     prisma.courseOnPole.deleteMany(),
     prisma.courseOnDiscipline.deleteMany(),
+    prisma.discipline.deleteMany(),
     prisma.courseHistoric.deleteMany()
   ])
 
@@ -37,19 +38,19 @@ async function seed() {
 
   const discipline = await prisma.discipline.create({
     data: {
-      name: 'discipline-1'
+      name: 'HISTÓRIA DA POLICIA MILITAR ONLINE DUAS VEZES MAIOR QUE O NORMAL E NOMINAL'
     }
   })
 
   const discipline2 = await prisma.discipline.create({
     data: {
-      name: 'discipline-2'
+      name: faker.string.uuid()
     }
   })
 
   const discipline3 = await prisma.discipline.create({
     data: {
-      name: 'discipline-3'
+      name: faker.string.uuid()
     }
   })
 
