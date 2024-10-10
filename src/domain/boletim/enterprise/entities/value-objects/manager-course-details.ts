@@ -7,11 +7,16 @@ interface ManagerCourseDetailsProps {
   username: string
   email: string
   cpf: string
+  birthday: Date
   assignedAt: Date
+  civilId?: string
   militaryId?: string
   state?: string
   county?: string
   parent?: Parent
+
+  isActive?: boolean
+  reason?: string
 
   courseId: UniqueEntityId
   course: string
@@ -37,6 +42,10 @@ export class ManagerCourseDetails extends ValueObject<ManagerCourseDetailsProps>
     return this.props.cpf
   }
 
+  get birthday() {
+    return this.props.birthday
+  }
+
   get courseId() {
     return this.props.courseId
   }
@@ -45,6 +54,10 @@ export class ManagerCourseDetails extends ValueObject<ManagerCourseDetailsProps>
     return this.props.course
   }
   
+  get civilId() {
+    return this.props.militaryId
+  }
+
   get militaryId() {
     return this.props.militaryId
   }
@@ -71,6 +84,14 @@ export class ManagerCourseDetails extends ValueObject<ManagerCourseDetailsProps>
 
   get assignedAt() {
     return this.props.assignedAt
+  }
+
+  get isActive() {
+    return this.props.isActive
+  }
+
+  get reason() {
+    return this.props.reason
   }
 
   static create(props: ManagerCourseDetailsProps) {
