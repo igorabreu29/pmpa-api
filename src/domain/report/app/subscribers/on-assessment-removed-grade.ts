@@ -32,7 +32,7 @@ export class OnAssessmentRemovedGrade implements EventHandler {
     )
   }
 
-  private async sendRemoveGradeAssessmentReport({ assessment, reporterId, reporterIp, ocurredAt }: AssessmentRemovedGradeEvent) {
+  private async sendRemoveGradeAssessmentReport({ previousAssessment, assessment, reporterId, reporterIp, ocurredAt }: AssessmentRemovedGradeEvent) {
     const [course, discipline, reporter, student] = await Promise.all([
       this.coursesRepository.findById(assessment.courseId.toValue()),
       this.disciplinesRepository.findById(assessment.disciplineId.toValue()),
@@ -40,6 +40,11 @@ export class OnAssessmentRemovedGrade implements EventHandler {
       this.studentsRepository.findById(assessment.studentId.toValue())
     ])
     const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
+
+    const vfWasRemoved = previousAssessment.vf !== assessment.vf
+    const aviWasRemoved = previousAssessment.avi !== assessment.avi
+    const aviiWasRemoved = previousAssessment.avii !== assessment.avii
+    const vfeWasRemoved = previousAssessment.vfe !== assessment.vfe
 
     if (course && discipline && reporter && student) {
       await this.sendReport.execute({
@@ -51,7 +56,12 @@ export class OnAssessmentRemovedGrade implements EventHandler {
           Remetente: ${reporter.username.value} (${reporter.role})
           Estudante: ${student.username.value}
           Data: ${formattedDate}
+
           ${reporter.username.value} removeu notas do aluno: ${student.username.value}
+          VF: ${vfWasRemoved ? `${previousAssessment.vf} removida` : assessment.vf ?? ''}
+          AVI: ${aviWasRemoved ? `${previousAssessment.avi} removida` : assessment.avi ?? ''}
+          AVII: ${aviiWasRemoved ? `${previousAssessment.avii} removida` : assessment.avii ?? ''}
+          VFE: ${vfeWasRemoved ? `${previousAssessment.vfe} removida` : assessment.vfe ?? ''}
         `,
         ip: reporterIp,
         courseId: assessment.courseId.toValue(),

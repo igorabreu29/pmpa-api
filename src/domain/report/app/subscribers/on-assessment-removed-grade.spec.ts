@@ -32,73 +32,73 @@ let reportsRepository: InMemoryReportsRepository
 let sendReportUseCase: SendReportUseCase
 
 let sendReportExecuteSpy: MockInstance<
-  [SendReportUseCaseRequest],
-  Promise<SendReportUseCaseResponse>
+[SendReportUseCaseRequest],
+Promise<SendReportUseCaseResponse>
 >
 
 describe('On Assessment Removed Grade', () => {
-  beforeEach(() => {
-    studensCoursesRepository = new InMemoryStudentsCoursesRepository(
-      studentsRepository,
-      coursesRepository,
-      studentsPolesRepository,
-      polesRepository
-    )
+beforeEach(() => {
+  studensCoursesRepository = new InMemoryStudentsCoursesRepository(
+    studentsRepository,
+    coursesRepository,
+    studentsPolesRepository,
+    polesRepository
+  )
 
-    coursesRepository = new InMemoryCoursesRepository()
-    studentsPolesRepository = new InMemoryStudentsPolesRepository(
-      studentsRepository,
-      studensCoursesRepository,
-      coursesRepository,
-      polesRepository
-    )
-    polesRepository = new InMemoryPolesRepository()
+  coursesRepository = new InMemoryCoursesRepository()
+  studentsPolesRepository = new InMemoryStudentsPolesRepository(
+    studentsRepository,
+    studensCoursesRepository,
+    coursesRepository,
+    polesRepository
+  )
+  polesRepository = new InMemoryPolesRepository()
 
-    studentsRepository = new InMemoryStudentsRepository(
-      studensCoursesRepository,
-      coursesRepository,
-      studentsPolesRepository,
-      polesRepository
-    )
-    reportersRepository = new InMemoryReportersRepository()
-    disciplinesRepository = new InMemoryDisciplinesRepository()
+  studentsRepository = new InMemoryStudentsRepository(
+    studensCoursesRepository,
+    coursesRepository,
+    studentsPolesRepository,
+    polesRepository
+  )
+  reportersRepository = new InMemoryReportersRepository()
+  disciplinesRepository = new InMemoryDisciplinesRepository()
 
-    reportsRepository = new InMemoryReportsRepository(reportersRepository)
-    assessmentsRepository = new InMemoryAssessmentsRepository()
+  reportsRepository = new InMemoryReportsRepository(reportersRepository)
+  assessmentsRepository = new InMemoryAssessmentsRepository()
 
-    sendReportUseCase = new SendReportUseCase(
-      reportsRepository
-    )
-    
-    sendReportExecuteSpy = vi.spyOn(sendReportUseCase, 'execute')
+  sendReportUseCase = new SendReportUseCase(
+    reportsRepository
+  )
+  
+  sendReportExecuteSpy = vi.spyOn(sendReportUseCase, 'execute')
 
-    new OnAssessmentRemovedGrade (
-      studentsRepository,
-      reportersRepository,
-      coursesRepository,
-      disciplinesRepository,
-      sendReportUseCase
-    )
+  new OnAssessmentRemovedGrade (
+    studentsRepository,
+    reportersRepository,
+    coursesRepository,
+    disciplinesRepository,
+    sendReportUseCase
+  )
+})
+
+it ('should send a report when an assessment is created', async () => {
+  const course = makeCourse()
+  const discipline = makeDiscipline()
+  const student = makeStudent()
+  const reporter = makeReporter()
+
+  coursesRepository.create(course)
+  disciplinesRepository.create(discipline)
+  studentsRepository.create(student)
+  reportersRepository.items.push(reporter)
+
+  const assessment = makeAssessment({ courseId: course.id, studentId: student.id, disciplineId: discipline.id })
+  assessment.addDomainAssessmentEvent(new AssessmentRemovedGradeEvent({ previousAssessment: assessment, assessment, reporterId: reporter.id.toValue(), reporterIp: '' }))
+
+  assessmentsRepository.update(assessment)
+  
+  await waitFor(() => {
+    expect(sendReportExecuteSpy).toHaveBeenCalled()
   })
-
-  it ('should send a report when an assessment is created', async () => {
-    const course = makeCourse()
-    const discipline = makeDiscipline()
-    const student = makeStudent()
-    const reporter = makeReporter()
-
-    coursesRepository.create(course)
-    disciplinesRepository.create(discipline)
-    studentsRepository.create(student)
-    reportersRepository.items.push(reporter)
-
-    const assessment = makeAssessment({ courseId: course.id, studentId: student.id, disciplineId: discipline.id })
-    assessment.addDomainAssessmentEvent(new AssessmentRemovedGradeEvent({ assessment, reporterId: reporter.id.toValue(), reporterIp: '' }))
-
-    assessmentsRepository.update(assessment)
-    
-    await waitFor(() => {
-      expect(sendReportExecuteSpy).toHaveBeenCalled()
-    })
-  })
+})
 })  

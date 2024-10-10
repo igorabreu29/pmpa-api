@@ -63,18 +63,18 @@ export class OnBehaviorUpdated implements EventHandler {
           Data: ${formattedDate}
           
           ${reporter.username.value} atualizou notas de comportamento do aluno: ${student.username.value}
-          JANEIRO: ${januaryWasUpdated ? `${previousBehavior.january} para ${behavior.january}` : behavior.january}
-          FEVEREIRO: ${februaryWasUpdated ? `${previousBehavior.february} para ${behavior.february}` : behavior.february}
-          MARÇO: ${marchWasUpdated ? `${previousBehavior.march} para ${behavior.march}` : behavior.march}
-          ABRIL: ${aprilWasUpdated ? `${previousBehavior.april} para ${behavior.april}` : behavior.april}
-          MAIO: ${mayWasUpdated ? `${previousBehavior.may} para ${behavior.may}` : behavior.may}
-          JUN: ${junWasUpdated ? `${previousBehavior.jun} para ${behavior.jun}` : behavior.jun}
-          JULHO: ${julyWasUpdated ? `${previousBehavior.july} para ${behavior.july}` : behavior.july}
-          AGOSTO: ${augustWasUpdated ? `${previousBehavior.august} para ${behavior.april}` : behavior.april}
-          SETEMBRO: ${septemberWasUpdated ? `${previousBehavior.september} para ${behavior.september}` : behavior.september}
-          OUTUBRO: ${octoberWasUpdated ? `${previousBehavior.october} para ${behavior.october}` : behavior.october}
-          NOVEMBRO: ${novemberWasUpdated ? `${previousBehavior.november} para ${behavior.november}` : behavior.november}
-          DEZEMBRO: ${decemberWasUpdated ? `${previousBehavior.december} para ${behavior.december}` : behavior.december}
+          JANEIRO: ${januaryWasUpdated ? `${previousBehavior.january} para ${behavior.january}` : behavior.january ?? ''}
+          FEVEREIRO: ${februaryWasUpdated ? `${previousBehavior.february} para ${behavior.february}` : behavior.february ?? ''}
+          MARÇO: ${marchWasUpdated ? `${previousBehavior.march} para ${behavior.march}` : behavior.march ?? ''}
+          ABRIL: ${aprilWasUpdated ? `${previousBehavior.april} para ${behavior.april}` : behavior.april ?? ''}
+          MAIO: ${mayWasUpdated ? `${previousBehavior.may} para ${behavior.may}` : behavior.may ?? ''}
+          JUN: ${junWasUpdated ? `${previousBehavior.jun} para ${behavior.jun}` : behavior.jun ?? ''}
+          JULHO: ${julyWasUpdated ? `${previousBehavior.july} para ${behavior.july}` : behavior.july ?? ''}
+          AGOSTO: ${augustWasUpdated ? `${previousBehavior.august} para ${behavior.april}` : behavior.august ?? ''}
+          SETEMBRO: ${septemberWasUpdated ? `${previousBehavior.september} para ${behavior.september}` : behavior.september ?? ''}
+          OUTUBRO: ${octoberWasUpdated ? `${previousBehavior.october} para ${behavior.october}` : behavior.october ?? ''}
+          NOVEMBRO: ${novemberWasUpdated ? `${previousBehavior.november} para ${behavior.november}` : behavior.november ?? ''}
+          DEZEMBRO: ${decemberWasUpdated ? `${previousBehavior.december} para ${behavior.december}` : behavior.december ?? ''}
         `,
         ip: reporterIp,
         courseId: behavior.courseId.toValue(),

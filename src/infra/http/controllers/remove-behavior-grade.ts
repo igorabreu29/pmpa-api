@@ -9,6 +9,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { makeRemoveBehaviorGradeUseCase } from "@/infra/factories/make-remove-behavior-grade-use-case.ts";
+import { makeOnBehaviorRemovedGrade } from "@/infra/factories/make-on-behavior-removed-grade.ts";
 
 export async function removeBehaviorGrade(
   app: FastifyInstance
@@ -57,6 +58,7 @@ export async function removeBehaviorGrade(
 
       const ip = req.ip
 
+      makeOnBehaviorRemovedGrade()
       const useCase = makeRemoveBehaviorGradeUseCase()
       const result = await useCase.execute({
         id,

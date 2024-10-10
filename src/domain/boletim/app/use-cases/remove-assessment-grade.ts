@@ -46,12 +46,15 @@ export class RemoveAssessmentGradeUseCase {
     const assessment = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({ courseId, disciplineId, studentId })
     if (!assessment) return left(new ResourceNotFoundError('Av não encontrada.'))
 
+    const previousAssessment = assessment
+
     assessment.vf = vf ? null : assessment.vf
     assessment.avi = avi ? null : assessment.avi
     assessment.avii = avii ? null : assessment.avii
     assessment.vfe = vfe ? null : assessment.vfe
         
     assessment.addDomainAssessmentEvent(new AssessmentRemovedGradeEvent({
+      previousAssessment,
       assessment,
       reporterId: userId,
       reporterIp: userIp
