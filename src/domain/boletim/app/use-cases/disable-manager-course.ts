@@ -42,6 +42,7 @@ export class DisableManagerCourseUseCase {
     if (!managerCourse) return left(new ResourceNotFoundError('Gerente não está presente no curso!'))
 
     managerCourse.isActive = false
+    managerCourse.reason = reason
 
     managerCourse.addDomainManagerCourseEvent(
       new ChangeManagerStatusEvent({

@@ -42,6 +42,7 @@ export class ActiveStudentCourseUseCase {
     if (!studentCourse) return left(new ResourceNotFoundError('Estudante não está presente no curso.'))
 
     studentCourse.isActive = true
+    studentCourse.reason = reason
 
     studentCourse.addDomainStudentCourseEvent(
       new ChangeStudentStatusEvent({
