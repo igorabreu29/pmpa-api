@@ -8,6 +8,10 @@ import { makeCourse } from 'test/factories/make-course.ts'
 import { makeDiscipline } from 'test/factories/make-discipline.ts'
 import { makeCourseDiscipline } from 'test/factories/make-course-discipline.ts'
 import { DeleteCourseDisciplineUseCase } from './delete-course-discipline.ts'
+import { InMemoryAssessmentsRepository } from 'test/repositories/in-memory-assessments-repository.ts'
+import { makeAssessment } from 'test/factories/make-assessment.ts'
+
+let assessmentsRepository: InMemoryAssessmentsRepository
 
 let coursesRepository: InMemoryCoursesRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
@@ -16,10 +20,13 @@ let sut: DeleteCourseDisciplineUseCase
 
 describe('Delete Course Discipline', () => {
   beforeEach(() => {
+    assessmentsRepository = new InMemoryAssessmentsRepository()
+
     coursesRepository = new InMemoryCoursesRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     courseDisciplineRepository = new InMemoryCoursesDisciplinesRepository(
-      disciplinesRepository
+      disciplinesRepository,
+      assessmentsRepository
     )
     sut = new DeleteCourseDisciplineUseCase(
       coursesRepository,
@@ -77,6 +84,9 @@ describe('Delete Course Discipline', () => {
     const courseDiscipline = makeCourseDiscipline({ courseId: course.id, disciplineId: discipline.id })
     courseDisciplineRepository.create(courseDiscipline)
 
+    const assessment = makeAssessment({ courseId: course.id, disciplineId: discipline.id })
+    assessmentsRepository.create(assessment)
+
     const result = await sut.execute({
       courseId: course.id.toValue(),
       disciplineId: discipline.id.toValue(),
@@ -84,5 +94,6 @@ describe('Delete Course Discipline', () => {
 
     expect(result.isRight()).toBe(true)
     expect(courseDisciplineRepository.items).toHaveLength(0)
+    expect(assessmentsRepository.items).toHaveLength(0)
   })
 })
