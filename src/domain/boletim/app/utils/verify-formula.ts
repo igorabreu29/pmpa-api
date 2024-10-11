@@ -13,6 +13,9 @@ export interface AssessmentWithModule {
   isRecovering: boolean;
   id: string;
   module: number;
+
+  courseId: string
+  disciplineId: string
 }
 
 interface FormulaProps {
