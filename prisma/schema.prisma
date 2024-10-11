@@ -82,7 +82,7 @@ model UserCourseOnPole {
   createdAt      DateTime @default(now()) @map("created_at")
 
   usersOnCourse UserOnCourse @relation(fields: [userOnCourseId], references: [id], onDelete: Cascade)
-  pole          Pole         @relation(fields: [poleId], references: [id])
+  pole          Pole         @relation(fields: [poleId], references: [id], onDelete: Cascade)
 
   @@map("user_course_on_poles")
 }
@@ -197,7 +197,7 @@ model Assessment {
 
   user       User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
   course     Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  discipline Discipline @relation(fields: [disciplineId], references: [id])
+  discipline Discipline @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
 
   @@map("assessments")
 }
