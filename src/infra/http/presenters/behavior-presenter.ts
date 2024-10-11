@@ -20,6 +20,7 @@ export class BehaviorPresenter {
       november: behavior.november,
       december: behavior.december,
       currentYear: behavior.currentYear,
+      module: behavior.module,
     }
   }
 }

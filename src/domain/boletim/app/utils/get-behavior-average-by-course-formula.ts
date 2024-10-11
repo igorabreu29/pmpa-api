@@ -1,7 +1,8 @@
+import type { BehaviorsPerPeriod } from "./generate-behavior-average.ts"
 import { getBehaviorAverageStatus } from "./get-behavior-average-status.ts"
 
 interface FormulaTypeProps {
-  behaviorMonthsNotes: (number | null)[]
+  behaviorsPerPeriod: BehaviorsPerPeriod
 }
 
 export interface BehaviorAveragePerPeriod {
@@ -10,18 +11,17 @@ export interface BehaviorAveragePerPeriod {
 }
 
 export const defineBehaviorByFormulaType = {
-  period: ({ behaviorMonthsNotes }: FormulaTypeProps) => {
-    const TOTAL_MONTH_PER_PERIOD = 6 // 6 months
-    const behaviorAveragePerPeriod: BehaviorAveragePerPeriod[] = []
+  period: ({ behaviorsPerPeriod }: FormulaTypeProps) => {
+    const behaviorKeys = Object.keys(behaviorsPerPeriod)
 
-    for (let i = 0; i < behaviorMonthsNotes.length; i += TOTAL_MONTH_PER_PERIOD) {
-      const behaviorPerPeriod = behaviorMonthsNotes.map(behavior => Number(behavior)).slice(i, i + 6)
-      const behaviorAverage = behaviorPerPeriod.reduce((previousNote, currentNote) => previousNote + currentNote, 0) / behaviorPerPeriod.length
-      behaviorAveragePerPeriod.push({
+    const behaviorAveragePerPeriod = behaviorKeys.map(item => {
+      const behaviorAverage = behaviorsPerPeriod[item].reduce((grade, currentGrade) => grade + currentGrade, 0) / behaviorsPerPeriod[item].length
+
+      return {
         average: behaviorAverage,
-        behaviorsCount: behaviorPerPeriod.length
-      });
-    }
+        behaviorsCount: behaviorsPerPeriod[item].length
+      }
+    })
 
     const behaviorAverageStatus = behaviorAveragePerPeriod.map(behaviorAverage => getBehaviorAverageStatus(Number(behaviorAverage.average.toFixed(3))))
     const behaviorsCount = behaviorAveragePerPeriod.reduce((previousBehavior, currentBehavior) => previousBehavior + currentBehavior.behaviorsCount, 0)
@@ -32,11 +32,11 @@ export const defineBehaviorByFormulaType = {
     }
   },
 
-  module: ({ behaviorMonthsNotes }: FormulaTypeProps) => {
-    const behaviorsAverage = Number(behaviorMonthsNotes.reduce((previousNote, currentNote) => Number(previousNote) + Number(currentNote), 0)) / behaviorMonthsNotes.length
+  module: ({ behaviorsPerPeriod }: FormulaTypeProps) => {
+    const behaviorsAverage = Number(behaviorsPerPeriod[1].reduce((previousNote, currentNote) => Number(previousNote) + Number(currentNote), 0)) / behaviorsPerPeriod[1].length
     const behaviorAverageStatus = getBehaviorAverageStatus(Number(behaviorsAverage.toFixed(3)) || 0)
 
-    const behaviorsCount = behaviorMonthsNotes.length
+    const behaviorsCount = behaviorsPerPeriod[1].length
 
     return {
       behaviorAverageStatus: [behaviorAverageStatus],

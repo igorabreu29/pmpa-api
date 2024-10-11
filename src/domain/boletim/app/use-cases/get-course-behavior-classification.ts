@@ -46,6 +46,7 @@ export class GetCourseBehaviorClassificationUseCase {
         october,
         november,
         december,
+        module
       }) => ({
         january,
         february,
@@ -59,6 +60,7 @@ export class GetCourseBehaviorClassificationUseCase {
         october,
         november,
         december,
+        module
       }))
       
       const behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod: course.isPeriod })

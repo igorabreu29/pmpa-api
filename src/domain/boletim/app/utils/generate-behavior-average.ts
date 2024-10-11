@@ -13,6 +13,7 @@ export interface BehaviorMonths {
   october?: number | null
   november?: number | null
   december?: number | null
+  module: number
 }
 
 export interface GenerateBehaviorAverageProps {
@@ -20,15 +21,24 @@ export interface GenerateBehaviorAverageProps {
   isPeriod?: boolean
 }
 
-export function generateBehaviorAverage({ behaviorMonths, isPeriod = false }: GenerateBehaviorAverageProps) {
-  const behaviorMonthsNotes: (number | null)[] = []
+export interface BehaviorsPerPeriod {
+  [x: string]: number[]
+}
 
-  for (const behaviorMonth of behaviorMonths) {
-    const { ...months } = behaviorMonth
-    const notes = Object.values(months).filter(item => item !== null && item !== undefined)
-    
-    behaviorMonthsNotes.push(...notes)
+export function generateBehaviorAverage({ behaviorMonths, isPeriod = false }: GenerateBehaviorAverageProps) {
+  const behaviorsPerPeriod: BehaviorsPerPeriod = {}
+
+  for (const behavior of behaviorMonths) {
+    const { module: behaviorModule, ...months } = behavior
+
+    if (!behaviorsPerPeriod[behaviorModule]) {
+      behaviorsPerPeriod[behaviorModule] = []
+    }
+
+    const grades = Object.values(months).filter(item => item !== null && item !== undefined)
+
+    behaviorsPerPeriod[behaviorModule].push(...grades)
   }
 
-  return defineBehaviorByFormulaType[isPeriod ? 'period' : 'module']({ behaviorMonthsNotes })
+  return defineBehaviorByFormulaType[isPeriod ? 'period' : 'module']({ behaviorsPerPeriod })
 }

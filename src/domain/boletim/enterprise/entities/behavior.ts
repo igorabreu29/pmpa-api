@@ -19,6 +19,7 @@ interface BehaviorProps {
   november?: number | null
   december?: number | null
   currentYear: number
+  module: number
 }
 
 export class Behavior extends AggregateRoot<BehaviorProps> {
@@ -118,14 +119,19 @@ export class Behavior extends AggregateRoot<BehaviorProps> {
     return this.props.currentYear
   }
 
+  get module() {
+    return this.props.module
+  }
+
   public addDomainBehaviorEvent(domainEvent: DomainEvent): void {
     this.addDomainEvent(domainEvent)
   }
 
-  static create(props: Optional<BehaviorProps, 'currentYear'>, id?: UniqueEntityId) {
+  static create(props: Optional<BehaviorProps, 'currentYear' | 'module'>, id?: UniqueEntityId) {
     const behavior = new Behavior({
       ...props,
       currentYear: props.currentYear ?? new Date().getFullYear(),
+      module: props.module ?? 1
     }, id)
     return behavior
   }

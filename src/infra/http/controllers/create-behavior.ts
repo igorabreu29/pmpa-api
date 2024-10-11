@@ -39,6 +39,7 @@ export async function createBehavior(
           october: z.number().nullable().default(null),
           november: z.number().nullable().default(null),
           december: z.number().nullable().default(null),
+          module: z.number().optional(),
         })
       }
     }, async (req, res) => {
@@ -57,6 +58,7 @@ export async function createBehavior(
         october,
         november,
         december,
+        module
       } = req.body
 
       const { payload: { role, sub } } = req.user
@@ -80,6 +82,7 @@ export async function createBehavior(
         october,
         november,
         december,
+        module,
         role,
         userId: sub,
         userIp: ip

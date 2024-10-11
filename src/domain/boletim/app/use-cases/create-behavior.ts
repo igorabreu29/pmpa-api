@@ -27,6 +27,8 @@ interface CreateBehaviorUseCaseRequest {
   october?: number | null
   november?: number | null
   december?: number | null
+  module?: number
+
   userId: string
   userIp: string
 
@@ -57,6 +59,7 @@ export class CreateBehaviorUseCase {
     october,
     november,
     december,
+    module,
     userIp,
     userId,
     role
@@ -86,6 +89,7 @@ export class CreateBehaviorUseCase {
       october,
       november,
       december,
+      module,
     })
     behavior.addDomainBehaviorEvent(new BehaviorEvent({
       behavior, 

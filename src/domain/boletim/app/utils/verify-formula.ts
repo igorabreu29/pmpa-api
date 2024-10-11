@@ -89,87 +89,72 @@ export const formulas = {
         return periodAverageWithWeight
       })
 
-      geralAverageWithBehavior = averagesWithWeight.reduce((previousModuleAverage, currentModuleAverage) => previousModuleAverage + currentModuleAverage, 0) / weightPerPeriod
+      if (assessmentsPerPeriod['module4']) {
+        const average = averagesWithWeight.reduce((previousModuleAverage, currentModuleAverage) => previousModuleAverage + currentModuleAverage, 0)
+        const tcc = assessmentsPerPeriod['module4'][0].average
+
+        geralAverageWithBehavior = (average + tcc * 2) / 6
+      } 
+
+      if (!assessmentsPerPeriod['module4']) {
+        geralAverageWithBehavior = averagesWithWeight.reduce((previousModuleAverage, currentModuleAverage) => previousModuleAverage + currentModuleAverage, 0) / weightPerPeriod
+      }
+
     }
 
     let generalAverage: number | null = 0
 
-    if (assessmentsPerPeriod['module4']) {
-      const assessmentsAverageModule1 = assessmentsPerPeriod['module1'] && assessmentsPerPeriod['module1']?.reduce((previousAverage, currentAverage) => {
-        return Number(previousAverage) + Number(currentAverage.average)
-      }, 0) || 0
-      
-      const assessmentAverageModule1Period = calculatesAverageWithWeight({
-        assessmentAverage: assessmentsAverageModule1,
-        assessmentsQuantityPerPeriod: assessmentsPerPeriod['module1']?.length, 
-        behaviorAveragePerPeriod: null, 
-        weight: 1
-      }) || 0
+    if (assessmentsPerPeriod['module4'] && !behaviorAverage?.behaviorAverageStatus.length) {
+      let weightPerPeriod = 0
+      const periodKeys = Object.keys(assessmentsPerPeriod)
 
-      const assessmentsAverageModule2 = assessmentsPerPeriod['module2'] && assessmentsPerPeriod['module2']?.reduce((previousAverage, currentAverage) => {
-        return Number(previousAverage) + Number(currentAverage.average)
-      }, 0) || 0
+      const averagesWithWeight = periodKeys.map((item, index) => {
+        const assessmentsAveragePerPeriod = assessmentsPerPeriod[item].reduce((previousAverage, currentAverage) => {
+          return Number(previousAverage) + Number(currentAverage.average)
+        }, 0)
 
-      const assessmentAverageModule2Period = calculatesAverageWithWeight({
-        assessmentAverage: assessmentsAverageModule2,
-        assessmentsQuantityPerPeriod: assessmentsPerPeriod['module2']?.length, 
-        behaviorAveragePerPeriod: null, 
-        weight: 1
-      }) || 0
-      
-      const assessmentsAverageModule3 = assessmentsPerPeriod['module3'] && assessmentsPerPeriod['module3']?.reduce((previousAverage, currentAverage) => {
-        return Number(previousAverage) + Number(currentAverage.average)
-      }, 0) || 0
+        const periodAverageWithWeight = calculatesAverageWithWeight({ 
+            assessmentAverage: assessmentsAveragePerPeriod,
+            assessmentsQuantityPerPeriod: assessmentsPerPeriod[item]?.length, 
+            behaviorAveragePerPeriod: null, 
+            weight: weightPerPeriod || 1 
+        })
 
-      const assessmentAverageModule3Period = calculatesAverageWithWeight({
-        assessmentAverage: assessmentsAverageModule3,
-        assessmentsQuantityPerPeriod: assessmentsPerPeriod['module3']?.length, 
-        behaviorAveragePerPeriod: null, 
-        weight: 2
-      }) || 0
+        if (periodAverageWithWeight && index === 2) weightPerPeriod += 2
+        if (periodAverageWithWeight && index !== 2) weightPerPeriod += 1
+        
+        return periodAverageWithWeight
+      })
 
+      const average = averagesWithWeight.reduce((previousModuleAverage, currentModuleAverage) => previousModuleAverage + currentModuleAverage, 0)
       const tcc = assessmentsPerPeriod['module4'][0].average
 
-      generalAverage = (assessmentAverageModule1Period + assessmentAverageModule2Period + assessmentAverageModule3Period * 2 + tcc * 2) / 6
+      geralAverageWithBehavior = (average + tcc * 2) / 6
     }
 
-    if (!assessmentsPerPeriod['module4']) {
-      const assessmentsAverageModule1 = assessmentsPerPeriod['module1'] && assessmentsPerPeriod['module1']?.reduce((previousAverage, currentAverage) => {
-        return Number(previousAverage) + Number(currentAverage.average)
-      }, 0) || 0
-      
-      const assessmentAverageModule1Period = calculatesAverageWithWeight({
-        assessmentAverage: assessmentsAverageModule1,
-        assessmentsQuantityPerPeriod: assessmentsPerPeriod['module1']?.length, 
-        behaviorAveragePerPeriod: null, 
-        weight: 1
-      }) || 0
+    if (!assessmentsPerPeriod['module4'] && behaviorAverage?.behaviorAverageStatus?.length) {
+      let weightPerPeriod = 0
+      const periodKeys = Object.keys(assessmentsPerPeriod)
 
-      const assessmentsAverageModule2 = assessmentsPerPeriod['module2'] && assessmentsPerPeriod['module2']?.reduce((previousAverage, currentAverage) => {
-        return Number(previousAverage) + Number(currentAverage.average)
-      }, 0) || 0
+      const averagesWithWeight = periodKeys.map((item, index) => {
+        const assessmentsAveragePerPeriod = assessmentsPerPeriod[item].reduce((previousAverage, currentAverage) => {
+          return Number(previousAverage) + Number(currentAverage.average)
+        }, 0)
 
-      const assessmentAverageModule2Period = calculatesAverageWithWeight({
-        assessmentAverage: assessmentsAverageModule2,
-        assessmentsQuantityPerPeriod: assessmentsPerPeriod['module2']?.length, 
-        behaviorAveragePerPeriod: null, 
-        weight: 1
-      }) || 0
-      
-      const assessmentsAverageModule3 = assessmentsPerPeriod['module3'] && assessmentsPerPeriod['module3']?.reduce((previousAverage, currentAverage) => {
-        return Number(previousAverage) + Number(currentAverage.average)
-      }, 0) || 0
+        const periodAverageWithWeight = calculatesAverageWithWeight({ 
+            assessmentAverage: assessmentsAveragePerPeriod,
+            assessmentsQuantityPerPeriod: assessmentsPerPeriod[item]?.length, 
+            behaviorAveragePerPeriod: null, 
+            weight: weightPerPeriod || 1 
+        })
 
-      const assessmentAverageModule3Period = calculatesAverageWithWeight({
-        assessmentAverage: assessmentsAverageModule3,
-        assessmentsQuantityPerPeriod: assessmentsPerPeriod['module3']?.length, 
-        behaviorAveragePerPeriod: null, 
-        weight: 2
-      }) || 0
+        if (periodAverageWithWeight && index === 2) weightPerPeriod += 2
+        if (periodAverageWithWeight && index !== 2) weightPerPeriod += 1
+        
+        return periodAverageWithWeight
+      })
 
-      const average = (assessmentAverageModule1Period + assessmentAverageModule2Period + assessmentAverageModule3Period) / 4
-
-      generalAverage = average
+      generalAverage = averagesWithWeight.reduce((previousModuleAverage, currentModuleAverage) => previousModuleAverage + currentModuleAverage, 0) / weightPerPeriod
     }
 
     const isStudentRecovering = assessments.some((item) => item?.isRecovering)    
@@ -222,7 +207,7 @@ export const formulas = {
 
     let average: number = 0
     
-    if (behaviorAverage) {
+    if (behaviorAverage && behaviorAverage.behaviorAverageStatus.length) {
       const { behaviorAverageStatus } = behaviorAverage as BehaviorAveragePerPeriod
 
       if (disciplineModule === 1) {
@@ -271,7 +256,7 @@ export const formulas = {
       }
     }
 
-    if (!behaviorAverage) {
+    if (!behaviorAverage?.behaviorAverageStatus.length) {
       if (disciplineModule === 1) {
         const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module1`]?.reduce((previousAverage, currentAverage) => {
           return Number(previousAverage) + Number(currentAverage.average)

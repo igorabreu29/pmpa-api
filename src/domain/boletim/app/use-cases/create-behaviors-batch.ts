@@ -28,6 +28,8 @@ interface StudentBehavior {
   october?: number | null
   november?: number | null
   december?: number | null
+
+  module?: number
   currentYear: number
 }
 
@@ -97,7 +99,8 @@ export class CreateBehaviorsBatchUseCase {
         october: studentBehavior.october,
         november: studentBehavior.november,
         december: studentBehavior.december,
-        currentYear: studentBehavior.currentYear
+        currentYear: studentBehavior.currentYear,
+        module: studentBehavior.module
       })
 
       return behavior

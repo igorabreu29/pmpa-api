@@ -220,6 +220,7 @@ model Behavior {
   november    Decimal?
   december    Decimal?
   currentYear Int?
+  module      Int?
 
   user   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)

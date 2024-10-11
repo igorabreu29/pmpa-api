@@ -17,7 +17,9 @@ describe('Verify Formulas', () => {
           average: 6.5,
           isRecovering: true,
           status: 'approved second season' as Status,
-          disciplineName: 'discipline-1'
+          disciplineName: 'discipline-1',
+          disciplineId: 'discipline-1',
+          courseId: 'course-1',
         },
         {
           id: 'assessment-2',
@@ -29,7 +31,9 @@ describe('Verify Formulas', () => {
           average: 6.5,
           isRecovering: true,
           status: 'approved second season' as Status,
-          disciplineName: 'discipline-1'
+          disciplineName: 'discipline-1',
+          disciplineId: 'discipline-1',
+          courseId: 'course-1',
         },
         {
           id: 'assessment-3',
@@ -41,7 +45,9 @@ describe('Verify Formulas', () => {
           average: 6.5,
           isRecovering: true,
           status: 'approved second season' as Status,
-          disciplineName: 'discipline-1'
+          disciplineName: 'discipline-1',
+          disciplineId: 'discipline-1',
+          courseId: 'course-1',
         },
         {
           id: 'assessment-4',
@@ -53,7 +59,9 @@ describe('Verify Formulas', () => {
           average: 8,
           isRecovering: true,
           status: 'approved' as Status,
-          disciplineName: 'discipline-1'
+          disciplineName: 'discipline-1',
+          disciplineId: 'discipline-1',
+          courseId: 'course-1',
         },
       ]
       
@@ -65,6 +73,7 @@ describe('Verify Formulas', () => {
           april: 4,
           may: 8,
           jun: 8,
+          module: 1
         },
         {
           july: 4,
@@ -73,11 +82,13 @@ describe('Verify Formulas', () => {
           october: 4,
           november: 8.5,
           december: 6.75,
+          module: 2
         },
         {
           january: 8,
           february: 7,
           march: 9.5,
+          module: 3
         },
       ]
       const behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod: true })
@@ -142,7 +153,9 @@ describe('Verify Formulas', () => {
           average: 6.67,
           isRecovering: false,
           status: 'second season' as Status,
-          disciplineName: 'discipline-1'
+          disciplineName: 'discipline-1',
+          disciplineId: 'discipline-1',
+          courseId: 'course-1',
         },
         {
           id: 'assessment-2',
@@ -153,7 +166,9 @@ describe('Verify Formulas', () => {
           average: 6,
           isRecovering: false,
           status: 'second season' as Status,
-          disciplineName: 'discipline-1'
+          disciplineName: 'discipline-1',
+          disciplineId: 'discipline-1',
+          courseId: 'course-1',
         },
       ]
 
@@ -190,7 +205,9 @@ describe('Verify Formulas', () => {
           average: 6.67,
           isRecovering: false,
           status: 'second season' as Status,
-          disciplineName: 'discipline-1'
+          disciplineName: 'discipline-1',
+          disciplineId: 'discipline-1',
+          courseId: 'course-1',
         },
         {
           id: 'assessment-2',
@@ -201,7 +218,9 @@ describe('Verify Formulas', () => {
           average: 6,
           isRecovering: false,
           status: 'second season' as Status,
-          disciplineName: 'discipline-1'
+          disciplineName: 'discipline-1',
+          disciplineId: 'discipline-1',
+          courseId: 'course-1',
         },
       ]
 
@@ -213,7 +232,8 @@ describe('Verify Formulas', () => {
           april: 5,
           may: 7.5, 
           jun: 9.25,
-          july: 7
+          july: 7,
+          module: 1
         },
       ]
 

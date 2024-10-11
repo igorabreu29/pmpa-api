@@ -19,7 +19,8 @@ export class PrismaBehaviorsMapper {
       october: behavior.october ? Number(behavior.october) : null,
       november: behavior.november ? Number(behavior.november) : null,
       december: behavior.december ? Number(behavior.december) : null,
-      currentYear: behavior.currentYear ?? new Date().getFullYear()
+      currentYear: behavior.currentYear ?? new Date().getFullYear(),
+      module: behavior.module ?? undefined
     }, new UniqueEntityId(behavior.id))
   }
 
@@ -40,7 +41,8 @@ export class PrismaBehaviorsMapper {
       october: behavior.october,
       november: behavior.november,
       december: behavior.december,
-      currentYear: behavior.currentYear
+      currentYear: behavior.currentYear,
+      module: behavior.module
     }
   }
 }

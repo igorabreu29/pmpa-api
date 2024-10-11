@@ -13,12 +13,14 @@ describe('Behavior Average', () => {
         october: 7,
         november: 7,
         december: 7,
+        module: 1
       },
       {
         january: 7,
         february: 9.2,
         march: 2.2,
-        april: 8.53
+        april: 8.53,
+        module: 1
       }
     ]
 
@@ -41,11 +43,13 @@ describe('Behavior Average', () => {
         october: 7,
         november: 8,
         december: 8,
+        january: 9.5,
+        module: 1
       },
       {
-        january: 9.5,
         february: 7.5,
         march: 6.2,
+        module: 2
       },
     ]
 

@@ -14,11 +14,13 @@ describe('Classify Students By Formula', () => {
         october: 7,
         november: 8,
         december: 8,
+        module: 1
       },
       {
         january: 9.5,
         february: 7.5,
         march: 6.2,
+        module: 1
       },
     ]
 
@@ -36,7 +38,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 8,
               isRecovering: false,
-              status: 'approved' as Status
+              status: 'approved' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-2',
@@ -46,7 +50,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
           averageInform: {
@@ -73,7 +79,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-4',
@@ -83,7 +91,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
           averageInform: {
@@ -139,11 +149,13 @@ describe('Classify Students By Formula', () => {
         october: 7,
         november: 8,
         december: 8,
+        module: 1
       },
       {
         january: 9.5,
         february: 7.5,
         march: 6.2,
+        module: 1
       },
     ]
 
@@ -161,7 +173,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 8,
               isRecovering: false,
-              status: 'approved' as Status
+              status: 'approved' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-2',
@@ -171,7 +185,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
 
@@ -199,7 +215,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-4',
@@ -209,7 +227,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
           averageInform: {
@@ -269,11 +289,13 @@ describe('Classify Students By Formula', () => {
         october: 7,
         november: 8,
         december: 8,
+        module: 1
       },
       {
         january: 9.5,
         february: 7.5,
         march: 6.2,
+        module: 1
       },
     ]
 
@@ -291,7 +313,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 8,
               isRecovering: false,
-              status: 'approved' as Status
+              status: 'approved' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-2',
@@ -301,7 +325,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
 
@@ -329,7 +355,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 8,
               isRecovering: false,
-              status: 'approved' as Status
+              status: 'approved' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-4',
@@ -339,7 +367,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
 
@@ -367,7 +397,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 7.3,
               isRecovering: false,
-              status: 'approved' as Status
+              status: 'approved' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-6',
@@ -377,7 +409,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 7.6,
               isRecovering: false,
-              status: 'approved' as Status
+              status: 'approved' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
 
@@ -405,7 +439,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 7.3,
               isRecovering: false,
-              status: 'approved' as Status
+              status: 'approved' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-8',
@@ -415,7 +451,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 7.6,
               isRecovering: false,
-              status: 'approved' as Status
+              status: 'approved' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
 
@@ -443,7 +481,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 8,
               isRecovering: false,
-              status: 'approved' as Status
+              status: 'approved' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-10',
@@ -453,7 +493,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
 
@@ -481,7 +523,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
             {
               id: 'assessment-12',
@@ -491,7 +535,9 @@ describe('Classify Students By Formula', () => {
               module: 1,
               average: 6.67,
               isRecovering: false,
-              status: 'second season' as Status
+              status: 'second season' as Status,
+              courseId: '',
+              disciplineId: ''
             },
           ],
           averageInform: {
@@ -583,11 +629,13 @@ describe('Classify Students By Formula', () => {
         october: 7,
         november: 8,
         december: 8,
+        january: 9.5,
+        module: 1
       },
       {
-        january: 9.5,
         february: 7.5,
         march: 6.2,
+        module: 2
       },
     ]
 
@@ -607,7 +655,9 @@ describe('Classify Students By Formula', () => {
                 module: 1,
                 average: 6.5,
                 isRecovering: true,
-                status: 'approved' as Status
+                status: 'approved' as Status,
+                courseId: '',
+                disciplineId: '',
               }
             ],
 
@@ -621,7 +671,9 @@ describe('Classify Students By Formula', () => {
                 module: 2,
                 average: 7,
                 isRecovering: false,
-                status: 'approved' as Status
+                status: 'approved' as Status,
+                courseId: '',
+                disciplineId: ''
               }
             ],
 
@@ -635,7 +687,9 @@ describe('Classify Students By Formula', () => {
                 module: 2,
                 average: 7,
                 isRecovering: false,
-                status: 'approved' as Status
+                status: 'approved' as Status,
+                courseId: '',
+                disciplineId: ''
               }
             ],
           },
@@ -667,7 +721,9 @@ describe('Classify Students By Formula', () => {
                 module: 1,
                 average: 6.5,
                 isRecovering: true,
-                status: 'approved' as Status
+                status: 'approved' as Status,
+                courseId: '',
+                disciplineId: ''
               }
             ],
 
@@ -681,7 +737,9 @@ describe('Classify Students By Formula', () => {
                 module: 2,
                 average: 6,
                 isRecovering: false,
-                status: 'second season' as Status
+                status: 'second season' as Status,
+                courseId: '',
+                disciplineId: ''
               }
             ],
             module3: [
@@ -694,7 +752,9 @@ describe('Classify Students By Formula', () => {
                 module: 3,
                 average: 6.5,
                 isRecovering: true,
-                status: 'approved second season' as Status
+                status: 'approved second season' as Status,
+                courseId: '',
+                disciplineId: ''
               }
             ],
           },

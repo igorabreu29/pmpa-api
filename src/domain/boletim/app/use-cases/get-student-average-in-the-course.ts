@@ -17,7 +17,7 @@ interface GetStudentAverageInTheCourseUseCaseRequest {
   disciplineModule?: number
 }
 
-interface Month {
+export interface BehaviorMonths {
   january?: number | null
   february?: number | null
   march?: number | null
@@ -30,6 +30,7 @@ interface Month {
   october?: number | null
   november?: number | null
   december?: number | null
+  module: number
 }
 
 type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError, {
@@ -58,16 +59,13 @@ type GetStudentAverageInTheCourseUseCaseResponse = Either<ResourceNotFoundError,
     assessmentsCount: number
   },
 
-  behaviorMonths: Month[]
+  behaviorMonths: BehaviorMonths[]
 }>
 
 export interface BehaviorAverage {
   behaviorAverage: {
     behaviorAverageStatus: GenerateBehaviorStatus[];
     behaviorsCount: number;
-  } | {
-      behaviorAverageStatus: GenerateBehaviorStatus;
-      behaviorsCount: number;
   }
 }
 
@@ -97,7 +95,7 @@ export class GetStudentAverageInTheCourseUseCase {
       }
     }
 
-    let behaviorMonths: Month[] = []
+    let behaviorMonths: BehaviorMonths[] = []
 
     if (hasBehavior) {
       const behaviors = await this.behaviorsRepository.findManyByStudentIdAndCourseId({ studentId, courseId })
@@ -114,6 +112,7 @@ export class GetStudentAverageInTheCourseUseCase {
         october,
         november,
         december,
+        module
       }) => ({
         january,
         february,
@@ -127,6 +126,7 @@ export class GetStudentAverageInTheCourseUseCase {
         october,
         november,
         december,
+        module
       }))
       
       behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod })
