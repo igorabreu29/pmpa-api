@@ -28,7 +28,7 @@ export class OnStudentDeleted implements EventHandler {
 
   private async sendDeleteStudentReport({ student, reporterId, reporterIp, ocurredAt }: StudentEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY HH:mm:ss')
 
     if (reporter) {
       await this.sendReport.execute({

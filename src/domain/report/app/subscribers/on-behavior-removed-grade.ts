@@ -36,7 +36,7 @@ export class OnBehaviorRemovedGrade implements EventHandler {
       this.reportersRepository.findById({ id: reporterId }),
       this.studentsRepository.findById(behavior.studentId.toValue())
     ])
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY HH:mm:ss')
 
     const januaryWasUpdated = previousBehavior.january !== behavior.january
     const februaryWasUpdated = previousBehavior.february !== behavior.february

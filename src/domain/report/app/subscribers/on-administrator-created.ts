@@ -28,7 +28,7 @@ export class OnAdministratorCreated implements EventHandler {
 
   private async sendNewAdministratorReport({ administrator, reporterId, reporterIp, ocurredAt }: AdministratorEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY HH:mm:ss')
 
     if (reporter) {
       await this.sendReport.execute({
