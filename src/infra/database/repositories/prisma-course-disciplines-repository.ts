@@ -91,6 +91,14 @@ export class PrismaCourseDisciplinesRepository implements CoursesDisciplinesRepo
 
   async delete(courseDiscipline: CourseDiscipline): Promise<void> {
     const raw = PrismaCourseDisciplinesMapper.toPrisma(courseDiscipline)
+
+    await prisma.assessment.deleteMany({
+      where: {
+        courseId: raw.courseId,
+        disciplineId: raw.disciplineId
+      }
+    })
+  
     await prisma.courseOnDiscipline.delete({
       where: {
         id: raw.id
