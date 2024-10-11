@@ -13,6 +13,5 @@ export default defineConfig({
     coverage: {
       enabled: false
     },
-    isolate: false,
   },
 })
