@@ -1,5 +1,20 @@
+import { env } from "@/infra/env/index.ts";
 import { PrismaClient } from "@prisma/client";
 
-export const prisma = new PrismaClient({
-  log: ['query', 'error']
-})
+let prisma: PrismaClient 
+
+if (env.NODE_ENV === 'production') {
+  prisma = new PrismaClient({
+    log: ['error']
+  })
+}
+
+if (env.NODE_ENV !== 'production') {
+  prisma = new PrismaClient({
+    log: ['error', 'query']
+  })
+}
+
+export {
+  prisma
+}
