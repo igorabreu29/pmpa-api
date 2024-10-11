@@ -46,7 +46,7 @@ export async function createStudentBatch(
 
     const { filename, originalname } = assessmentFileSchema.parse(req.file)
 
-    const fullUrl = req.protocol.concat('://').concat(req.hostname)
+    const fullUrl = req.protocol.concat('://').concat(req.host)
     const fileUrl = new URL(`/uploads/${filename}`, fullUrl)
 
     const students = createStudentsBatchExcelToJSON(fileUrl.pathname)

@@ -36,7 +36,7 @@ export class OnStudentActivated implements EventHandler {
       this.studentsRepository.findById(studentCourse.studentId.toValue()),
       this.coursesRepository.findById(studentCourse.courseId.toValue())
     ])
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY HH:mm:ss')
 
     if (course && reporter) {
       await this.sendReport.execute({

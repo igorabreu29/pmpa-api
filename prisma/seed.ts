@@ -10,6 +10,7 @@ async function seed() {
     prisma.report.deleteMany(),
     prisma.courseOnPole.deleteMany(),
     prisma.courseOnDiscipline.deleteMany(),
+    prisma.discipline.deleteMany(),
     prisma.courseHistoric.deleteMany()
   ])
 
@@ -53,12 +54,31 @@ async function seed() {
     }
   })
 
-  const course = await prisma.course.create({
+  const discipline = await prisma.discipline.create({
     data: {
-      name: 'CAS',
+      name: 'HISTÓRIA DA POLICIA MILITAR ONLINE DUAS VEZES MAIOR QUE O NORMAL E NOMINAL'
+    }
+  })
+
+  const discipline2 = await prisma.discipline.create({
+    data: {
+      name: faker.string.uuid()
+    }
+  })
+
+  const discipline3 = await prisma.discipline.create({
+    data: {
+      name: faker.string.uuid()
+    }
+  })
+
+  await prisma.course.create({
+    data: {
+      name: 'CFO 2022',
       endsAt: new Date('2050-01-02'),
-      formula: 'CAS',
+      formula: 'CFO',
       imageUrl: '',
+      isPeriod: true,
 
       courseOnPoles: {
         create: {

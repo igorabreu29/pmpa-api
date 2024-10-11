@@ -57,6 +57,7 @@ export class RemoveBehaviorGradeUseCase {
 
     const behavior = await this.behaviorsRepository.findById({ id })
     if (!behavior) return left(new ResourceNotFoundError('Av não encontrada.'))
+    const previousBehavior = behavior
 
     behavior.january = january ? null : behavior.january
     behavior.february = february ? null : behavior.february
@@ -72,6 +73,7 @@ export class RemoveBehaviorGradeUseCase {
     behavior.december = december ? null : behavior.december
         
     behavior.addDomainBehaviorEvent(new BehaviorRemovedGradeEvent({
+      previousBehavior,
       behavior,
       reporterId: userId,
       reporterIp: userIp

@@ -1,20 +1,19 @@
-import { DomainEvents } from "@/core/events/domain-events.ts";
 import { EventHandler } from "@/core/events/event-handler.ts";
+import { SendReportUseCase } from "../use-cases/send-report.ts";
+import { DomainEvents } from "@/core/events/domain-events.ts";
 import { CoursesRepository } from "@/domain/boletim/app/repositories/courses-repository.ts";
 import { StudentsRepository } from "@/domain/boletim/app/repositories/students-repository.ts";
-import { SendReportUseCase } from "../use-cases/send-report.ts";
 import { ReportersRepository } from "../repositories/reporters-repository.ts";
-import { BehaviorEvent } from "@/domain/boletim/enterprise/events/behavior-event.ts";
-import { BehaviorUpdatedEvent } from "@/domain/boletim/enterprise/events/behavior-updated-event.ts";
 
 import dayjs from "dayjs";
-import localizedFormat from 'dayjs/plugin/localizedFormat.js'
-import 'dayjs/locale/pt-br.js'
+import localizedFormat from 'dayjs/plugin/localizedFormat.js';
+import 'dayjs/locale/pt-br.js';
+import { BehaviorRemovedGradeEvent } from "@/domain/boletim/enterprise/events/behavior-removed-grade.ts";
 
 dayjs.locale('pt-br')
 dayjs.extend(localizedFormat)
 
-export class OnBehaviorUpdated implements EventHandler {
+export class OnBehaviorRemovedGrade implements EventHandler {
   constructor (
     private studentsRepository: StudentsRepository,
     private reportersRepository: ReportersRepository,
@@ -26,12 +25,12 @@ export class OnBehaviorUpdated implements EventHandler {
 
   setupSubscriptions(): void {
     DomainEvents.register(
-      this.sendUpdateBehaviorReport.bind(this),
-      BehaviorUpdatedEvent.name
+      this.sendRemoveGradeBehaviorReport.bind(this),
+      BehaviorRemovedGradeEvent.name
     )
   }
 
-  private async sendUpdateBehaviorReport({ previousBehavior, behavior, reporterId, reporterIp, ocurredAt }: BehaviorUpdatedEvent) {
+  private async sendRemoveGradeBehaviorReport({ previousBehavior, behavior, reporterId, reporterIp, ocurredAt }: BehaviorRemovedGradeEvent) {
     const [course, reporter, student] = await Promise.all([
       this.coursesRepository.findById(behavior.courseId.toValue()),
       this.reportersRepository.findById({ id: reporterId }),
@@ -54,32 +53,32 @@ export class OnBehaviorUpdated implements EventHandler {
 
     if (course && reporter && student) {
       await this.sendReport.execute({
-        title: 'Notas de comportamento atualizadas',
+        title: 'Notas de comportamento removidas',
         content: `
           IP: ${reporterIp}
           Curso: ${course.name.value}
           Remetente: ${reporter.username.value} (${reporter.role})
           Estudante: ${student.username.value}
           Data: ${formattedDate}
-          
-          ${reporter.username.value} atualizou notas de comportamento do aluno: ${student.username.value}
-          JANEIRO: ${januaryWasUpdated ? `${previousBehavior.january} para ${behavior.january}` : behavior.january ?? ''}
-          FEVEREIRO: ${februaryWasUpdated ? `${previousBehavior.february} para ${behavior.february}` : behavior.february ?? ''}
-          MARÇO: ${marchWasUpdated ? `${previousBehavior.march} para ${behavior.march}` : behavior.march ?? ''}
-          ABRIL: ${aprilWasUpdated ? `${previousBehavior.april} para ${behavior.april}` : behavior.april ?? ''}
-          MAIO: ${mayWasUpdated ? `${previousBehavior.may} para ${behavior.may}` : behavior.may ?? ''}
-          JUN: ${junWasUpdated ? `${previousBehavior.jun} para ${behavior.jun}` : behavior.jun ?? ''}
-          JULHO: ${julyWasUpdated ? `${previousBehavior.july} para ${behavior.july}` : behavior.july ?? ''}
-          AGOSTO: ${augustWasUpdated ? `${previousBehavior.august} para ${behavior.april}` : behavior.august ?? ''}
-          SETEMBRO: ${septemberWasUpdated ? `${previousBehavior.september} para ${behavior.september}` : behavior.september ?? ''}
-          OUTUBRO: ${octoberWasUpdated ? `${previousBehavior.october} para ${behavior.october}` : behavior.october ?? ''}
-          NOVEMBRO: ${novemberWasUpdated ? `${previousBehavior.november} para ${behavior.november}` : behavior.november ?? ''}
-          DEZEMBRO: ${decemberWasUpdated ? `${previousBehavior.december} para ${behavior.december}` : behavior.december ?? ''}
+
+          ${reporter.username.value} deletou notas de comportamento do aluno: ${student.username.value}
+          JANEIRO: ${januaryWasUpdated ? `${previousBehavior.january} removida` : behavior.january ?? ''}
+          FEVEREIRO: ${februaryWasUpdated ? `${previousBehavior.february} removida` : behavior.february ?? ''}
+          MARÇO: ${marchWasUpdated ? `${previousBehavior.march} removida` : behavior.march ?? ''}
+          ABRIL: ${aprilWasUpdated ? `${previousBehavior.april} removida` : behavior.april ?? ''}
+          MAIO: ${mayWasUpdated ? `${previousBehavior.may} removida` : behavior.may ?? ''}
+          JUN: ${junWasUpdated ? `${previousBehavior.jun} removida` : behavior.jun ?? ''}
+          JULHO: ${julyWasUpdated ? `${previousBehavior.july} removida` : behavior.july ?? ''}
+          AGOSTO: ${augustWasUpdated ? `${previousBehavior.august} removida` : behavior.august ?? ''}
+          SETEMBRO: ${septemberWasUpdated ? `${previousBehavior.september} removida` : behavior.september ?? ''}
+          OUTUBRO: ${octoberWasUpdated ? `${previousBehavior.october} removida` : behavior.october ?? ''}
+          NOVEMBRO: ${novemberWasUpdated ? `${previousBehavior.november} removida` : behavior.november ?? ''}
+          DEZEMBRO: ${decemberWasUpdated ? `${previousBehavior.december} removida` : behavior.december ?? ''}
         `,
-        ip: reporterIp,
         courseId: behavior.courseId.toValue(),
+        ip: reporterIp,
         reporterId,
-        action: 'update'
+        action: 'remove'
       })
     }
   }

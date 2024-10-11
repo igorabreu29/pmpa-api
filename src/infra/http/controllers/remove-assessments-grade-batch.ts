@@ -39,7 +39,7 @@ export async function removeAssessmentsGradeBatch(
   
       const { filename, originalname } = assessmentFileSchema.parse(req.file)
 
-      const fullUrl = req.protocol.concat('://').concat(req.hostname)
+      const fullUrl = req.protocol.concat('://').concat(req.host)
       const fileUrl = new URL(`/uploads/${filename}`, fullUrl)
   
       const studentAssessments = assessmentsBatchExcelToJSON(fileUrl.pathname)

@@ -28,7 +28,7 @@ export class OnBehaviorCreated implements EventHandler {
 
   private async sendNewBehaviorReport({ behavior, courseName, studentName, reporterId, reporterIp, ocurredAt }: BehaviorEvent) {
     const reporter = await this.reportersRepository.findById({ id: reporterId })
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY HH:mm:ss')
 
 
     if (reporter) {
@@ -40,7 +40,20 @@ export class OnBehaviorCreated implements EventHandler {
           Remetente: ${reporter.username.value} (${reporter.role})
           Estudante: ${studentName}
           Data: ${formattedDate}
+
           ${reporter.username.value} adicionou notas de comportamento para o aluno: ${studentName}
+          JANEIRO: ${behavior.january || ''}
+          FEVEREIRO: ${behavior.february || ''}
+          MARÇO: ${behavior.march || ''}
+          ABRIL: ${behavior.april || ''}
+          MAIO: ${behavior.may || ''}
+          JUN: ${behavior.jun || ''}
+          JULHO: ${behavior.july || ''}
+          AGOSTO: ${behavior.august || ''}
+          SETEMBRO: ${behavior.september || ''}
+          OUTUBRO: ${behavior.october || ''}
+          NOVEMBRO: ${behavior.november || ''}
+          DEZEMBRO: ${behavior.december || ''}
         `,
         ip: reporterIp,
         courseId: behavior.courseId.toValue(),

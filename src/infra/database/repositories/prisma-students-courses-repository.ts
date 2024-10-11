@@ -58,7 +58,8 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
     const studentCourseMapper = {
       ...studentCourse.user,
       course: studentCourse.course,
-      pole: poleExist.pole
+      pole: poleExist.pole,
+      userOnCourse: studentCourse
     }
 
     return PrismaStudentCourseDetailsMapper.toDomain(studentCourseMapper)
@@ -268,7 +269,8 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
         ...studentCourse.user,
         profile: studentCourse.user.profile ?? undefined,
         course: studentCourse.course,
-        pole: poleExist.pole
+        pole: poleExist.pole,
+        userOnCourse: studentCourse
       }
     })
 
@@ -332,7 +334,8 @@ export class PrismaStudentsCoursesRepository implements StudentsCoursesRepositor
       return {
         ...studentCourse.user,
         course: studentCourse.course,
-        pole: poleExist.pole
+        pole: poleExist.pole,
+        userOnCourse: studentCourse
       }
     })
 

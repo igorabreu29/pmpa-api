@@ -2,12 +2,14 @@ import { CoursesDisciplinesRepository, type FindManyByCourseIdWithDiscipline } f
 import { CourseDiscipline } from "@/domain/boletim/enterprise/entities/course-discipline.ts";
 import type { InMemoryDisciplinesRepository } from "./in-memory-disciplines-repository.ts";
 import { CourseWithDiscipline } from "@/domain/boletim/enterprise/entities/value-objects/course-with-discipline.ts";
+import { InMemoryAssessmentsRepository } from "./in-memory-assessments-repository.ts";
 
 export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesRepository {
   public items: CourseDiscipline[] = []
 
   constructor(
-    private disciplinesRepository: InMemoryDisciplinesRepository
+    private disciplinesRepository: InMemoryDisciplinesRepository,
+    private assessmentsRepository: InMemoryAssessmentsRepository
   ) {}
 
   async findByCourseAndDisciplineId({ courseId, disciplineId }: { courseId: string; disciplineId: string; }): Promise<CourseDiscipline | null> {
@@ -76,7 +78,13 @@ export class InMemoryCoursesDisciplinesRepository implements CoursesDisciplinesR
   }
 
   async delete(courseDiscipline: CourseDiscipline): Promise<void> {
+    const assessments = this.assessmentsRepository.items.filter(item => {
+      return !item.courseId.equals(courseDiscipline.courseId) && !item.disciplineId.equals(courseDiscipline.disciplineId)
+    })
+
+    this.assessmentsRepository.items = assessments
+
     const courseDisciplineIndex = this.items.findIndex(item => item.equals(courseDiscipline))
-  this.items.splice(courseDisciplineIndex, 1)
+    this.items.splice(courseDisciplineIndex, 1)
   }
 }

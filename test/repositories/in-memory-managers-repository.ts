@@ -62,7 +62,7 @@ export class InMemoryManagersRepository implements ManagersRepository {
     return ManagerDetails.create({
       managerId: manager.id,
       username: manager.username.value,
-      civilId: manager.civilId,
+      civilId: manager.civilId ?? '',
       assignedAt: manager.createdAt,
       birthday: manager.birthday.value,
       cpf: manager.cpf.value,
@@ -130,7 +130,7 @@ export class InMemoryManagersRepository implements ManagersRepository {
         return ManagerDetails.create({
           managerId: manager.id,
           username: manager.username.value,
-          civilId: manager.civilId,
+          civilId: manager.civilId ?? '',
           cpf: manager.cpf.value,
           email: manager.email.value,
           birthday: manager.birthday.value,

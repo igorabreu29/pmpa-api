@@ -17,6 +17,9 @@ interface StudentCourseDetailsProps {
   county?: string
   parent?: Parent
 
+  isActive?: boolean
+  reason?: string
+
   courseId: UniqueEntityId
   course: string
   formula: Formula
@@ -88,6 +91,14 @@ export class StudentCourseDetails extends ValueObject<StudentCourseDetailsProps>
 
   get parent() {
     return this.props.parent
+  }
+
+  get isActive() {
+    return this.props.isActive
+  }
+
+  get reason() {
+    return this.props.reason
   }
 
   static create(props: StudentCourseDetailsProps) {

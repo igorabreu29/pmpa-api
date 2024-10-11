@@ -8,6 +8,7 @@ export interface ManagerCourseProps {
   managerId: UniqueEntityId
   courseId: UniqueEntityId
   isActive: boolean
+  reason?: string
   createdAt: Date
 }
 
@@ -25,6 +26,13 @@ export class ManagerCourse extends AggregateRoot<ManagerCourseProps> {
   }
   set isActive(value) {
     this.props.isActive = value
+  }
+
+  get reason() {
+    return this.props.reason
+  }
+  set reason(value) {
+    this.props.reason = value
   }
 
   get createdAt() {

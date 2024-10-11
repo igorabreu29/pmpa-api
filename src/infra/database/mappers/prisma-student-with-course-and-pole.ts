@@ -1,10 +1,11 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.ts';
 import { StudentCourseDetails } from '@/domain/boletim/enterprise/entities/value-objects/student-course-details.ts';
-import { Course, Pole, User, type Prisma } from '@prisma/client';
+import { Course, Pole, User, UserOnCourse, type Prisma } from '@prisma/client';
 
 type PrismaStudentCourseDetails = User & {
   course: Course
   pole: Pole
+  userOnCourse: UserOnCourse
   profile?: Prisma.ProfileUncheckedCreateInput
 }
 
@@ -14,6 +15,8 @@ export class PrismaStudentCourseDetailsMapper {
       studentId: new UniqueEntityId(student.id),
       email: student.email,
       cpf: student.cpf,
+      isActive: student.userOnCourse.isActive,
+      reason: student.userOnCourse.reason ?? undefined,
       civilId: student.civilId,
       militaryId: student.profile?.militaryId ?? undefined,
       state: student.profile?.state ?? undefined,

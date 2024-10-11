@@ -150,6 +150,8 @@ export class GetStudentAverageInTheCourseUseCase {
         id: assessment.id.toValue(),
         module: courseDiscipline.module,
         disciplineName: courseDiscipline.disciplineName,
+        courseId,
+        disciplineId: courseDiscipline.disciplineId.toValue(),
         ...studentCondition,
       }
     }))

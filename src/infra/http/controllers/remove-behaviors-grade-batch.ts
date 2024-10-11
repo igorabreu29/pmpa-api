@@ -39,7 +39,7 @@ export async function removeBehaviorsGradeBatch(
   
       const { filename, originalname } = behaviorsFileSchema.parse(req.file)
 
-      const fullUrl = req.protocol.concat('://').concat(req.hostname)
+      const fullUrl = req.protocol.concat('://').concat(req.host)
       const fileUrl = new URL(`/uploads/${filename}`, fullUrl)
   
       const studentBehaviors = behaviorsBatchExcelToJSON(fileUrl.pathname)

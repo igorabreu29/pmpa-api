@@ -54,7 +54,8 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
     const prismaManagerCourseMapper = {
       ...managerCourse.user,
       course: managerCourse.course,
-      pole: managerCourse.usersOnPoles[0].pole
+      pole: managerCourse.usersOnPoles[0].pole,
+      userOnCourse: managerCourse
     }
 
     return PrismaManagerCourseDetailsMapper.toDomain(prismaManagerCourseMapper)
@@ -152,7 +153,8 @@ export class PrismaManagersCoursesRepository implements ManagersCoursesRepositor
         ...managerCourse.user,
         profile: managerCourse.user.profile ?? undefined,
         course: managerCourse.course,
-        pole: poleExist.pole
+        pole: poleExist.pole,
+        userOnCourse: managerCourse
       }
     })
 

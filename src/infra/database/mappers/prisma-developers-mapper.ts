@@ -62,7 +62,7 @@ export class PrismaDevelopersMapper {
       cpf: developer.cpf.value,
       email: developer.email.value,
       password: developer.passwordHash.value,
-      civilId: String(developer),
+      civilId: developer.civilId ?? '',
       birthday: developer.birthday?.value,
       avatarUrl: developer.avatarUrl,
       createdAt: developer.createdAt,

@@ -105,9 +105,9 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
         
         include: {
           usersOnCourse: {
-            select: {
+            include: {
+              user: true,
               course: true,
-              user: true
             }
           },
           pole: true
@@ -121,7 +121,8 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
         return {
           ...studentPole.usersOnCourse.user,
           course: studentPole.usersOnCourse.course,
-          pole: studentPole.pole
+          pole: studentPole.pole,
+          userOnCourse: studentPole.usersOnCourse
         }
       })
   
@@ -173,7 +174,7 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       
       include: {
         usersOnCourse: {
-          select: {
+          include: {
             course: true,
             user: true
           }
@@ -186,7 +187,8 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       return {
         ...studentPole.usersOnCourse.user,
         course: studentPole.usersOnCourse.course,
-        pole: studentPole.pole
+        pole: studentPole.pole,
+        userOnCourse: studentPole.usersOnCourse
       }
     })
 
@@ -223,7 +225,7 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
 
       include: {
         usersOnCourse: {
-          select: {
+          include: {
             course: true,
             user: true
           }
@@ -247,7 +249,8 @@ export class PrismaStudentsPolesRepository implements StudentsPolesRepository {
       return {
         ...studentPole.usersOnCourse.user,
         course: studentPole.usersOnCourse.course,
-        pole: studentPole.pole
+        pole: studentPole.pole,
+        userOnCourse: studentPole.usersOnCourse
       }
     })
 

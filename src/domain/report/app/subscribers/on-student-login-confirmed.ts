@@ -25,7 +25,7 @@ export class OnStudentLoginConfirmed implements EventHandler {
   } 
 
   private async sendStudentLoginConfirmedReport({ student, studentIp, ocurredAt }: StudentLoginConfirmedEvent) {
-    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY - hh:mm:ss')
+    const formattedDate = dayjs(ocurredAt).format('DD/MM/YYYY HH:mm:ss')
 
     await this.sendReport.execute({
       title: `Confirmação de login`,

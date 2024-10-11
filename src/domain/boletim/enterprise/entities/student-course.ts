@@ -8,6 +8,7 @@ export interface StudentCourseProps {
   studentId: UniqueEntityId
   courseId: UniqueEntityId
   isActive: boolean
+  reason?: string
   createdAt: Date
 
   ip?: string
@@ -27,6 +28,13 @@ export class StudentCourse extends AggregateRoot<StudentCourseProps> {
   }
   set isActive(value) {
     this.props.isActive = value
+  }
+
+  get reason() {
+    return this.props.reason
+  }
+  set reason(value) {
+    this.props.reason = value
   }
 
   get createdAt() {

@@ -132,7 +132,7 @@ app.register(import('@fastify/jwt'), {
 })
 
 app.register(import('@fastify/static'), {
-  root: join(cwd(), './uploads'),
+  root: join(cwd(), '/uploads'),
   prefix: "/uploads"
 })
 app.register(import('@fastify/multipart'))
