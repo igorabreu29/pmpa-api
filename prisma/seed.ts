@@ -54,24 +54,6 @@ async function seed() {
     }
   })
 
-  const discipline = await prisma.discipline.create({
-    data: {
-      name: 'HISTÓRIA DA POLICIA MILITAR ONLINE DUAS VEZES MAIOR QUE O NORMAL E NOMINAL'
-    }
-  })
-
-  const discipline2 = await prisma.discipline.create({
-    data: {
-      name: faker.string.uuid()
-    }
-  })
-
-  const discipline3 = await prisma.discipline.create({
-    data: {
-      name: faker.string.uuid()
-    }
-  })
-
   await prisma.course.create({
     data: {
       name: 'CFO 2022',
