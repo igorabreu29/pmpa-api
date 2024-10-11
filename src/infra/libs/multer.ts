@@ -14,6 +14,8 @@ export const upload = multer({
                 .toLowerCase()
                 .trim()
                 .replace(/\s+/g, '-')
+                .replace(/[^\w-]+/g, '')
+                .replace(/(?=xlsx$)/, '.')
                 .replace(/_/g, '-')
                 .replace(/--+/g, '-')
                 .replace(/-$/g, '')
