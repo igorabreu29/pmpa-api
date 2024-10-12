@@ -68,6 +68,8 @@ export const formulas = {
       })
     }
 
+    const assessmentsPerPeriodKeys = Object.keys(assessmentsPerPeriod)
+
     let geralAverageWithBehavior: number | null = null
     
     if (behaviorAverage && behaviorAverage.behaviorAverageStatus.length) {
@@ -108,9 +110,8 @@ export const formulas = {
 
     if (assessmentsPerPeriod['module4'] && !behaviorAverage?.behaviorAverageStatus.length) {
       let weightPerPeriod = 0
-      const periodKeys = Object.keys(assessmentsPerPeriod)
-
-      const averagesWithWeight = periodKeys.map((item, index) => {
+      
+      const averagesWithWeight = assessmentsPerPeriodKeys.map((item, index) => {
         const assessmentsAveragePerPeriod = assessmentsPerPeriod[item].reduce((previousAverage, currentAverage) => {
           return Number(previousAverage) + Number(currentAverage.average)
         }, 0)
@@ -136,9 +137,8 @@ export const formulas = {
 
     if (!assessmentsPerPeriod['module4'] && !behaviorAverage?.behaviorAverageStatus?.length) {
       let weightPerPeriod = 0
-      const periodKeys = Object.keys(assessmentsPerPeriod)
 
-      const averagesWithWeight = periodKeys.map((item, index) => {
+      const averagesWithWeight = assessmentsPerPeriodKeys.map((item, index) => {
         const assessmentsAveragePerPeriod = assessmentsPerPeriod[item].reduce((previousAverage, currentAverage) => {
           return Number(previousAverage) + Number(currentAverage.average)
         }, 0)
