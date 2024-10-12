@@ -71,6 +71,17 @@ export class UpdateAssessmentsBatchUseCase {
       assessment.avii = studentAssessment.avii ?? assessment.avii,
       assessment.vfe = studentAssessment.vfe ?? assessment.vfe
 
+      const averageAndStatus = Assessment.generateAverageAndStatus({
+        vf: !assessment.vf ? -1 : assessment.vf, 
+        avi: !assessment.avi ? -1 : assessment.avi,
+        avii: !assessment.avii ? -1 : assessment.avii, 
+        vfe: !assessment.vfe ? null : assessment.vfe
+      })
+  
+      assessment.average = averageAndStatus.average
+      assessment.status = averageAndStatus.status
+      assessment.isRecovering = averageAndStatus.isRecovering
+
       return assessment
     }))
 

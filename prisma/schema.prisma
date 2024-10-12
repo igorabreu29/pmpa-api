@@ -184,16 +184,26 @@ model Discipline {
   @@map("disciplines")
 }
 
+enum Status {
+  APPROVED
+  DISAPPROVED
+  APPROVED_SECOND_SEASON
+  SECOND_SEASON
+}
+
 model Assessment {
   id           String @id @default(uuid())
   studentId    String
   courseId     String
   disciplineId String
 
-  vf   Decimal?
-  avi  Decimal?
-  avii Decimal?
-  vfe  Decimal?
+  vf           Decimal?
+  avi          Decimal?
+  avii         Decimal?
+  vfe          Decimal?
+  average      Decimal
+  status       Status
+  isRecovering Boolean  @map("is_recovering")
 
   user       User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
   course     Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -207,18 +217,19 @@ model Behavior {
   studentId String
   courseId  String
 
-  january     Decimal?
-  february    Decimal?
-  march       Decimal?
-  april       Decimal?
-  may         Decimal?
-  jun         Decimal?
-  july        Decimal?
-  august      Decimal?
-  september   Decimal?
-  october     Decimal?
-  november    Decimal?
-  december    Decimal?
+  january   Decimal?
+  february  Decimal?
+  march     Decimal?
+  april     Decimal?
+  may       Decimal?
+  jun       Decimal?
+  july      Decimal?
+  august    Decimal?
+  september Decimal?
+  october   Decimal?
+  november  Decimal?
+  december  Decimal?
+
   currentYear Int?
   module      Int?
 

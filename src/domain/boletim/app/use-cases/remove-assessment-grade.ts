@@ -4,6 +4,7 @@ import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found
 import { AssessmentsRepository } from "../repositories/assessments-repository.ts";
 import { Role } from "../../enterprise/entities/authenticate.ts";
 import { AssessmentRemovedGradeEvent } from "../../enterprise/events/assessment-removed-grade-event.ts";
+import { Assessment } from "../../enterprise/entities/assessment.ts";
 
 interface RemoveAssessmentGradeUseCaseRequest {
   studentId: string
@@ -52,6 +53,17 @@ export class RemoveAssessmentGradeUseCase {
     assessment.avi = avi ? null : assessment.avi
     assessment.avii = avii ? null : assessment.avii
     assessment.vfe = vfe ? null : assessment.vfe
+
+    const averageAndStatus = Assessment.generateAverageAndStatus({
+      vf: !assessment.vf ? -1 : assessment.vf, 
+      avi: !assessment.avi ? -1 : assessment.avi,
+      avii: !assessment.avii ? -1 : assessment.avii, 
+      vfe: !assessment.vfe ? null : assessment.vfe
+    })
+
+    assessment.average = averageAndStatus.average
+    assessment.status = averageAndStatus.status
+    assessment.isRecovering = averageAndStatus.isRecovering
         
     assessment.addDomainAssessmentEvent(new AssessmentRemovedGradeEvent({
       previousAssessment,

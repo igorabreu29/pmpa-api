@@ -1,18 +1,21 @@
+import { Worker } from "worker_threads";
 import { calculatesAverageWithWeight } from "./calculates-average-with-weight.ts";
 import { Status } from "./get-assessment-average-status.ts";
 import { GenerateBehaviorStatus } from "./get-behavior-average-status.ts";
 import { getGeralStudentAverageStatus } from "./get-geral-student-average-status.ts";
+import { cwd } from "process";
+import { join } from "path";
 
 export interface AssessmentWithModule {
-  vf: number;
-  avi: number | null;
-  avii: number | null;
-  vfe?: number | null;
-  average: number;
-  status: Status;
-  isRecovering: boolean;
-  id: string;
-  module: number;
+  vf: number | null
+  avi: number | null
+  avii: number | null
+  vfe?: number | null
+  average: number
+  status: Status
+  isRecovering: boolean
+  id: string
+  module: number
 
   courseId: string
   disciplineId: string
@@ -69,7 +72,7 @@ export const formulas = {
     
     if (behaviorAverage && behaviorAverage.behaviorAverageStatus.length) {
       const { behaviorAverageStatus } = behaviorAverage as BehaviorAveragePerPeriod
-      
+
       let weightPerPeriod = 0
       const averagesWithWeight = behaviorAverageStatus.map((item, index) => {
         const assessmentsAveragePerPeriod = assessmentsPerPeriod[`module${index + 1}`]?.reduce((previousAverage, currentAverage) => {
@@ -99,7 +102,6 @@ export const formulas = {
       if (!assessmentsPerPeriod['module4']) {
         geralAverageWithBehavior = averagesWithWeight.reduce((previousModuleAverage, currentModuleAverage) => previousModuleAverage + currentModuleAverage, 0) / weightPerPeriod
       }
-
     }
 
     let generalAverage: number | null = 0
@@ -132,7 +134,7 @@ export const formulas = {
       geralAverageWithBehavior = (average + tcc * 2) / 6
     }
 
-    if (!assessmentsPerPeriod['module4'] && behaviorAverage?.behaviorAverageStatus?.length) {
+    if (!assessmentsPerPeriod['module4'] && !behaviorAverage?.behaviorAverageStatus?.length) {
       let weightPerPeriod = 0
       const periodKeys = Object.keys(assessmentsPerPeriod)
 

@@ -40,6 +40,9 @@ export class PrismaSearchsRepository implements SearchsRepository {
           civilId: true,
           role: true,
           usersOnCourses: {
+            orderBy: {
+              createdAt: 'desc',
+            },
             include: {
               course: true,
               usersOnPoles: {

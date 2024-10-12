@@ -133,13 +133,6 @@ export class GetStudentAverageInTheCourseUseCase {
     }
 
     const assessmentWithDisciplineModule = await Promise.all(assessments.map(async assessment => {
-      const studentCondition = generateAssessmentAverage({ 
-        vf: !assessment.vf ? -1 : assessment.vf, 
-        avi: !assessment.avi ? -1 : assessment.avi,
-        avii: !assessment.avii ? -1 : assessment.avii, 
-        vfe: assessment.vfe
-      })
-
       const courseDiscipline = await this.courseDisciplineRepository.findByCourseIdAndDisciplineIdWithDiscipline({
         courseId: assessment.courseId.toValue(), 
         disciplineId: assessment.disciplineId.toValue() 
@@ -147,12 +140,18 @@ export class GetStudentAverageInTheCourseUseCase {
       if (!courseDiscipline) return null
 
       return {
+        vf: assessment.vf,
+        avi: assessment.avi,
+        avii: assessment.avii,
+        vfe: assessment.vfe,
+        average: assessment.average,
+        status: assessment.status,
+        isRecovering: assessment.isRecovering,
         id: assessment.id.toValue(),
         module: courseDiscipline.module,
         disciplineName: courseDiscipline.disciplineName,
-        courseId,
-        disciplineId: courseDiscipline.disciplineId.toValue(),
-        ...studentCondition,
+        courseId: assessment.courseId.toValue(),
+        disciplineId: assessment.disciplineId.toValue(),
       }
     }))
 
