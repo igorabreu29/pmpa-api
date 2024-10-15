@@ -78,7 +78,7 @@ export class RemoveAssessmentsGradeBatchUseCase {
         vfe: !assessment.vfe ? null : assessment.vfe
       })
   
-      assessment.average = averageAndStatus.average
+      assessment.average = averageAndStatus.average || 0
       assessment.status = averageAndStatus.status
       assessment.isRecovering = averageAndStatus.isRecovering
 
