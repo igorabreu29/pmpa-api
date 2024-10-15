@@ -79,11 +79,14 @@ export class CreateManagerUseCase {
     const pole = await this.polesRepository.findById(poleId)
     if (!pole) return left(new ResourceNotFoundError('Polo não encontrado!'))
 
-    const defaultPassword = `Pmp@${cpf}`
+    const cpfOrError = CPF.create(cpf)
+    if (cpfOrError.isLeft()) return left(cpfOrError.value)
+
+    const cpfTransformed = cpfOrError.value.value
+    const defaultPassword = `Pmp@${cpfTransformed}`
 
     const nameOrError = Name.create(username)
     const emailOrError = Email.create(email)
-    const cpfOrError = CPF.create(cpf)
     const passwordOrError = Password.create(defaultPassword)
     const birthdayOrError = Birthday.create(birthday)
 
