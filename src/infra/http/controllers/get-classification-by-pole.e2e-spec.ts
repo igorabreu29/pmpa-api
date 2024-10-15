@@ -111,18 +111,27 @@ describe('Get Classification By Pole (e2e)', () => {
                 avi: 9.5,
                 courseId: course.id,
                 studentId: student.id,
+                average: 9.75,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id,
-                studentId: student2.id
+                studentId: student2.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id,
-                studentId: student3.id
+                studentId: student3.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
             ]
           }
@@ -145,21 +154,24 @@ describe('Get Classification By Pole (e2e)', () => {
           february: 8,
           march: 7.5,
           courseId: course.id,
-          studentId: student.id
+          studentId: student.id,
+          module: 1
         },
         {
           january: 9,
           february: 8.25,
           march: 6.35,
           courseId: course.id,
-          studentId: student2.id
+          studentId: student2.id,
+          module: 1
         },
         {
           january: 9,
           february: 8.25,
           march: 6.35,
           courseId: course.id,
-          studentId: student3.id
+          studentId: student3.id,
+          module: 1
         }
       ]
     })

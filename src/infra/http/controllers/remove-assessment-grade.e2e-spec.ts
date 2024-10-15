@@ -50,7 +50,10 @@ describe('Remove Assessment Grade (e2e)', () => {
         studentId: student.id,
         disciplineId: discipline.id,
         courseId: course.id,
-        vf: 7
+        vf: 7,
+        average: 7,
+        isRecovering: false,
+        status: 'APPROVED'
       }
     })
 

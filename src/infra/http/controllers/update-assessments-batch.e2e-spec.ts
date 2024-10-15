@@ -87,14 +87,20 @@ describe('Update Assessments Batch (e2e)', () => {
           disciplineId: discipline.id,
           studentId: student.id,
           vf: 7,
-          avi: 8
+          avi: 8,
+          average: 7.5,
+          isRecovering: false,
+          status: 'APPROVED'
         },
         {
           courseId: course.id,
           disciplineId: discipline.id,
           studentId: student2.id,
           vf: 10,
-          avi: 9
+          avi: 9,
+          average: 9.5,
+          isRecovering: false,
+          status: 'APPROVED'
         }
       ]
     })

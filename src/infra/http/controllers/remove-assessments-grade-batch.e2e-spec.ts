@@ -87,12 +87,18 @@ describe('Remove Assessments Grade Batch (e2e)', () => {
           disciplineId: discipline.id,
           studentId: student.id,
           vf: 7,
+          average: 7,
+          isRecovering: false,
+          status: 'APPROVED'
         },
         {
           courseId: course.id,
           disciplineId: discipline.id,
           studentId: student2.id,
           vf: 10,
+          average: 10,
+          isRecovering: false,
+          status: 'APPROVED'
         }
       ]
     })

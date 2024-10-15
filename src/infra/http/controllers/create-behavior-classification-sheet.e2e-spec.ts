@@ -149,25 +149,29 @@ describe('Create Behavior Classification Sheet (e2e)', () => {
           courseId: course.id,
           studentId: student.id,
           january: 7,
-          february: 8
+          february: 8,
+          module: 1
         },
         {
           courseId: course.id,
           studentId: student2.id,
           january: 8,
-          february: 9
+          february: 9,
+          module: 1
         },
         {
           courseId: course.id,
           studentId: student3.id,
           january: 8.6,
-          february: 9.2
+          february: 9.2,
+          module: 1
         },
         {
           courseId: course.id,
           studentId: student4.id,
           january: 10,
-          february: 9.2
+          february: 9.2,
+          module: 1
         },
       ]
     })

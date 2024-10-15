@@ -111,18 +111,27 @@ describe('Get Classification By Pole (e2e)', () => {
                 avi: 9.5,
                 courseId: course.id,
                 studentId: student.id,
+                average: 9.75,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id,
-                studentId: student2.id
+                studentId: student2.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id,
-                studentId: student3.id
+                studentId: student3.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
             ]
           }
@@ -149,18 +158,27 @@ describe('Get Classification By Pole (e2e)', () => {
                 avi: 5,
                 courseId: course.id,
                 studentId: student.id,
+                average: 4.5,
+                isRecovering: true,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id,
-                studentId: student2.id
+                studentId: student2.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 8, 
                 avi: 9,
                 courseId: course.id,
-                studentId: student3.id
+                studentId: student3.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
             ]
           }
@@ -187,18 +205,27 @@ describe('Get Classification By Pole (e2e)', () => {
                 avi: 9.5,
                 courseId: course.id,
                 studentId: student.id,
+                average: 9.75,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id,
-                studentId: student2.id
+                studentId: student2.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id,
-                studentId: student3.id
+                studentId: student3.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
             ]
           }

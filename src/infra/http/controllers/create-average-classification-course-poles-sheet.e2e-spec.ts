@@ -117,18 +117,27 @@ describe('Create Average Classification Course Poles Sheet (e2e)', () => {
                 avi: 5,
                 courseId: course.id.toValue(),
                 studentId: student.id,
+                average: 6.5,
+                isRecovering: true,
+                status: 'SECOND_SEASON'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id.toValue(),
-                studentId: student2.id
+                studentId: student2.id,
+                average: 7.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id.toValue(),
-                studentId: student3.id
+                studentId: student3.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
             ]
           }

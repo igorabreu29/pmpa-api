@@ -134,18 +134,27 @@ describe('Get Sub Classification By Manager (e2e)', () => {
                 avi: 9.5,
                 courseId: course.id,
                 studentId: student.id,
+                average: 9.75,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id,
-                studentId: student2.id
+                studentId: student2.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
               {
                 vf: 10, 
                 avi: 7,
                 courseId: course.id,
-                studentId: student3.id
+                studentId: student3.id,
+                average: 8.5,
+                isRecovering: false,
+                status: 'APPROVED'
               },
             ]
           }

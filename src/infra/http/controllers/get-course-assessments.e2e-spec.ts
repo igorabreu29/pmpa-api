@@ -51,13 +51,19 @@ describe('Get Course Assessments (e2e)', () => {
           courseId: course.id.toValue(),
           studentId: student.id.toValue(),
           disciplineId: discipline.id,
-          vf: 10
+          vf: 10,
+          average: 10,
+          isRecovering: false,
+          status: 'APPROVED'
         },
         {
           courseId: course.id.toValue(),
           studentId: student2.id.toValue(),
           disciplineId: discipline.id,
-          vf: 8
+          vf: 8,
+          average: 8,
+          isRecovering: false,
+          status: 'APPROVED'
         },
       ]
     })

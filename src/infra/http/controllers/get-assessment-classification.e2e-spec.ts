@@ -156,28 +156,40 @@ describe('Get Assessment Classification (e2e)', () => {
           studentId: student.id,
           disciplineId: discipline.id,
           vf: 7,
-          avi: 8
+          avi: 8,
+          average: 7.5,
+          isRecovering: false,
+          status: 'APPROVED'
         },
         {
           courseId: course.id,
           studentId: student2.id,
           disciplineId: discipline.id,
           vf: 8,
-          avi: 9
+          avi: 9,
+          average: 8.5,
+          isRecovering: false,
+          status: 'APPROVED'
         },
         {
           courseId: course.id,
           studentId: student3.id,
           disciplineId: discipline.id,
           vf: 8.6,
-          avi: 9.2
+          avi: 9.2,
+          average: 8.9,
+          isRecovering: false,
+          status: 'APPROVED'
         },
         {
           courseId: course.id,
           studentId: student4.id,
           disciplineId: discipline.id,
           vf: 10,
-          avi: 9.2
+          avi: 9.2,
+          average: 9.6,
+          isRecovering: false,
+          status: 'APPROVED'
         },
       ]
     })

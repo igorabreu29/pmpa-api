@@ -51,6 +51,9 @@ describe('Get Student Average (e2e)', () => {
             avi: 5,
             courseId: course.id,
             studentId: student.id,
+            average: 6.5,
+            isRecovering: true,
+            status: 'SECOND_SEASON'
           }
         },
         courseOnDisciplines: {

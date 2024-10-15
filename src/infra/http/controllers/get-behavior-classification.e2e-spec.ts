@@ -149,28 +149,32 @@ describe('Get Behavior Classification (e2e)', () => {
           february: 8,
           march: 7.5,
           courseId: course.id,
-          studentId: student.id
+          studentId: student.id,
+          module: 1
         },
         {
           january: 9,
           february: 8.25,
           march: 6.35,
           courseId: course.id,
-          studentId: student2.id
+          studentId: student2.id,
+          module: 1
         },
         {
           january: 9,
           february: 8.25,
           march: 6.35,
           courseId: course.id,
-          studentId: student3.id
+          studentId: student3.id,
+          module: 1
         },
         {
           january: 10,
           february: 7,
           march: 6.35,
           courseId: course.id,
-          studentId: student4.id
+          studentId: student4.id,
+          module: 1
         },
       ]
     })

@@ -41,7 +41,10 @@ describe('Create Students Information Sheet (e2e)', () => {
           create: {
             courseId: course.id.toValue(),
             studentId: student.id.toValue(),
-            vf: 7
+            vf: 7,
+            average: 7,
+            isRecovering: false,
+            status: 'APPROVED'
           }
         }
       }
@@ -63,7 +66,10 @@ describe('Create Students Information Sheet (e2e)', () => {
           create: {
             courseId: course.id.toValue(),
             studentId: student.id.toValue(),
-            vf: 10
+            vf: 10,
+            average: 10,
+            isRecovering: false,
+            status: 'APPROVED'
           }
         }
       }
