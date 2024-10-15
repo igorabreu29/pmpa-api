@@ -122,7 +122,7 @@ export function behaviorsBatchExcelToJSON(fileUrl: string) {
     march: behavior['MARÇO'],
     april: behavior['ABRIL'],
     may: behavior['MAIO'],
-    jun: behavior['JULHO'],
+    jun: behavior['JUNHO'],
     july: behavior['JULHO'],
     august: behavior['AGOSTO'],
     september: behavior['SETEMBRO'],
