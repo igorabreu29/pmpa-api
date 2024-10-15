@@ -14,10 +14,10 @@ export async function authenticate(
   app.withTypeProvider<ZodTypeProvider>().post('/credentials/auth', {
     schema: {
       body: z.object({
-        cpf: z.string().min(14).transform(input => {
+        cpf: z.string().length(14, 'O CPF deve conter 14 caracteres!').transform(input => {
           return CPF.format(input)
         }),
-        password: z.string().min(6).max(14)
+        password: z.string().min(6, 'A senha deve conter no mínimo 6 caracteres.').max(20, 'A senha deve conter no máximo 20 caracteres.')
       })
     }
   }, 

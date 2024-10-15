@@ -24,10 +24,10 @@ export async function createAdministrator(
       onRequest: [verifyJWT, verifyUserRole(['dev'])],
       schema: {
         body: z.object({
-          username: z.string().min(3).max(50),
-          email: z.string().email(),
-          cpf: z.string().min(14).max(14),
-          password: z.string().min(6).max(20),
+          username: z.string().min(3, 'O nome deve conter no minímo 3 caracteres.').max(50, 'O nome deve conter no máximo 50 caracteres'),
+          email: z.string().email('E-mail inválido!'),
+          cpf: z.string().length(14, 'O CPF deve ter 14 caracteres.'),
+          password: z.string().min(6, 'A senha deve conter no mínimo 6 caracteres.').max(20, 'A senha deve conter no máximo 20 caracteres.'),
           birthday: z.string().transform(transformDate),
           civilId: z.string(),
         })
