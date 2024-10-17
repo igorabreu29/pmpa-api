@@ -50,7 +50,7 @@ describe('On Behavior Batch Updated', () => {
     )
   })
 
-  it ('should send a report when an behaviors are created', async () => {
+  it ('should send a report when an behaviors are updated', async () => {
     const course = makeCourse()
     const reporter = makeReporter()
 
