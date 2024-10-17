@@ -133,6 +133,7 @@ export class GetStudentAverageInTheCourseUseCase {
     }
 
     const assessmentWithDisciplineModule = await Promise.all(assessments.map(async assessment => {
+      
       const courseDiscipline = await this.courseDisciplineRepository.findByCourseIdAndDisciplineIdWithDiscipline({
         courseId: assessment.courseId.toValue(), 
         disciplineId: assessment.disciplineId.toValue() 
