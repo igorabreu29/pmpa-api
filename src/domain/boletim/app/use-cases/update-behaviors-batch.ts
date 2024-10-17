@@ -72,7 +72,7 @@ export class UpdateBehaviorsBatchUseCase {
 
     const studentBehaviorsOrError = await Promise.all(studentBehaviors.map(async (studentBehavior) => {
       const student = await this.studentsRepository.findByCPF(studentBehavior.cpf)
-      if (!student) return new ResourceNotFoundError('Estudante não encontrado.')
+      if (!student) return new ResourceNotFoundError(`${studentBehavior.cpf} não encontrado!`)
         
       const behavior = await this.behaviorsRepository.findByStudentAndCourseIdAndYearAndModule({ 
         studentId: student.id.toValue(), 

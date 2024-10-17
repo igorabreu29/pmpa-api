@@ -35,7 +35,7 @@ interface RemoveBehaviorsGradeBatchUseCaseRequest {
   studentBehaviors: StudentBehavior[]
   courseId: string
   userId: string
-  userIp: string,
+  userIp: string
   fileLink: string
   fileName: string
 
@@ -72,7 +72,7 @@ export class RemoveBehaviorsGradeBatchUseCase {
 
     const studentBehaviorsOrError = await Promise.all(studentBehaviors.map(async (studentBehavior) => {
       const student = await this.studentsRepository.findByCPF(studentBehavior.cpf)
-      if (!student) return new ResourceNotFoundError('Estudante não encontrado.')
+      if (!student) return new ResourceNotFoundError(`${studentBehavior.cpf} não existente!`)
         
       const behavior = await this.behaviorsRepository.findByStudentAndCourseIdAndYearAndModule({ 
         studentId: student.id.toValue(), 
@@ -80,7 +80,7 @@ export class RemoveBehaviorsGradeBatchUseCase {
         year: studentBehavior.currentYear,
         module: studentBehavior.module
       }) 
-      if (!behavior) return new ResourceNotFoundError('Comportamento não encontrado .')
+      if (!behavior) return new ResourceNotFoundError('Comportamento não encontrado.')
 
       behavior.january = studentBehavior.january ? null : behavior.january
       behavior.february = studentBehavior.february ? null : behavior.february

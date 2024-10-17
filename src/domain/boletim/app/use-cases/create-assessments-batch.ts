@@ -59,10 +59,10 @@ export class CreateAssessmentsBatchUseCase {
 
     const assessmentsBatchOrError = await Promise.all(studentAssessments.map(async (studentAssessment) => {
       const student = await this.studentsRepository.findByCPF(studentAssessment.cpf)
-      if (!student) return new ResourceNotFoundError('Estudante não encontrado.')
+      if (!student) return new ResourceNotFoundError(`${studentAssessment.cpf} não existente!`)
 
       const discipline = await this.disciplinesRepository.findByName(studentAssessment.disciplineName)
-      if (!discipline) return new ResourceNotFoundError('Disciplina não encontrada!')
+      if (!discipline) return new ResourceNotFoundError(`${studentAssessment.disciplineName} não existente!`)
 
       const assessmentAlreadyExistToStudent = await this.assessmentsRepository.findByStudentAndDisciplineAndCourseId({
         studentId: student.id.toValue(),
