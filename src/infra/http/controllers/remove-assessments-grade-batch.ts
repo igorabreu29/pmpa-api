@@ -14,6 +14,7 @@ import { ClientError } from "../errors/client-error.ts";
 import { assessmentsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
 import { makeRemoveAssessmentsGradeBatchUseCase } from "@/infra/factories/make-remove-assessments-grade-batch-use-case.ts";
 import { makeOnAssessmentBatchUpdated } from "@/infra/factories/make-on-assessment-batch-updated.ts";
+import { makeOnAssessmentBatchRemovedGrade } from "@/infra/factories/make-on-assessment-batch-removed-grade.ts";
 
 export async function removeAssessmentsGradeBatch(
   app: FastifyInstance
@@ -46,7 +47,7 @@ export async function removeAssessmentsGradeBatch(
       
       const ip = req.ip
 
-      makeOnAssessmentBatchUpdated()
+      makeOnAssessmentBatchRemovedGrade()
       const useCase = makeRemoveAssessmentsGradeBatchUseCase()
       const result = await useCase.execute({
         courseId,

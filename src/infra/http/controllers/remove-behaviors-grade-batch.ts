@@ -13,6 +13,7 @@ import { upload } from "@/infra/libs/multer.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { behaviorsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
 import { makeRemoveBehaviorsGradeBatchUseCase } from "@/infra/factories/make-remove-behaviors-grade-batch-use-case.ts";
+import { makeOnBehaviorBatchRemovedGrade } from "@/infra/factories/make-on-behavior-batch-removed-grade.ts";
 // import { makeOnBehaviorBatchUpdated } from "@/infra/factories/make-on-behavior-batch-updated.ts";
 
 export async function removeBehaviorsGradeBatch(
@@ -46,7 +47,7 @@ export async function removeBehaviorsGradeBatch(
       
       const ip = req.ip
 
-      // makeOnBehaviorBatchUpdated()
+      makeOnBehaviorBatchRemovedGrade()
       const useCase = makeRemoveBehaviorsGradeBatchUseCase()
       const result = await useCase.execute({
         courseId,
