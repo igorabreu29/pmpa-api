@@ -29,7 +29,7 @@ interface StudentBehavior {
   november?: number | null
   december?: number | null
 
-  module?: number
+  module: number
   currentYear: number
 }
 
@@ -74,12 +74,13 @@ export class CreateBehaviorsBatchUseCase {
 
     const studentBehaviorsOrError = await Promise.all(studentBehaviors.map(async (studentBehavior) => {
       const student = await this.studentsRepository.findByCPF(studentBehavior.cpf)
-      if (!student) return new ResourceNotFoundError('Estudante não encontrado.')
+      if (!student) return new ResourceNotFoundError(`${studentBehavior.cpf} não existente!`)
 
-      const behaviorAlreadyExist = await this.behaviorsRepository.findByStudentAndCourseIdAndYear({
+      const behaviorAlreadyExist = await this.behaviorsRepository.findByStudentAndCourseIdAndYearAndModule({
         courseId: course.id.toValue(),
         studentId: student.id.toValue(),
-        year: studentBehavior.currentYear
+        year: studentBehavior.currentYear,
+        module: studentBehavior.module
       })
 
       if (behaviorAlreadyExist) return new ResourceAlreadyExistError('Comportamento já lançado para o estudante!')

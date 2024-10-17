@@ -1,5 +1,5 @@
 import { DomainEvents } from "@/core/events/domain-events.ts";
-import { BehaviorsRepository, type FindByStudentAndCourseAndYear } from "@/domain/boletim/app/repositories/behaviors-repository.ts";
+import { BehaviorsRepository, type FindByBehaviorProps } from "@/domain/boletim/app/repositories/behaviors-repository.ts";
 import { Behavior } from "@/domain/boletim/enterprise/entities/behavior.ts";
 
 export class InMemoryBehaviorsRepository implements BehaviorsRepository {
@@ -10,11 +10,12 @@ export class InMemoryBehaviorsRepository implements BehaviorsRepository {
     return behavior ?? null
   }
 
-  async findByStudentAndCourseIdAndYear({ studentId, courseId, year }: FindByStudentAndCourseAndYear): Promise<Behavior | null> {
+  async findByStudentAndCourseIdAndYearAndModule({ studentId, courseId, year, module: behaviorModule }: FindByBehaviorProps): Promise<Behavior | null> {
     const behavior = this.items.find(item => {
       return item.studentId.toValue() === studentId
         && item.courseId.toValue() === courseId 
         && item.currentYear === year
+        && item.module === behaviorModule
     })
     return behavior ?? null
   }

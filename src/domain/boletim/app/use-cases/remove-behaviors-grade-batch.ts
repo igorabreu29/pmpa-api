@@ -28,6 +28,7 @@ interface StudentBehavior {
   november?: number
   december?: number
   currentYear: number
+  module: number
 }
 
 interface RemoveBehaviorsGradeBatchUseCaseRequest {
@@ -73,10 +74,11 @@ export class RemoveBehaviorsGradeBatchUseCase {
       const student = await this.studentsRepository.findByCPF(studentBehavior.cpf)
       if (!student) return new ResourceNotFoundError('Estudante não encontrado.')
         
-      const behavior = await this.behaviorsRepository.findByStudentAndCourseIdAndYear({ 
+      const behavior = await this.behaviorsRepository.findByStudentAndCourseIdAndYearAndModule({ 
         studentId: student.id.toValue(), 
         courseId: course.id.toValue(),
-        year: studentBehavior.currentYear 
+        year: studentBehavior.currentYear,
+        module: studentBehavior.module
       }) 
       if (!behavior) return new ResourceNotFoundError('Comportamento não encontrado .')
 

@@ -135,21 +135,24 @@ describe('Create Behaviors Batch Use Case', () => {
         january: null,
         february: null,
         march: null,
-        currentYear: 2022
+        currentYear: 2022,
+        module: 1
       },
       {
         cpf: 'not-exist',
         january: null,
         february: null,
         march: null,
-        currentYear: 2022
+        currentYear: 2022,
+        module: 1
       },
       {
         cpf: 'not-exist',
         january: null,
         february: null,
         march: null,
-        currentYear: 2022
+        currentYear: 2022,
+        module: 1
       },
     ]
 
@@ -190,21 +193,24 @@ describe('Create Behaviors Batch Use Case', () => {
         january: 7,
         february: 8.2,
         march: 10,
-        currentYear: 2022
+        currentYear: 2022,
+        module: 1
       },
       {
         cpf: student2.cpf.value,
         january: 2,
         february: 4,
         march: 5,
-        currentYear: 2022
+        currentYear: 2022,
+        module: 1
       },
       {
         cpf: student3.cpf.value,
         january: 7,
         february: 4,
         march: 9,
-        currentYear: 2022
+        currentYear: 2022,
+        module: 1
       },
     ]
     
@@ -238,21 +244,24 @@ describe('Create Behaviors Batch Use Case', () => {
         january: 7,
         february: 8.2,
         march: 10,
-        currentYear: 2022
+        currentYear: 2022,
+        module: 1
       },
       {
         cpf: student2.cpf.value,
         january: 2,
         february: 4,
         march: 5,
-        currentYear: 2022
+        currentYear: 2022,
+        module: 1
       },
       {
         cpf: student3.cpf.value,
         january: 7,
         february: 4,
         march: 9,
-        currentYear: 2022
+        currentYear: 2022,
+        module: 1
       },
     ]
     const result = await sut.execute({ 

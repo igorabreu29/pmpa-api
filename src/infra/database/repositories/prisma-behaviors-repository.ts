@@ -1,4 +1,4 @@
-import { BehaviorsRepository, FindByStudentAndCourseAndYear } from "@/domain/boletim/app/repositories/behaviors-repository.ts";
+import { BehaviorsRepository, FindByBehaviorProps } from "@/domain/boletim/app/repositories/behaviors-repository.ts";
 import { prisma } from "../lib/prisma.ts";
 import { PrismaBehaviorsMapper } from "../mappers/prisma-behaviors-mapper.ts";
 import { Behavior } from "@/domain/boletim/enterprise/entities/behavior.ts";
@@ -28,17 +28,19 @@ export class PrismaBehaviorsRepository implements BehaviorsRepository {
     return PrismaBehaviorsMapper.toDomain(behavior)
   }
 
-  async findByStudentAndCourseIdAndYear({ 
+  async findByStudentAndCourseIdAndYearAndModule({ 
     studentId, 
     courseId, 
-    year 
-  }: FindByStudentAndCourseAndYear): Promise<Behavior | null> {
-    const behavior = await prisma.behavior.findFirst({
-      where: {
-        studentId,
-        courseId,
-        currentYear: year
-      }
+    year,
+    module: behaviorModule
+    }: FindByBehaviorProps): Promise<Behavior | null> {
+      const behavior = await prisma.behavior.findFirst({
+        where: {
+          studentId,
+          courseId,
+          currentYear: year,
+          module: behaviorModule
+        }
     }) 
     if (!behavior) return null
 
