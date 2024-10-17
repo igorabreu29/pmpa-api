@@ -143,7 +143,7 @@ export class Assessment extends AggregateRoot<AssessmentProps> {
     props: Optional<AssessmentProps, 'avi' | 'avii' | 'vfe' | 'average' | 'status' | 'isRecovering'>,
     id?: UniqueEntityId
   ): Either<ConflictError, Assessment> {
-    if (!props.vf && props.avi) return left(new ConflictError('Está faltando a VF.'))
+    if (props.vf === null && props.avi) return left(new ConflictError('Está faltando a VF.'))
 
     if (props.avi && (
         props.avi > 10 || props.avi < 0
