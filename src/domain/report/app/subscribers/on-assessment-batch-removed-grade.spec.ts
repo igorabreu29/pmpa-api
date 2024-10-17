@@ -16,7 +16,7 @@ let assessmentsRepository: InMemoryAssessmentsRepository
 
 let reportersRepository: InMemoryReportersRepository
 let coursesRepository: InMemoryCoursesRepository
-let assessmentsBatchRepository: InMemoryAssessmentsBatchRepository
+let assessmentsBatchRepository: InMemoryAssessmentsBatchRepository  
 
 let reportsRepository: InMemoryReportsRepository
 let sendReportBatchUseCase: SendReportBatchUseCase
