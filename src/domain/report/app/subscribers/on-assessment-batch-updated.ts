@@ -42,9 +42,8 @@ export class OnAssessmentBatchUpdated implements EventHandler {
           IP: ${reporterIp}
           Course: ${course.name.value}
           Remetente: ${reporter.username.value} (${reporter.role})
-          Link do arquivo: ${assessmentBatch.fileLink}
           Data: ${formattedDate}
-          ${reporter.username.value} adicionou/atualizou notas em lote
+          ${reporter.username.value} atualizou notas em lote
         `,
         courseId: assessmentBatch.courseId.toValue(),
         reporterId: reporter.id.toValue(),
