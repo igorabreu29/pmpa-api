@@ -14,6 +14,7 @@ import { upload } from "@/infra/libs/multer.ts";
 import { ClientError } from "../errors/client-error.ts";
 import { assessmentsBatchExcelToJSON } from "@/infra/utils/excel-to-json.ts";
 import { makeOnAssessmentBatchCreated } from "@/infra/factories/make-on-assessment-batch-created.ts";
+import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 
 
 export async function createAssessmentBatch(
@@ -68,6 +69,9 @@ export async function createAssessmentBatch(
           case ResourceNotFoundError:
             const notFound = error as ResourceNotFoundError
             throw new NotFound(notFound.message)
+          case ResourceAlreadyExistError:
+            const alreadyExist = error as ResourceAlreadyExistError
+            throw new Conflict(alreadyExist.message)
           case ConflictError:
             const conflict = error as ConflictError
             throw new Conflict(conflict.message)
