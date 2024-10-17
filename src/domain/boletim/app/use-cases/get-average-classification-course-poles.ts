@@ -30,7 +30,7 @@ export class GetAverageClassificationCoursePolesUseCase {
 
     const coursePoles = await this.coursePolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
 
-    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId })
+    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, isEnabled: true })
 
     const studentsWithAverageOrError = await Promise.all(students.map(async (student) => {
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({

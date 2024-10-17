@@ -30,7 +30,7 @@ export class GetCourseClassificationUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
-    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId })
+    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, isEnabled: true })
 
     const studentsWithAverageOrError = await Promise.all(students.map(async (student) => {
       const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({

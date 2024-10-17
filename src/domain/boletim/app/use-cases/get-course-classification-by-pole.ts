@@ -52,7 +52,7 @@ export class GetCourseClassificationByPoleUseCase {
       poleIdAssigned = managerCourse.poleId.toValue()
     }
 
-    const { studentsPole } = await this.studentsPolesRepository.findManyDetailsByPoleId({ poleId: poleIdAssigned })
+    const { studentsPole } = await this.studentsPolesRepository.findManyDetailsByPoleId({ poleId: poleIdAssigned, isEnabled: true })
     const students = studentsPole.filter(studentPole => studentPole.courseId.equals(course.id))
 
     const studentsWithAverageOrError = await Promise.all(students.map(async (student) => {

@@ -29,7 +29,7 @@ export class GetCourseBehaviorClassificationUseCase {
 
     const coursePoles = await this.coursesPolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
 
-    const { studentsCourse: students, pages, totalItems } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId })
+    const { studentsCourse: students, pages, totalItems } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, isEnabled: true })
 
     const studentsWithBehaviorAverage = await Promise.all(students.map(async student => {
       const behaviors = await this.behaviorsRepository.findManyByStudentIdAndCourseId({ studentId: student.studentId.toValue(), courseId })
@@ -86,9 +86,9 @@ export class GetCourseBehaviorClassificationUseCase {
         const average = student.behaviorAverage.behaviorAverageStatus.reduce((acc, item) => acc + item.behaviorAverage, 0)
         averages.push(average)
       }
-      
+
       const behaviorAverageByPole = averages
-        .reduce((acc, item) => acc + item, 0) / studentsGroup.length
+        .reduce((acc, item) => acc + item, 0) / averages.length
 
       return {
         poleAverage: {
