@@ -27,6 +27,7 @@ import { makeManager } from "test/factories/make-manager.ts";
 import { makeManagerCourse } from "test/factories/make-manager-course.ts";
 import { makeManagerPole } from "test/factories/make-manager-pole.ts";
 import { FakeSheeter } from "test/files/fake-sheeter.ts";
+import { InMemoryClassificationsRepository } from "test/repositories/in-memory-classifications-repository.ts";
 
 let managersRepository: InMemoryManagersRepository
 let managerPolesRepository: InMemoryManagersPolesRepository
@@ -39,7 +40,7 @@ let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let studentsRepository: InMemoryStudentsRepository
 let studentCoursesRepository: InMemoryStudentsCoursesRepository
 let polesRepository: InMemoryPolesRepository
-let getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
+let classificationsRepository: InMemoryClassificationsRepository
 
 let coursesRepository: InMemoryCoursesRepository
 let managerCoursesRepository: InMemoryManagersCoursesRepository
@@ -56,14 +57,7 @@ describe('Create Course Classification By Manager Sheet', () => {
       studentPolesRepository,
       polesRepository
     )
-    studentCoursesRepository = new InMemoryStudentsCoursesRepository(
-      studentsRepository,
-      coursesRepository,
-      studentPolesRepository,
-      polesRepository
-    )
     polesRepository = new InMemoryPolesRepository()
-    
     coursesRepository = new InMemoryCoursesRepository ()
     studentPolesRepository = new InMemoryStudentsPolesRepository(
       studentsRepository,
@@ -72,11 +66,19 @@ describe('Create Course Classification By Manager Sheet', () => {
       polesRepository
     )
 
+    studentCoursesRepository = new InMemoryStudentsCoursesRepository(
+      studentsRepository,
+      coursesRepository,
+      studentPolesRepository,
+      polesRepository
+    )
+
     assessmentsRepository = new InMemoryAssessmentsRepository()
     behaviorsRepository = new InMemoryBehaviorsRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
-      disciplinesRepository
+      disciplinesRepository,
+      assessmentsRepository
     )
 
     managersRepository = new InMemoryManagersRepository(
@@ -94,26 +96,20 @@ describe('Create Course Classification By Manager Sheet', () => {
       polesRepository
     )
 
-    getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase({
-      assessmentsRepository,
-      behaviorsRepository,
-      disciplinesRepository,
-      courseDisciplinesRepository
-    })
+    classificationsRepository = new InMemoryClassificationsRepository()
 
     getCourseClassificationByPole = makeGetCourseClassificationByPoleUseCase({
       coursesRepository,
       polesRepository,
       managerCoursesRepository,
-      studentPolesRepository,
-      getStudentAverageInTheCourseUseCase
+      studentCoursesRepository,
+      classificationsRepository
     })
     sheeter = new FakeSheeter() 
 
     sut = new CreateCourseClassificationByManagerSheetUseCase(
       coursesRepository,
       managerCoursesRepository,
-      studentPolesRepository,
       getCourseClassificationByPole,
       sheeter
     )

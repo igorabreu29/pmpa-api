@@ -16,6 +16,7 @@ import { InMemoryDisciplinesRepository } from "test/repositories/in-memory-disci
 import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
+import { FakeGenerateClassification } from "test/classification/fake-generate-classification.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -25,6 +26,8 @@ let assessmentsRepository: InMemoryAssessmentsRepository
 let coursesRepository: InMemoryCoursesRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
 let studentsRepository: InMemoryStudentsRepository
+let generateClassification: FakeGenerateClassification
+
 let sut: CreateAssessmentUseCase
 
 describe(('Create Assessment Use Case'), () => {
@@ -39,11 +42,14 @@ describe(('Create Assessment Use Case'), () => {
       studentsPolesRepository,
       polesRepository
     )
+    generateClassification = new FakeGenerateClassification()
+
     sut = new CreateAssessmentUseCase(
       assessmentsRepository,
       coursesRepository,
       disciplinesRepository,
-      studentsRepository
+      studentsRepository,
+      generateClassification
     )
   })
 

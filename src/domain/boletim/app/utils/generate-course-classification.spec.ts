@@ -4,6 +4,7 @@ import { StudentClassficationByModule, StudentClassficationByPeriod } from '../t
 import { generateBehaviorAverage } from './generate-behavior-average.ts'
 import { GenerateBehaviorStatus } from './get-behavior-average-status.ts'
 import { Status } from './get-assessment-average-status.ts'
+import { makeClassification } from 'test/factories/make-classification.ts'
 
 describe('Generate Students Classification', () => {
   it ('should be able to generate students classification by period', () => {
@@ -26,148 +27,139 @@ describe('Generate Students Classification', () => {
 
     const behaviorAverageByPeriod = generateBehaviorAverage({ isPeriod: true, behaviorMonths })
 
-    const studentsWithAverage: StudentClassficationByPeriod[] = [
-      {
-        studentAverage: {
-          assessmentsPerPeriod: {
-            module1: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: 10,
-                module: 1,
-                average: 6.5,
-                isRecovering: true,
-                status: 'approved' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-
-            module2: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: null,
-                module: 2,
-                average: 6,
-                isRecovering: false,
-                status: 'second season' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1',
-              }
-            ],
-
-            module3: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: 10,
-                module: 3,
-                average: 6.5,
-                isRecovering: true,
-                status: 'approved second season' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-          },
-          assessments: [],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season',
-            },
-            behaviorsCount: behaviorAverageByPeriod.behaviorsCount
-          },
-          assessmentsCount: 3
+    const classification = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[0].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[0].status,
+          behaviorsCount: 6
         },
-        studentBirthday: new Date(2001, 5, 12)
-      },
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[1].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[1].status,
+          behaviorsCount: 2
+        }
+      ],
 
-      {
-        studentAverage: {
-          assessmentsPerPeriod: {
-            module1: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: 10,
-                module: 1,
-                average: 6.5,
-                isRecovering: true,
-                status: 'approved' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-
-            module2: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: null,
-                module: 2,
-                average: 6,
-                isRecovering: false,
-                status: 'second season' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-            module3: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: 10,
-                module: 3,
-                average: 6.5,
-                isRecovering: true,
-                status: 'approved second season' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-          },
-          assessments: [],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season'
-            },
-            behaviorsCount: behaviorAverageByPeriod.behaviorsCount
-          },
-          assessmentsCount: 10
+      studentBirthday: new Date(2001, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
         },
-        studentBirthday: new Date(1990, 5, 12)
-      }
-    ]
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1',
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
 
-    const result = classificationByCourseFormula['CFO']((studentsWithAverage as StudentClassficationByPeriod[]))
+    const classification2 = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: 7.5,
+          status: 'approved',
+          behaviorsCount: 6
+        },
+        {
+          behaviorAverage: 6.85,
+          status: 'approved',
+          behaviorsCount: 2
+        }
+      ],
+
+      studentBirthday: new Date(1990, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
+
+    const result = classificationByCourseFormula['CFO']([classification, classification2])
 
     expect(result).toMatchObject([
       {
-        studentAverage: result[0].studentAverage,
         studentBirthday: result[0].studentBirthday
       },
       {
-        studentAverage: result[1].studentAverage,
         studentBirthday: result[1].studentBirthday
       },
     ])
@@ -191,150 +183,131 @@ describe('Generate Students Classification', () => {
       },
     ]
 
-    const behaviorAverageByPeriod = generateBehaviorAverage({ isPeriod: true, behaviorMonths })
+    const behaviorAverageByPeriod = generateBehaviorAverage({ isPeriod: false, behaviorMonths })
 
-    const studentsWithAverage: StudentClassficationByPeriod[] = [
-      {
-        studentAverage: {
-          assessmentsPerPeriod: {
-            module1: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: 10,
-                module: 1,
-                average: 6.5,
-                isRecovering: true,
-                status: 'approved' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-
-            module2: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: null,
-                module: 2,
-                average: 6,
-                isRecovering: false,
-                status: 'second season' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-
-            module3: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: 10,
-                module: 3,
-                average: 6.5,
-                isRecovering: true,
-                status: 'approved second season' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-          },
-          assessments: [],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season'
-            },
-            behaviorsCount: behaviorAverageByPeriod.behaviorsCount
-          },
-          assessmentsCount: 3
+    const classification = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[0].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[0].status,
+          behaviorsCount: 8
         },
-        studentBirthday: new Date(2001, 5, 12)
-      },
+      ],
 
-      {
-        studentAverage: {
-          assessmentsPerPeriod: {
-            module1: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: 10,
-                module: 1,
-                average: 6.5,
-                isRecovering: true,
-                status: 'approved' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-
-            module2: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: null,
-                module: 2,
-                average: 6,
-                isRecovering: false,
-                status: 'second season' as Status,
-                                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-            module3: [
-              {
-                id: 'assessment-1',
-                vf: 7,
-                avi: 5,
-                avii: null,
-                vfe: 10,
-                module: 3,
-                average: 6.5,
-                isRecovering: true,
-                status: 'approved second season' as Status,
-                courseId: 'course-1',
-                disciplineId: 'discipline-1'
-              }
-            ],
-          },
-          assessments: [],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season'
-            },
-            behaviorsCount: behaviorAverageByPeriod.behaviorsCount
-          },
-          assessmentsCount: 10
+      studentBirthday: new Date(2001, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
         },
-        studentBirthday: new Date(1990, 5, 12)
-      }
-    ]
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1',
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
 
-    const result = classificationByCourseFormula['CFO']((studentsWithAverage as StudentClassficationByPeriod[]))
+    const classification2 = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[0].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[0].status,
+          behaviorsCount: 8
+        },
+      ],
+
+      studentBirthday: new Date(1990, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
+
+    const result = classificationByCourseFormula['CHO']([classification, classification2])
 
     expect(result).toMatchObject([
       {
-        studentAverage: result[0].studentAverage,
         studentBirthday: result[0].studentBirthday
       },
       {
-        studentAverage: result[1].studentAverage,
         studentBirthday: result[1].studentBirthday
       },
     ])
@@ -360,100 +333,129 @@ describe('Generate Students Classification', () => {
 
     const behaviorAverageByPeriod = generateBehaviorAverage({ behaviorMonths })
 
-    const studentsWithAverage: StudentClassficationByModule[] = [
-      {
-        studentAverage: {
-          assessments: [
-            {
-              id: 'assessment-1',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-            {
-              id: 'assessment-2',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-          ],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season'
-            },
-            behaviorsCount: 8
-          },
-          assessmentsCount: 6
+    const classification = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[0].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[0].status,
+          behaviorsCount: 8
         },
-        studentBirthday: new Date(2001, 5, 12)
-      },
-      {
-        studentAverage: {
-          assessments: [
-            {
-              id: 'assessment-1',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-            {
-              id: 'assessment-2',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-          ],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season'
-            },
-            behaviorsCount: 8
-          },
-          assessmentsCount: 6
-        },
-        studentBirthday: new Date(1990, 5, 12)
-      }
-    ]
+      ],
 
-    const result = classificationByCourseFormula['CAS'](studentsWithAverage) 
+      studentBirthday: new Date(2001, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1',
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
+
+    const classification2 = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[0].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[0].status,
+          behaviorsCount: 8
+        },
+      ],
+
+      studentBirthday: new Date(1990, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
+
+    const result = classificationByCourseFormula['CAS']([classification, classification2])
 
     expect(result).toMatchObject([
       {
-        studentAverage: result[0].studentAverage,
         studentBirthday: result[0].studentBirthday
       },
       {
-        studentAverage: result[1].studentAverage,
         studentBirthday: result[1].studentBirthday
       },
     ])
@@ -479,100 +481,129 @@ describe('Generate Students Classification', () => {
 
     const behaviorAverageByPeriod = generateBehaviorAverage({ behaviorMonths })
 
-    const studentsWithAverage: StudentClassficationByModule[] = [
-      {
-        studentAverage: {
-          assessments: [
-            {
-              id: 'assessment-1',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-            {
-              id: 'assessment-2',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-          ],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season'
-            },
-            behaviorsCount: 8
-          },
-          assessmentsCount: 6
+    const classification = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[0].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[0].status,
+          behaviorsCount: 8
         },
-        studentBirthday: new Date(2001, 5, 12)
-      },
-      {
-        studentAverage: {
-          assessments: [
-            {
-              id: 'assessment-1',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-            {
-              id: 'assessment-2',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-          ],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season'
-            },
-            behaviorsCount: 8
-          },
-          assessmentsCount: 6
-        },
-        studentBirthday: new Date(1990, 5, 12)
-      }
-    ]
+      ],
 
-    const result = classificationByCourseFormula['CAS'](studentsWithAverage) 
+      studentBirthday: new Date(2001, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1',
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
+
+    const classification2 = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[0].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[0].status,
+          behaviorsCount: 8
+        },
+      ],
+
+      studentBirthday: new Date(1990, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
+
+    const result = classificationByCourseFormula['CGS']([classification, classification2])
 
     expect(result).toMatchObject([
       {
-        studentAverage: result[0].studentAverage,
         studentBirthday: result[0].studentBirthday
       },
       {
-        studentAverage: result[1].studentAverage,
         studentBirthday: result[1].studentBirthday
       },
     ])
@@ -598,100 +629,129 @@ describe('Generate Students Classification', () => {
 
     const behaviorAverageByPeriod = generateBehaviorAverage({ behaviorMonths })
 
-    const studentsWithAverage: StudentClassficationByModule[] = [
-      {
-        studentAverage: {
-          assessments: [
-            {
-              id: 'assessment-1',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-            {
-              id: 'assessment-2',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-          ],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season'
-            },
-            behaviorsCount: 8
-          },
-          assessmentsCount: 6
+    const classification = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[0].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[0].status,
+          behaviorsCount: 8
         },
-        studentBirthday: new Date(2001, 5, 12)
-      },
-      {
-        studentAverage: {
-          assessments: [
-            {
-              id: 'assessment-1',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-            {
-              id: 'assessment-2',
-              vf: 7,
-              avi: 5,
-              avii: 8,
-              module: 1,
-              average: 6.67,
-              isRecovering: false,
-              status: 'second season' as Status,
-              courseId: 'course-1',
-              disciplineId: 'discipline-1'
-            },
-          ],
-          averageInform: {
-            behaviorAverageStatus: behaviorAverageByPeriod.behaviorAverageStatus as GenerateBehaviorStatus[],
-            geralAverage: 6.500,
-            studentAverageStatus: {
-              concept: 'regular',
-              status: 'approved second season'
-            },
-            behaviorsCount: 8
-          },
-          assessmentsCount: 6
-        },
-        studentBirthday: new Date(1990, 5, 12)
-      }
-    ]
+      ],
 
-    const result = classificationByCourseFormula['CAS'](studentsWithAverage) 
+      studentBirthday: new Date(2001, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1',
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
+
+    const classification2 = makeClassification({
+      assessmentsCount: 3,
+      average: 6.500,
+      concept: 'regular',
+      status: 'approved second season',
+      behavior: [
+        {
+          behaviorAverage: behaviorAverageByPeriod.behaviorAverageStatus[0].behaviorAverage,
+          status: behaviorAverageByPeriod.behaviorAverageStatus[0].status,
+          behaviorsCount: 8
+        },
+      ],
+
+      studentBirthday: new Date(1990, 5, 12),
+      
+      assessments: [
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 1,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: null,
+          module: 2,
+          average: 6,
+          isRecovering: false,
+          status: 'second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        },
+        {
+          id: 'assessment-1',
+          vf: 7,
+          avi: 5,
+          avii: null,
+          vfe: 10,
+          module: 3,
+          average: 6.5,
+          isRecovering: true,
+          status: 'approved second season' as Status,
+          courseId: 'course-1',
+          disciplineId: 'discipline-1'
+        }
+      ]
+    })
+
+    const result = classificationByCourseFormula['CFP']([classification, classification2])
 
     expect(result).toMatchObject([
       {
-        studentAverage: result[0].studentAverage,
         studentBirthday: result[0].studentBirthday
       },
       {
-        studentAverage: result[1].studentAverage,
         studentBirthday: result[1].studentBirthday
       },
     ])

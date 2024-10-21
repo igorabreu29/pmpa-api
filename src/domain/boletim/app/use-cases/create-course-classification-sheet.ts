@@ -28,19 +28,16 @@ export class CreateCourseClassificationSheetUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
-    const { studentsCourse: students } = await this.studentCoursesRepository.findManyDetailsByCourseId({ courseId: course.id.toValue() })
-
-    const classification = await this.getCourseClassification.execute({
+    const result = await this.getCourseClassification.execute({
       courseId: course.id.toValue(),
-      hasBehavior,
     })
 
-    if (classification.isLeft()) {
-      const error = classification.value
+    if (result.isLeft()) {
+      const error = result.value
       return left(error)
     }
 
-    const { studentsWithAverage } = classification.value
+    const { classifications, students } = result.value
 
     const { filename } = this.sheeter.write({
       keys: [
@@ -60,8 +57,8 @@ export class CreateCourseClassificationSheetUseCase {
         'MUNICÍPIO',
         'OBSERVAÇÃO'
       ],
-      rows: studentsWithAverage.map((studentWithAverage, index) => {
-        const student = students.find(item => item.username === studentWithAverage.studentName)
+      rows: classifications.map((classification, index) => {
+        const student = students.find(item => item.studentId.equals(classification.studentId))
 
         return {
           classification: index + 1,
@@ -69,8 +66,8 @@ export class CreateCourseClassificationSheetUseCase {
           cpf: student?.cpf,
           username: student?.username,
           birthday: student?.birthday,
-          average: studentWithAverage.studentAverage.averageInform.geralAverage,
-          concept: studentWithAverage.studentAverage.averageInform.studentAverageStatus.concept,
+          average: classification.average,
+          concept: classification.concept,
           pole: student?.pole,
           civilId: student?.civilId,
           militaryId: student?.militaryId,
@@ -78,7 +75,7 @@ export class CreateCourseClassificationSheetUseCase {
           motherName: student?.parent?.motherName,
           state: student?.state,
           county: student?.county,
-          status: studentWithAverage.studentAverage.averageInform.studentAverageStatus.status
+          status: classification.status
         }
       }),
       sheetName: hasBehavior ? `${course.name.value} - Classificação Geral.xlsx` : `${course.name.value} - Classificação Geral Sem Comportamento.xlsx`

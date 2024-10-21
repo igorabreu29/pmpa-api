@@ -25,6 +25,8 @@ import { makeCourseDiscipline } from "test/factories/make-course-discipline.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { makePole } from "test/factories/make-pole.ts";
+import { InMemoryClassificationsRepository } from "test/repositories/in-memory-classifications-repository.ts";
+import { makeClassification } from "test/factories/make-classification.ts";
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
@@ -33,6 +35,7 @@ let studentCoursesRepository: InMemoryStudentsCoursesRepository
 let studentPolesRepository: InMemoryStudentsPolesRepository
 let polesRepository: InMemoryPolesRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
+let classificationsRepository: InMemoryClassificationsRepository
 
 let coursesRepository: InMemoryCoursesRepository
 let courseHistoricRepository: InMemoryCourseHistoricRepository
@@ -72,17 +75,14 @@ describe('Download Historic Use Case', () => {
     courseHistoricRepository = new InMemoryCourseHistoricRepository()
 
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
-      disciplinesRepository
+      disciplinesRepository,
+      assessmentsRepository
     )
-    getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase({
-      assessmentsRepository,
-      behaviorsRepository,
-      courseDisciplinesRepository,
-      disciplinesRepository
-    })
+    classificationsRepository = new InMemoryClassificationsRepository()
+
     getCourseClassification = makeGetCourseClassificationUseCase({
       coursesRepository,
-      getStudentAverageInTheCourseUseCase,
+      classificationsRepository,
       studentCoursesRepository,
     })
     fakePDF = new FakePDF()
@@ -151,6 +151,13 @@ describe('Download Historic Use Case', () => {
 
     studentCoursesRepository.create(studentCourse)
     studentPolesRepository.create(studentPole)
+
+    const classification = makeClassification({
+      courseId: course.id,
+      studentId: student.id,
+      studentBirthday: student.birthday.value
+    })
+    classificationsRepository.createMany([classification])
 
     const courseHistoric = makeCourseHistoric({ courseId: course.id })
     courseHistoricRepository.create(courseHistoric)

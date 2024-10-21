@@ -1,14 +1,14 @@
+import type { Classification } from "../../enterprise/entities/classification.ts"
 import { CourseHistoric } from "../../enterprise/entities/course-historic.ts"
 import { Course } from "../../enterprise/entities/course.ts"
 import { Student } from "../../enterprise/entities/student.ts"
 import { CourseWithDiscipline } from "../../enterprise/entities/value-objects/course-with-discipline.ts"
-import type { StudentClassficationByModule, StudentClassficationByPeriod } from "../types/generate-students-classification.js"
 
 interface Row {
   course: Course
   student: Student
   studentClassification: number
-  grades: StudentClassficationByModule | StudentClassficationByPeriod
+  grades: Classification
   courseWithDisciplines: CourseWithDiscipline[]
   courseHistoric: CourseHistoric
 }

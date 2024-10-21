@@ -15,6 +15,7 @@ import { ConflictError } from "./errors/conflict-error.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { CPF } from "../../enterprise/entities/value-objects/cpf.ts";
 import { RemoveBehaviorsGradeBatchUseCase } from "./remove-behaviors-grade-batch.ts";
+import { FakeGenerateClassification } from "test/classification/fake-generate-classification.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -24,6 +25,7 @@ let polesRepository: InMemoryPolesRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
 let studentsRepository: InMemoryStudentsRepository
 let behaviorsBatchRepository: InMemoryBehaviorsBatchRepository
+let generateClassification: FakeGenerateClassification
 let sut: RemoveBehaviorsGradeBatchUseCase
 
 describe('Remove Behaviors Grade Batch Use Case', () => {
@@ -58,11 +60,14 @@ describe('Remove Behaviors Grade Batch Use Case', () => {
       polesRepository
     )
 
+    generateClassification = new FakeGenerateClassification()
+
     sut = new RemoveBehaviorsGradeBatchUseCase(
       behaviorsRepository,
       coursesRepository,
       studentsRepository,
-      behaviorsBatchRepository
+      behaviorsBatchRepository,
+      generateClassification
     )
   })
   

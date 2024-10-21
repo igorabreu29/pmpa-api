@@ -21,7 +21,6 @@ export class CreateCourseClassificationByManagerSheetUseCase {
   constructor(
     private coursesRepository: CoursesRepository,
     private managerCoursesRepository: ManagersCoursesRepository,
-    private studentPolesRepository: StudentsPolesRepository,
     private getCourseClassificationByPole: GetCourseClassificationByPoleUseCase,
     private sheeter: Sheeter
   ) {}
@@ -36,22 +35,18 @@ export class CreateCourseClassificationByManagerSheetUseCase {
     })
     if (!managerCourse) return left(new ResourceNotFoundError('Manager is not present in this course'))
 
-    const { studentsPole } = await this.studentPolesRepository.findManyDetailsByPoleId({ poleId: managerCourse.poleId.toValue() })
-
-    const students = studentsPole.filter(studentPole => studentPole.courseId.equals(course.id))
-
-    const classification = await this.getCourseClassificationByPole.execute({
+    const result = await this.getCourseClassificationByPole.execute({
       courseId: course.id.toValue(),
       managerId: managerCourse.managerId.toValue(),
       hasBehavior
     })
 
-    if (classification.isLeft()) {
-      const error = classification.value
+    if (result.isLeft()) {
+      const error = result.value
       return left(error)
     }
 
-    const { studentsWithAverage } = classification.value
+    const { classifications, students } = result.value
 
     const { filename } = this.sheeter.write({
       keys: [
@@ -71,8 +66,8 @@ export class CreateCourseClassificationByManagerSheetUseCase {
         'MUNICÍPIO',
         'OBSERVAÇÃO'
       ],
-      rows: studentsWithAverage.map((studentWithAverage, index) => {
-        const student = students.find(item => item.username === studentWithAverage.studentName)
+      rows: classifications.map((classification, index) => {
+        const student = students.find(item => item.studentId.equals(classification.studentId))
 
         return {
           classification: index + 1,
@@ -80,8 +75,8 @@ export class CreateCourseClassificationByManagerSheetUseCase {
           cpf: student?.cpf,
           username: student?.username,
           birthday: student?.birthday,
-          average: studentWithAverage.studentAverage.averageInform.geralAverage,
-          concept: studentWithAverage.studentAverage.averageInform.studentAverageStatus.concept,
+          average: classification.average,
+          concept: classification.concept,
           pole: student?.pole,
           civilId: student?.civilId,
           militaryId: student?.militaryId,
@@ -89,7 +84,7 @@ export class CreateCourseClassificationByManagerSheetUseCase {
           motherName: student?.parent?.motherName,
           state: student?.state,
           county: student?.county,
-          status: studentWithAverage.studentAverage.averageInform.studentAverageStatus.status
+          status: classification.status
         }
       }),
       sheetName: hasBehavior ? `${course.name.value} - Classificação Por Polo.xlsx` : `${course.name.value} - Classificação Por Polo Sem Comportamento.xlsx`

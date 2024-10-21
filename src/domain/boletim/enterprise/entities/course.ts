@@ -20,6 +20,9 @@ export interface CourseProps {
   imageUrl: string
   startAt: Date
   endsAt: EndsAt
+
+  conceptType: number
+  decimalPlaces: number
 }
 
 export class Course extends Entity<CourseProps> {
@@ -73,7 +76,7 @@ export class Course extends Entity<CourseProps> {
   }
 
   static create(
-    props: Optional<CourseProps, 'startAt' | 'isPeriod' | 'isActive'>, 
+    props: Optional<CourseProps, 'startAt' | 'isPeriod' | 'isActive' | 'conceptType' | 'decimalPlaces'>, 
     id?: UniqueEntityId
   ): Either<
     | InvalidNameError
@@ -81,10 +84,12 @@ export class Course extends Entity<CourseProps> {
     Course
   > {
     const course = new Course({
+      ...props,
       startAt: props.startAt ?? new Date(),
       isPeriod: false,
       isActive: true,
-      ...props
+      conceptType: 1,
+      decimalPlaces: 3
     }, id)
 
     return right(course)

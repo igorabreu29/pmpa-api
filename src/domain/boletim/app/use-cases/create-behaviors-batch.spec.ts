@@ -14,6 +14,7 @@ import { EndsAt } from "../../enterprise/entities/value-objects/ends-at.ts";
 import { CreateBehaviorsBatchUseCase } from "./create-behaviors-batch.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
+import { FakeGenerateClassification } from "test/classification/fake-generate-classification.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -23,6 +24,7 @@ let polesRepository: InMemoryPolesRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
 let studentsRepository: InMemoryStudentsRepository
 let behaviorsBatchRepository: InMemoryBehaviorsBatchRepository
+let generateClassification: FakeGenerateClassification
 let sut: CreateBehaviorsBatchUseCase
 
 describe('Create Behaviors Batch Use Case', () => {
@@ -57,11 +59,14 @@ describe('Create Behaviors Batch Use Case', () => {
       polesRepository
     )
 
+    generateClassification = new FakeGenerateClassification()
+
     sut = new CreateBehaviorsBatchUseCase(
       behaviorsRepository,
       coursesRepository,
       studentsRepository,
-      behaviorsBatchRepository
+      behaviorsBatchRepository,
+      generateClassification
     )
   })
   

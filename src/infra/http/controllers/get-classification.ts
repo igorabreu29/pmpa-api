@@ -37,7 +37,6 @@ export async function getClassification(
       const result = await useCase.execute({
         courseId: id,
         page: page ? Number(page) : undefined,
-        hasBehavior
       })
       
       if (result.isLeft()) {

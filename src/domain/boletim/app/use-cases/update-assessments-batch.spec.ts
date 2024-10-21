@@ -18,6 +18,7 @@ import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { UpdateAssessmentsBatchUseCase } from "./update-assessments-batch.ts";
 import { makeAssessment } from "test/factories/make-assessment.ts";
 import { CPF } from "../../enterprise/entities/value-objects/cpf.ts";
+import { FakeGenerateClassification } from "test/classification/fake-generate-classification.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -28,6 +29,7 @@ let studentsRepository: InMemoryStudentsRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
 let assessmentsRepository: InMemoryAssessmentsRepository
 let assessmentsBatchRepository: InMemoryAssessmentsBatchRepository
+let generateClassification: FakeGenerateClassification
 let sut: UpdateAssessmentsBatchUseCase
 
 describe('Update Assessments Batch Use Case', () => {
@@ -63,12 +65,15 @@ describe('Update Assessments Batch Use Case', () => {
       polesRepository
     )
 
+    generateClassification = new FakeGenerateClassification()
+
     sut = new UpdateAssessmentsBatchUseCase(
       studentsRepository,
       coursesRepository,
       disciplinesRepository,
       assessmentsRepository,
-      assessmentsBatchRepository
+      assessmentsBatchRepository,
+      generateClassification
     )
   })
 

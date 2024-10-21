@@ -7,6 +7,7 @@ import { StudentsCoursesRepository } from "../repositories/students-courses-repo
 import { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error.ts";
 import type { CoursesPoleRepository } from "../repositories/courses-poles-repository.ts";
 import { ranksStudentsByAveragePole, type PoleAverageClassification } from "../utils/classification/ranks-students-by-average-pole.ts";
+import type { ClassificationsRepository } from "../repositories/classifications-repository.ts";
 
 interface GetAverageClassificationCoursePolesUseCaseRequest {
   courseId: string
@@ -20,8 +21,7 @@ export class GetAverageClassificationCoursePolesUseCase {
   constructor(
     private coursesRepository: CoursesRepository,
     private coursePolesRepository: CoursesPoleRepository,
-    private studentsCoursesRepository: StudentsCoursesRepository,
-    private getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
+    private classificationsRepository: ClassificationsRepository,
   ) {}
 
   async execute({ courseId }: GetAverageClassificationCoursePolesUseCaseRequest): Promise<GetAverageClassificationCoursePolesUseCaseResponse> {
@@ -30,37 +30,13 @@ export class GetAverageClassificationCoursePolesUseCase {
 
     const coursePoles = await this.coursePolesRepository.findManyByCourseId({ courseId: course.id.toValue() })
 
-    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId })
-
-    const studentsWithAverageOrError = await Promise.all(students.map(async (student) => {
-      const studentAverage = await this.getStudentAverageInTheCourseUseCase.execute({
-        studentId: student.studentId.toValue(),
-        courseId,
-        isPeriod: false,
-        hasBehavior: true
-      })
-
-      if (studentAverage.isLeft()) return studentAverage.value
-      
-      return {
-        studentAverage: studentAverage.value.grades,
-        studentBirthday: student.birthday,
-        studentId: student.civilId,
-        studentPole: student.pole,
-        studentName: student.username
-      }
-    }))
-
-    const error = studentsWithAverageOrError.find(item => item instanceof ResourceNotFoundError)
-    if (error) return left(error)
-
-    const studentsWithAverage = studentsWithAverageOrError as StudentClassficationByModule[]
+    const { classifications } = await this.classificationsRepository.findManyByCourseId({ courseId: course.id.toValue() }) 
 
     const studentsAverageGroupedByPole = coursePoles.map(coursePole => {
-      const studentsGroup = studentsWithAverage.filter(item => item.studentPole === coursePole.name.value)
+      const studentsGroup = classifications.filter(item => item.poleId.equals(coursePole.id))
 
       const studentAverageByPole = studentsGroup
-        .reduce((acc, item) => acc + Number(item.studentAverage.averageInform.geralAverage), 0) / studentsGroup.length
+        .reduce((acc, item) => acc + Number(item.average), 0) / studentsGroup.length
 
       return {
         poleAverage: {

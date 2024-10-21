@@ -14,6 +14,10 @@ export class GeneratePDF implements PDF {
     let htmlContent = fs.readFileSync(htmlFilePath, 'utf8')
 
     const list = rows.courseWithDisciplines.map((discipline, key) => {
+      const assessment = rows.grades.assessments.find(item => {
+        return item.disciplineId === discipline.disciplineId.toValue()
+      })
+
       return `
         <tr>
           <td class="text-sm font-bold border border-black rounded">
@@ -23,30 +27,30 @@ export class GeneratePDF implements PDF {
             N/A
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${rows.grades.studentAverage.assessments[key]?.avi ?? ''}
+            ${assessment?.avi ?? ''}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${rows.grades.studentAverage.assessments[key]?.avii ?? ''}
+            ${assessment?.avii ?? ''}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${rows.grades.studentAverage.assessments[key]?.vf}
+            ${assessment?.vf ?? ''}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${rows.grades.studentAverage.assessments[key]?.vfe ?? ''}
+            ${assessment?.vfe ?? ''}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${rows.grades.studentAverage.assessments[key]?.average}
+            ${assessment?.average}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${rows.grades.studentAverage.assessments[key]?.status}
+            ${assessment?.status}
           </td>
         </tr>
       `
     })
 
     const average = 
-      rows.grades.studentAverage.averageInform.behaviorAverageStatus.reduce((acc, item) => acc + item.behaviorAverage, 0) / 
-        rows.grades.studentAverage.averageInform.behaviorAverageStatus.length
+      rows.grades.behavior.reduce((acc, item) => acc + item.behaviorAverage, 0) / 
+        rows.grades.behavior.length
       
     const { behaviorAverage, status } = getBehaviorAverageStatus(average)
 
@@ -84,7 +88,7 @@ export class GeneratePDF implements PDF {
     const endsAt = dayjs(rows.course.endsAt.value).format('DD/MM/YYYY')
     const birthday = dayjs(rows.student.birthday.value).format('DD/MM/YYYY')
 
-    const assessmentsSecondSeasonQuantity = rows.grades.studentAverage.assessments.filter(assessment => assessment?.vf).length
+    const assessmentsSecondSeasonQuantity = rows.grades.assessments.filter(assessment => assessment?.vf).length
 
     const historicHash = await bcrypt.hash(`${rows.course.name.value} - PMPA`, 6)
 
@@ -109,8 +113,8 @@ export class GeneratePDF implements PDF {
       .replace('{{ dynamic_second_season_quantity }}', String(assessmentsSecondSeasonQuantity))
       .replace('{{ dynamic_current_date }}', currentDate)
       .replace('{{ dynamic_total_hours }}', String(rows.courseHistoric.totalHours))
-      .replace('{{ dynamic_average }}', String(rows.grades.studentAverage.averageInform.geralAverage))
-      .replace('{{ dynamic_concept }}', String(rows.grades.studentAverage.averageInform.studentAverageStatus.concept))
+      .replace('{{ dynamic_average }}', String(rows.grades.average))
+      .replace('{{ dynamic_concept }}', String(rows.grades.concept))
       .replace('{{ dynamic_classification }}', String(rows.studentClassification))
       .replace('{{ dynamic_cmt }}', rows.courseHistoric.commander ?? '')
       .replace('{{ dynamic_division_boss }}', rows.courseHistoric.divisionBoss ?? '')

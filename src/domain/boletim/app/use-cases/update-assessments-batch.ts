@@ -12,6 +12,7 @@ import { StudentsRepository } from "../repositories/students-repository.ts"
 import dayjs from "dayjs"
 import type { Role } from "../../enterprise/entities/authenticate.ts"
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
+import type { GenerateClassification } from "../classification/generate-classification.ts"
 
 interface StudentAssessment {
   cpf: string
@@ -42,6 +43,7 @@ export class UpdateAssessmentsBatchUseCase {
     private disciplinesRepository: DisciplinesRepository,
     private assessmentsRepository: AssessmentsRepository,
     private assessmentsBatchRepository: AssessmentsBatchRepository,
+    private generateClassification: GenerateClassification
   ) {}
 
   async execute({ studentAssessments, courseId, userIp, userId, fileLink, fileName, role }: UpdateAssessmentsBatchUseCaseRequest): Promise<UpdateAssessmentsBatchUseCaseResponse> {
@@ -98,6 +100,8 @@ export class UpdateAssessmentsBatchUseCase {
       fileName
     })
     await this.assessmentsBatchRepository.save(assessmentBatch)
+
+    await this.generateClassification.run({ courseId: course.id.toValue() })
 
     return right(null)
   }
