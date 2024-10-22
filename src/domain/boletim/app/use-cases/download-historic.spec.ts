@@ -93,6 +93,7 @@ describe('Download Historic Use Case', () => {
       studentsRepository,
       courseDisciplinesRepository,
       getCourseClassification,
+      behaviorsRepository,
       fakePDF
     )
   })
