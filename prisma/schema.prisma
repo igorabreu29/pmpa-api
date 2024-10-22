@@ -281,19 +281,11 @@ model Classification {
   status           String
   concept          String
   assessmentsCount Int
+  behaviorsCount   Int     @default(0)
 
-  behaviorAverageModule1 Decimal?
-  behaviorStatusModule1  String?
-
-  behaviorAverageModule2 Decimal?
-  behaviorStatusModule2  String?
-
-  behaviorAverageModule3 Decimal?
-  behaviorStatusModule3  String?
-
-  student User   @relation(fields: [studentId], references: [id])
-  course  Course @relation(fields: [courseId], references: [id])
-  pole    Pole   @relation(fields: [poleId], references: [id])
+  student User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  pole    Pole   @relation(fields: [poleId], references: [id], onDelete: Cascade)
 
   @@index([studentId, courseId])
 }
