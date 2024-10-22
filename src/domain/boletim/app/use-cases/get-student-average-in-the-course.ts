@@ -13,6 +13,8 @@ interface GetStudentAverageInTheCourseUseCaseRequest {
   studentId: string
   courseId: string
   isPeriod: boolean
+  decimalPlaces?: number
+  conceptType?: number
   hasBehavior?: boolean
   disciplineModule?: number
 }
@@ -81,7 +83,9 @@ export class GetStudentAverageInTheCourseUseCase {
     courseId,
     isPeriod,
     disciplineModule,
-    hasBehavior = true
+    hasBehavior = true,
+    conceptType,
+    decimalPlaces
 }: GetStudentAverageInTheCourseUseCaseRequest): Promise<GetStudentAverageInTheCourseUseCaseResponse> {
     const assessments = await this.assessmentsRepository.findManyByStudentIdAndCourseId({
       studentId,
@@ -128,12 +132,11 @@ export class GetStudentAverageInTheCourseUseCase {
         december,
         module
       }))
-      
-      behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod })
+
+      behaviorAverage = generateBehaviorAverage({ behaviorMonths, isPeriod, decimalPlaces })
     }
 
     const assessmentWithDisciplineModule = await Promise.all(assessments.map(async assessment => {
-      
       const courseDiscipline = await this.courseDisciplineRepository.findByCourseIdAndDisciplineIdWithDiscipline({
         courseId: assessment.courseId.toValue(), 
         disciplineId: assessment.disciplineId.toValue() 
@@ -164,6 +167,7 @@ export class GetStudentAverageInTheCourseUseCase {
         assessments: assessmentWithDisciplineModule,
         behaviorAverage: hasBehavior ? behaviorAverage : undefined,
         disciplineModule,
+        decimalPlaces
       })
 
       return right({
@@ -175,6 +179,8 @@ export class GetStudentAverageInTheCourseUseCase {
     const gradesByFormula = formulas[isPeriod ? 'period' : 'module']({
       assessments: assessmentWithDisciplineModule,
       behaviorAverage: hasBehavior ? behaviorAverage : undefined,
+      decimalPlaces,
+      conceptType
     })
 
     return right({

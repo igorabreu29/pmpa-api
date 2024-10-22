@@ -3,6 +3,7 @@ import { getBehaviorAverageStatus } from "./get-behavior-average-status.ts"
 
 interface FormulaTypeProps {
   behaviorsPerPeriod: BehaviorsPerPeriod
+  decimalPlaces?: number
 }
 
 export interface BehaviorAveragePerPeriod {
@@ -11,7 +12,7 @@ export interface BehaviorAveragePerPeriod {
 }
 
 export const defineBehaviorByFormulaType = {
-  period: ({ behaviorsPerPeriod }: FormulaTypeProps) => {
+  period: ({ behaviorsPerPeriod, decimalPlaces }: FormulaTypeProps) => {
     const behaviorKeys = Object.keys(behaviorsPerPeriod)
 
     const behaviorAveragePerPeriod = behaviorKeys.map(item => {
@@ -23,7 +24,7 @@ export const defineBehaviorByFormulaType = {
       }
     })
 
-    const behaviorAverageStatus = behaviorAveragePerPeriod.map(behaviorAverage => getBehaviorAverageStatus(Number(behaviorAverage.average.toFixed(3))))
+    const behaviorAverageStatus = behaviorAveragePerPeriod.map(behaviorAverage => getBehaviorAverageStatus(Number(behaviorAverage.average.toFixed(decimalPlaces ?? 3))))
     const behaviorsCount = behaviorAveragePerPeriod.reduce((previousBehavior, currentBehavior) => previousBehavior + currentBehavior.behaviorsCount, 0)
 
     return {
@@ -32,15 +33,15 @@ export const defineBehaviorByFormulaType = {
     }
   },
 
-  module: ({ behaviorsPerPeriod }: FormulaTypeProps) => {
+  module: ({ behaviorsPerPeriod, decimalPlaces }: FormulaTypeProps) => {
     const behaviorsAverage = Number(behaviorsPerPeriod[1].reduce((previousNote, currentNote) => Number(previousNote) + Number(currentNote), 0)) / behaviorsPerPeriod[1].length
-    const behaviorAverageStatus = getBehaviorAverageStatus(Number(behaviorsAverage.toFixed(3)) || 0)
+    const behaviorAverageStatus = getBehaviorAverageStatus(Number(behaviorsAverage.toFixed(decimalPlaces ?? 3)) || 0)
 
     const behaviorsCount = behaviorsPerPeriod[1].length
 
     return {
       behaviorAverageStatus: [behaviorAverageStatus],
-      behaviorsCount
+      behaviorsCount: behaviorsCount
     }
   } 
 }
