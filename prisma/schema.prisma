@@ -282,14 +282,14 @@ model Classification {
   concept          String
   assessmentsCount Int
 
-  behaviorAverageModule1 Decimal
-  behaviorStatusModule1  String
+  behaviorAverageModule1 Decimal?
+  behaviorStatusModule1  String?
 
-  behaviorAverageModule2 Decimal
-  behaviorStatusModule2  String
+  behaviorAverageModule2 Decimal?
+  behaviorStatusModule2  String?
 
-  behaviorAverageModule3 Decimal
-  behaviorStatusModule3  String
+  behaviorAverageModule3 Decimal?
+  behaviorStatusModule3  String?
 
   student User   @relation(fields: [studentId], references: [id])
   course  Course @relation(fields: [courseId], references: [id])
