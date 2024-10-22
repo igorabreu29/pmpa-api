@@ -4,6 +4,7 @@ import { PrismaDisciplinesRepository } from "../database/repositories/prisma-dis
 import { PrismaStudentsRepository } from "../database/repositories/prisma-students-repository.ts";
 import { PrismaAssessmentsBathcRepository } from "../database/repositories/prisma-assessments-batch-repository.ts";
 import { UpdateAssessmentsBatchUseCase } from "@/domain/boletim/app/use-cases/update-assessments-batch.ts";
+import { GenerateClassificationJob } from "../classification/generate-classification.ts";
 
 export function makeUpdateAssessmentsBatchUseCase() {
   const studentsRepository = new PrismaStudentsRepository()
@@ -11,11 +12,14 @@ export function makeUpdateAssessmentsBatchUseCase() {
   const disciplinesRepository = new PrismaDisciplinesRepository()
   const assessmentsRepository = new PrismaAssessmentsRepository()
   const assessmentsBatchRepository = new PrismaAssessmentsBathcRepository()
+  const generateClassification = new GenerateClassificationJob()
+
   return new UpdateAssessmentsBatchUseCase(
     studentsRepository,
     coursesRepository,
     disciplinesRepository,
     assessmentsRepository,
-    assessmentsBatchRepository
+    assessmentsBatchRepository,
+    generateClassification
   )
 }

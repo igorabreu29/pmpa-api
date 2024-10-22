@@ -4,6 +4,7 @@ import { PrismaDisciplinesRepository } from "../database/repositories/prisma-dis
 import { PrismaStudentsRepository } from "../database/repositories/prisma-students-repository.ts";
 import { PrismaAssessmentsBathcRepository } from "../database/repositories/prisma-assessments-batch-repository.ts";
 import { RemoveAssessmentsGradeBatchUseCase } from "@/domain/boletim/app/use-cases/remove-assessments-grade-batch.ts";
+import { GenerateClassificationJob } from "../classification/generate-classification.ts";
 
 export function makeRemoveAssessmentsGradeBatchUseCase() {
   const studentsRepository = new PrismaStudentsRepository()
@@ -11,11 +12,14 @@ export function makeRemoveAssessmentsGradeBatchUseCase() {
   const disciplinesRepository = new PrismaDisciplinesRepository()
   const assessmentsRepository = new PrismaAssessmentsRepository()
   const assessmentsBatchRepository = new PrismaAssessmentsBathcRepository()
+  const generateClassification = new GenerateClassificationJob()
+
   return new RemoveAssessmentsGradeBatchUseCase(
     studentsRepository,
     coursesRepository,
     disciplinesRepository,
     assessmentsRepository,
-    assessmentsBatchRepository
+    assessmentsBatchRepository,
+    generateClassification
   )
 }
