@@ -22,28 +22,28 @@ export class GeneratePDF implements PDF {
 
       return `
         <tr>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             ${discipline.disciplineName}
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             N/A
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             ${assessment?.avi?.toFixed(3) ?? ''}
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             ${assessment?.avii?.toFixed(3) ?? ''}
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             ${assessment?.vf?.toFixed(3) ?? ''}
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             ${assessment?.vfe?.toFixed(3) ?? ''}
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             ${assessment?.average?.toFixed(3)}
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             ${statusMap[assessment.status]}
           </td>
         </tr>
@@ -52,24 +52,24 @@ export class GeneratePDF implements PDF {
 
     list.push(`
         <tr>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             Comportamento Escolar
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             N/A
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             ${rows.behavior.average.toFixed(rows.course.decimalPlaces ?? 3)}
           </td>
-          <td class="text-sm font-bold border border-black rounded">
+          <td class="text-sm text-center font-bold border border-black rounded">
             ${behaviorStatusMap[rows.behavior.status]}
           </td>
         </tr>
