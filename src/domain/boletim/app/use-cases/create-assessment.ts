@@ -13,6 +13,7 @@ import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
 import { AssessmentEvent } from "../../enterprise/events/assessment-event.ts";
+import type { GenerateClassification } from "../classification/generate-classification.ts";
 
 interface CreateAssessmentUseCaseRequest {
   userId: string
@@ -35,7 +36,8 @@ export class CreateAssessmentUseCase {
     private assessmentsRepository: AssessmentsRepository,
     private coursesRepository: CoursesRepository,
     private disciplinesRepository: DisciplinesRepository,
-    private studentsRepository: StudentsRepository
+    private studentsRepository: StudentsRepository,
+    private generateClassification: GenerateClassification
   ) {}
 
   async execute({
@@ -87,7 +89,8 @@ export class CreateAssessmentUseCase {
       reporterIp: userIp
     }))
 
-    await this.assessmentsRepository.create(assessment)   
+    await this.assessmentsRepository.create(assessment)
+    await this.generateClassification.run({ courseId: course.id.toValue() })
 
     return right(null)
   }

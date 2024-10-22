@@ -21,6 +21,7 @@ import { makePole } from "test/factories/make-pole.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { FakeSheeter } from "test/files/fake-sheeter.ts";
+import { InMemoryClassificationsRepository } from "test/repositories/in-memory-classifications-repository.ts";
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
@@ -30,11 +31,12 @@ let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let studentsRepository: InMemoryStudentsRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
 let polesRepository: InMemoryPolesRepository
-let getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
+let classificationsRepository: InMemoryClassificationsRepository
 
 let coursesRepository: InMemoryCoursesRepository
 let studentCoursesRepository: InMemoryStudentsCoursesRepository
 let getCourseClassification: GetCourseClassificationUseCase
+
 let sheeter: FakeSheeter
 let sut: CreateCourseClassificationSheetUseCase
 
@@ -66,20 +68,16 @@ describe('Create Course Classification Sheet', () => {
     behaviorsRepository = new InMemoryBehaviorsRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
-      disciplinesRepository
+      disciplinesRepository,
+      assessmentsRepository
     )
 
-    getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase({
-      assessmentsRepository,
-      behaviorsRepository,
-      disciplinesRepository,
-      courseDisciplinesRepository
-    })
+    classificationsRepository = new InMemoryClassificationsRepository()
 
     getCourseClassification = makeGetCourseClassificationUseCase({
       coursesRepository,
       studentCoursesRepository,
-      getStudentAverageInTheCourseUseCase
+      classificationsRepository
     })
     sheeter = new FakeSheeter() 
 

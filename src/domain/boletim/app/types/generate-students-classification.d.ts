@@ -38,7 +38,5 @@ export interface StudentClassficationByModule {
   }
   studentId?: string
   studentBirthday?: Date
-  studentName?: string
-  studentCivilOrMilitaryId?: string
-  studentPole?: string
+  classificationId?: string
 }

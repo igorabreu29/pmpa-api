@@ -1,3 +1,4 @@
+import type { ClassificationsRepository } from "@/domain/boletim/app/repositories/classifications-repository.ts";
 import { GetCourseClassificationUseCase } from "@/domain/boletim/app/use-cases/get-course-classification.ts";
 import type { GetStudentAverageInTheCourseUseCase } from "@/domain/boletim/app/use-cases/get-student-average-in-the-course.ts";
 import type { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
@@ -6,17 +7,17 @@ import type { InMemoryStudentsCoursesRepository } from "test/repositories/in-mem
 interface MakeGetCourseClassificationUseCaseProps {
   coursesRepository: InMemoryCoursesRepository
   studentCoursesRepository: InMemoryStudentsCoursesRepository
-  getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
+  classificationsRepository: ClassificationsRepository
 }
 
 export function makeGetCourseClassificationUseCase({
   coursesRepository,
   studentCoursesRepository,
-  getStudentAverageInTheCourseUseCase
+  classificationsRepository
 }: MakeGetCourseClassificationUseCaseProps) {
   return new GetCourseClassificationUseCase(
     coursesRepository,
     studentCoursesRepository,
-    getStudentAverageInTheCourseUseCase
+    classificationsRepository
   )
 }

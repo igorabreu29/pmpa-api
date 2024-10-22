@@ -31,11 +31,12 @@ model User {
 
   role Role @default(STUDENT)
 
-  profile        Profile?
-  assessments    Assessment[]
-  behaviors      Behavior[]
-  usersOnCourses UserOnCourse[]
-  reports        Report[]
+  profile         Profile?
+  assessments     Assessment[]
+  behaviors       Behavior[]
+  usersOnCourses  UserOnCourse[]
+  reports         Report[]
+  classifications Classification[]
 
   @@map("users")
 }
@@ -103,6 +104,9 @@ model Course {
   imageUrl String
   formula  Formula
 
+  conceptType   Int @default(1)
+  decimalPlaces Int @default(3)
+
   startAt DateTime @default(now()) @map("starts_at")
   endsAt  DateTime
 
@@ -113,6 +117,7 @@ model Course {
   coursesOnDisciplines CourseOnDiscipline[]
   coursesHistorics     CourseHistoric[]
   Report               Report[]
+  classifications      Classification[]
 
   @@map("courses")
 }
@@ -170,6 +175,7 @@ model Pole {
 
   courseOnPoles      CourseOnPole[]
   userCoursesOnPoles UserCourseOnPole[]
+  classifications    Classification[]
 
   @@map("poles")
 }
@@ -263,4 +269,31 @@ model Report {
   course   Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@map("reports")
+}
+
+model Classification {
+  id        String @id @default(uuid())
+  studentId String
+  courseId  String
+  poleId    String
+
+  average          Decimal
+  status           String
+  concept          String
+  assessmentsCount Int
+
+  behaviorAverageModule1 Decimal?
+  behaviorStatusModule1  String?
+
+  behaviorAverageModule2 Decimal?
+  behaviorStatusModule2  String?
+
+  behaviorAverageModule3 Decimal?
+  behaviorStatusModule3  String?
+
+  student User   @relation(fields: [studentId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
+  pole    Pole   @relation(fields: [poleId], references: [id])
+
+  @@index([studentId, courseId])
 }

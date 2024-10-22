@@ -12,7 +12,7 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
 import type { Role } from "../../enterprise/entities/authenticate.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { ResourceAlreadyExistError } from "@/core/errors/use-case/resource-already-exist-error.ts";
-import { cursorTo } from "node:readline";
+import type { GenerateClassification } from "../classification/generate-classification.ts";
 
 interface StudentBehavior {
   cpf: string
@@ -54,7 +54,8 @@ export class CreateBehaviorsBatchUseCase {
     private behaviorsRepository: BehaviorsRepository,
     private coursesRepository: CoursesRepository,
     private studentsRepository: StudentsRepository,
-    private behaviorsBatchRepository: BehaviorsBatchRepository
+    private behaviorsBatchRepository: BehaviorsBatchRepository,
+    private generateClassification: GenerateClassification
   ) {}
 
   async execute({
@@ -120,6 +121,8 @@ export class CreateBehaviorsBatchUseCase {
       fileLink
     })
     await this.behaviorsBatchRepository.create(behaviorBatch)
+
+    await this.generateClassification.run({ courseId: course.id.toValue() })
 
     return right(null)
   }

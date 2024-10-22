@@ -15,6 +15,7 @@ import { ConflictError } from "./errors/conflict-error.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { UpdateBehaviorsBatchUseCase } from "./update-behaviors-batch.ts";
 import { CPF } from "../../enterprise/entities/value-objects/cpf.ts";
+import { FakeGenerateClassification } from "test/classification/fake-generate-classification.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -24,6 +25,7 @@ let polesRepository: InMemoryPolesRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
 let studentsRepository: InMemoryStudentsRepository
 let behaviorsBatchRepository: InMemoryBehaviorsBatchRepository
+let generateClassification: FakeGenerateClassification
 let sut: UpdateBehaviorsBatchUseCase
 
 describe('Update Behaviors Batch Use Case', () => {
@@ -58,11 +60,14 @@ describe('Update Behaviors Batch Use Case', () => {
       polesRepository
     )
 
+    generateClassification = new FakeGenerateClassification()
+
     sut = new UpdateBehaviorsBatchUseCase(
       behaviorsRepository,
       coursesRepository,
       studentsRepository,
-      behaviorsBatchRepository
+      behaviorsBatchRepository,
+      generateClassification
     )
   })
   

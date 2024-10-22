@@ -20,6 +20,7 @@ import { CreateAssessmentsBatchUseCase } from "./create-assessments-batch.ts";
 import { ConflictError } from "./errors/conflict-error.ts";
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts";
 import { makeAssessment } from "test/factories/make-assessment.ts";
+import { FakeGenerateClassification } from "test/classification/fake-generate-classification.ts";
 
 let studentsCoursesRepository: InMemoryStudentsCoursesRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
@@ -30,6 +31,7 @@ let studentsRepository: InMemoryStudentsRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
 let assessmentsRepository: InMemoryAssessmentsRepository
 let assessmentsBatchRepository: InMemoryAssessmentsBatchRepository
+let generateClassification: FakeGenerateClassification
 let sut: CreateAssessmentsBatchUseCase
 
 describe('Create Assessments Batch Use Case', () => {
@@ -65,12 +67,15 @@ describe('Create Assessments Batch Use Case', () => {
       polesRepository
     )
 
+    generateClassification = new FakeGenerateClassification()
+
     sut = new CreateAssessmentsBatchUseCase(
       studentsRepository,
       coursesRepository,
       disciplinesRepository,
       assessmentsRepository,
-      assessmentsBatchRepository
+      assessmentsBatchRepository,
+      generateClassification
     )
   })
 

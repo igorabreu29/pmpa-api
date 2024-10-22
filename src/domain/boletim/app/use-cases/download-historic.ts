@@ -2,7 +2,6 @@ import { Either, left, right } from "@/core/either.ts"
 import { CoursesRepository } from "../repositories/courses-repository.ts"
 import { StudentsRepository } from "../repositories/students-repository.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
-import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts"
 import { CoursesDisciplinesRepository } from "../repositories/courses-disciplines-repository.ts"
 import { PDF } from "../files/pdf.ts"
 import { CourseHistoricRepository } from "../repositories/course-historic-repository.ts"
@@ -46,14 +45,17 @@ export class DownloadHistoricUseCase {
     })
 
     if (result.isLeft()) return left(result.value)
-    const { studentsWithAverage } = result.value
+    const { classifications } = result.value
 
-    const studentData = studentsWithAverage.find(item => item.studentName === student.username.value)
-    const studentClassification = studentsWithAverage.findIndex(item => {
-      return item.studentName === student.username.value
+    const studentClassificationPosition = classifications.findIndex(item => {
+      return item.studentId.equals(student.id)
     })
 
-    if (!studentData) return left(new ResourceNotFoundError('Estudante não encontrado.'))
+    const studentClassification = classifications.find(item => {
+      return item.studentId.equals(student.id)
+    })
+
+    if (!studentClassification) return left(new ResourceNotFoundError('Estudante não encontrado!'))
 
     const courseWithDisciplines = await this.courseDisciplinesRepository.findManyByCourseIdWithDiscipliine({
       courseId: course.id.toValue()
@@ -63,8 +65,8 @@ export class DownloadHistoricUseCase {
       rows: {
         course,
         student,
-        studentClassification: studentClassification + 1,
-        grades: studentData,
+        studentClassification: studentClassificationPosition + 1,
+        grades: studentClassification,
         courseWithDisciplines,
         courseHistoric
       }

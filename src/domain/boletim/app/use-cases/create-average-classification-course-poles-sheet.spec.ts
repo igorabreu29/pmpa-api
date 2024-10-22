@@ -22,6 +22,7 @@ import { makeGetAverageClassificationCoursePolesUseCase } from "test/factories/m
 import { InMemoryCoursesPolesRepository } from "test/repositories/in-memory-courses-poles-repository.ts";
 import { CreateAverageClassificationCoursePolesSheetUseCase } from "./create-average-classification-course-poles-sheet.ts";
 import { FakeSheeter } from "test/files/fake-sheeter.ts";
+import { InMemoryClassificationsRepository } from "test/repositories/in-memory-classifications-repository.ts";
 
 let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
@@ -36,6 +37,7 @@ let getStudentAverageInTheCourse: GetStudentAverageInTheCourseUseCase
 
 let coursesRepository: InMemoryCoursesRepository
 let studentCoursesRepository: InMemoryStudentsCoursesRepository
+let classificationsRepository: InMemoryClassificationsRepository
 let getAverageClassificationCoursePoles: GetAverageClassificationCoursePolesUseCase
 let sheeter: FakeSheeter
 let sut: CreateAverageClassificationCoursePolesSheetUseCase
@@ -68,7 +70,8 @@ describe('Create Course Classification Sheet', () => {
     behaviorsRepository = new InMemoryBehaviorsRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
-      disciplinesRepository
+      disciplinesRepository,
+      assessmentsRepository
     )
     coursePolesRepository = new InMemoryCoursesPolesRepository(
       polesRepository
@@ -81,11 +84,12 @@ describe('Create Course Classification Sheet', () => {
       courseDisciplinesRepository
     })
 
+    classificationsRepository = new InMemoryClassificationsRepository()
+
     getAverageClassificationCoursePoles = makeGetAverageClassificationCoursePolesUseCase({
       coursesRepository,
       coursePolesRepository,
-      studentCoursesRepository,
-      getStudentAverageInTheCourse,
+      classificationsRepository
     })
     sheeter = new FakeSheeter() 
 

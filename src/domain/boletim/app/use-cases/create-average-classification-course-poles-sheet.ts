@@ -24,16 +24,16 @@ export class CreateAverageClassificationCoursePolesSheetUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
-    const classification = await this.getAverageClassificationCoursePoles.execute({
+    const result = await this.getAverageClassificationCoursePoles.execute({
       courseId: course.id.toValue()
     })
 
-    if (classification.isLeft()) {
-      const error = classification.value
+    if (result.isLeft()) {
+      const error = result.value
       return left(error)
     }
 
-    const { studentsAverageGroupedByPole } = classification.value
+    const { studentsAverageGroupedByPole } = result.value
 
     const { filename } = this.sheeter.write({
       keys: [

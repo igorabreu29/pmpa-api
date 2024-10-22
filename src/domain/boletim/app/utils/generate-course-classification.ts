@@ -1,28 +1,29 @@
+import type { Classification } from "../../enterprise/entities/classification.ts";
 import { StudentClassficationByModule, StudentClassficationByPeriod } from "../types/generate-students-classification.js";
 import { classifyStudentsByCFOFormula, classifyStudentsByCFPFormula, classifyStudentsByCGSAndCASFormula, classifyStudentsByCHOFormula, classifyStudentsBySUBFormula } from "./classification/classify-students-by-formula.ts";
 
 export const classificationByCourseFormula = {
-  CGS: (studentsWithAverage: StudentClassficationByModule[]) => {
+  CGS: (studentsWithAverage: Classification[]) => {
     return classifyStudentsByCGSAndCASFormula(studentsWithAverage)
   },
 
-  CAS: (studentsWithAverage: StudentClassficationByModule[]) => {
+  CAS: (studentsWithAverage: Classification[]) => {
     return classifyStudentsByCGSAndCASFormula(studentsWithAverage)
   },
 
-  CFP: (studentsWithAverage: StudentClassficationByModule[]) => {
+  CFP: (studentsWithAverage: Classification[]) => {
     return classifyStudentsByCFPFormula(studentsWithAverage)
   },
 
-  CHO: (studentsWithAverage: StudentClassficationByModule[]) => {
+  CHO: (studentsWithAverage: Classification[]) => {
     return classifyStudentsByCHOFormula(studentsWithAverage)
   },
 
-  CFO: (studentsWithAverage: StudentClassficationByPeriod[]) => {
+  CFO: (studentsWithAverage: Classification[]) => {
     return classifyStudentsByCFOFormula(studentsWithAverage)
   },
 
-  SUB: (studentsWithAverage: StudentClassficationByPeriod[]) => {
+  SUB: (studentsWithAverage: Classification[]) => {
     return classifyStudentsBySUBFormula(studentsWithAverage)
   },
 } 

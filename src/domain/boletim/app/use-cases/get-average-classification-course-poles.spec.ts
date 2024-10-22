@@ -20,6 +20,8 @@ import { InMemoryBehaviorsRepository } from 'test/repositories/in-memory-behavio
 import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
 import { InMemoryCoursesDisciplinesRepository } from 'test/repositories/in-memory-courses-disciplines-repository.ts'
 import { GetAverageClassificationCoursePolesUseCase } from './get-average-classification-course-poles.ts'
+import { InMemoryClassificationsRepository } from 'test/repositories/in-memory-classifications-repository.ts'
+import { makeClassification } from 'test/factories/make-classification.ts'
 
 let studentsRepository: InMemoryStudentsRepository
 let coursesRepository: InMemoryCoursesRepository
@@ -33,7 +35,7 @@ let assessmentsRepository: InMemoryAssessmentsRepository
 let behaviorsRepository: InMemoryBehaviorsRepository
 let disciplinesRepository: InMemoryDisciplinesRepository
 let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
-let getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
+let classificationsRepository: InMemoryClassificationsRepository
 
 let sut: GetAverageClassificationCoursePolesUseCase
 
@@ -68,20 +70,15 @@ describe('Get Course Assessment Classification', () => {
     behaviorsRepository = new InMemoryBehaviorsRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
-      disciplinesRepository
-    )
-    getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase({
-      assessmentsRepository,
-      behaviorsRepository,
       disciplinesRepository,
-      courseDisciplinesRepository
-    })
+      assessmentsRepository
+    )
+    classificationsRepository = new InMemoryClassificationsRepository()
 
     sut = new GetAverageClassificationCoursePolesUseCase(
       coursesRepository,
       coursesPolesRepository,
-      studentsCoursesRepository,
-      getStudentAverageInTheCourseUseCase
+      classificationsRepository,
     )
   })
 
@@ -94,7 +91,7 @@ describe('Get Course Assessment Classification', () => {
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it ('should be able to get assessment classification with module formula', async () => {
+  it ('should be able to get assessment classification', async () => {
     const course = makeCourse({ formula: 'CAS' }, new UniqueEntityId('course-1'))
     coursesRepository.create(course)
 
@@ -127,22 +124,97 @@ describe('Get Course Assessment Classification', () => {
     studentsPolesRepository.create(studentPole1)
     studentsPolesRepository.create(studentPole2)
 
+    const classification = makeClassification({
+      courseId: course.id,
+      studentId: student.id,
+      poleId: pole1.id,
+      assessments: [
+        {
+          vf: 10,
+          average: 10,
+          avi: null,
+          avii: null,
+          courseId: course.id.toValue(),
+          disciplineId: '',
+          id: '',
+          isRecovering: false,
+          module: 1,
+          status: 'approved'
+        },
+        {
+          vf: 10,
+          average: 9,
+          avi: 8,
+          avii: null,
+          courseId: course.id.toValue(),
+          disciplineId: '',
+          id: '',
+          isRecovering: false,
+          module: 1,
+          status: 'approved'
+        }
+      ],
+      assessmentsCount: 3,
+      average: 9.5,
+      concept: 'very good',
+      isPeriod: false,
+      status: 'approved'
+    })
+
+    const classification2 = makeClassification({
+      courseId: course.id,
+      studentId: student.id,
+      poleId: pole2.id,
+      assessments: [
+        {
+          vf: 8,
+          average: 8,
+          avi: null,
+          avii: null,
+          courseId: course.id.toValue(),
+          disciplineId: '',
+          id: '',
+          isRecovering: false,
+          module: 1,
+          status: 'approved'
+        },
+        {
+          vf: 10,
+          average: 9,
+          avi: 8,
+          avii: null,
+          courseId: course.id.toValue(),
+          disciplineId: '',
+          id: '',
+          isRecovering: false,
+          module: 1,
+          status: 'approved'
+        }
+      ],
+      assessmentsCount: 3,
+      average: 8.5,
+      concept: 'good',
+      isPeriod: false,
+      status: 'approved'
+    })
+    classificationsRepository.createMany([classification, classification2])
+
     const result = await sut.execute({
       courseId: course.id.toValue(),
     })
-    
+
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
       studentsAverageGroupedByPole: [
         {
           poleAverage: {
-            average: 7.761,
+            average: 9.5,
             name: pole1.name.value
           }
         },
         {
           poleAverage: {
-            average: 7.377,
+            average: 8.5,
             name: pole2.name.value
           }
         },
