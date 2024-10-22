@@ -1,10 +1,7 @@
-import { Worker } from "worker_threads";
 import { calculatesAverageWithWeight } from "./calculates-average-with-weight.ts";
 import { Status } from "./get-assessment-average-status.ts";
 import { GenerateBehaviorStatus } from "./get-behavior-average-status.ts";
 import { getGeralStudentAverageStatus } from "./get-geral-student-average-status.ts";
-import { cwd } from "process";
-import { join } from "path";
 
 export interface AssessmentWithModule {
   vf: number | null
@@ -27,6 +24,8 @@ interface FormulaProps {
     behaviorAverageStatus: GenerateBehaviorStatus[]
     behaviorsCount: number
   } 
+  decimalPlaces?: number
+  conceptType?: number
 }
 
 interface FormulaSubProps {
@@ -36,6 +35,7 @@ interface FormulaSubProps {
     behaviorsCount: number
   } 
   disciplineModule: number
+  decimalPlaces?: number
 }
 
 interface BehaviorAveragePerPeriod {
@@ -53,7 +53,7 @@ export interface AssessmentsPerPeriod {
 }
 
 export const formulas = {
-  period({ assessments, behaviorAverage }: FormulaProps) {
+  period({ assessments, behaviorAverage, decimalPlaces }: FormulaProps) {
     const assessmentsPerPeriod: AssessmentsPerPeriod = {}
 
     for(const assessment of assessments) {
@@ -173,11 +173,11 @@ export const formulas = {
     const assessmentsCount = 
       assessmentTotalVF + assessmentTotalAVI + assessmentTotalAVII
     
-    const average = generalAverage ? Number(generalAverage.toFixed(3)) : 0
+    const average = generalAverage ? Number(generalAverage) : 0
 
     return {
       averageInform: {
-        geralAverage: geralAverageWithBehavior ? Number(geralAverageWithBehavior.toFixed(3)) : average, 
+        geralAverage: geralAverageWithBehavior ? geralAverageWithBehavior.toFixed(decimalPlaces ?? 3) : average, 
         behaviorAverageStatus: behaviorAverage ? behaviorAverage.behaviorAverageStatus : [],
         behaviorsCount: behaviorAverage ? behaviorAverage.behaviorsCount : 0,
         studentAverageStatus
@@ -192,7 +192,7 @@ export const formulas = {
     }
   },
 
-  sub({ assessments, behaviorAverage, disciplineModule }: FormulaSubProps) {
+  sub({ assessments, behaviorAverage, disciplineModule, decimalPlaces }: FormulaSubProps) {
     const assessmentsPerPeriod: AssessmentsPerPeriod = {}
 
     for(const assessment of assessments) {
@@ -224,7 +224,7 @@ export const formulas = {
           weight: 1 
         })
 
-        average = periodAverageWithWeight
+        average = Number(periodAverageWithWeight.toFixed(decimalPlaces ?? 3))
       }
 
       if (disciplineModule === 2) {
@@ -239,7 +239,7 @@ export const formulas = {
           weight: 1 
         })
 
-        average = periodAverageWithWeight
+        average = Number(periodAverageWithWeight.toFixed(decimalPlaces ?? 3))
       }
 
       if (disciplineModule === 3) {
@@ -254,7 +254,7 @@ export const formulas = {
           weight: 2
         })
 
-        average = periodAverageWithWeight / 2
+        average = Number((periodAverageWithWeight / 2).toFixed(decimalPlaces ?? 3))
       }
     }
 
@@ -271,7 +271,7 @@ export const formulas = {
           weight: 1 
         })
 
-        average = periodAverageWithWeight
+        average = Number(periodAverageWithWeight.toFixed(decimalPlaces ?? 3))
       }
 
       if (disciplineModule === 2) {
@@ -286,7 +286,7 @@ export const formulas = {
           weight: 1 
         })
 
-        average = periodAverageWithWeight
+        average = Number(periodAverageWithWeight.toFixed(decimalPlaces ?? 3))
       }
 
       if (disciplineModule === 3) {
@@ -301,7 +301,7 @@ export const formulas = {
           weight: 2
         })
 
-        average = periodAverageWithWeight / 2
+        average = Number((periodAverageWithWeight / 2).toFixed(decimalPlaces ?? 3))
       }
     }
 
@@ -323,7 +323,7 @@ export const formulas = {
 
     return {
       averageInform: {
-        geralAverage: average ? Number(average.toFixed(3)) : 0, 
+        geralAverage: average ? average.toFixed(decimalPlaces ?? 3) : 0, 
         behaviorAverageStatus: behaviorAverage ? behaviorAverage.behaviorAverageStatus : [],
         behaviorsCount: behaviorAverage ? behaviorAverage.behaviorsCount : 0,
         studentAverageStatus
@@ -338,7 +338,7 @@ export const formulas = {
     }
   },
 
-  module({ assessments, behaviorAverage }: FormulaProps) {
+  module({ assessments, behaviorAverage, decimalPlaces }: FormulaProps) {
     const studentIsRecovering = assessments.some((item) => item?.isRecovering)
 
     const averages = assessments.map(item => item?.average)
@@ -351,7 +351,7 @@ export const formulas = {
       return Number(previousAverageAssessment) + Number(currentAverageAssessment)
     }, 0)) / averages.length
 
-    const studentAverageStatus = getGeralStudentAverageStatus({ average: assessmentsAverage || assessmentsAverage, isRecovering: studentIsRecovering })
+    const studentAverageStatus = getGeralStudentAverageStatus({ average: assessmentsAverage, isRecovering: studentIsRecovering })
     const isStudentSecondSeason = assessments.some(assessment => assessment?.status === 'second season')
 
     studentAverageStatus.status = isStudentSecondSeason ? 'second season' : studentAverageStatus.status
@@ -365,7 +365,7 @@ export const formulas = {
 
     return {
       averageInform: {
-        geralAverage: Number(assessmentsAverage.toFixed(3)),
+        geralAverage: assessmentsAverage.toFixed(decimalPlaces ?? 3),
         behaviorAverageStatus: behaviorAverage ? behaviorAverage.behaviorAverageStatus : [],
         behaviorsCount: behaviorAverage ? behaviorAverage.behaviorsCount : 0,
         studentAverageStatus

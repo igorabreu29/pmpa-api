@@ -23,6 +23,10 @@ export const classificationByCourseFormula = {
     return classifyStudentsByCFOFormula(studentsWithAverage)
   },
 
+  'CFO 2': (studentsWithAverage: Classification[]) => {
+    return classifyStudentsByCFOFormula(studentsWithAverage)
+  },
+  
   SUB: (studentsWithAverage: Classification[]) => {
     return classifyStudentsBySUBFormula(studentsWithAverage)
   },
