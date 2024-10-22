@@ -100,7 +100,7 @@ describe('Verify Formulas', () => {
 
       expect(result).toMatchObject({
         averageInform: {
-          geralAverage: 7.281,
+          geralAverage: '7.281',
           behaviorAverageStatus: expect.arrayContaining([
             expect.objectContaining({
               behaviorAverage: 6.5
@@ -178,7 +178,7 @@ describe('Verify Formulas', () => {
 
       expect(result).toMatchObject({
         averageInform: {
-          geralAverage: 6.335,
+          geralAverage: '6.335',
           studentAverageStatus: { concept: 'regular', status: 'second season' },
           behaviorAverageStatus: []
         },
@@ -246,7 +246,7 @@ describe('Verify Formulas', () => {
 
       expect(result).toMatchObject({
         averageInform: {
-          geralAverage: 6.497,
+          geralAverage: '6.497',
           studentAverageStatus: { concept: 'regular', status: 'second season' },
           behaviorAverageStatus: [{
             behaviorAverage: 6.821,

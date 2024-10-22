@@ -97,7 +97,7 @@ describe(('Get Student Average In The Course Use Case'), () => {
     expect(result.value).toMatchObject({
       grades: {
         averageInform: {
-          geralAverage: 6.986,
+          geralAverage: '6.986',
           behaviorAverageStatus: [{
             behaviorAverage: 6.958, 
             status: 'approved'
@@ -148,7 +148,7 @@ describe(('Get Student Average In The Course Use Case'), () => {
     expect(result.value).toMatchObject({
       grades: {
         averageInform: {
-          geralAverage: 6.181,
+          geralAverage: '6.181',
           behaviorAverageStatus: [
             {
               behaviorAverage: 6.542, 
