@@ -9,6 +9,10 @@ interface Row {
   student: Student
   studentClassification: number
   grades: Classification
+  behavior: {
+    average: number
+    status: 'disapproved' | 'approved'
+  }
   courseWithDisciplines: CourseWithDiscipline[]
   courseHistoric: CourseHistoric
 }
