@@ -49,10 +49,11 @@ export class GenerateCourseClassificationUseCase {
       
       return {
         studentAverage: studentAverage.value.grades,
-        studentBirthday: student.birthday
+        studentBirthday: student.birthday,
+        studentId: student.studentId.toValue(),
+        poleId: student.poleId.toValue(),
       }
     }))
-
 
     const error = studentsWithAverageOrError.find(item => item instanceof ResourceNotFoundError)
     if (error) return left(error)
@@ -61,32 +62,47 @@ export class GenerateCourseClassificationUseCase {
       case 'CGS': 
         const studentsWithAverageCGS = studentsWithAverageOrError as StudentClassficationByModule[]
 
-        const classificationsCGS = studentsWithAverageCGS.map(item => {
-          const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
-
-          return Classification.create({
-            courseId: course.id,
-            studentId: new UniqueEntityId(item.studentId),
-            studentBirthday: new Date(item.studentBirthday ?? new Date()),
-            behavior: item.studentAverage.averageInform.behaviorAverageStatus.map(behavior => {
-              return {
-                ...behavior,
-                behaviorsCount: item.studentAverage.averageInform.behaviorsCount
-              }
-            }),
-            concept: item.studentAverage.averageInform.studentAverageStatus.concept,
-            status: item.studentAverage.averageInform.studentAverageStatus.status,
-            average: generalAverage || 0, 
-            assessmentsCount: item.studentAverage.assessmentsCount,
-            assessments: item.studentAverage.assessments
-          })
-        })
-
         if (!classifications.length) {
+          const classificationsCGS = studentsWithAverageCGS.map((item, index) => {
+            const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+            return Classification.create({
+              courseId: course.id,
+              studentId: new UniqueEntityId(item.studentId),
+              poleId: new UniqueEntityId(item.poleId),
+              position: index +  1,
+              studentBirthday: new Date(item.studentBirthday ?? new Date()),
+              behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+              concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+              status: item.studentAverage.averageInform.studentAverageStatus.status,
+              average: generalAverage || 0, 
+              assessmentsCount: item.studentAverage.assessmentsCount,
+              assessments: item.studentAverage.assessments,
+            })
+          })
           await this.classificationsRepository.createMany(classificationsCGS)
         }
 
         if (classifications.length) {
+          const classificationsCGS = studentsWithAverageCGS.map((item, index) => {
+            const classification = classifications.find(classification => classification.studentId.toValue() === item.studentId)
+            const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+            return Classification.create({
+              courseId: course.id,
+              studentId: new UniqueEntityId(item.studentId),
+              poleId: new UniqueEntityId(item.poleId),
+              position: index +  1,
+              studentBirthday: new Date(item.studentBirthday ?? new Date()),
+              behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+              concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+              status: item.studentAverage.averageInform.studentAverageStatus.status,
+              average: generalAverage || 0, 
+              assessmentsCount: item.studentAverage.assessmentsCount,
+              assessments: item.studentAverage.assessments,
+            }, classification?.id)
+          })
+
           await this.classificationsRepository.saveMany(classificationsCGS)
         }
 
@@ -94,32 +110,47 @@ export class GenerateCourseClassificationUseCase {
       case 'CAS': 
       const studentsWithAverageCAS = studentsWithAverageOrError as StudentClassficationByModule[]
 
-      const classificationsCAS = studentsWithAverageCAS.map(item => {
-        const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
-
-        return Classification.create({
-          courseId: course.id,
-          studentId: new UniqueEntityId(item.studentId),
-          studentBirthday: new Date(item.studentBirthday ?? new Date()),
-          behavior: item.studentAverage.averageInform.behaviorAverageStatus.map(behavior => {
-            return {
-              ...behavior,
-              behaviorsCount: item.studentAverage.averageInform.behaviorsCount
-            }
-          }),
-          concept: item.studentAverage.averageInform.studentAverageStatus.concept,
-          status: item.studentAverage.averageInform.studentAverageStatus.status,
-          average: generalAverage || 0, 
-          assessmentsCount: item.studentAverage.assessmentsCount,
-          assessments: item.studentAverage.assessments
-        })
-      })
-
       if (!classifications.length) {
+        const classificationsCAS = studentsWithAverageCAS.map((item, index) => {
+          const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+          return Classification.create({
+            courseId: course.id,
+            studentId: new UniqueEntityId(item.studentId),
+            poleId: new UniqueEntityId(item.poleId),
+            position: index +  1,
+            studentBirthday: new Date(item.studentBirthday ?? new Date()),
+            behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+            concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+            status: item.studentAverage.averageInform.studentAverageStatus.status,
+            average: generalAverage || 0, 
+            assessmentsCount: item.studentAverage.assessmentsCount,
+            assessments: item.studentAverage.assessments,
+          })
+        })
         await this.classificationsRepository.createMany(classificationsCAS)
       }
 
       if (classifications.length) {
+        const classificationsCAS = studentsWithAverageCAS.map((item, index) => {
+          const classification = classifications.find(classification => classification.studentId.toValue() === item.studentId)
+          const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+          return Classification.create({
+            courseId: course.id,
+            studentId: new UniqueEntityId(item.studentId),
+            poleId: new UniqueEntityId(item.poleId),
+            position: index +  1,
+            studentBirthday: new Date(item.studentBirthday ?? new Date()),
+            behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+            concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+            status: item.studentAverage.averageInform.studentAverageStatus.status,
+            average: generalAverage || 0, 
+            assessmentsCount: item.studentAverage.assessmentsCount,
+            assessments: item.studentAverage.assessments,
+          }, classification?.id)
+        })
+
         await this.classificationsRepository.saveMany(classificationsCAS)
       }
 
@@ -127,32 +158,47 @@ export class GenerateCourseClassificationUseCase {
       case 'CFP': 
       const studentsWithAverageCFP = studentsWithAverageOrError as StudentClassficationByModule[]
 
-      const classificationsCFP = studentsWithAverageCFP.map(item => {
-        const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
-
-        return Classification.create({
-          courseId: course.id,
-          studentId: new UniqueEntityId(item.studentId),
-          studentBirthday: new Date(item.studentBirthday ?? new Date()),
-          behavior: item.studentAverage.averageInform.behaviorAverageStatus.map(behavior => {
-            return {
-              ...behavior,
-              behaviorsCount: item.studentAverage.averageInform.behaviorsCount
-            }
-          }),
-          concept: item.studentAverage.averageInform.studentAverageStatus.concept,
-          status: item.studentAverage.averageInform.studentAverageStatus.status,
-          average: generalAverage || 0, 
-          assessmentsCount: item.studentAverage.assessmentsCount,
-          assessments: item.studentAverage.assessments
-        })
-      })
-      
       if (!classifications.length) {
+        const classificationsCFP = studentsWithAverageCFP.map((item, index) => {
+          const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+          return Classification.create({
+            courseId: course.id,
+            studentId: new UniqueEntityId(item.studentId),
+            poleId: new UniqueEntityId(item.poleId),
+            position: index +  1,
+            studentBirthday: new Date(item.studentBirthday ?? new Date()),
+            behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+            concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+            status: item.studentAverage.averageInform.studentAverageStatus.status,
+            average: generalAverage || 0, 
+            assessmentsCount: item.studentAverage.assessmentsCount,
+            assessments: item.studentAverage.assessments,
+          })
+        })
         await this.classificationsRepository.createMany(classificationsCFP)
       }
 
       if (classifications.length) {
+        const classificationsCFP = studentsWithAverageCFP.map((item, index) => {
+          const classification = classifications.find(classification => classification.studentId.toValue() === item.studentId)
+          const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+          return Classification.create({
+            courseId: course.id,
+            studentId: new UniqueEntityId(item.studentId),
+            poleId: new UniqueEntityId(item.poleId),
+            position: index +  1,
+            studentBirthday: new Date(item.studentBirthday ?? new Date()),
+            behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+            concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+            status: item.studentAverage.averageInform.studentAverageStatus.status,
+            average: generalAverage || 0, 
+            assessmentsCount: item.studentAverage.assessmentsCount,
+            assessments: item.studentAverage.assessments,
+          }, classification?.id)
+        })
+
         await this.classificationsRepository.saveMany(classificationsCFP)
       }
 
@@ -160,65 +206,94 @@ export class GenerateCourseClassificationUseCase {
       case 'CHO': 
       const studentsWithAverageCHO = studentsWithAverageOrError as StudentClassficationByModule[]
 
-      const classificationsCHO = studentsWithAverageCHO.map(item => {
-        const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
-
-        return Classification.create({
-          courseId: course.id,
-          studentId: new UniqueEntityId(item.studentId),
-          studentBirthday: new Date(item.studentBirthday ?? new Date()),
-          behavior: item.studentAverage.averageInform.behaviorAverageStatus.map(behavior => {
-            return {
-              ...behavior,
-              behaviorsCount: item.studentAverage.averageInform.behaviorsCount
-            }
-          }),
-          concept: item.studentAverage.averageInform.studentAverageStatus.concept,
-          status: item.studentAverage.averageInform.studentAverageStatus.status,
-          average: generalAverage || 0, 
-          assessmentsCount: item.studentAverage.assessmentsCount,
-          assessments: item.studentAverage.assessments
-        })
-      })
-
       if (!classifications.length) {
+        const classificationsCHO = studentsWithAverageCHO.map((item, index) => {
+          const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+          return Classification.create({
+            courseId: course.id,
+            studentId: new UniqueEntityId(item.studentId),
+            poleId: new UniqueEntityId(item.poleId),
+            position: index +  1,
+            studentBirthday: new Date(item.studentBirthday ?? new Date()),
+            behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+            concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+            status: item.studentAverage.averageInform.studentAverageStatus.status,
+            average: generalAverage || 0, 
+            assessmentsCount: item.studentAverage.assessmentsCount,
+            assessments: item.studentAverage.assessments,
+          })
+        })
         await this.classificationsRepository.createMany(classificationsCHO)
       }
 
       if (classifications.length) {
+        const classificationsCHO = studentsWithAverageCHO.map((item, index) => {
+          const classification = classifications.find(classification => classification.studentId.toValue() === item.studentId)
+          const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+          return Classification.create({
+            courseId: course.id,
+            studentId: new UniqueEntityId(item.studentId),
+            poleId: new UniqueEntityId(item.poleId),
+            position: index +  1,
+            studentBirthday: new Date(item.studentBirthday ?? new Date()),
+            behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+            concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+            status: item.studentAverage.averageInform.studentAverageStatus.status,
+            average: generalAverage || 0, 
+            assessmentsCount: item.studentAverage.assessmentsCount,
+            assessments: item.studentAverage.assessments,
+          }, classification?.id)
+        })
+
         await this.classificationsRepository.saveMany(classificationsCHO)
       }
-
       return right(null)
       case 'CFO': 
       const studentsWithAverageCFO = studentsWithAverageOrError as StudentClassficationByModule[]
 
-      const classificationsCFO = studentsWithAverageCFO.map(item => {
-        const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
-
-        return Classification.create({
-          courseId: course.id,
-          studentId: new UniqueEntityId(item.studentId),
-          studentBirthday: new Date(item.studentBirthday ?? new Date()),
-          behavior: item.studentAverage.averageInform.behaviorAverageStatus.map(behavior => {
-            return {
-              ...behavior,
-              behaviorsCount: item.studentAverage.averageInform.behaviorsCount
-            }
-          }),
-          concept: item.studentAverage.averageInform.studentAverageStatus.concept,
-          status: item.studentAverage.averageInform.studentAverageStatus.status,
-          average: generalAverage || 0, 
-          assessmentsCount: item.studentAverage.assessmentsCount,
-          assessments: item.studentAverage.assessments
-        })
-      })
-
       if (!classifications.length) {
+        const classificationsCFO = studentsWithAverageCFO.map((item, index) => {
+          const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+          return Classification.create({
+            courseId: course.id,
+            studentId: new UniqueEntityId(item.studentId),
+            poleId: new UniqueEntityId(item.poleId),
+            position: index +  1,
+            studentBirthday: new Date(item.studentBirthday ?? new Date()),
+            behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+            concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+            status: item.studentAverage.averageInform.studentAverageStatus.status,
+            average: generalAverage || 0, 
+            assessmentsCount: item.studentAverage.assessmentsCount,
+            assessments: item.studentAverage.assessments,
+          })
+        })
         await this.classificationsRepository.createMany(classificationsCFO)
       }
 
       if (classifications.length) {
+        const classificationsCFO = studentsWithAverageCFO.map((item, index) => {
+          const classification = classifications.find(classification => classification.studentId.toValue() === item.studentId)
+          const generalAverage = Number(item.studentAverage.averageInform.geralAverage)
+
+          return Classification.create({
+            courseId: course.id,
+            studentId: new UniqueEntityId(item.studentId),
+            poleId: new UniqueEntityId(item.poleId),
+            position: index +  1,
+            studentBirthday: new Date(item.studentBirthday ?? new Date()),
+            behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+            concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+            status: item.studentAverage.averageInform.studentAverageStatus.status,
+            average: generalAverage || 0, 
+            assessmentsCount: item.studentAverage.assessmentsCount,
+            assessments: item.studentAverage.assessments,
+          }, classification?.id)
+        })
+        
         await this.classificationsRepository.saveMany(classificationsCFO)
       }
 
