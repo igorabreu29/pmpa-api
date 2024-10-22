@@ -11,7 +11,7 @@ export function makeClassification(
     poleId: new UniqueEntityId(),
     average: 10,
     assessmentsCount: 3,
-    behavior: [],
+    behaviorsCount: 0,
     concept: 'good',
     status: 'approved',
     assessments: [],
