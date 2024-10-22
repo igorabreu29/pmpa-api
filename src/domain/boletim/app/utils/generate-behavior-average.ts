@@ -19,13 +19,14 @@ export interface BehaviorMonths {
 export interface GenerateBehaviorAverageProps {
   behaviorMonths: BehaviorMonths[]
   isPeriod?: boolean
+  decimalPlaces?: number
 }
 
 export interface BehaviorsPerPeriod {
   [x: string]: number[]
 }
 
-export function generateBehaviorAverage({ behaviorMonths, isPeriod = false }: GenerateBehaviorAverageProps) {
+export function generateBehaviorAverage({ behaviorMonths, isPeriod = false, decimalPlaces }: GenerateBehaviorAverageProps) {
   const behaviorsPerPeriod: BehaviorsPerPeriod = {}
 
   for (const behavior of behaviorMonths) {
@@ -40,5 +41,5 @@ export function generateBehaviorAverage({ behaviorMonths, isPeriod = false }: Ge
     behaviorsPerPeriod[behaviorModule].push(...grades)
   }
 
-  return defineBehaviorByFormulaType[isPeriod ? 'period' : 'module']({ behaviorsPerPeriod })
+  return defineBehaviorByFormulaType[isPeriod ? 'period' : 'module']({ behaviorsPerPeriod, decimalPlaces })
 }

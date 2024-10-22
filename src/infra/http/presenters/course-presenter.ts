@@ -11,6 +11,7 @@ export class CoursePresenter {
       formula: course.formula,
       imageUrl: course.imageUrl,
       isPeriod: course.isPeriod,
+      decimalPlaces: course.decimalPlaces
     }
   }
 }
