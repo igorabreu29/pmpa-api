@@ -51,7 +51,7 @@ export class UpdateAssessmentsBatchUseCase {
     
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
-
+    
     if (dayjs(course.endsAt.value).isBefore(new Date())) return left(new ConflictError('Curso finalizado!'))
 
     const assessmentsBatchOrError = await Promise.all(studentAssessments.map(async (studentAssessment) => {
