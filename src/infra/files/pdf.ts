@@ -4,9 +4,9 @@ import fs from 'node:fs'
 import { cwd } from 'node:process'
 import { dayjs } from '../libs/dayjs.ts'
 import puppeteer from "puppeteer";
-import { getBehaviorAverageStatus } from "@/domain/boletim/app/utils/get-behavior-average-status.ts";
 import qrcode from 'qrcode'
 import bcrypt from 'bcryptjs'
+import { behaviorStatusMap, conceptMap, statusMap } from "@/domain/boletim/app/utils/status-and-concept-mapper.ts";
 
 export class GeneratePDF implements PDF {
   async create({ rows }: PDFCreateProps) {
@@ -18,6 +18,8 @@ export class GeneratePDF implements PDF {
         return item.disciplineId === discipline.disciplineId.toValue()
       })
 
+      if (!assessment) return
+
       return `
         <tr>
           <td class="text-sm font-bold border border-black rounded">
@@ -27,32 +29,26 @@ export class GeneratePDF implements PDF {
             N/A
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${assessment?.avi ?? ''}
+            ${assessment?.avi?.toFixed(3) ?? ''}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${assessment?.avii ?? ''}
+            ${assessment?.avii?.toFixed(3) ?? ''}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${assessment?.vf ?? ''}
+            ${assessment?.vf?.toFixed(3) ?? ''}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${assessment?.vfe ?? ''}
+            ${assessment?.vfe?.toFixed(3) ?? ''}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${assessment?.average}
+            ${assessment?.average?.toFixed(3)}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${assessment?.status}
+            ${statusMap[assessment.status]}
           </td>
         </tr>
       `
     })
-
-    const average = 
-      rows.grades.behavior.reduce((acc, item) => acc + item.behaviorAverage, 0) / 
-        rows.grades.behavior.length
-      
-    const { behaviorAverage, status } = getBehaviorAverageStatus(average)
 
     list.push(`
         <tr>
@@ -71,10 +67,10 @@ export class GeneratePDF implements PDF {
           <td class="text-sm font-bold border border-black rounded">
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${behaviorAverage}
+            ${rows.behavior.average.toFixed(rows.course.decimalPlaces ?? 3)}
           </td>
           <td class="text-sm font-bold border border-black rounded">
-            ${status}
+            ${behaviorStatusMap[rows.behavior.status]}
           </td>
         </tr>
     `)
@@ -88,7 +84,7 @@ export class GeneratePDF implements PDF {
     const endsAt = dayjs(rows.course.endsAt.value).format('DD/MM/YYYY')
     const birthday = dayjs(rows.student.birthday.value).format('DD/MM/YYYY')
 
-    const assessmentsSecondSeasonQuantity = rows.grades.assessments.filter(assessment => assessment?.vf).length
+    const assessmentsSecondSeasonQuantity = rows.grades.assessments.filter(assessment => assessment?.vfe).length
 
     const historicHash = await bcrypt.hash(`${rows.course.name.value} - PMPA`, 6)
 
@@ -113,8 +109,8 @@ export class GeneratePDF implements PDF {
       .replace('{{ dynamic_second_season_quantity }}', String(assessmentsSecondSeasonQuantity))
       .replace('{{ dynamic_current_date }}', currentDate)
       .replace('{{ dynamic_total_hours }}', String(rows.courseHistoric.totalHours))
-      .replace('{{ dynamic_average }}', String(rows.grades.average))
-      .replace('{{ dynamic_concept }}', String(rows.grades.concept))
+      .replace('{{ dynamic_average }}', rows.grades.average.toFixed(3))
+      .replace('{{ dynamic_concept }}', String(conceptMap[rows.grades.concept]))
       .replace('{{ dynamic_classification }}', String(rows.studentClassification))
       .replace('{{ dynamic_cmt }}', rows.courseHistoric.commander ?? '')
       .replace('{{ dynamic_division_boss }}', rows.courseHistoric.divisionBoss ?? '')
