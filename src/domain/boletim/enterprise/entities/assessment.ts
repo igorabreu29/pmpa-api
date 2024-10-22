@@ -27,7 +27,7 @@ export interface AssessmentStatus {
 }
 
 interface GenerateAssessmentAverageProps {
-  vf: number
+  vf: number 
   avi: number
   avii: number
   vfe: number | null
@@ -140,11 +140,9 @@ export class Assessment extends AggregateRoot<AssessmentProps> {
   }
 
   static create(
-    props: Optional<AssessmentProps, 'avi' | 'avii' | 'vfe' | 'average' | 'status' | 'isRecovering'>,
+    props: Optional<AssessmentProps, 'avi' | 'avii' | 'vfe' |'vf' | 'average' | 'status' | 'isRecovering'>,
     id?: UniqueEntityId
   ): Either<ConflictError, Assessment> {
-    if (props.vf === null && props.avi) return left(new ConflictError('Está faltando a VF.'))
-
     if (props.avi && (
         props.avi > 10 || props.avi < 0
       )
@@ -171,6 +169,7 @@ export class Assessment extends AggregateRoot<AssessmentProps> {
 
     const assessment = new Assessment({
       ...props,
+      vf: props.vf ?? null,
       avi: props.avi ?? null,
       avii: props.avii ?? null,
       vfe: props.vfe ?? null,
