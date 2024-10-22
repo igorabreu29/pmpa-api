@@ -80,10 +80,10 @@ export class GetCourseBehaviorClassificationUseCase {
     const behaviorAverageGroupedByPole = coursePoles.map(coursePole => {
       const studentsGroup = studentsWithBehaviorAverage.filter(item => item.studentPole.id.equals(coursePole.id))
 
-      const averages = []
+      const averages: number[] = []
     
       for (const student of studentsGroup) {
-        const average = student.behaviorAverage.behaviorAverageStatus.reduce((acc, item) => acc + item.behaviorAverage, 0)
+        const average = student.behaviorAverage.behaviorAverageStatus.reduce((acc, item) => acc + item.behaviorAverage, 0) / student.behaviorAverage.behaviorAverageStatus.length
         averages.push(average)
       }
 
