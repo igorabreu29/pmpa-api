@@ -19,6 +19,9 @@ interface CreateCourseUseCaseRequest {
   startAt?: Date
   endsAt: Date
   isPeriod: boolean
+
+  conceptType?: number
+  decimalPlaces?: number
 }
 
 type CreateCourseUseCaseResponse = Either<
@@ -35,7 +38,7 @@ export class CreateCourseUseCase {
     private coursesRepository: CoursesRepository,
   ) {}
 
-  async execute({ formula, name, imageUrl, startAt, endsAt, isPeriod }: CreateCourseUseCaseRequest): Promise<CreateCourseUseCaseResponse> {
+  async execute({ formula, name, imageUrl, startAt, endsAt, isPeriod, conceptType, decimalPlaces }: CreateCourseUseCaseRequest): Promise<CreateCourseUseCaseResponse> {
     const courseAlreadyExist = await this.coursesRepository.findByName(name)
     if (courseAlreadyExist) return left(new ResourceAlreadyExistError('Curso já presente na plataforma.'))
 
@@ -51,7 +54,9 @@ export class CreateCourseUseCase {
       imageUrl, 
       startAt,
       endsAt: endsAtOrError.value,
-      isPeriod
+      isPeriod,
+      conceptType,
+      decimalPlaces
     })
     if (courseOrError.isLeft()) return left(courseOrError.value)
       
