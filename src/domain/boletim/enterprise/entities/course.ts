@@ -9,7 +9,7 @@ import { InvalidDateError } from "@/core/errors/domain/invalid-date.ts";
 
 // export type Active = 'enabled' | 'disabled'
 
-export type Formula = 'CGS' | 'CFP' | 'CAS' | 'CHO' | 'CFO'
+export type Formula = 'CGS' | 'CFP' | 'CAS' | 'CHO' | 'CFO' | 'CFO 2'
 // export type CourseType = 'period' | 'module' | 'year'
 
 export interface CourseProps { 
@@ -75,6 +75,20 @@ export class Course extends Entity<CourseProps> {
     this.props.endsAt = value
   }
 
+  get decimalPlaces() {
+    return this.props.decimalPlaces
+  }
+  set decimalPlaces(value) {
+    this.props.decimalPlaces = value
+  }
+
+  get conceptType() {
+    return this.props.conceptType
+  }
+  set conceptType(value) {
+    this.props.conceptType = value
+  }
+
   static create(
     props: Optional<CourseProps, 'startAt' | 'isPeriod' | 'isActive' | 'conceptType' | 'decimalPlaces'>, 
     id?: UniqueEntityId
@@ -86,7 +100,7 @@ export class Course extends Entity<CourseProps> {
     const course = new Course({
       ...props,
       startAt: props.startAt ?? new Date(),
-      isPeriod: false,
+      isPeriod: props.isPeriod ?? true,
       isActive: true,
       conceptType: 1,
       decimalPlaces: 3
