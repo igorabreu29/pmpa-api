@@ -7,6 +7,9 @@ import { PDF } from "../files/pdf.ts"
 import { CourseHistoricRepository } from "../repositories/course-historic-repository.ts"
 import type { GetCourseClassificationUseCase } from "./get-course-classification.ts"
 import type { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error.ts"
+import { BehaviorsRepository } from "../repositories/behaviors-repository.ts"
+import { generateBehaviorAverage } from "../utils/generate-behavior-average.ts"
+import { getBehaviorAverageStatus } from "../utils/get-behavior-average-status.ts"
 
 interface DownloadHistoricUseCaseRequest {
   courseId: string
@@ -24,6 +27,7 @@ export class DownloadHistoricUseCase {
     private studentsRepository: StudentsRepository,
     private courseDisciplinesRepository: CoursesDisciplinesRepository,
     private getCourseClassification: GetCourseClassificationUseCase,
+    private behaviorsRepository: BehaviorsRepository,
     private pdf: PDF
   ) {}
 
@@ -61,6 +65,44 @@ export class DownloadHistoricUseCase {
       courseId: course.id.toValue()
     })
 
+    const behaviors = await this.behaviorsRepository.findManyByStudentIdAndCourseId({ studentId, courseId })
+    const behaviorMonths = behaviors.map(({
+      january,
+      february,
+      march,
+      april,
+      may,
+      jun,
+      july,
+      august,
+      september,
+      october,
+      november,
+      december,
+      module
+    }) => ({
+      january,
+      february,
+      march,
+      april,
+      may,
+      jun,
+      july,
+      august,
+      september,
+      october,
+      november,
+      december,
+      module
+    }))
+
+    const { behaviorAverageStatus } = generateBehaviorAverage({ behaviorMonths, isPeriod: course.isPeriod, decimalPlaces: course.decimalPlaces })
+    const average = behaviorAverageStatus.reduce(
+      (acc, item) => acc + item.behaviorAverage, 0
+    ) / behaviorAverageStatus.length
+
+    const { behaviorAverage, status: behaviorStatus } = getBehaviorAverageStatus(average)
+
     const { filename } = await this.pdf.create({
       rows: {
         course,
@@ -68,7 +110,11 @@ export class DownloadHistoricUseCase {
         studentClassification: studentClassificationPosition + 1,
         grades: studentClassification,
         courseWithDisciplines,
-        courseHistoric
+        courseHistoric,
+        behavior: {
+          average: behaviorAverage,
+          status: behaviorStatus
+        }
       }
     })
 
