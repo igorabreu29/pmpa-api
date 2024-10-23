@@ -22,7 +22,7 @@ import { InMemoryClassificationsRepository } from 'test/repositories/in-memory-c
 import { GenerateCourseClassificationUseCase } from './generate-course-classification.ts'
 import { makeClassification } from 'test/factories/make-classification.ts'
 import { UpdateCourseClassificationUseCase } from './update-course-classification.ts'
-import { UpdateStudentClassification } from './update-student-classification.ts'
+import { UpdateStudentClassificationUseCase } from './update-student-classification.ts'
 import { ConflictError } from './errors/conflict-error.ts'
 
 let studentsRepository: InMemoryStudentsRepository
@@ -38,7 +38,7 @@ let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let classificationsRepository: InMemoryClassificationsRepository
 let getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
 
-let sut: UpdateStudentClassification
+let sut: UpdateStudentClassificationUseCase
 
 describe('Update Student Classfication Use Case', () => {
   beforeEach(() => {
@@ -78,7 +78,7 @@ describe('Update Student Classfication Use Case', () => {
       courseDisciplinesRepository
     })
 
-    sut = new UpdateStudentClassification(
+    sut = new UpdateStudentClassificationUseCase(
       coursesRepository,
       getStudentAverageInTheCourseUseCase,
       classificationsRepository,

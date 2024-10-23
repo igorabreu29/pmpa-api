@@ -1,25 +1,24 @@
 import { left, right, type Either } from "@/core/either.ts"
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts"
 import type { CoursesRepository } from "../repositories/courses-repository.ts"
-import type { StudentsCoursesRepository } from "../repositories/students-courses-repository.ts"
 import type { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts"
 import type { ClassificationsRepository } from "../repositories/classifications-repository.ts"
 import { ConflictError } from "./errors/conflict-error.ts"
 import { Classification } from "../../enterprise/entities/classification.ts"
 import type { AssessmentWithModule } from "../utils/verify-formula.ts"
 
-interface UpdateStudentClassificationRequest {
+interface UpdateStudentClassificationUseCaseRequest {
   courseId: string
   studentId: string
   hasBehavior?: boolean
 }
 
-type UpdateStudentClassificationResponse = Either<
+type UpdateStudentClassificationUseCaseResponse = Either<
   | ResourceNotFoundError
   | ConflictError
 , null>
 
-export class UpdateStudentClassification {
+export class UpdateStudentClassificationUseCase {
   constructor(
     private coursesRepository: CoursesRepository,
     private getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase,
@@ -30,7 +29,7 @@ export class UpdateStudentClassification {
     courseId,
     studentId,
     hasBehavior
-  }: UpdateStudentClassificationRequest): Promise<UpdateStudentClassificationResponse> {
+  }: UpdateStudentClassificationUseCaseRequest): Promise<UpdateStudentClassificationUseCaseResponse> {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
@@ -54,14 +53,10 @@ export class UpdateStudentClassification {
     const generalAverage = Number(studentAverage.grades.averageInform.geralAverage)
 
     const studentClassification = Classification.create({
-      courseId: course.id,
+      courseId: studentCourseClassification.courseId,
       studentId: studentCourseClassification.studentId,
-      behavior: studentAverage.grades.averageInform.behaviorAverageStatus.map(behavior => {
-        return {
-          ...behavior,
-          behaviorsCount: studentAverage.grades.averageInform.behaviorsCount
-        }
-      }),
+      poleId: studentCourseClassification.poleId,
+      behaviorsCount: studentAverage.grades.averageInform.behaviorsCount,
       concept: studentAverage.grades.averageInform.studentAverageStatus.concept,
       status: studentAverage.grades.averageInform.studentAverageStatus.status,
       average: generalAverage || 0, 
