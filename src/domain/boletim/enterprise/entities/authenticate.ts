@@ -36,6 +36,9 @@ export class Authenticate extends Entity<AuthenticateProps> {
   get role() {
     return this.props.role
   }
+  set role(value) {
+    this.props.role = value
+  }
 
   get isLoginConfirmed() {
     return this.props.isLoginConfirmed
