@@ -62,6 +62,10 @@ export class InMemoryClassificationsRepository implements ClassificationsReposit
     }
   }
 
+  async create(classification: Classification): Promise<void> {
+    this.items.push(classification)
+  }
+
   async createMany(classifications: Classification[]): Promise<void> {
     classifications.forEach(classification => {
       this.items.push(classification)

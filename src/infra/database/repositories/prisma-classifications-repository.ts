@@ -62,7 +62,15 @@ export class PrismaClassificationsRepository implements ClassificationsRepositor
 
       classificationsCount = await prisma.classification.count({
         where: {
-          courseId
+          courseId,
+          student: {
+            usersOnCourses: {
+              some: {
+                courseId,
+                isActive: true
+              }
+            }
+          }
         }
       })
 
@@ -177,6 +185,14 @@ export class PrismaClassificationsRepository implements ClassificationsRepositor
       pages,
       totalItems: classificationsCount
     }
+  }
+
+  async create(classification: Classification): Promise<void> {
+    const row = PrismaClassificationsMapper.toPrisma(classification)
+
+    await prisma.classification.create({
+      data: row
+    })
   }
 
   async createMany(classifications: Classification[]): Promise<void> {
