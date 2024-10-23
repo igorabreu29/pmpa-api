@@ -225,18 +225,26 @@ export const classifyStudentsByCGSAndCASFormula = (studentsWithAverage: Classifi
   })
 }
 
-export const classifyStudentsBySUBFormula = (studentsWithAverage: StudentClassficationByPeriod[]) => {
+export const classifyStudentsBySUBFormula = (studentsWithAverage: Classification[]) => {
   const approvedStudents = studentsWithAverage.filter(student => {
-    const disapprovedStudentInFirstModule = student.studentAverage.assessmentsPerPeriod['module1']
-      ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'second season')
+    const disapprovedStudentInFirstModule = student.assessments
+      ?.some(assessment => {
+        return assessment.module === 1 && 
+          assessment.status === 'approved second season' || 
+          assessment.status === 'second season'
+      })
 
-    const disapprovedStudentInSecondModule = student.studentAverage.assessmentsPerPeriod['module2']
-      ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'second season')
+    const disapprovedStudentInSecondModule = student.assessments
+      ?.some(assessment => {
+        return assessment.module === 2 && 
+          assessment.status === 'approved second season' || 
+          assessment.status === 'second season'
+    })
 
     return !disapprovedStudentInFirstModule && !disapprovedStudentInSecondModule
   }).sort((studentA, studentB) => {
-    const geralAverageStudentA = studentA.studentAverage.averageInform.geralAverage
-    const geralAverageStudentB = studentB.studentAverage.averageInform.geralAverage
+    const geralAverageStudentA = studentA.average
+    const geralAverageStudentB = studentB.average
 
     const studentABirthday = Number(studentA.studentBirthday?.getTime())
     const studentBBirthday = Number(studentB.studentBirthday?.getTime())
@@ -253,16 +261,24 @@ export const classifyStudentsBySUBFormula = (studentsWithAverage: StudentClassfi
   })
 
   const disapprovedStudents = studentsWithAverage.filter(student => {
-    const disapprovedStudentInFirstModule = student.studentAverage.assessmentsPerPeriod['module1']
-    ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
+    const disapprovedStudentInFirstModule = student.assessments
+      ?.some(assessment => {
+        return assessment.module === 1 && 
+          assessment.status === 'approved second season' || 
+          assessment.status === 'second season'
+      })
 
-    const disapprovedStudentInSecondModule = student.studentAverage.assessmentsPerPeriod['module2']
-    ?.some(assessment => assessment.status === 'approved second season' || assessment.status === 'disapproved' || assessment.status === 'second season')
+    const disapprovedStudentInSecondModule = student.assessments
+      ?.some(assessment => {
+        return assessment.module === 2 && 
+          assessment.status === 'approved second season' || 
+          assessment.status === 'second season'
+      })
 
     return disapprovedStudentInFirstModule || disapprovedStudentInSecondModule
   }).sort((studentA, studentB) => {
-    const geralAverageStudentA = studentA.studentAverage.averageInform.geralAverage
-    const geralAverageStudentB = studentB.studentAverage.averageInform.geralAverage
+    const geralAverageStudentA = studentA.average
+    const geralAverageStudentB = studentB.average
 
     const studentABirthday = Number(studentA.studentBirthday?.getTime())
     const studentBBirthday = Number(studentB.studentBirthday?.getTime())
