@@ -19,9 +19,8 @@ export interface StudentClassficationByPeriod {
   }
   studentId?: string
   studentBirthday?: Date
-  studentName?: string
-  studentCivilOrMilitaryId?: string
-  studentPole?: string
+  classificationId?: string
+  poleId?: string
 }
 
 export interface StudentClassficationByModule {
