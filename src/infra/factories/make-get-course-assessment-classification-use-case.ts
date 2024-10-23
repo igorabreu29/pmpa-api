@@ -3,16 +3,15 @@ import { PrismaStudentsCoursesRepository } from "../database/repositories/prisma
 import { GetCourseAssessmentClassificationUseCase } from "@/domain/boletim/app/use-cases/get-course-assessment-classification.ts";
 import { PrismaCoursePolesRepository } from "../database/repositories/prisma-course-poles-repository.ts";
 import { PrismaAssessmentsRepository } from "../database/repositories/prisma-assessments-repository.ts";
+import { makeGetStudentAverageInTheCourseUseCase } from "./make-get-student-average-in-the-course-use-case.ts";
 
 export function makeGetCourseAssessmentClassificationUseCase() {
   const coursesRepository = new PrismaCoursesRepository()
-  const coursePolesRepository = new PrismaCoursePolesRepository()
   const studentCoursesRepository = new PrismaStudentsCoursesRepository()
-  const assessmentsRepository = new PrismaAssessmentsRepository()
+  const getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase()
   return new GetCourseAssessmentClassificationUseCase(
     coursesRepository,
-    coursePolesRepository,
     studentCoursesRepository,
-    assessmentsRepository
+    getStudentAverageInTheCourseUseCase
   )
 }
