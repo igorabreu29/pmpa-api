@@ -305,8 +305,6 @@ export const formulas = {
       }
     }
 
-    assessments = assessments.filter(assessment => assessment?.module === disciplineModule)
-
     const isStudentRecovering = assessments.some((item) => item?.isRecovering)    
     const studentAverageStatus = getGeralStudentAverageStatus({ average, isRecovering: isStudentRecovering })
 
