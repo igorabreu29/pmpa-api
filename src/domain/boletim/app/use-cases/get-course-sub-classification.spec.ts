@@ -15,7 +15,6 @@ import { InMemoryStudentsCoursesRepository } from 'test/repositories/in-memory-s
 import { InMemoryStudentsPolesRepository } from 'test/repositories/in-memory-students-poles-repository.ts'
 import { InMemoryStudentsRepository } from 'test/repositories/in-memory-students-repository.ts'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { GetCourseClassificationUseCase } from './get-course-classification.ts'
 import { GetStudentAverageInTheCourseUseCase } from './get-student-average-in-the-course.ts'
 import { InMemoryDisciplinesRepository } from 'test/repositories/in-memory-disciplines-repository.ts'
 import { GetCourseSubClassificationUseCase } from './get-course-sub-classification.ts'
@@ -61,7 +60,8 @@ describe('Get Course Sub Classification Use Case', () => {
     behaviorsRepository = new InMemoryBehaviorsRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
-      disciplinesRepository
+      disciplinesRepository,
+      assessmentsRepository
     )
     getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase({
       assessmentsRepository,
@@ -119,37 +119,15 @@ describe('Get Course Sub Classification Use Case', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      studentsWithAverage: [
+      classifications: [
         {
-          studentAverage: {
-            averageInform: {
-              geralAverage: 6.771,
-            },
-
-            assessments: [
-              {
-                module: 1,
-                average: 7
-              }
-            ]
-          },
-          studentName: student1.username.value
+          studentId: student1.id,
+          average: 6.771,
         },
         {
-          studentAverage: {
-            averageInform: {
-              geralAverage: 6.454,
-            },
-
-            assessments: [
-              {
-                module: 1,
-                average: 7.2
-              }
-            ]
-          },
-          studentName: student2.username.value
-        }
+          studentId: student2.id,
+          average: 6.454,
+        },
       ]
     })
   })
@@ -185,25 +163,15 @@ describe('Get Course Sub Classification Use Case', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      studentsWithAverage: [
+      classifications: [
         {
-          studentAverage: {
-              assessments: [
-                {
-                  average: 8.5
-                }
-              ]
-            },
+          studentId: student1.id,
+          average: 8.5,
         },
         {
-          studentAverage: {
-            assessments: [
-              {
-                average: 10
-              }
-            ]
-          },
-        }
+          studentId: student2.id,
+          average: 10
+        },
       ]
     })
   })

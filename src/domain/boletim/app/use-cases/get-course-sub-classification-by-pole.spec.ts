@@ -162,21 +162,10 @@ describe('Get Course Sub Classfication By Pole Use Case', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      studentsWithAverage: [
+      classifications: [
         {
-          studentAverage: {
-            averageInform: {
-              geralAverage: 6.771,
-            },
-
-            assessments: [
-              {
-                module: 1,
-                average: 7
-              }
-            ]
-          },
-          studentName: student1.username.value
+          studentId: student1.id,
+          average: 6.771,
         },
       ]
     })
@@ -222,25 +211,15 @@ describe('Get Course Sub Classfication By Pole Use Case', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      studentsWithAverage: [
+      classifications: [
         {
-          studentAverage: {
-              assessments: [
-                {
-                  average: 8.5
-                }
-              ]
-            },
+          studentId: student1.id,
+          average: 8.5,
         },
         {
-          studentAverage: {
-            assessments: [
-              {
-                average: 10
-              }
-            ]
-          },
-        }
+          studentId: student2.id,
+          average: 10
+        },
       ]
     })
   })

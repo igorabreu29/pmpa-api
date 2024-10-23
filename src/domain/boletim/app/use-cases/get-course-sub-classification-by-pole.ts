@@ -8,6 +8,9 @@ import { StudentClassficationByModule, StudentClassficationByPeriod } from "../t
 import { classificationByCourseFormula } from "../utils/generate-course-classification.ts";
 import { InvalidCourseFormulaError } from "./errors/invalid-course-formula-error.ts";
 import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
+import { Classification } from "../../enterprise/entities/classification.ts";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
+import { StudentCourseDetails } from "../../enterprise/entities/value-objects/student-course-details.ts";
 
 interface GetCourseSubClassificationByPoleUseCaseRequest {
   courseId: string
@@ -19,7 +22,8 @@ interface GetCourseSubClassificationByPoleUseCaseRequest {
 }
 
 type GetCourseSubClassificationByPoleUseCaseResponse = Either<ResourceNotFoundError | InvalidCourseFormulaError, {
-  studentsWithAverage: StudentClassficationByPeriod[] | StudentClassficationByModule[]
+  classifications: Classification[]
+  students: StudentCourseDetails[]
   pages?: number
   totalItems?: number
 }>
@@ -80,22 +84,28 @@ export class GetCourseSubClassificationByPoleUseCase {
     const error = studentsWithAverageOrError.find(item => item instanceof ResourceNotFoundError)
     if (error) return left(error)
 
+      const studentsWithAverage = studentsWithAverageOrError as StudentClassficationByPeriod[]
+      const classifications = studentsWithAverage.map(item => {
+        return Classification.create({
+          assessments: item.studentAverage.assessments,
+          assessmentsCount: item.studentAverage.assessmentsCount,
+          average: Number(item.studentAverage.averageInform.geralAverage),
+          behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
+          concept: item.studentAverage.averageInform.studentAverageStatus.concept,
+          courseId: course.id,
+          poleId: new UniqueEntityId(item.poleId),
+          studentId: new UniqueEntityId(item.studentId),
+          status: item.studentAverage.averageInform.studentAverageStatus.status,
+          studentBirthday: item.studentBirthday
+        })
+      })
+
     if (disciplineModule === 3) {
-      const classifiedByCFPFormula = classificationByCourseFormula['SUB'](studentsWithAverageOrError as StudentClassficationByPeriod[])
-  
-      const classifiedByCFPFormulaPaginated = page ? classifiedByCFPFormula.slice((page - 1) * 30, page * 30) : classifiedByCFPFormula
-  
-      const pagesCFP = Math.ceil(classifiedByCFPFormula.length / 30)
-      const totalItemsCFP = classifiedByCFPFormula.length
-      return right({ studentsWithAverage: classifiedByCFPFormulaPaginated, pages: pagesCFP, totalItems: totalItemsCFP })
+      const classificationsSortedSUB = classificationByCourseFormula['SUB'](classifications)
+      return right({ classifications: classificationsSortedSUB, students })
     }
 
-    const classifiedByCFPFormula = classificationByCourseFormula['CFP'](studentsWithAverageOrError as StudentClassficationByModule[])
-  
-    const classifiedByCFPFormulaPaginated = page ? classifiedByCFPFormula.slice((page - 1) * 30, page * 30) : classifiedByCFPFormula
-
-    const pagesCFP = Math.ceil(classifiedByCFPFormula.length / 30)
-    const totalItemsCFP = classifiedByCFPFormula.length
-    return right({ studentsWithAverage: classifiedByCFPFormulaPaginated, pages: pagesCFP, totalItems: totalItemsCFP })
+    const classificationsSortedCFP = classificationByCourseFormula['CFP'](classifications)
+    return right({ classifications: classificationsSortedCFP, students })
   }
 }
