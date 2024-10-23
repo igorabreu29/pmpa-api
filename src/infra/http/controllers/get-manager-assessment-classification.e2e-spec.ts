@@ -40,8 +40,16 @@ describe('Get Manager Assessment Classification (e2e)', () => {
 
     const discipline = await prisma.discipline.create({
       data: {
-        name: 'discipline-1'
-      }
+        name: 'discipline-1',
+        courseOnDisciplines: {
+          create: {
+            courseId: course.id,
+            expected: 'VF',
+            hours: 30,
+            module: 1
+          }
+        }
+      },
     })
 
     await prisma.courseOnPole.createMany({
@@ -149,6 +157,29 @@ describe('Get Manager Assessment Classification (e2e)', () => {
       },
     })
 
+    await prisma.user.create(({
+      data: {
+        username: 'John Doe',
+        civilId: '02345',
+        cpf: '00000000001',
+        email: 'johnny@acne.com', 
+        password: await bcrypt.hash('node-20', 8),
+        birthday: transformDate('02/01/2002'),
+        role: 'MANAGER',
+
+        usersOnCourses: {
+          create: {
+            courseId: course.id,
+             usersOnPoles: {
+              create: {
+                poleId: pole2.id
+              }
+             }
+          }
+        }
+      }
+    }))
+
     await prisma.assessment.createMany({
       data: [
         {
@@ -201,19 +232,7 @@ describe('Get Manager Assessment Classification (e2e)', () => {
     await app.close()
   })
 
-  it ('GET /courses/:id/classification/assessments', async () => {
-    await prisma.user.create(({
-      data: {
-        username: 'John Doe',
-        civilId: '02345',
-        cpf: '00000000001',
-        email: 'john@acne.com', 
-        password: await bcrypt.hash('node-20', 8),
-        birthday: transformDate('02/01/2002'),
-        role: 'MANAGER'
-      }
-    }))
-
+  it ('GET /courses/:id/manager/classification/assessments', async () => {
     const authenticateResponse = await request(app.server)
       .post('/credentials/auth')
       .send({
@@ -223,11 +242,18 @@ describe('Get Manager Assessment Classification (e2e)', () => {
     const { token }: { token: string } = authenticateResponse.body
 
     const response = await request(app.server)
-      .get(`/courses/${course.id}/classification/manager/assessments?page=1`)
+      .get(`/courses/${course.id}/manager/classification/assessments?page=1`)
       .set('Authorization', `Bearer ${token}`)
 
     const { classifications } = response.body
-    console.log(classifications)
-
+  
+    expect(classifications).toMatchObject([
+      {
+        average: 9.6,
+      },
+      {
+        average: 8.9
+      },
+    ])
   })
 })
