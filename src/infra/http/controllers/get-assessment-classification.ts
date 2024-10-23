@@ -7,6 +7,8 @@ import { makeGetCourseAssessmentClassificationUseCase } from "@/infra/factories/
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { NotFound } from "../errors/not-found.ts";
 import { ClientError } from "../errors/client-error.ts";
+import { ClassificationPresenter } from "../presenters/classification-presenter.ts";
+import { StudentCourseDetailsPresenter } from "../presenters/student-course-details-presenter.ts";
 
 export async function getAssessmentClassification(
   app: FastifyInstance
@@ -45,10 +47,13 @@ export async function getAssessmentClassification(
         }
       }
 
-      const { assessmentAverageGroupedByPole } = result.value
+      const { classifications, students, pages, totalItems } = result.value
 
-      return {
-        assessmentAverageGroupedByPole
-      }
+      return res.status(200).send({
+        classifications: classifications.map(ClassificationPresenter.toHTTP),
+        students: students.map(StudentCourseDetailsPresenter.toHTTP),
+        pages,
+        totalItems
+      })
     })
 }
