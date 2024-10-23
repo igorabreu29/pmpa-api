@@ -1,4 +1,5 @@
 import { GetCourseAssessmentClassificationUseCase } from "@/domain/boletim/app/use-cases/get-course-assessment-classification.ts";
+import { GetStudentAverageInTheCourseUseCase } from "@/domain/boletim/app/use-cases/get-student-average-in-the-course.ts";
 import type { InMemoryAssessmentsRepository } from "test/repositories/in-memory-assessments-repository.ts";
 import type { InMemoryCoursesPolesRepository } from "test/repositories/in-memory-courses-poles-repository.ts";
 import type { InMemoryCoursesRepository } from "test/repositories/in-memory-courses-repository.ts";
@@ -6,21 +7,18 @@ import type { InMemoryStudentsCoursesRepository } from "test/repositories/in-mem
 
 interface MakeGetCourseAssessmentClassificationProps {
   coursesRepository: InMemoryCoursesRepository
-  coursesPolesRepository: InMemoryCoursesPolesRepository
   studentCoursesRepository: InMemoryStudentsCoursesRepository
-  assessmentsRepository: InMemoryAssessmentsRepository
+  getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
 }
 
 export function makeGetCourseAssessmentClassification({
   coursesRepository,
-  coursesPolesRepository,
   studentCoursesRepository,
-  assessmentsRepository
+  getStudentAverageInTheCourseUseCase
 }: MakeGetCourseAssessmentClassificationProps) {
   return new GetCourseAssessmentClassificationUseCase(
     coursesRepository,
-    coursesPolesRepository,
     studentCoursesRepository,
-    assessmentsRepository
+    getStudentAverageInTheCourseUseCase
   )
 }
