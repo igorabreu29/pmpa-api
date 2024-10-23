@@ -34,14 +34,21 @@ export const defineBehaviorByFormulaType = {
   },
 
   module: ({ behaviorsPerPeriod, decimalPlaces }: FormulaTypeProps) => {
-    const behaviorsAverage = Number(behaviorsPerPeriod[1].reduce((previousNote, currentNote) => Number(previousNote) + Number(currentNote), 0)) / behaviorsPerPeriod[1].length
-    const behaviorAverageStatus = getBehaviorAverageStatus(Number(behaviorsAverage.toFixed(decimalPlaces ?? 3)) || 0)
+    if (behaviorsPerPeriod[1]?.length) {
+      const behaviorsAverage = Number(behaviorsPerPeriod[1].reduce((previousNote, currentNote) => Number(previousNote) + Number(currentNote), 0)) / behaviorsPerPeriod[1]?.length
+      const behaviorAverageStatus = getBehaviorAverageStatus(Number(behaviorsAverage?.toFixed(decimalPlaces ?? 3)) || 0)
+  
+      const behaviorsCount = behaviorsPerPeriod[1].length
 
-    const behaviorsCount = behaviorsPerPeriod[1].length
+      return {
+        behaviorAverageStatus: [behaviorAverageStatus],
+        behaviorsCount: behaviorsCount
+      }
+    }
 
     return {
-      behaviorAverageStatus: [behaviorAverageStatus],
-      behaviorsCount: behaviorsCount
+      behaviorAverageStatus: [],
+      behaviorsCount: 0
     }
   } 
 }
