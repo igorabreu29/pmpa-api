@@ -33,7 +33,7 @@ export class GenerateCourseClassificationUseCase {
     const course = await this.coursesRepository.findById(courseId)
     if (!course) return left(new ResourceNotFoundError('Curso não existente.'))
 
-    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId })
+    const { studentsCourse: students } = await this.studentsCoursesRepository.findManyDetailsByCourseId({ courseId, isEnabled: true })
 
     const { classifications } = await this.classificationsRepository.findManyByCourseId({ courseId: course.id.toValue() })
 
@@ -70,7 +70,7 @@ export class GenerateCourseClassificationUseCase {
               courseId: course.id,
               studentId: new UniqueEntityId(item.studentId),
               poleId: new UniqueEntityId(item.poleId),
-              position: index +  1,
+
               studentBirthday: new Date(item.studentBirthday ?? new Date()),
               behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
               concept: item.studentAverage.averageInform.studentAverageStatus.concept,
@@ -92,7 +92,7 @@ export class GenerateCourseClassificationUseCase {
               courseId: course.id,
               studentId: new UniqueEntityId(item.studentId),
               poleId: new UniqueEntityId(item.poleId),
-              position: index +  1,
+
               studentBirthday: new Date(item.studentBirthday ?? new Date()),
               behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
               concept: item.studentAverage.averageInform.studentAverageStatus.concept,
@@ -118,7 +118,6 @@ export class GenerateCourseClassificationUseCase {
             courseId: course.id,
             studentId: new UniqueEntityId(item.studentId),
             poleId: new UniqueEntityId(item.poleId),
-            position: index +  1,
             studentBirthday: new Date(item.studentBirthday ?? new Date()),
             behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
             concept: item.studentAverage.averageInform.studentAverageStatus.concept,
@@ -140,7 +139,6 @@ export class GenerateCourseClassificationUseCase {
             courseId: course.id,
             studentId: new UniqueEntityId(item.studentId),
             poleId: new UniqueEntityId(item.poleId),
-            position: index +  1,
             studentBirthday: new Date(item.studentBirthday ?? new Date()),
             behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
             concept: item.studentAverage.averageInform.studentAverageStatus.concept,
@@ -166,7 +164,6 @@ export class GenerateCourseClassificationUseCase {
             courseId: course.id,
             studentId: new UniqueEntityId(item.studentId),
             poleId: new UniqueEntityId(item.poleId),
-            position: index +  1,
             studentBirthday: new Date(item.studentBirthday ?? new Date()),
             behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
             concept: item.studentAverage.averageInform.studentAverageStatus.concept,
@@ -188,7 +185,6 @@ export class GenerateCourseClassificationUseCase {
             courseId: course.id,
             studentId: new UniqueEntityId(item.studentId),
             poleId: new UniqueEntityId(item.poleId),
-            position: index +  1,
             studentBirthday: new Date(item.studentBirthday ?? new Date()),
             behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
             concept: item.studentAverage.averageInform.studentAverageStatus.concept,
@@ -214,7 +210,6 @@ export class GenerateCourseClassificationUseCase {
             courseId: course.id,
             studentId: new UniqueEntityId(item.studentId),
             poleId: new UniqueEntityId(item.poleId),
-            position: index +  1,
             studentBirthday: new Date(item.studentBirthday ?? new Date()),
             behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
             concept: item.studentAverage.averageInform.studentAverageStatus.concept,
@@ -236,7 +231,6 @@ export class GenerateCourseClassificationUseCase {
             courseId: course.id,
             studentId: new UniqueEntityId(item.studentId),
             poleId: new UniqueEntityId(item.poleId),
-            position: index +  1,
             studentBirthday: new Date(item.studentBirthday ?? new Date()),
             behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
             concept: item.studentAverage.averageInform.studentAverageStatus.concept,
@@ -261,7 +255,6 @@ export class GenerateCourseClassificationUseCase {
             courseId: course.id,
             studentId: new UniqueEntityId(item.studentId),
             poleId: new UniqueEntityId(item.poleId),
-            position: index +  1,
             studentBirthday: new Date(item.studentBirthday ?? new Date()),
             behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
             concept: item.studentAverage.averageInform.studentAverageStatus.concept,
@@ -283,7 +276,6 @@ export class GenerateCourseClassificationUseCase {
             courseId: course.id,
             studentId: new UniqueEntityId(item.studentId),
             poleId: new UniqueEntityId(item.poleId),
-            position: index +  1,
             studentBirthday: new Date(item.studentBirthday ?? new Date()),
             behaviorsCount: item.studentAverage.averageInform.behaviorsCount,
             concept: item.studentAverage.averageInform.studentAverageStatus.concept,
