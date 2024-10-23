@@ -118,6 +118,7 @@ import { createStudentsInformationByManagerSheet } from "./http/controllers/crea
 import { deleteStudentCourse } from "./http/controllers/delete-student-course.ts";
 import { deleteManagerCourse } from "./http/controllers/delete-manager-course.ts";
 import { getCourseAssessments } from "./http/controllers/get-course-assessments.ts";
+import { changeUserRole } from './http/controllers/change-user-role.ts';
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -143,6 +144,7 @@ app.setSerializerCompiler(serializerCompiler)
 app.register(authenticate)
 app.register(restorePassword)
 app.register(forgotPassword)
+app.register(changeUserRole)
 app.register(createStudentsInformationSheet)
 app.register(createStudentsInformationByManagerSheet)
 app.register(createStudent)

@@ -4,6 +4,17 @@ import { prisma } from "../lib/prisma.ts";
 import { PrismaAuthenticatesMapper } from "../mappers/prisma-authenticates-mapper.ts";
 
 export class PrismaAuthenticatesRepository implements AuthenticatesRepository {
+  async findById({ id }: { id: string; }): Promise<Authenticate | null> {
+    const authenticate = await prisma.user.findUnique({
+      where: {
+        id
+      }
+    })
+    if (!authenticate) return null
+
+    return PrismaAuthenticatesMapper.toDomain(authenticate)
+  }
+
   async findByCPF({ cpf }: { cpf: string; }): Promise<Authenticate | null> {
     const authenticate = await prisma.user.findUnique({
       where: {

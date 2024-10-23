@@ -4,6 +4,11 @@ import { Authenticate } from "@/domain/boletim/enterprise/entities/authenticate.
 export class InMemoryAuthenticatesRepository implements AuthenticatesRepository {
   public items: Authenticate[] = []
 
+  async findById({ id }: { id: string; }): Promise<Authenticate | null> {
+    const authenticate = this.items.find(item => item.id.toValue() === id) 
+    return authenticate ?? null
+  }
+
   async findByCPF({ cpf }: { cpf: string; }): Promise<Authenticate | null> {
     const authenticate = this.items.find(item => item.cpf.value === cpf) 
     return authenticate ?? null
