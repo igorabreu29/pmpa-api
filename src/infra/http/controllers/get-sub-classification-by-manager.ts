@@ -11,6 +11,8 @@ import { ClientError } from "../errors/client-error.ts";
 
 import { dayjs } from '@/infra/libs/dayjs.ts';
 import { makeGetCourseSubClassificationByPoleUseCase } from "@/infra/factories/make-get-course-sub-classification-by-pole-use-case.ts";
+import { ClassificationPresenter } from "../presenters/classification-presenter.ts";
+import { StudentCourseDetailsPresenter } from "../presenters/student-course-details-presenter.ts";
 
 export async function getSubClassificationByManager(
   app: FastifyInstance
@@ -57,13 +59,13 @@ export async function getSubClassificationByManager(
         }
       }
 
-      const { studentsWithAverage } = result.value
+      const { classifications, students, pages, totalItems } = result.value
 
       return res.status(200).send({
-        studentsWithAverage: studentsWithAverage.map(student => ({
-          ...student,
-          studentBirthday: dayjs(student.studentBirthday).format('DD/MM/YYYY')
-        }))
+        classifications: classifications.map(ClassificationPresenter.toHTTP),
+        students: students.map(StudentCourseDetailsPresenter.toHTTP),
+        pages,
+        totalItems
       })
     })
 }

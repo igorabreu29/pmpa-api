@@ -175,6 +175,41 @@ describe('Get Sub Classification (e2e)', () => {
       ]
     })
 
+    await prisma.classification.createMany({
+      data: [
+        {
+          studentId: student.id,
+          courseId: course.id,
+          assessmentsCount: 1,
+          average: 7,
+          concept: 'good',
+          status: 'approved',
+          behaviorsCount: 3,
+          poleId: pole.id
+        },
+        {
+          studentId: student2.id,
+          courseId: course.id,
+          assessmentsCount: 1,
+          average: 8.184,
+          concept: 'good',
+          status: 'approved',
+          behaviorsCount: 3,
+          poleId: pole.id
+        },
+        {
+          studentId: student3.id,
+          courseId: course.id,
+          assessmentsCount: 1,
+          average: 8.184,
+          concept: 'good',
+          status: 'approved',
+          behaviorsCount: 3,
+          poleId: pole.id
+        },
+      ]
+    })
+
     await app.ready()
   })
 
@@ -207,32 +242,17 @@ describe('Get Sub Classification (e2e)', () => {
       .get(`/courses/${course.id}/classification/sub?disciplineModule=1&hasBehavior=true`)
       .set('Authorization', `Bearer ${token}`)
 
-    const { studentsWithAverage } = response.body
+    const { classifications } = response.body
 
-    expect(studentsWithAverage).toMatchObject([
+    expect(classifications).toMatchObject([
       {
-        studentAverage: {
-          averageInform: {
-            geralAverage: 8.184,
-            studentAverageStatus: { status: 'approved' }
-          }
-        },
+        average: 8.184
       },
       {
-        studentAverage: {
-          averageInform: {
-            geralAverage: 8.184,
-            studentAverageStatus: { status: 'approved' }
-          }
-        },
+        average: 8.184
       },
       {
-        studentAverage: {
-          averageInform: {
-            geralAverage: 7,
-            studentAverageStatus: { status: 'second season' }
-          }
-        },
+        average: 7
       }
     ])
   })
