@@ -7,8 +7,11 @@ import { transformDate } from '@/infra/utils/transform-date.ts'
 
 import bcrypt from 'bcryptjs'
 import { Course, Discipline, User, type Assessment } from '@prisma/client'
+import { DomainEvents } from '@/core/events/domain-events.ts'
 
 let assessment: Assessment
+
+DomainEvents.shouldRun = false
 
 describe('Update Assessment (e2e)', () => {
   beforeAll(async () => {

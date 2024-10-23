@@ -6,6 +6,9 @@ import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
 
 import bcrypt from 'bcryptjs'
+import { DomainEvents } from '@/core/events/domain-events.ts'
+
+DomainEvents.shouldRun = false
 
 describe('Remove Assessments Grade Batch (e2e)', () => {
   beforeAll(async () => {

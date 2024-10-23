@@ -7,8 +7,11 @@ import { transformDate } from '@/infra/utils/transform-date.ts'
 
 import bcrypt from 'bcryptjs'
 import { Behavior } from '@prisma/client'
+import { DomainEvents } from '@/core/events/domain-events.ts'
 
 let behavior: Behavior
+
+DomainEvents.shouldRun = false
 
 describe('Update Behavior (e2e)', () => {
   beforeAll(async () => {

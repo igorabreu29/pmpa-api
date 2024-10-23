@@ -9,8 +9,11 @@ import bcrypt from 'bcryptjs'
 import { makePrismaCourse } from 'test/factories/make-course.ts'
 import { makeAuth } from 'test/factories/make-auth.ts'
 import { Course } from '@/domain/boletim/enterprise/entities/course.ts'
+import { DomainEvents } from '@/core/events/domain-events.ts'
 
 let course: Course
+
+DomainEvents.shouldRun = false
 
 describe('Remove Behaviors Grade Batch (e2e)', () => {
   beforeAll(async () => {

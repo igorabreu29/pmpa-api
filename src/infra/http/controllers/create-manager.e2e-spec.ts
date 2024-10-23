@@ -3,6 +3,9 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 import request from 'supertest'
 import { prisma } from '@/infra/database/lib/prisma.ts'
+import { DomainEvents } from '@/core/events/domain-events.ts'
+
+DomainEvents.shouldRun = false
 
 describe('Create Manager (e2e)', () => {
   beforeAll(async () => {

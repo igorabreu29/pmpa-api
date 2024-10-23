@@ -8,8 +8,11 @@ import { transformDate } from '@/infra/utils/transform-date.ts'
 import bcrypt from 'bcryptjs'
 import { makeAuth } from 'test/factories/make-auth.ts'
 import type { Behavior } from '@prisma/client'
+import { DomainEvents } from '@/core/events/domain-events.ts'
 
 let behavior: Behavior
+
+DomainEvents.shouldRun = false
 
 describe('Remove Behavior Grade (e2e)', () => {
   beforeAll(async () => {

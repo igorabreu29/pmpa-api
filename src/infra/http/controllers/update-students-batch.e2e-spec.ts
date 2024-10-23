@@ -4,6 +4,9 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
+import { DomainEvents } from '@/core/events/domain-events.ts'
+
+DomainEvents.shouldRun = false
 
 describe('Update Students Batch (e2e)', () => {
   beforeAll(async () => {

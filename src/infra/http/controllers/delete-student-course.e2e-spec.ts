@@ -6,6 +6,9 @@ import { prisma } from '@/infra/database/lib/prisma.ts'
 import { transformDate } from '@/infra/utils/transform-date.ts'
 import { makeAuth } from 'test/factories/make-auth.ts'
 import { makePrismaCourse } from 'test/factories/make-course.ts'
+import { DomainEvents } from '@/core/events/domain-events.ts'
+
+DomainEvents.shouldRun = false
 
 describe('Delete Student Course (e2e)', () => {
   beforeAll(async () => {
