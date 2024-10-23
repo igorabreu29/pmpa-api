@@ -4,6 +4,8 @@ import { PrismaDisciplinesRepository } from "../database/repositories/prisma-dis
 import { PrismaStudentsRepository } from "../database/repositories/prisma-students-repository.ts";
 import { makeSendReportUseCase } from "./make-send-report-use-case.ts";
 import { PrismaReportersRepository } from "../database/repositories/prisma-reporters-repository.ts";
+import { makeUpdateStudentClassificationUseCase } from "./make-update-student-classification-use-case.ts";
+import { OnAssessmentUpdatedClassification } from "@/domain/boletim/app/classification/subscribers/on-assessment-updated-classification.ts";
 
 export function makeOnAssessmentUpdated() {
   const studentsRepository = new PrismaStudentsRepository()
@@ -11,11 +13,17 @@ export function makeOnAssessmentUpdated() {
   const coursesRepository = new PrismaCoursesRepository()
   const disciplinesRepository = new PrismaDisciplinesRepository()
   const sendReportUseCase = makeSendReportUseCase()
-  return new OnAssessmentUpdated(
+  
+  new OnAssessmentUpdated(
     studentsRepository,
     reportersRepository,
     coursesRepository,
     disciplinesRepository,
     sendReportUseCase
+  )
+
+  const updateStudentClassificationUseCase = makeUpdateStudentClassificationUseCase()
+  return new OnAssessmentUpdatedClassification(
+    updateStudentClassificationUseCase
   )
 }
