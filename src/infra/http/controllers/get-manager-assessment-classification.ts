@@ -10,7 +10,7 @@ import { ClassificationPresenter } from "../presenters/classification-presenter.
 import { StudentCourseDetailsPresenter } from "../presenters/student-course-details-presenter.ts";
 import { makeGetManagerAssessmentClassificationUseCase } from "@/infra/factories/make-get-manager-assessment-classification-use-case.ts";
 
-export async function getAssessmentClassification(
+export async function getManagerAssessmentClassification(
   app: FastifyInstance
 ) {
   app
