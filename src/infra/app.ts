@@ -119,6 +119,8 @@ import { deleteStudentCourse } from "./http/controllers/delete-student-course.ts
 import { deleteManagerCourse } from "./http/controllers/delete-manager-course.ts";
 import { getCourseAssessments } from "./http/controllers/get-course-assessments.ts";
 import { changeUserRole } from './http/controllers/change-user-role.ts';
+import { getManagerAssessmentClassification } from './http/controllers/get-manager-assessment-classification.ts';
+import { createManagerAssessmentClassificationSheet } from './http/controllers/create-manager-assessment-classification-sheet.ts';
 
 export const app = fastify()
 app.register(import("@fastify/cors"), {
@@ -237,6 +239,7 @@ app.register(getAverageClassificationCoursePoles)
 app.register(getClassificationByManager)
 app.register(getSubClassificationByManager)
 app.register(getAssessmentClassification)
+app.register(getManagerAssessmentClassification)
 app.register(getBehaviorClassification)
 app.register(getReports)
 app.register(getManagerReports)
@@ -252,6 +255,7 @@ app.register(createSubClassificationSheet)
 app.register(createSubClassificationByPoleSheet)
 app.register(createSubClassificationByManagerSheet)
 app.register(createAssessmentClassificationSheet)
+app.register(createManagerAssessmentClassificationSheet)
 app.register(createBehaviorClassificationSheet)
 app.register(createAverageClassificationCoursePolesSheet)
 
