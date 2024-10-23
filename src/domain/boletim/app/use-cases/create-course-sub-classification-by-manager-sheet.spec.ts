@@ -18,11 +18,8 @@ import { makePole } from "test/factories/make-pole.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import { InMemoryManagersCoursesRepository } from "test/repositories/in-memory-managers-courses-repository.ts";
-import type { GetCourseClassificationByPoleUseCase } from "./get-course-classification-by-pole.ts";
-import { makeGetCourseClassificationByPoleUseCase } from "test/factories/make-get-course-classification-by-pole.ts";
 import { InMemoryManagersPolesRepository } from "test/repositories/in-memory-managers-poles-repository.ts";
 import { InMemoryManagersRepository } from "test/repositories/in-memory-managers-repository.ts";
-import { CreateCourseClassificationByManagerSheetUseCase } from "./create-course-classification-by-manager-sheet.ts";
 import { makeManager } from "test/factories/make-manager.ts";
 import { makeManagerCourse } from "test/factories/make-manager-course.ts";
 import { makeManagerPole } from "test/factories/make-manager-pole.ts";
@@ -79,7 +76,8 @@ describe('Create Course Sub Classification By Manager Sheet', () => {
     behaviorsRepository = new InMemoryBehaviorsRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
-      disciplinesRepository
+      disciplinesRepository,
+      assessmentsRepository
     )
 
     managersRepository = new InMemoryManagersRepository(
@@ -116,7 +114,6 @@ describe('Create Course Sub Classification By Manager Sheet', () => {
     sut = new CreateCourseSubClassificationByManagerSheetUseCase(
       coursesRepository,
       managerCoursesRepository,
-      studentPolesRepository,
       getCourseSubClassificationByPole,
       sheeter
     )
@@ -188,7 +185,7 @@ describe('Create Course Sub Classification By Manager Sheet', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      filename: `${course.name.value} - Sub Classificação Por Polo.xlsx`
+      filename: `${course.name.value} - Sub Classificação.xlsx`
     })
   })
 })

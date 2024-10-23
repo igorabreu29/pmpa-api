@@ -11,14 +11,12 @@ import { CreateCourseClassificationByPoleSheetUseCase } from "@/domain/boletim/a
 export function makeCreateCourseClassificationByPoleSheetUseCase() {
   const coursesRepository = new PrismaCoursesRepository()
   const polesRepository = new PrismaPolesRepository()
-  const studentPolesRepository = new PrismaStudentsPolesRepository()
   const getCourseClassificationByPole = makeGetCourseClassificationByPoleUseCase()
   const sheeter = new XLSXSheeter()
 
   return new CreateCourseClassificationByPoleSheetUseCase(
     coursesRepository,
     polesRepository,
-    studentPolesRepository,
     getCourseClassificationByPole,
     sheeter
   )

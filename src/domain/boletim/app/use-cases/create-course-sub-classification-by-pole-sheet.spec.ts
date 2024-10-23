@@ -10,7 +10,6 @@ import { InMemoryBehaviorsRepository } from "test/repositories/in-memory-behavio
 import { InMemoryAssessmentsRepository } from "test/repositories/in-memory-assessments-repository.ts";
 import { InMemoryDisciplinesRepository } from "test/repositories/in-memory-disciplines-repository.ts";
 import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
-import { CreateCourseClassificationByPoleSheetUseCase } from "./create-course-classification-by-pole-sheet.ts";
 import { ResourceNotFoundError } from "@/core/errors/use-case/resource-not-found-error.ts";
 import { makeCourse } from "test/factories/make-course.ts";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.ts";
@@ -19,8 +18,6 @@ import { makePole } from "test/factories/make-pole.ts";
 import { makeStudentCourse } from "test/factories/make-student-course.ts";
 import { makeStudentPole } from "test/factories/make-student-pole.ts";
 import type { InMemoryManagersCoursesRepository } from "test/repositories/in-memory-managers-courses-repository.ts";
-import type { GetCourseClassificationByPoleUseCase } from "./get-course-classification-by-pole.ts";
-import { makeGetCourseClassificationByPoleUseCase } from "test/factories/make-get-course-classification-by-pole.ts";
 import { FakeSheeter } from "test/files/fake-sheeter.ts";
 import type { GetCourseSubClassificationByPoleUseCase } from "./get-course-sub-classification-by-pole.ts";
 import { makeGetCourseSubClassificationByPoleUseCase } from "test/factories/make-get-course-sub-classification-by-pole-use-case.ts";
@@ -72,7 +69,8 @@ describe('Create Course Sub Classification By Pole Sheet', () => {
     behaviorsRepository = new InMemoryBehaviorsRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
     courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
-      disciplinesRepository
+      disciplinesRepository,
+      assessmentsRepository
     )
 
     getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase({
@@ -94,7 +92,6 @@ describe('Create Course Sub Classification By Pole Sheet', () => {
     sut = new CreateCourseSubClassificationByPoleSheetUseCase(
       coursesRepository,
       polesRepository,
-      studentPolesRepository,
       getCourseSubClassificationByPole,
       sheeter
     )

@@ -21,6 +21,11 @@ import { makeCoursePole } from "test/factories/make-course-pole.ts";
 import { makeDiscipline } from "test/factories/make-discipline.ts";
 import { makeAssessment } from "test/factories/make-assessment.ts";
 import { FakeSheeter } from "test/files/fake-sheeter.ts";
+import { InMemoryBehaviorsRepository } from "test/repositories/in-memory-behaviors-repository.ts";
+import { InMemoryCoursesDisciplinesRepository } from "test/repositories/in-memory-courses-disciplines-repository.ts";
+import { makeGetStudentAverageInTheCourseUseCase } from "test/factories/make-get-student-average-in-the-course-use-case.ts";
+import { GetStudentAverageInTheCourseUseCase } from "./get-student-average-in-the-course.ts";
+import { makeCourseDiscipline } from "test/factories/make-course-discipline.ts";
 
 
 let disciplinesRepository: InMemoryDisciplinesRepository
@@ -28,8 +33,11 @@ let studentsRepository: InMemoryStudentsRepository
 let studentsPolesRepository: InMemoryStudentsPolesRepository
 let polesRepository: InMemoryPolesRepository
 let assessmentsRepository: InMemoryAssessmentsRepository
+let behaviorsRepository: InMemoryBehaviorsRepository
+let courseDisciplinesRepository: InMemoryCoursesDisciplinesRepository
 let coursePolesRepository: InMemoryCoursesPolesRepository
 let studentCoursesRepository: InMemoryStudentsCoursesRepository
+let getStudentAverageInTheCourseUseCase: GetStudentAverageInTheCourseUseCase
 
 let coursesRepository: InMemoryCoursesRepository
 let getCourseAssessmentClassification: GetCourseAssessmentClassificationUseCase
@@ -60,17 +68,29 @@ describe('Create Course Assessment Classification Sheet', () => {
       polesRepository
     )
 
+    behaviorsRepository = new InMemoryBehaviorsRepository()
     assessmentsRepository = new InMemoryAssessmentsRepository()
     disciplinesRepository = new InMemoryDisciplinesRepository()
+    courseDisciplinesRepository = new InMemoryCoursesDisciplinesRepository(
+      disciplinesRepository,
+      assessmentsRepository
+    )
     coursePolesRepository = new InMemoryCoursesPolesRepository(
       polesRepository
     )
 
+    getStudentAverageInTheCourseUseCase = makeGetStudentAverageInTheCourseUseCase({
+      assessmentsRepository,
+      behaviorsRepository,
+      disciplinesRepository,
+      courseDisciplinesRepository
+    })
+
+
     getCourseAssessmentClassification = makeGetCourseAssessmentClassification({
       coursesRepository,
       studentCoursesRepository,
-      assessmentsRepository,
-      coursesPolesRepository: coursePolesRepository
+      getStudentAverageInTheCourseUseCase
     })
     sheeter = new FakeSheeter() 
 
@@ -122,13 +142,18 @@ describe('Create Course Assessment Classification Sheet', () => {
     const assessment2 = makeAssessment({ courseId: course.id, studentId: student2.id, disciplineId: discipline.id, vf: 9.2 })
     assessmentsRepository.createMany([assessment, assessment2])
 
+    const courseDiscipline = makeCourseDiscipline({ courseId: course.id, disciplineId: discipline.id, module: 1 })
+    courseDisciplinesRepository.create(courseDiscipline)
+
     const result = await sut.execute({
       courseId: course.id.toValue()
     })
 
+    console.log(result.value)
+
     expect(result.isRight()).toBe(true)
     expect(result.value).toMatchObject({
-      filename: `${course.name.value} - Classificação de Avaliações.xlsx`
+      filename: `${course.name.value} - Classificação Geral Sem Comportamento.xlsx`
     })
   })
 })

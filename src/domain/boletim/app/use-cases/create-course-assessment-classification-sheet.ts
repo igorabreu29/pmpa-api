@@ -32,22 +32,48 @@ export class CreateCourseAssessmentClassificationSheetUseCase {
       return left(error)
     }
 
-    const { assessmentAverageGroupedByPole } = classification.value
+    const { classifications, students } = classification.value
 
     const { filename } = this.sheeter.write({
       keys: [
         'CLASSIFICAÇÃO',
+        'E-MAIL',
+        'CPF',
+        'NOME',
+        'DATA DE NASCIMENTO',
+        'MÉDIA FINAL',
+        'CONCEITO',
         'POLO',
-        'MÉDIA DO POLO'
+        'RG CIVIL',
+        'RG MILITAR',
+        'PAI',
+        'MÃE',
+        'UF',
+        'MUNICÍPIO',
+        'OBSERVAÇÃO'
       ],
-      rows: assessmentAverageGroupedByPole.map((assessmentAverage, index) => {
+      rows: classifications.map((classification, index) => {
+        const student = students.find(item => item.studentId.equals(classification.studentId))
+
         return {
           classification: index + 1,
-          pole: assessmentAverage.poleAverage.name,
-          average: assessmentAverage.poleAverage.average,
+          email: student?.email,
+          cpf: student?.cpf,
+          username: student?.username,
+          birthday: student?.birthday,
+          average: classification.average,
+          concept: classification.concept,
+          pole: student?.pole,
+          civilId: student?.civilId,
+          militaryId: student?.militaryId,
+          fatherName: student?.parent?.fatherName,
+          motherName: student?.parent?.motherName,
+          state: student?.state,
+          county: student?.county,
+          status: classification.status
         }
       }),
-      sheetName: `${course.name.value} - Classificação de Avaliações.xlsx`
+      sheetName: `${course.name.value} - Classificação Geral Sem Comportamento.xlsx`
     })
 
     return right({
