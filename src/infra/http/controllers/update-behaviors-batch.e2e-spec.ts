@@ -82,7 +82,8 @@ describe('Update Behaviors Batch (e2e)', () => {
           january: 6,
           february: 8,
           march: 5,
-          currentYear: 2023
+          currentYear: 2023,
+          module: 1
         },
         {
           courseId: course.id,
@@ -90,7 +91,8 @@ describe('Update Behaviors Batch (e2e)', () => {
           january: 8,
           february: 9,
           march: 7,
-          currentYear: 2023
+          currentYear: 2023,
+          module: 1
         }
       ]
     })

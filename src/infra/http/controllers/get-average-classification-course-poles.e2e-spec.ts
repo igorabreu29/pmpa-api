@@ -182,6 +182,41 @@ describe('Get Average Classification Course Poles (e2e)', () => {
       ]
     })
 
+    await prisma.classification.createMany({
+      data: [
+        {
+          studentId: student.id,
+          courseId: course.id.toValue(),
+          assessmentsCount: 1,
+          average: 7,
+          concept: 'good',
+          status: 'approved',
+          behaviorsCount: 3,
+          poleId: pole.id
+        },
+        {
+          studentId: student2.id,
+          courseId: course.id.toValue(),
+          assessmentsCount: 1,
+          average: 8.184,
+          concept: 'good',
+          status: 'approved',
+          behaviorsCount: 3,
+          poleId: pole.id
+        },
+        {
+          studentId: student3.id,
+          courseId: course.id.toValue(),
+          assessmentsCount: 1,
+          average: 8.184,
+          concept: 'good',
+          status: 'approved',
+          behaviorsCount: 3,
+          poleId: pole2.id
+        },
+      ]
+    })
+
     await app.ready()
   })
 

@@ -50,15 +50,16 @@ describe('Remove Behaviors Grade Batch (e2e)', () => {
           studentId: student.id,
           january: 7,
           february: 7,
-          currentYear: 2023
-
+          currentYear: 2023,
+          module: 1
         },
         {
           courseId: course.id.toValue(),
           studentId: student2.id,
           january: 10,
           february: 8,
-          currentYear: 2023
+          currentYear: 2023,
+          module: 1
         }
       ]
     })
