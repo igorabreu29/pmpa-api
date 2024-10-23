@@ -40,8 +40,16 @@ describe('Get Assessment Classification (e2e)', () => {
 
     const discipline = await prisma.discipline.create({
       data: {
-        name: 'discipline-1'
-      }
+        name: 'discipline-1',
+        courseOnDisciplines: {
+          create: {
+            courseId: course.id,
+            expected: 'VF',
+            hours: 30,
+            module: 1
+          }
+        }
+      },
     })
 
     await prisma.courseOnPole.createMany({
@@ -208,19 +216,21 @@ describe('Get Assessment Classification (e2e)', () => {
       .get(`/courses/${course.id}/classification/assessments?page=1`)
       .set('Authorization', `Bearer ${token}`)
 
-    const { assessmentAverageGroupedByPole } = response.body
+    const { classifications } = response.body
 
-    expect(assessmentAverageGroupedByPole).toMatchObject([
+    expect(classifications).toMatchObject([
       {
-        poleAverage: {
-          average: 9.25,
-        }
+        average: 9.6,
       },
       {
-        poleAverage: {
-          average: 8,
-        }
+        average: 8.9
       },
+      {
+        average: 8.5
+      },
+      {
+        average: 7.5
+      }
     ])
   })
 })

@@ -40,7 +40,15 @@ describe('Create Assessment Classification Sheet (e2e)', () => {
 
     const discipline = await prisma.discipline.create({
       data: {
-        name: 'discipline-1'
+        name: 'discipline-1',
+        courseOnDisciplines: {
+          create: {
+            courseId: course.id,
+            hours: 30,
+            expected: 'VF',
+            module: 1
+          }
+        }
       }
     })
 

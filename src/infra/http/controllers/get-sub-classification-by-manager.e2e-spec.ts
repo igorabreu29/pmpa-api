@@ -216,34 +216,19 @@ describe('Get Sub Classification By Manager (e2e)', () => {
       .get(`/courses/${course.id}/manager/classification/sub?hasBehavior=tru&disciplineModule=2`)
       .set('Authorization', `Bearer ${token}`)
 
-    const { studentsWithAverage } = response.body
+    const { classifications } = response.body
 
     expect(response.statusCode).toEqual(200)
-    expect(studentsWithAverage).toMatchObject([
+    expect(classifications).toMatchObject([
       {
-        studentAverage: {
-          averageInform: {
-            geralAverage: 9.75,
-            studentAverageStatus: { status: 'approved' }
-          }
-        },
+        average: 9.75
       },
       {
-        studentAverage: {
-          averageInform: {
-            geralAverage: 8.5,
-            studentAverageStatus: { status: 'approved' }
-          }
-        },
+        average: 8.5,
       },
       {
-        studentAverage: {
-          averageInform: {
-            geralAverage: 8.5,
-            studentAverageStatus: { status: 'approved' }
-          }
-        },
-      }
+        average: 8.5,
+      },
     ])
   })
 })

@@ -48,6 +48,7 @@ describe('Download Course Historic (e2e)', () => {
         password: await bcrypt.hash('node-20', 8),
         isLoginConfirmed: new Date(),
         birthday: transformDate('01/02/2001'),
+        role: 'STUDENT',
         
         usersOnCourses: {
           create: {
@@ -101,6 +102,19 @@ describe('Download Course Historic (e2e)', () => {
           studentId: student.id
         },
       ]
+    })
+
+    await prisma.classification.create({
+      data: {
+        courseId: course.id,
+        studentId: student.id,
+        poleId: pole.id,
+        average: 7,
+        status: 'approved',
+        concept: 'good',
+        behaviorsCount: 3,
+        assessmentsCount: 2,
+      }
     })
 
     await app.ready()

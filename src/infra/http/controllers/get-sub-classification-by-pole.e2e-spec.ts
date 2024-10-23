@@ -299,32 +299,17 @@ describe('Get Classification By Pole (e2e)', () => {
       .get(`/courses/${course.id}/poles/${pole.id}/classification/sub?hasBehavior=true&disciplineModule=3`)
       .set('Authorization', `Bearer ${token}`)
 
-    const { studentsWithAverage } = response.body
+    const { classifications } = response.body
 
-    expect(studentsWithAverage).toMatchObject([
+    expect(classifications).toMatchObject([
       {
-        studentAverage: {
-          averageInform: {
-            geralAverage: 8.5,
-            studentAverageStatus: { status: 'approved' }
-          }
-        },
+        average: 8.5,
       },
       {
-        studentAverage: {
-          averageInform: {
-            geralAverage: 8.5,
-            studentAverageStatus: { status: 'approved' }
-          }
-        },
+        average: 8.5,
       },
       {
-        studentAverage: {
-          averageInform: {
-            geralAverage: 9.75,
-            studentAverageStatus: { status: 'approved' }
-          }
-        },
+        average: 9.75
       }
     ])
   })
