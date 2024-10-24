@@ -13,7 +13,29 @@ export class PrismaStudentsBatchRepository implements StudentsBatchRepository {
       const prismaStudentCourseMapper = PrismaStudentCourseMapper.toPrisma(studentBatch.studentCourse)
       const prismaStudentPoleMapper = PrismaStudentPoleMapper.toPrisma(studentBatch.studentPole)
 
-      await prisma.user.create({
+      const student = await prisma.user.findUnique({
+        where: {
+          id: prismaStudentMapper.id
+        }
+      })
+
+      if (student) {
+        await prisma.userOnCourse.create({
+          data: {
+            userId: String(prismaStudentMapper.id),
+            courseId: prismaStudentCourseMapper.courseId,
+            usersOnPoles: {
+              create: {
+                poleId: prismaStudentPoleMapper.poleId,
+              }
+            }
+          }
+        })
+
+        continue
+      }
+
+        await prisma.user.create({
         data: {
           ...prismaStudentMapper,
           usersOnCourses: {

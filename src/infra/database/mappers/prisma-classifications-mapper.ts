@@ -25,7 +25,10 @@ export class PrismaClassificationsMapper {
       assessmentsCount: classificationDetails.assessmentsCount,
       average: Number(classificationDetails.average),
       assessments: classificationDetails.assessments.map(item => {
-        const courseDiscipline = classificationDetails.courseDisciplines.find(courseDiscipline => courseDiscipline.disciplineId === item.disciplineId)
+        const courseDiscipline = classificationDetails.courseDisciplines.find(courseDiscipline => {
+          return courseDiscipline.disciplineId === item.disciplineId &&
+            courseDiscipline.courseId === item.courseId
+        })
         if (!courseDiscipline) throw new Error('Course discipline does not exist')
 
         return {

@@ -88,7 +88,11 @@ export class PrismaClassificationsRepository implements ClassificationsRepositor
         student: {
           select: {
             birthday: true,
-            assessments: true
+            assessments: {
+              where: {
+                courseId
+              },
+            }
           }
         },
         course: {
@@ -160,7 +164,11 @@ export class PrismaClassificationsRepository implements ClassificationsRepositor
         student: {
           select: {
             birthday: true,
-            assessments: true
+            assessments: {
+              where: {
+                courseId
+              }
+            }
           }
         },
         course: {
