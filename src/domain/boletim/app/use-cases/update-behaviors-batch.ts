@@ -82,7 +82,7 @@ export class UpdateBehaviorsBatchUseCase {
         year: studentBehavior.currentYear,
         module: studentBehavior.module
       }) 
-      if (!behavior) return new ResourceNotFoundError('Comportamento não encontrado .')
+      if (!behavior) return new ResourceNotFoundError('Comportamento não encontrado.')
 
       behavior.january =  studentBehavior.january ?? behavior.january
       behavior.february =  studentBehavior.february ?? behavior.february

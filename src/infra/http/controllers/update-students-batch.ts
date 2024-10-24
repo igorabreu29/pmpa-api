@@ -75,17 +75,17 @@ export async function updateStudentBatch(
         case ResourceAlreadyExistError: 
           throw new Conflict(error.message)
         case InvalidEmailError:
-          throw new Conflict('Email inválido!') 
+          throw new Conflict(error.message) 
         case InvalidPasswordError:
-          throw new Conflict('Senha inválida!') 
+          throw new Conflict(error.message) 
         case InvalidBirthdayError:
-          throw new Conflict('Data de nascimento inválida!') 
+          throw new Conflict(error.message) 
         case InvalidNameError:
-          throw new Conflict('Nome inválido!') 
+          throw new Conflict(error.message) 
         case InvalidCPFError:
-          throw new Conflict('CPF inválido!') 
+          throw new Conflict(error.message) 
         case InvalidBirthdayError:
-          throw new Conflict('This date is not valid.') 
+          throw new Conflict(error.message) 
         default: 
           throw new ClientError('Houve algum problema')
       }

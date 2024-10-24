@@ -20,6 +20,10 @@ import { StudentsPolesRepository } from "../repositories/students-poles-reposito
 import { StudentsRepository } from "../repositories/students-repository.ts"
 import { formatCPF } from "@/core/utils/formatCPF.ts"
 import { CPF } from "../../enterprise/entities/value-objects/cpf.ts"
+import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
+import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts"
+import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts"
+import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts"
 
 interface StudentCreated {
   student: Student
@@ -85,7 +89,7 @@ export class UpdateStudentsBatchUseCase {
         studentId: studentExist.id.toValue(),
         courseId: currentCourse.id.toValue()
       })
-      if (!studentCourse) return new ResourceAlreadyExistError('Student is not present on this course.')
+      if (!studentCourse) return new ResourceAlreadyExistError('Estudante não está presente no curso.')
         
       if (!studentCourse.courseId.equals(course.id)) {
         const newStudentCourse = StudentCourse.create({
@@ -116,7 +120,7 @@ export class UpdateStudentsBatchUseCase {
         const currentStudentPole = await this.studentPolesRepository.findByStudentId({
           studentId: studentCourse.id.toValue()
         })
-        if (!currentStudentPole) return new ResourceNotFoundError('Student polo não encontrado!')
+        if (!currentStudentPole) return new ResourceNotFoundError('Estudante não está presente no polo!')
 
         const newStudentPole = StudentPole.create({
           poleId: pole.id,
@@ -134,11 +138,11 @@ export class UpdateStudentsBatchUseCase {
       const passwordOrError = Password.create(student.password ?? studentExist.passwordHash.value)
       const birthdayOrError = Birthday.create(student.birthday ?? studentExist.birthday.value)
   
-      if (nameOrError.isLeft()) return nameOrError.value
-      if (emailOrError.isLeft()) return emailOrError.value
-      if (passwordOrError.isLeft()) return passwordOrError.value
-      if (birthdayOrError.isLeft()) return birthdayOrError.value
-
+      if (nameOrError.isLeft()) return new InvalidNameError(`${student.username}(${student.cpf}) - ${nameOrError.value.message}`)
+      if (emailOrError.isLeft()) return new InvalidEmailError(`${student.username}(${student.cpf}) - ${emailOrError.value.message}`)
+      if (passwordOrError.isLeft()) return new InvalidPasswordError(`${student.username}(${student.cpf}) - ${passwordOrError.value.message}`)
+      if (birthdayOrError.isLeft()) return new InvalidBirthdayError(`${student.username}(${student.cpf}) - ${birthdayOrError.value.message}`)
+  
       await passwordOrError.value.hash()
       studentExist.username = nameOrError.value
       studentExist.email = emailOrError.value

@@ -84,7 +84,7 @@ export class CreateBehaviorsBatchUseCase {
         module: studentBehavior.module
       })
 
-      if (behaviorAlreadyExist) return new ResourceAlreadyExistError('Comportamento já lançado para o estudante!')
+      if (behaviorAlreadyExist) return new ResourceAlreadyExistError(`Comportamento já lançada para o estudante: ${student.username.value}(${student.cpf.value})!`)
 
       const behavior = Behavior.create({
         courseId: course.id,

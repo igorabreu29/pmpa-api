@@ -71,7 +71,7 @@ export class CreateAssessmentsBatchUseCase {
         disciplineId: discipline.id.toValue(),
         courseId: course.id.toValue(),
       })
-      if (assessmentAlreadyExistToStudent) return new ResourceAlreadyExistError('Av já lançada para o estudante!')
+      if (assessmentAlreadyExistToStudent) return new ResourceAlreadyExistError(`Av já lançada para o estudante: ${student.username.value}(${student.cpf.value})!`)
 
       const assessmentOrError = Assessment.create({
         courseId: course.id,

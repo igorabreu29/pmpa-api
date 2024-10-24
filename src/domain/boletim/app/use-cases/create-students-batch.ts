@@ -19,6 +19,11 @@ import { StudentsPolesRepository } from "../repositories/students-poles-reposito
 import { StudentsRepository } from "../repositories/students-repository.ts"
 import type { Role } from "../../enterprise/entities/authenticate.ts"
 import { NotAllowedError } from "@/core/errors/use-case/not-allowed-error.ts"
+import { InvalidEmailError } from "@/core/errors/domain/invalid-email.ts"
+import { InvalidNameError } from "@/core/errors/domain/invalid-name.ts"
+import { InvalidPasswordError } from "@/core/errors/domain/invalid-password.ts"
+import { InvalidBirthdayError } from "@/core/errors/domain/invalid-birthday.ts"
+import { InvalidCPFError } from "@/core/errors/domain/invalid-cpf.ts"
 
 interface StudentCreated {
   student: Student
@@ -69,38 +74,37 @@ export class CreateStudentsBatchUseCase {
       const pole = await this.polesRepository.findByName(student.poleName)
       if (!pole) return new ResourceNotFoundError('Polo não encontrado!')
 
-      const defaultPassword = `Pmp@${student.cpf}`
+      const cpfOrError = CPF.create(student.cpf)
+      if (cpfOrError.isLeft()) return new InvalidCPFError((`${student.username}(${student.cpf}) - ${cpfOrError.value.message}`))
+  
+      const cpfTransformed = cpfOrError.value.value
+      const defaultPassword = `Pmp@${cpfTransformed}`
 
       const nameOrError = Name.create(student.username)
       const emailOrError = Email.create(student.email)
-      const cpfOrError = CPF.create(student.cpf)
       const passwordOrError = Password.create(defaultPassword)
       const birthdayOrError = Birthday.create(student.birthday)
   
-      if (nameOrError.isLeft()) return nameOrError.value
-      if (emailOrError.isLeft()) return emailOrError.value
-      if (cpfOrError.isLeft()) return cpfOrError.value
-      if (passwordOrError.isLeft()) return passwordOrError.value
-      if (birthdayOrError.isLeft()) return birthdayOrError.value
+      if (nameOrError.isLeft()) return new InvalidNameError(`${student.username}(${student.cpf}) - ${nameOrError.value.message}`)
+      if (emailOrError.isLeft()) return new InvalidEmailError(`${student.username}(${student.cpf}) - ${emailOrError.value.message}`)
+      if (passwordOrError.isLeft()) return new InvalidPasswordError(`${student.username}(${student.cpf}) - ${passwordOrError.value.message}`)
+      if (birthdayOrError.isLeft()) return new InvalidBirthdayError(`${student.username}(${student.cpf}) - ${birthdayOrError.value.message}`)
 
-      const studentWithCPF = await this.studentsRepository.findByCPF(student.cpf)
+      const studentWithCPF = await this.studentsRepository.findByCPF(cpfTransformed)
       if (studentWithCPF) {
         const studentAlreadyExistOnThisCourse = await this.studentsCoursesRepository.findByStudentIdAndCourseId({ 
           courseId: course.id.toValue(), 
           studentId: studentWithCPF.id.toValue() 
         })
-        if (studentAlreadyExistOnThisCourse) return new ResourceAlreadyExistError('Estudante já está presente no curso!')
+        if (studentAlreadyExistOnThisCourse) return new ResourceAlreadyExistError(`${studentWithCPF.username.value}(${studentWithCPF.cpf.value}) já está presente no curso`)
 
         const studentCourse = StudentCourse.create({
-          courseId: new UniqueEntityId(course.id.toValue()),
+          courseId: course.id,
           studentId: studentWithCPF.id,
         })
 
-        const studentAlreadyBePresentInPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
-        if (studentAlreadyBePresentInPole) return new ResourceAlreadyExistError('Estudante já está presente no polo!')
-
         const studentPole = StudentPole.create({
-          poleId: new UniqueEntityId(),
+          poleId: pole.id,
           studentId: studentCourse.id
         })
         
@@ -114,18 +118,15 @@ export class CreateStudentsBatchUseCase {
       const studentWithEmail = await this.studentsRepository.findByEmail(student.email)
       if (studentWithEmail) {
         const studentAlreadyExistOnThisCourse = await this.studentsCoursesRepository.findByStudentIdAndCourseId({ courseId: course.id.toValue(), studentId: studentWithEmail.id.toValue() })
-        if (studentAlreadyExistOnThisCourse) return new ResourceAlreadyExistError('Estudante já existe no curso!')
+        if (studentAlreadyExistOnThisCourse) return new ResourceAlreadyExistError(`${studentWithEmail.username.value}(${studentWithEmail.cpf.value}) já está presente no curso`)
 
         const studentCourse = StudentCourse.create({
-          courseId: new UniqueEntityId(course.id.toValue()),
+          courseId: course.id,
           studentId: studentWithEmail.id,
         })
 
-        const studentAlreadyBePresentInPole = await this.studentsPolesRepository.findByStudentId({ studentId: studentCourse.id.toValue() })
-        if (studentAlreadyBePresentInPole) return new ResourceAlreadyExistError('Estudante já está presente no polo!')
-
         const studentPole = StudentPole.create({
-          poleId: new UniqueEntityId(pole.id.toValue()),
+          poleId: pole.id,
           studentId: studentCourse.id
         })
 
@@ -146,7 +147,7 @@ export class CreateStudentsBatchUseCase {
         militaryId: student.militaryId,
         birthday: birthdayOrError.value, 
       })
-      if (studentOrError.isLeft()) return studentOrError.value
+      if (studentOrError.isLeft()) return new Error(`${student.username}(${student.cpf}) - ${studentOrError.value.message}`)
       const studentCreated = studentOrError.value
 
       const studentCourse = StudentCourse.create({

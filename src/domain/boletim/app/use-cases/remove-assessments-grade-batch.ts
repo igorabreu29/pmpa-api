@@ -66,7 +66,7 @@ export class RemoveAssessmentsGradeBatchUseCase {
         disciplineId: discipline.id.toValue(),
         courseId: course.id.toValue()
       })
-      if (!assessment) return new ResourceNotFoundError('Av não encontrada.')
+      if (!assessment) return new ResourceNotFoundError(`Av do estudante: ${student.username.value}(${student.cpf.value}) não encontrada!`)
 
       assessment.vf = studentAssessment.vf ? null : assessment.vf
       assessment.avi = studentAssessment.avi ? null : assessment.avi
